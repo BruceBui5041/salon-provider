@@ -1,0 +1,1 @@
+ /Users/bruce/Desktop/projects/salon-provider/.dart_tool/flutter_build/0963c89b09d1a54442cdff50eeb11562/native_assets.yaml: 
