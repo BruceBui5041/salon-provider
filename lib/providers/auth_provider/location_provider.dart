@@ -2,14 +2,12 @@ import 'dart:developer';
 import 'package:flutter/cupertino.dart';
 import 'package:geolocator/geolocator.dart';
 import '../../config.dart';
-import '../../widgets/bottom_sheet_buttons_common.dart';
-
 
 class LocationProvider with ChangeNotifier {
   AnimationController? animationController;
   LatLng? position;
   double? newLog, newLat;
-  int primaryAddress =0;
+  int primaryAddress = 0;
   String? currentAddress, street;
   Set<Marker> markers = {};
   GoogleMapController? mapController;
@@ -27,7 +25,7 @@ class LocationProvider with ChangeNotifier {
   FocusNode zipcodeFocus = FocusNode();
 
   Placemark? place;
-  bool isEdit = false,isCompany = false;
+  bool isEdit = false, isCompany = false;
   int count = 0;
   dynamic argumentData;
 
@@ -57,15 +55,13 @@ class LocationProvider with ChangeNotifier {
     }
   }
 
-  onTapLocationAdd(context){
-    final value = Provider.of<SignUpCompanyProvider>(context,listen: false);
-    final location = Provider.of<LocationListProvider>(context,listen: false);
-    appArray.serviceAvailableAreaList.add(
-      {
-        "title": "${place!.name!} - ${place!.subLocality!}",
-        "subtext": "${place!.country!} - ${place!.postalCode!}"
-      }
-    );
+  onTapLocationAdd(context) {
+    final value = Provider.of<SignUpCompanyProvider>(context, listen: false);
+    final location = Provider.of<LocationListProvider>(context, listen: false);
+    appArray.serviceAvailableAreaList.add({
+      "title": "${place!.name!} - ${place!.subLocality!}",
+      "subtext": "${place!.country!} - ${place!.postalCode!}"
+    });
     log("ADDED LIST ${appArray.serviceAvailableAreaList}");
     location.locationList.add({
       "title": "${place!.name!} - ${place!.subLocality!}",
@@ -73,7 +69,8 @@ class LocationProvider with ChangeNotifier {
       "latitude": "${position!.latitude}",
       "longitude": "${position!.longitude}",
       "zip": "${place!.postalCode}",
-      "address": "${place!.street!}, ${place!.name!}, ${place!.subLocality!}, ${place!.administrativeArea!}",
+      "address":
+          "${place!.street!}, ${place!.name!}, ${place!.subLocality!}, ${place!.administrativeArea!}",
     });
     value.notifyListeners();
     location.notifyListeners();
@@ -82,7 +79,6 @@ class LocationProvider with ChangeNotifier {
 
   // created method for getting user current location
   getUserCurrentLocation(context, {isRoute = false}) async {
-
     dynamic args = ModalRoute.of(context)?.settings.arguments ?? false;
     isCompany = args;
     notifyListeners();
@@ -95,7 +91,6 @@ class LocationProvider with ChangeNotifier {
       log("GET INIT LOC : $position");
       notifyListeners();
       getAddressFromLatLng(context);
-
     }).onError((error, stackTrace) async {
       await Geolocator.requestPermission();
       log("ERROR $error");
@@ -103,12 +98,12 @@ class LocationProvider with ChangeNotifier {
   }
 
   getAddressFromLatLng(context) async {
-
     log("NHNNN : ${position!.latitude}");
     await placemarkFromCoordinates(
             newLat ?? position!.latitude, newLog ?? position!.longitude)
         .then((List<Placemark> placeMarks) async {
-      final locationVal = Provider.of<NewLocationProvider>(context,listen: false);
+      final locationVal =
+          Provider.of<NewLocationProvider>(context, listen: false);
       place = placeMarks[0];
       markers = {};
       log("place : ${placeMarks[0]}");
@@ -119,8 +114,8 @@ class LocationProvider with ChangeNotifier {
       latitudeCtrl.text = position!.latitude.toString();
       longitudeCtrl.text = position!.longitude.toString();
       zipcodeCtrl.text = place!.postalCode!;
-      addressCtrl.text = "${place!.name!}, ${place!.street}, ${place!.subLocality}";
-
+      addressCtrl.text =
+          "${place!.name!}, ${place!.street}, ${place!.subLocality}";
 
       locationVal.latitudeCtrl.text = position!.latitude.toString();
       locationVal.longitudeCtrl.text = position!.longitude.toString();
@@ -158,158 +153,182 @@ class LocationProvider with ChangeNotifier {
     });
   }
 
-  onSuccess(context){
+  onSuccess(context) {
     onTapLocationAdd(context);
     notifyListeners();
-   showDialog(context: context, builder: (context1) {
-      return AlertDialogCommon(
-          title: appFonts.successfullyChanged,
-          image: eGifAssets.successGif,
-          subtext: appFonts.congratulation,
-          bText1: appFonts.okay,
-          height: Sizes.s145,
-          b1OnTap: () {
-            route.pop(context);
-            route.pop(context);
-            route.pop(context);
-          }
-      );
-   });
+    showDialog(
+        context: context,
+        builder: (context1) {
+          return AlertDialogCommon(
+              title: appFonts.successfullyChanged,
+              image: eGifAssets.successGif,
+              subtext: appFonts.congratulation,
+              bText1: appFonts.okay,
+              height: Sizes.s145,
+              b1OnTap: () {
+                route.pop(context);
+                route.pop(context);
+                route.pop(context);
+              });
+        });
   }
 
-  onEdit(context){
-    if(isCompany) {
+  onEdit(context) {
+    if (isCompany) {
       route.pushNamed(context, routeName.addNewLocation);
     } else {
       showModalBottomSheet(
           isScrollControlled: true,
-          context: context, builder: (context) {
-        return Consumer<DeleteDialogProvider>(
-          builder: (context,value,child) {
-            return Padding(
-              padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
-              child: Container(
-                  alignment: Alignment.center,
-                  height: MediaQuery
-                      .of(context)
-                      .size
-                      .height / 1.39,
-                  child: SingleChildScrollView(
-                      child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.start,
-                          children: [
-                            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(language(context, appFonts.editServiceArea),
-                                      style: appCss.dmDenseBold18
-                                          .textColor(appColor(context).appTheme
-                                          .darkText)),
-                                  const Icon(CupertinoIcons.multiply)
-                                      .inkWell(onTap: () => route.pop(context))
-                                ]),
-                            const VSpace(Sizes.s25),
-                            Column(
+          context: context,
+          builder: (context) {
+            return Consumer<DeleteDialogProvider>(
+                builder: (context, value, child) {
+              return Padding(
+                padding: EdgeInsets.only(
+                    bottom: MediaQuery.of(context).viewInsets.bottom),
+                child: Container(
+                        alignment: Alignment.center,
+                        height: MediaQuery.of(context).size.height / 1.39,
+                        child: SingleChildScrollView(
+                            child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.start,
                                 children: [
-                                  Text(language(context, appFonts.areaLocality),
-                                      style: appCss.dmDenseMedium14.textColor(
-                                          appColor(context).appTheme.darkText))
-                                      .paddingOnly(bottom: Insets.i8),
-                                  TextFieldCommon(
-                                      focusNode: areaFocus,
-                                      controller: areaCtrl,
-                                      hintText: appFonts.selectArea,
-                                      prefixIcon: eSvgAssets.address),
-                                  const VSpace(Sizes.s20),
-                                  Row(children: [
-                                    Expanded(
-                                        child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Text(language(
-                                                  context, appFonts.latitude),
-                                                  style: appCss.dmDenseMedium14
-                                                      .textColor(
-                                                      appColor(context).appTheme
-                                                          .darkText)).paddingOnly(
-                                                  bottom: Insets.i8),
-                                              TextFieldCommon(
-                                                  keyboardType: TextInputType.number,
-                                                  focusNode: latitudeFocus,
-                                                  controller: latitudeCtrl,
-                                                  hintText: appFonts.enterHere,
-                                                  prefixIcon: eSvgAssets.locationOut)
-
-                                            ])),
-                                    const HSpace(Sizes.s15),
-                                    Expanded(
-                                        child: Column(
-                                            crossAxisAlignment: CrossAxisAlignment
-                                                .start,
-                                            children: [
-                                              Text(language(
-                                                  context, appFonts.longitude),
-                                                  style: appCss.dmDenseMedium14
-                                                      .textColor(
-                                                      appColor(context).appTheme
-                                                          .darkText)).paddingOnly(
-                                                  bottom: Insets.i8),
-                                              TextFieldCommon(
-                                                  keyboardType: TextInputType.number,
-                                                  focusNode: longitudeFocus,
-                                                  controller: longitudeCtrl,
-                                                  hintText: appFonts.enterHere,
-                                                  prefixIcon: eSvgAssets.locationOut)
-
-                                            ]))
+                              Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                        language(
+                                            context, appFonts.editServiceArea),
+                                        style: appCss.dmDenseBold18.textColor(
+                                            appColor(context)
+                                                .appTheme
+                                                .darkText)),
+                                    const Icon(CupertinoIcons.multiply).inkWell(
+                                        onTap: () => route.pop(context))
                                   ]),
-                                  const VSpace(Sizes.s20),
-                                  Text(language(context, appFonts.zipCode),
-                                      style: appCss.dmDenseMedium14.textColor(
-                                          appColor(context).appTheme.darkText))
-                                      .paddingOnly(bottom: Insets.i8),
-                                  TextFieldCommon(
-                                      keyboardType: TextInputType.number,
-                                      focusNode: zipcodeFocus,
-                                      controller: zipcodeCtrl,
-                                      hintText: appFonts.zipCode,
-                                      prefixIcon: eSvgAssets.zipcode),
-                                  const VSpace(Sizes.s20),
-                                  Text(language(context, appFonts.address),
-                                      style: appCss.dmDenseMedium14.textColor(
-                                          appColor(context).appTheme.darkText))
-                                      .paddingOnly(bottom: Insets.i8),
-                                  TextFieldCommon(
-                                      focusNode: addressFocus,
-                                      controller: addressCtrl,
-                                      hintText: appFonts.selectArea,
-                                      prefixIcon: eSvgAssets.address)
-                                ]
-                            ).paddingAll(Insets.i15).boxShapeExtension(
-                                color: appColor(context).appTheme.fieldCardBg),
-                            const VSpace(Sizes.s20),
-                            BottomSheetButtonCommon(textOne: appFonts.cancel,
-                                textTwo: appFonts.addArea,
-                                applyTap: () {
-                                  onTapLocationAdd(context);
-                                  notifyListeners();
-                              value.onResetPass(context, appFonts.congratulation, appFonts.okay, (){
-                                  route.pop(context);
-                                  route.pop(context);
-                                  route.pop(context);
-                                },title: appFonts.successfullyAdded);},
-                                clearTap: () => route.pop(context))
-                          ]
-                      ).paddingAll(Insets.i20))).bottomSheetExtension(context,),
-            );
-          }
-        );
-      });
+                              const VSpace(Sizes.s25),
+                              Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text(
+                                            language(
+                                                context, appFonts.areaLocality),
+                                            style: appCss.dmDenseMedium14
+                                                .textColor(appColor(context)
+                                                    .appTheme
+                                                    .darkText))
+                                        .paddingOnly(bottom: Insets.i8),
+                                    TextFieldCommon(
+                                        focusNode: areaFocus,
+                                        controller: areaCtrl,
+                                        hintText: appFonts.selectArea,
+                                        prefixIcon: eSvgAssets.address),
+                                    const VSpace(Sizes.s20),
+                                    Row(children: [
+                                      Expanded(
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                            Text(
+                                                    language(context,
+                                                        appFonts.latitude),
+                                                    style: appCss
+                                                        .dmDenseMedium14
+                                                        .textColor(
+                                                            appColor(context)
+                                                                .appTheme
+                                                                .darkText))
+                                                .paddingOnly(bottom: Insets.i8),
+                                            TextFieldCommon(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                focusNode: latitudeFocus,
+                                                controller: latitudeCtrl,
+                                                hintText: appFonts.enterHere,
+                                                prefixIcon:
+                                                    eSvgAssets.locationOut)
+                                          ])),
+                                      const HSpace(Sizes.s15),
+                                      Expanded(
+                                          child: Column(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                            Text(
+                                                    language(context,
+                                                        appFonts.longitude),
+                                                    style: appCss
+                                                        .dmDenseMedium14
+                                                        .textColor(
+                                                            appColor(context)
+                                                                .appTheme
+                                                                .darkText))
+                                                .paddingOnly(bottom: Insets.i8),
+                                            TextFieldCommon(
+                                                keyboardType:
+                                                    TextInputType.number,
+                                                focusNode: longitudeFocus,
+                                                controller: longitudeCtrl,
+                                                hintText: appFonts.enterHere,
+                                                prefixIcon:
+                                                    eSvgAssets.locationOut)
+                                          ]))
+                                    ]),
+                                    const VSpace(Sizes.s20),
+                                    Text(language(context, appFonts.zipCode),
+                                            style: appCss.dmDenseMedium14
+                                                .textColor(appColor(context)
+                                                    .appTheme
+                                                    .darkText))
+                                        .paddingOnly(bottom: Insets.i8),
+                                    TextFieldCommon(
+                                        keyboardType: TextInputType.number,
+                                        focusNode: zipcodeFocus,
+                                        controller: zipcodeCtrl,
+                                        hintText: appFonts.zipCode,
+                                        prefixIcon: eSvgAssets.zipcode),
+                                    const VSpace(Sizes.s20),
+                                    Text(language(context, appFonts.address),
+                                            style: appCss.dmDenseMedium14
+                                                .textColor(appColor(context)
+                                                    .appTheme
+                                                    .darkText))
+                                        .paddingOnly(bottom: Insets.i8),
+                                    TextFieldCommon(
+                                        focusNode: addressFocus,
+                                        controller: addressCtrl,
+                                        hintText: appFonts.selectArea,
+                                        prefixIcon: eSvgAssets.address)
+                                  ]).paddingAll(Insets.i15).boxShapeExtension(
+                                  color:
+                                      appColor(context).appTheme.fieldCardBg),
+                              const VSpace(Sizes.s20),
+                              BottomSheetButtonCommon(
+                                  textOne: appFonts.cancel,
+                                  textTwo: appFonts.addArea,
+                                  applyTap: () {
+                                    onTapLocationAdd(context);
+                                    notifyListeners();
+                                    value.onResetPass(
+                                        context,
+                                        appFonts.congratulation,
+                                        appFonts.okay, () {
+                                      route.pop(context);
+                                      route.pop(context);
+                                      route.pop(context);
+                                    }, title: appFonts.successfullyAdded);
+                                  },
+                                  clearTap: () => route.pop(context))
+                            ]).paddingAll(Insets.i20)))
+                    .bottomSheetExtension(
+                  context,
+                ),
+              );
+            });
+          });
     }
-
   }
-
-
 }

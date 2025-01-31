@@ -1,6 +1,5 @@
 import '../../../config.dart';
 
-
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
 
@@ -38,8 +37,6 @@ class _HomeScreenState extends State<HomeScreen>
     super.initState();
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(builder: (context, value, child) {
@@ -53,7 +50,7 @@ class _HomeScreenState extends State<HomeScreen>
               body: SingleChildScrollView(
                   child: Column(children: [
                 const VSpace(Sizes.s15),
-                    WalletBalanceLayout(onTap: ()=> value.onWithdraw(context)),
+                WalletBalanceLayout(onTap: () => value.onWithdraw(context)),
                 const VSpace(Sizes.s16),
                 StaggeredGrid.count(
                         crossAxisCount: 10,
@@ -69,9 +66,9 @@ class _HomeScreenState extends State<HomeScreen>
                                 onTap: () => value.onTapOption(e.key, context)))
                             .toList())
                     .paddingSymmetric(horizontal: Insets.i20),
-                const VSpace(Sizes.s25),
-                    const StaticDetailChart(),
-                    const AllCategoriesLayout()
+                // const VSpace(Sizes.s25),
+                //     const StaticDetailChart(),
+                const AllCategoriesLayout()
               ]).paddingOnly(bottom: Insets.i110))));
     });
   }

@@ -1,4 +1,4 @@
-import '../config.dart';
+import 'package:fixit_provider/config.dart';
 
 class DownIcon {
   DownIcon._();
@@ -7,6 +7,5 @@ class DownIcon {
   static const String? _kFontPkg = null;
 
   static const IconData downIcon =
-  IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
-
+      IconData(0xe800, fontFamily: _kFontFam, fontPackage: _kFontPkg);
 }

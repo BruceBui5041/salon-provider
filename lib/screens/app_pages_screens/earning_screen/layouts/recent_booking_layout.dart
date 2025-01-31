@@ -1,3 +1,5 @@
+import 'package:figma_squircle_updated/figma_squircle.dart';
+
 import '../../../../config.dart';
 import '../../../../model/recent_booking_model.dart';
 
@@ -115,13 +117,11 @@ class RecentBookingLayout extends StatelessWidget {
                 .paddingOnly(
                     bottom: data!.servicemanLists!.length > 1 ? Insets.i20 : 0)
             : Text(
-                language(context,
-                    "${appFonts.note}${appFonts.servicemanNotSelectedYet}"),
-                style: appCss.dmDenseMedium12
-                    .textColor(appColor(context).appTheme.lightText)
-              ).alignment(Alignment.centerLeft),
-
-
+                    language(context,
+                        "${appFonts.note}${appFonts.servicemanNotSelectedYet}"),
+                    style: appCss.dmDenseMedium12
+                        .textColor(appColor(context).appTheme.lightText))
+                .alignment(Alignment.centerLeft),
         if (data!.servicemanLists != null)
           if (data!.servicemanLists!.length > 1)
             CommonArrow(

@@ -1,4 +1,5 @@
 import 'dart:ui' as ui;
+import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:fixit_provider/model/countty_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -12,13 +13,11 @@ class CompanyDetailProvider with ChangeNotifier {
   FocusNode cityFocus = FocusNode();
   FocusNode zipCodeFocus = FocusNode();
 
-
-  List<CountryModel>  countryList = [];
+  List<CountryModel> countryList = [];
   CountryModel? country;
   String? areaValue;
   String? countryValue;
   double slider = 0;
-
 
   ui.Image? customImage;
 
@@ -26,7 +25,6 @@ class CompanyDetailProvider with ChangeNotifier {
     slider = newValue;
     notifyListeners();
   }
-
 
   onTapSwitch(val, data) {
     data["status"] = val;
@@ -43,25 +41,23 @@ class CompanyDetailProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onDeleteLocation(context,index){
-    final locationCtrl = Provider.of<NewLocationProvider>(context, listen: false);
+  onDeleteLocation(context, index) {
+    final locationCtrl =
+        Provider.of<NewLocationProvider>(context, listen: false);
     locationCtrl.locationList.removeAt(index);
     locationCtrl.notifyListeners();
     notifyListeners();
   }
 
-  onEditLocation(context,val,index){
-    route.pushNamed(context, routeName.addNewLocation, arg: {
-      "index": index,
-      "isEdit": true,
-      "data": val
-    });
+  onEditLocation(context, val, index) {
+    route.pushNamed(context, routeName.addNewLocation,
+        arg: {"index": index, "isEdit": true, "data": val});
     notifyListeners();
   }
 
-  onReady(){
+  onReady() {
     countryList = [];
-   /* notifyListeners();
+    /* notifyListeners();
     appArray.countryList.asMap().entries.forEach((element) {
       if(!countryList.contains(CountryModel.fromJson(element.value))) {
         countryList.add(CountryModel.fromJson(element.value));
@@ -69,8 +65,6 @@ class CompanyDetailProvider with ChangeNotifier {
     });*/
     notifyListeners();
   }
-
-
 
   onAddServiceArea(context) {
     showModalBottomSheet(
@@ -111,10 +105,8 @@ class CompanyDetailProvider with ChangeNotifier {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               Text(language(context, appFonts.area),
-                                  style: appCss.dmDenseMedium14
-                                      .textColor(appColor(context)
-                                      .appTheme
-                                      .darkText))
+                                      style: appCss.dmDenseMedium14.textColor(
+                                          appColor(context).appTheme.darkText))
                                   .paddingOnly(bottom: Insets.i8),
                               DropDownLayout(
                                   icon: eSvgAssets.address,
@@ -137,7 +129,7 @@ class CompanyDetailProvider with ChangeNotifier {
                                                       .darkText))
                                           .paddingOnly(bottom: Insets.i8),
                                       TextFieldCommon(
-                                        focusNode: value.cityFocus,
+                                          focusNode: value.cityFocus,
                                           controller: cityCtrl,
                                           hintText: appFonts.city,
                                           prefixIcon: eSvgAssets.locationOut)
@@ -155,8 +147,8 @@ class CompanyDetailProvider with ChangeNotifier {
                                                       .darkText))
                                           .paddingOnly(bottom: Insets.i8),
                                       TextFieldCommon(
-                                        keyboardType: TextInputType.number,
-                                        focusNode: value.zipCodeFocus,
+                                          keyboardType: TextInputType.number,
+                                          focusNode: value.zipCodeFocus,
                                           controller: zipcodeCtrl,
                                           hintText: appFonts.zipCode,
                                           prefixIcon: eSvgAssets.zipcode)
@@ -164,13 +156,10 @@ class CompanyDetailProvider with ChangeNotifier {
                               ]),
                               const VSpace(Sizes.s20),
                               Text(language(context, appFonts.country),
-                                  style: appCss.dmDenseMedium14
-                                      .textColor(appColor(context)
-                                      .appTheme
-                                      .darkText))
+                                      style: appCss.dmDenseMedium14.textColor(
+                                          appColor(context).appTheme.darkText))
                                   .paddingOnly(bottom: Insets.i8),
-                              StateCountryDropdown(items: countryList,selectedItem: country,onChanged: (val) => onChangeCountry(val),)
-
+                              // StateCountryDropdown(items: countryList,selectedItem: country,onChanged: (val) => onChangeCountry(val),)
                             ]).paddingAll(Insets.i15).boxShapeExtension(
                             color: appColor(context).appTheme.fieldCardBg),
                         const VSpace(Sizes.s20),

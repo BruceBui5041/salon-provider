@@ -1,46 +1,44 @@
-
 import 'package:country_list_pick/support/code_countries_en.dart';
-import 'package:fixit_provider/widgets/country_picker_custom/country_code_custom.dart';
 import 'package:fixit_provider/widgets/country_picker_custom/selection_item_list.dart';
 
 import '../../config.dart';
 
-List<Map> jsonList =countriesEnglish;
+List<Map> jsonList = countriesEnglish;
 
 List element = jsonList
     .map((s) => CountryCodeCustom(
-  name: s['name'],
-  code: s['code'],
-  dialCode: s['dial_code'],
-  flagUri: 'flags/${s['code'].toLowerCase()}.png',
-))
+          name: s['name'],
+          code: s['code'],
+          dialCode: s['dial_code'],
+          flagUri: 'flags/${s['code'].toLowerCase()}.png',
+        ))
     .toList();
 
 class CountryListPickCustom extends StatefulWidget {
   const CountryListPickCustom(
-      {super.key, this.onChanged,
-        this.initialSelection,
-        this.appBar,
-        this.pickerBuilder,
-        this.countryBuilder,
-        this.theme,
-        this.useUiOverlay = true,
-        this.useSafeArea = false});
+      {super.key,
+      this.onChanged,
+      this.initialSelection,
+      this.appBar,
+      this.pickerBuilder,
+      this.countryBuilder,
+      this.theme,
+      this.useUiOverlay = true,
+      this.useSafeArea = false});
 
   final String? initialSelection;
   final ValueChanged<CountryCodeCustom?>? onChanged;
   final PreferredSizeWidget? appBar;
   final Widget Function(BuildContext context, CountryCodeCustom? countryCode)?
-  pickerBuilder;
+      pickerBuilder;
   final CountryTheme? theme;
   final Widget Function(BuildContext context, CountryCodeCustom countryCode)?
-  countryBuilder;
+      countryBuilder;
   final bool useUiOverlay;
   final bool useSafeArea;
 
   @override
   CountryListPickCustomState createState() {
-
     return CountryListPickCustomState();
   }
 }
@@ -53,15 +51,13 @@ class CountryListPickCustomState extends State<CountryListPickCustom> {
 
   @override
   void initState() {
-    elements =element;
-    setState(() {
-
-    });
+    elements = element;
+    setState(() {});
     if (widget.initialSelection != null) {
       selectedItem = elements.firstWhere(
-              (e) =>
-          (e.code.toUpperCase() ==
-              widget.initialSelection!.toUpperCase()) ||
+          (e) =>
+              (e.code.toUpperCase() ==
+                  widget.initialSelection!.toUpperCase()) ||
               (e.dialCode == widget.initialSelection),
           orElse: () => elements[0] as CountryCodeCustom);
     } else {
@@ -81,7 +77,8 @@ class CountryListPickCustomState extends State<CountryListPickCustom> {
             selectedItem,
             appBar: widget.appBar ??
                 AppBar(
-                  backgroundColor: Theme.of(context).appBarTheme.backgroundColor,
+                  backgroundColor:
+                      Theme.of(context).appBarTheme.backgroundColor,
                   title: Text(language(context, appFonts.selectCountry)),
                 ),
             theme: theme,
@@ -106,40 +103,40 @@ class CountryListPickCustomState extends State<CountryListPickCustom> {
       child: widget.pickerBuilder != null
           ? widget.pickerBuilder!(context, selectedItem)
           : Flex(
-        direction: Axis.horizontal,
-        mainAxisSize: MainAxisSize.min,
-        children: <Widget>[
-          if (widget.theme?.isShowFlag ?? true == true)
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Image.asset(
-                  selectedItem!.flagUri!,
-                  package: 'country_list_pick',
-                  width: 32.0,
-                ),
-              ),
+              direction: Axis.horizontal,
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                if (widget.theme?.isShowFlag ?? true == true)
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Image.asset(
+                        selectedItem!.flagUri!,
+                        package: 'country_list_pick',
+                        width: 32.0,
+                      ),
+                    ),
+                  ),
+                if (widget.theme?.isShowCode ?? true == true)
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Text(selectedItem.toString()),
+                    ),
+                  ),
+                if (widget.theme?.isShowTitle ?? true == true)
+                  Flexible(
+                    child: Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 5.0),
+                      child: Text(selectedItem!.toCountryStringOnly()),
+                    ),
+                  ),
+                if (widget.theme?.isDownIcon ?? true == true)
+                  const Flexible(
+                    child: Icon(Icons.keyboard_arrow_down),
+                  )
+              ],
             ),
-          if (widget.theme?.isShowCode ?? true == true)
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Text(selectedItem.toString()),
-              ),
-            ),
-          if (widget.theme?.isShowTitle ?? true == true)
-            Flexible(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 5.0),
-                child: Text(selectedItem!.toCountryStringOnly()),
-              ),
-            ),
-          if (widget.theme?.isDownIcon ?? true == true)
-            const Flexible(
-              child: Icon(Icons.keyboard_arrow_down),
-            )
-        ],
-      ),
     );
   }
 }

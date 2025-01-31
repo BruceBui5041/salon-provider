@@ -1,20 +1,21 @@
 //phone textBox
 import '../../../../config.dart';
-import '../../../../widgets/country_picker_custom/country_code_custom.dart';
 import '../../../../widgets/country_picker_custom/layouts/country_list_layout.dart';
 
 class RegisterWidgetClass {
-
   Widget phoneTextBox(context, controller, focus,
-      {Function(CountryCodeCustom?)? onChanged, ValueChanged<
-          String>? onFieldSubmitted, double? hPadding}) =>
+          {Function(CountryCodeCustom?)? onChanged,
+          ValueChanged<String>? onFieldSubmitted,
+          double? hPadding}) =>
       IntrinsicHeight(
         child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          CountryListLayout(onChanged: onChanged,),
+          CountryListLayout(
+            onChanged: onChanged,
+          ),
           const HSpace(Sizes.s4),
           Expanded(
               child: TextFieldCommon(
-                isNumber: true,
+                  isNumber: true,
                   keyboardType: TextInputType.number,
                   validator: (phone) =>
                       Validation().phoneValidation(context, phone),
@@ -24,5 +25,4 @@ class RegisterWidgetClass {
                   hintText: language(context, appFonts.enterPhoneNumber)))
         ]).paddingSymmetric(horizontal: hPadding ?? Insets.i20),
       );
-
 }

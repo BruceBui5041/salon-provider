@@ -50,12 +50,12 @@ class AppArray {
 
   List serviceAvailableAreaList = [];
 
-  List<ValueItem> languageKnown = const [
-    ValueItem(label: "english", value: '1'),
-    ValueItem(label: 'german', value: '2'),
-    ValueItem(label: 'spanish', value: '3'),
-    ValueItem(label: 'japanese', value: '4'),
-  ];
+  // List<ValueItem> languageKnown = const [
+  //   ValueItem(label: "english", value: '1'),
+  //   ValueItem(label: 'german', value: '2'),
+  //   ValueItem(label: 'spanish', value: '3'),
+  //   ValueItem(label: 'japanese', value: '4'),
+  // ];
 
   var identityList = [
     appFonts.passport,
@@ -454,8 +454,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -496,8 +495,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -538,8 +536,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -623,8 +620,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -665,8 +661,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -707,8 +702,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -792,8 +786,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -834,8 +827,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -876,8 +868,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -961,8 +952,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -1003,8 +993,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -1045,8 +1034,7 @@ class AppArray {
               "order_column": "1",
               "created_at": "2023-10-04T05:47:42.000000Z",
               "updated_at": "2023-10-04T05:47:42.000000Z",
-              "original_url":
-              eSvgAssets.carpenter,
+              "original_url": eSvgAssets.carpenter,
               "preview_url": ""
             }
           ]
@@ -2001,7 +1989,7 @@ class AppArray {
     {
       "title": appFonts.panCard,
       "image": eImageAssets.panCard,
-      "status":appFonts.requestForUpdate
+      "status": appFonts.requestForUpdate
     },
     {
       "title": appFonts.aadhaarCard,
@@ -2867,9 +2855,9 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {
       "image": eImageAssets.c2,
       "title": "Kierra Lubin",
     },
@@ -2887,11 +2875,10 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {
       "image": eImageAssets.c1,
-
       "title": "Kierra Lubin",
     },
     "servicemanList": [
@@ -2915,12 +2902,9 @@ class AppArray {
     'required_servicemen': 3,
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c4,
-      "title": "Kierra Lubin"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c4, "title": "Kierra Lubin"},
     "servicemanList": []
   };
 
@@ -2936,12 +2920,9 @@ class AppArray {
     'required_servicemen': 3,
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c5,
-      "title": "Kierra Lubin"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c5, "title": "Kierra Lubin"},
     "servicemanList": []
   };
 
@@ -3002,12 +2983,9 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c7,
-      "title": "Kierra Lubing"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c7, "title": "Kierra Lubing"},
     "servicemanList": []
   };
 
@@ -3022,12 +3000,9 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c7,
-      "title": "Kierra Lubing"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c7, "title": "Kierra Lubing"},
     "servicemanList": [
       {
         "image": eImageAssets.c3,
@@ -3048,13 +3023,9 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c8,
-      "title": "Kierra Lubin"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c8, "title": "Kierra Lubin"},
     "servicemanList": [
       {
         "image": eImageAssets.c9,
@@ -3075,13 +3046,9 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c10,
-      "title": "Kierra Lubin"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c10, "title": "Kierra Lubin"},
     "servicemanList": [
       {
         "image": eImageAssets.c11,
@@ -3102,13 +3069,9 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c10,
-      "title": "Kierra Lubin"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c10, "title": "Kierra Lubin"},
     "servicemanList": []
   };
 
@@ -3123,13 +3086,9 @@ class AppArray {
     "date": "6 Sep, 2023",
     "time": "6:00 PM",
     "location": "2118 Thorn ridge Cir. Syracuse, Connecticut - 35624, USA.",
-
-    "description": "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
-    "customer":
-    {
-      "image": eImageAssets.c1,
-      "title": "Kierra Lubin"
-    },
+    "description":
+        "Our expert technicians will thoroughly clean and disinfect your air conditioning system, ensuring optimal performance.",
+    "customer": {"image": eImageAssets.c1, "title": "Kierra Lubin"},
     "servicemanList": [
       {
         "image": eImageAssets.c2,
@@ -3259,136 +3218,118 @@ class AppArray {
     },
   ];
 
-   var freelancerBookingList = [
-
-     {
-       "bookingNumber": "#58961",
-       "image": eImageAssets.b1,
-       "package_id": null,
-       "required_servicemen": 2,
-       "isExpand": false,
-       "name": "Cleaning of bathroom",
-       "price": "25.23",
-       "offer": "10% off",
-       "status": appFonts.pending,
-       "dateTime": "6 Sep, 2023 - 6:00 pm",
-       "payment": "Not paid yet",
-       "location": "California - USA",
-       "customerList": [
-         {
-           "image": eImageAssets.c1,
-           "title": "Arlene McCoy",
-           "rate": "3.5",
-         }
-       ],
-       "servicemanLists": []
-     },
-
-     {
-       "bookingNumber": "#25636",
-       "image": eImageAssets.b2,
-       "package_id": null,
-       "isExpand": false,
-       "required_servicemen": 2,
-       "name": "Full body massage",
-       "price": "30.25",
-       "offer": "10% off",
-       "status": appFonts.accepted,
-       "location": "California - USA",
-       "dateTime": "8 Aug, 2023 - 5:20 am",
-       "payment": "Not paid yet",
-       "customerList": [
-         {
-
-           "image": eImageAssets.c4,
-           "title": "Kierra Lubin",
-           "rate": "3.0",
-         }
-       ],
-       "servicemanLists": [
-
-       ]
-     },
-
-     {
-       "bookingNumber": "#85962",
-       "image": eImageAssets.b5,
-       "package_id": null,
-       "isExpand": false,
-       "name": "Hair spa & color",
-       "price": "15.23",
-       "offer": "15% off",
-       "required_servicemen": 2,
-       "status": appFonts.ongoing,
-       "location": "California - USA",
-       "dateTime": "10 Aug, 2023 - 2:05 pm",
-       "payment": "Not paid yet",
-       "customerList": [
-         {
-           "image": eImageAssets.c7,
-           "title": "Kierra Lubin",
-           "rate": "3.0",
-         }
-       ],
-       "servicemanLists": [
-
-       ]
-     },
-
-     {
-       "bookingNumber": "#56236",
-       "image": eImageAssets.b7,
-       "package_id": null,
-       "isExpand": false,
-       "required_servicemen": 2,
-       "name": "Furnishing & carpentry",
-       "price": "40.26",
-       "offer": "12% off",
-       "status": appFonts.completed,
-       "location": "California - USA",
-       "dateTime": "15 Aug, 2023 - 10:55 am",
-       "payment": "Paid in advance",
-       "customerList": [
-         {
-
-           "image": eImageAssets.c10,
-           "title": "Kierra Lubin",
-           "rate": "3.0",
-         }
-       ],
-       "servicemanLists": [
-
-       ]
-     },
-
-     {
-       "bookingNumber": "#15263",
-       "image": eImageAssets.b8,
-       "package_id": null,
-       "isExpand": false,
-       "required_servicemen": 2,
-       "name": "Chimney sweeping",
-       "price": "21.78",
-       "status": appFonts.cancelled,
-       "location": "California - USA",
-       "dateTime": "20 Aug, 2023 - 4:25pm",
-       "customerList": [
-         {
-           "image": eImageAssets.c11,
-           "title": "Kierra Lubin",
-           "rate": "3.0",
-         }
-       ],
-       "servicemanLists": []
-     },
-
-
+  var freelancerBookingList = [
+    {
+      "bookingNumber": "#58961",
+      "image": eImageAssets.b1,
+      "package_id": null,
+      "required_servicemen": 2,
+      "isExpand": false,
+      "name": "Cleaning of bathroom",
+      "price": "25.23",
+      "offer": "10% off",
+      "status": appFonts.pending,
+      "dateTime": "6 Sep, 2023 - 6:00 pm",
+      "payment": "Not paid yet",
+      "location": "California - USA",
+      "customerList": [
+        {
+          "image": eImageAssets.c1,
+          "title": "Arlene McCoy",
+          "rate": "3.5",
+        }
+      ],
+      "servicemanLists": []
+    },
+    {
+      "bookingNumber": "#25636",
+      "image": eImageAssets.b2,
+      "package_id": null,
+      "isExpand": false,
+      "required_servicemen": 2,
+      "name": "Full body massage",
+      "price": "30.25",
+      "offer": "10% off",
+      "status": appFonts.accepted,
+      "location": "California - USA",
+      "dateTime": "8 Aug, 2023 - 5:20 am",
+      "payment": "Not paid yet",
+      "customerList": [
+        {
+          "image": eImageAssets.c4,
+          "title": "Kierra Lubin",
+          "rate": "3.0",
+        }
+      ],
+      "servicemanLists": []
+    },
+    {
+      "bookingNumber": "#85962",
+      "image": eImageAssets.b5,
+      "package_id": null,
+      "isExpand": false,
+      "name": "Hair spa & color",
+      "price": "15.23",
+      "offer": "15% off",
+      "required_servicemen": 2,
+      "status": appFonts.ongoing,
+      "location": "California - USA",
+      "dateTime": "10 Aug, 2023 - 2:05 pm",
+      "payment": "Not paid yet",
+      "customerList": [
+        {
+          "image": eImageAssets.c7,
+          "title": "Kierra Lubin",
+          "rate": "3.0",
+        }
+      ],
+      "servicemanLists": []
+    },
+    {
+      "bookingNumber": "#56236",
+      "image": eImageAssets.b7,
+      "package_id": null,
+      "isExpand": false,
+      "required_servicemen": 2,
+      "name": "Furnishing & carpentry",
+      "price": "40.26",
+      "offer": "12% off",
+      "status": appFonts.completed,
+      "location": "California - USA",
+      "dateTime": "15 Aug, 2023 - 10:55 am",
+      "payment": "Paid in advance",
+      "customerList": [
+        {
+          "image": eImageAssets.c10,
+          "title": "Kierra Lubin",
+          "rate": "3.0",
+        }
+      ],
+      "servicemanLists": []
+    },
+    {
+      "bookingNumber": "#15263",
+      "image": eImageAssets.b8,
+      "package_id": null,
+      "isExpand": false,
+      "required_servicemen": 2,
+      "name": "Chimney sweeping",
+      "price": "21.78",
+      "status": appFonts.cancelled,
+      "location": "California - USA",
+      "dateTime": "20 Aug, 2023 - 4:25pm",
+      "customerList": [
+        {
+          "image": eImageAssets.c11,
+          "title": "Kierra Lubin",
+          "rate": "3.0",
+        }
+      ],
+      "servicemanLists": []
+    },
   ];
 
-   List serviceImageList = [
-
-   ];
-
+  List serviceImageList = [];
 
   var servicemenExperienceList = [
     appFonts.allServicemen,

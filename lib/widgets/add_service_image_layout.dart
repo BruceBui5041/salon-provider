@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../config.dart';
@@ -19,29 +20,28 @@ class AddServiceImageLayout extends StatelessWidget {
             width: Sizes.s70,
             decoration: ShapeDecoration(
                 image: DecorationImage(
-                    image: FileImage(
-                        File(image!)),
-                    fit: BoxFit.cover),
+                    image: FileImage(File(image!)), fit: BoxFit.cover),
                 shape: RoundedRectangleBorder(
                     borderRadius: SmoothBorderRadius(
-                        cornerRadius: AppRadius.r8,
-                        cornerSmoothing: 1)))),
+                        cornerRadius: AppRadius.r8, cornerSmoothing: 1)))),
         Container(
-            padding: const EdgeInsets.all(Insets.i4),
-            decoration: ShapeDecoration(
-                color: appColor(context).appTheme.darkText.withOpacity(0.5),
-                shape: const SmoothRectangleBorder(
-                    borderRadius: SmoothBorderRadius.only(
-                        bottomLeft: SmoothRadius(
-                            cornerRadius: AppRadius.r6, cornerSmoothing: 1),
-                        topRight: SmoothRadius(
-                            cornerRadius: AppRadius.r6,
-                            cornerSmoothing: 1)))),
-            child: Icon(CupertinoIcons.multiply,
-                color: appColor(context).appTheme.whiteColor,
-                size: Sizes.s14))
+                padding: const EdgeInsets.all(Insets.i4),
+                decoration: ShapeDecoration(
+                    color: appColor(context).appTheme.darkText.withOpacity(0.5),
+                    shape: const SmoothRectangleBorder(
+                        borderRadius: SmoothBorderRadius.only(
+                            bottomLeft: SmoothRadius(
+                                cornerRadius: AppRadius.r6, cornerSmoothing: 1),
+                            topRight: SmoothRadius(
+                                cornerRadius: AppRadius.r6,
+                                cornerSmoothing: 1)))),
+                child: Icon(CupertinoIcons.multiply,
+                    color: appColor(context).appTheme.whiteColor,
+                    size: Sizes.s14))
             .inkWell(onTap: onDelete)
       ],
-    ).paddingOnly(right: rtl(context) ? 0 : Insets.i10, left: rtl(context) ? Insets.i10 : 0);
+    ).paddingOnly(
+        right: rtl(context) ? 0 : Insets.i10,
+        left: rtl(context) ? Insets.i10 : 0);
   }
 }

@@ -1,3 +1,5 @@
+import 'package:figma_squircle_updated/figma_squircle.dart';
+
 import '../../../../config.dart';
 import 'dart:math';
 
@@ -13,7 +15,13 @@ class GridViewLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StaggeredGridTile.count(
-        crossAxisCellCount: index == 0 ? 6 : index == 1 ? 4 : index == 2 ? 4 : 6,
+        crossAxisCellCount: index == 0
+            ? 6
+            : index == 1
+                ? 4
+                : index == 2
+                    ? 4
+                    : 6,
         mainAxisCellCount: 3.4,
         child: Container(
                 decoration: ShapeDecoration(

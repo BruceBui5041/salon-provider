@@ -1,9 +1,7 @@
-import '../../config.dart';
+import 'package:fixit_provider/config.dart';
 
 class NoInternetProvider with ChangeNotifier {
-
   AnimationController? animationController;
-
 
   onAnimate(TickerProvider sync) async {
     animationController = AnimationController(
@@ -18,5 +16,4 @@ class NoInternetProvider with ChangeNotifier {
       await animationController!.reverse();
     }
   }
-
 }

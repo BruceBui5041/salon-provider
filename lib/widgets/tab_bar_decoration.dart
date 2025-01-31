@@ -1,7 +1,8 @@
-import '../config.dart';
+import 'package:fixit_provider/config.dart';
 
 class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
-  const DecoratedTabBar({super.key, required this.tabBar, required this.decoration});
+  const DecoratedTabBar(
+      {super.key, required this.tabBar, required this.decoration});
 
   final TabBar tabBar;
   final BoxDecoration decoration;
@@ -11,12 +12,9 @@ class DecoratedTabBar extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Stack(
-      children: [
-        Positioned.fill(child: Container(
-            decoration: decoration)),
-        tabBar
-      ]
-    );
+    return Stack(children: [
+      Positioned.fill(child: Container(decoration: decoration)),
+      tabBar
+    ]);
   }
 }

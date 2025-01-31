@@ -1,3 +1,5 @@
+import 'package:figma_squircle_updated/figma_squircle.dart';
+
 import '../../../../config.dart';
 
 class ServiceDoneLayout extends StatelessWidget {
@@ -21,7 +23,7 @@ class ServiceDoneLayout extends StatelessWidget {
                 borderRadius: BorderRadius.circular(AppRadius.r6))),
         SizedBox(
             width: Sizes.s100,
-            height:  Sizes.s40,
+            height: Sizes.s40,
             child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [

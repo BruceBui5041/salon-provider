@@ -1,8 +1,6 @@
-import 'dart:developer';
 import 'dart:ui' as ui;
 import 'package:flutter/services.dart';
 import '../../config.dart';
-import '../../widgets/alert_dialog_common.dart';
 
 class ResetPasswordProvider extends ChangeNotifier {
   TextEditingController txtNewPassword = TextEditingController();
@@ -27,10 +25,6 @@ class ResetPasswordProvider extends ChangeNotifier {
     isConfirmPassword = !isConfirmPassword;
     notifyListeners();
   }
-
-
-
-
 
   static getDisposableProviders(BuildContext context) {
     return [
@@ -58,7 +52,4 @@ class ResetPasswordProvider extends ChangeNotifier {
     ui.FrameInfo fi = await codec.getNextFrame();
     return fi.image;
   }
-
-
-
 }

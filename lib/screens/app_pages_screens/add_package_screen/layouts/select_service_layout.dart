@@ -1,3 +1,4 @@
+import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../../config.dart';
 
@@ -5,8 +6,7 @@ class SelectServiceLayout extends StatelessWidget {
   final dynamic data;
   final GestureTapCallback? onTapCross;
 
-  const SelectServiceLayout(
-      {super.key, this.onTapCross, this.data});
+  const SelectServiceLayout({super.key, this.onTapCross, this.data});
 
   @override
   Widget build(BuildContext context) {

@@ -84,8 +84,6 @@ export '../widgets/contact_detail_row_common.dart';
 export '../widgets/add_service_image_layout.dart';
 export '../helper/alert_class.dart';
 
-
-
 ThemeService appColor(context) {
   final themeServices = Provider.of<ThemeService>(context, listen: false);
   return themeServices;
@@ -115,12 +113,9 @@ String language(context, text) {
   return AppLocalizations.of(context)!.translate(text);
 }
 
-bool rtl(context){
+bool rtl(context) {
   return AppLocalizations.of(context)?.locale.languageCode == "ar";
 }
-
-
-
 
 Session session = Session();
 AppFonts appFonts = AppFonts();

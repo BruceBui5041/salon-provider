@@ -1,13 +1,10 @@
-import 'package:fixit_provider/config.dart';
+import 'package:flutter/material.dart';
 
 class CommissionHistoryProvider extends ChangeNotifier {
-
   bool isCompletedMe = false;
 
-  onTapSwitch(val){
+  onTapSwitch(val) {
     isCompletedMe = val;
     notifyListeners();
   }
-
-
 }

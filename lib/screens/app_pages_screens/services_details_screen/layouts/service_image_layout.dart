@@ -1,9 +1,17 @@
+import 'package:figma_squircle_updated/figma_squircle.dart';
+
 import '../../../../config.dart';
 
 class ServiceImageLayout extends StatelessWidget {
-  final String? image,rating,title;
-  final GestureTapCallback? editTap,deleteTap;
-  const ServiceImageLayout({super.key,this.rating,this.image,this.deleteTap,this.editTap,this.title});
+  final String? image, rating, title;
+  final GestureTapCallback? editTap, deleteTap;
+  const ServiceImageLayout(
+      {super.key,
+      this.rating,
+      this.image,
+      this.deleteTap,
+      this.editTap,
+      this.title});
 
   @override
   Widget build(BuildContext context) {
@@ -31,8 +39,7 @@ class ServiceImageLayout extends StatelessWidget {
             height: Sizes.s230,
             decoration: ShapeDecoration(
                 image: DecorationImage(
-                    image: AssetImage(image!),
-                    fit: BoxFit.cover),
+                    image: AssetImage(image!), fit: BoxFit.cover),
                 shape: const SmoothRectangleBorder(
                     borderRadius: SmoothBorderRadius.only(
                         bottomRight: SmoothRadius(
@@ -49,14 +56,23 @@ class ServiceImageLayout extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            CommonArrow(arrow: rtl(context) ? eSvgAssets.arrowRight : eSvgAssets.arrowLeft,onTap: ()=> route.pop(context)),
-                            Row(
-                              children: [
-                                CommonArrow(arrow: eSvgAssets.edit,svgColor: appColor(context).appTheme.darkText,onTap: editTap),
-                                const HSpace(Sizes.s15),
-                                CommonArrow(arrow: eSvgAssets.delete,svgColor: appColor(context).appTheme.red,color: const Color(0xffFFEDED),onTap: deleteTap)
-                              ]
-                            )
+                            CommonArrow(
+                                arrow: rtl(context)
+                                    ? eSvgAssets.arrowRight
+                                    : eSvgAssets.arrowLeft,
+                                onTap: () => route.pop(context)),
+                            Row(children: [
+                              CommonArrow(
+                                  arrow: eSvgAssets.edit,
+                                  svgColor: appColor(context).appTheme.darkText,
+                                  onTap: editTap),
+                              const HSpace(Sizes.s15),
+                              CommonArrow(
+                                  arrow: eSvgAssets.delete,
+                                  svgColor: appColor(context).appTheme.red,
+                                  color: const Color(0xffFFEDED),
+                                  onTap: deleteTap)
+                            ])
                           ]),
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
