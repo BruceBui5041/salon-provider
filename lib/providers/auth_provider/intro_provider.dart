@@ -13,12 +13,12 @@ class IntroProvider with ChangeNotifier {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       isFreelancer = false;
       prefs.setBool("isFreelancer", isFreelancer);
-      route.pushNamed(context, routeName.signUpCompany);
+      route.pushNamed(context, routeName.registerScreen);
     } else {
       final SharedPreferences prefs = await SharedPreferences.getInstance();
       isFreelancer = true;
       prefs.setBool("isFreelancer", isFreelancer);
-      route.pushNamed(context, routeName.signUpFreelancer);
+      route.pushNamed(context, routeName.registerScreen);
       notifyListeners();
     }
   }

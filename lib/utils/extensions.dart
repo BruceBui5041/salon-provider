@@ -1,3 +1,4 @@
+import 'package:diacritic/diacritic.dart';
 import 'package:figma_squircle_updated/figma_squircle.dart';
 
 import '../config.dart';
@@ -43,4 +44,22 @@ extension FixitUserExtensions on Widget {
                   topRight:
                       SmoothRadius(cornerRadius: 20, cornerSmoothing: 1)))),
       child: this);
+}
+
+extension FixitStringExtensions on String {
+  String toSlug() {
+    // Chuyển thành chữ thường
+    String slug = toLowerCase();
+
+    // Loại bỏ dấu tiếng Việt
+    slug = removeDiacritics(slug);
+
+    // Thay thế các ký tự không phải chữ cái hoặc số bằng dấu '-'
+    slug = slug.replaceAll(RegExp(r'[^a-z0-9]+'), '-');
+
+    // Loại bỏ dấu '-' ở đầu và cuối chuỗi
+    slug = slug.replaceAll(RegExp(r'^-+|-+$'), '');
+
+    return slug;
+  }
 }

@@ -17,4 +17,10 @@ abstract class RestClient {
 
   @POST("/login")
   Future<LoginResponse> loginUser(@Body() Map<String, dynamic> requestBody);
+
+  @POST("/otp/resend")
+  Future<dynamic> resendOtp();
+
+  @POST("/service")
+  Future<dynamic> createService(@Body() Map<String, dynamic> requestBody);
 }

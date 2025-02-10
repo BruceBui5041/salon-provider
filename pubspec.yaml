@@ -86,9 +86,14 @@ dependencies:
   equatable: ^2.0.7
   timezone: ^0.10.0
   flutter_secure_storage: ^9.2.4
+  icons_plus: ^5.0.0
+  diacritic: ^0.1.6
 
 
 dev_dependencies:
+  retrofit_generator: ">=8.0.0 <10.0.0" # for Dart 3.3 use ^9.0.0
+  build_runner: ^2.3.3
+  json_serializable: ^6.8.0
   flutter_test:
     sdk: flutter
 
@@ -115,6 +120,7 @@ flutter:
     - assets/images/
     - assets/svg/
     - assets/gif/
+    - .env
 
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware
