@@ -1,8 +1,12 @@
+// ignore_for_file: unnecessary_null_comparison
+
+import 'package:fixit_provider/model/response/category_response.dart';
+
 import '../../../../config.dart';
 
 class DropDownLayout extends StatelessWidget {
   final String? icon, hintText, val;
-  final List? categoryList;
+  final List? list;
   final ValueChanged? onChanged;
   final bool? isIcon, isField, isBig, isListIcon, isOnlyText;
 
@@ -15,7 +19,7 @@ class DropDownLayout extends StatelessWidget {
       this.isField = false,
       this.isIcon = false,
       this.isBig = false,
-      this.categoryList,
+      this.list,
       this.isListIcon = false,
       this.isOnlyText = false});
 
@@ -63,17 +67,18 @@ class DropDownLayout extends StatelessWidget {
                     icon: SvgPicture.asset(eSvgAssets.dropDown, colorFilter: ColorFilter.mode(val == null ? appColor(context).appTheme.lightText : appColor(context).appTheme.darkText, BlendMode.srcIn)),
                     isDense: true,
                     isExpanded: true,
-                    items: categoryList!.asMap().entries.map((e) {
-                      return DropdownMenuItem(
-                          value: e.value,
+                    items: list!.asMap().entries.map((e) {
+                      var val = e.value as CategoryItem;
+                      return DropdownMenuItem<CategoryItem>(
+                          value: val,
                           child: Row(
                             children: [
                               if (isListIcon == true)
                                 SizedBox(
                                         height: Sizes.s13,
                                         width: Sizes.s13,
-                                        child: SvgPicture.asset(
-                                          e.value["image"],
+                                        child: Image.network(
+                                          val.image ?? '',
                                           fit: BoxFit.scaleDown,
                                         ))
                                     .paddingAll(Insets.i4)
@@ -83,7 +88,7 @@ class DropDownLayout extends StatelessWidget {
                                             .fieldCardBg,
                                         shape: BoxShape.circle),
                               if (isListIcon == true) const HSpace(Sizes.s12),
-                              Text(language(context, e.value),
+                              Text(language(context, val.name ?? ''),
                                   style: appCss.dmDenseMedium14.textColor(val ==
                                           null
                                       ? appColor(context).appTheme.lightText

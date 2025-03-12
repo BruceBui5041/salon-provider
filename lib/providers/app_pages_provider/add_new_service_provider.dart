@@ -1,15 +1,20 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:dio/dio.dart';
+import 'package:fixit_provider/common/Utils.dart';
 import 'package:fixit_provider/config.dart';
 import 'package:fixit_provider/config/injection_config.dart';
 import 'package:fixit_provider/model/response/category_response.dart';
+import 'package:fixit_provider/network/api_config.dart';
 import 'package:fixit_provider/screens/app_pages_screens/add_new_service_screen/repository/add_new_service_repository.dart';
+import 'package:path_provider/path_provider.dart';
 
 class AddNewServiceProvider with ChangeNotifier {
   var repo = getIt<AddNewServiceRepository>();
 
-  String? categoryValue;
-  String? subCategoryValue;
+  CategoryItem? categoryValue;
+  CategoryItem? subCategoryValue;
   String? durationValue;
   int selectIndex = 0;
   String? taxIndex;
@@ -55,8 +60,33 @@ class AddNewServiceProvider with ChangeNotifier {
   String? slug = "";
 
   CategoryResponse? categoryResponse;
+  CategoryResponse? subCategoryResponse;
 
   CategoryItem? categoryItem;
+
+  XFile? imageThumbnail;
+  List<MultipartFile> listMultipartServiceImage = [];
+
+  Future<MultipartFile> convertImageToMultiPart(XFile? file) async {
+    MultipartFile multipartFile = await MultipartFile.fromFileSync(
+      file!.path,
+      filename: file.path.split('/').last, // Lấy tên file
+    );
+    return multipartFile;
+  }
+
+  void clearInput() {
+    serviceName.clear();
+    description.clear();
+    duration.clear();
+    availableService.clear();
+    minRequired.clear();
+    amount.clear();
+    discount.clear();
+    tax.clear();
+    featuredPoints.clear();
+    notifyListeners();
+  }
 
   void convertToSlug(String text) {
     slug = text.toSlug();
@@ -64,44 +94,94 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   Future<void> addService() async {
-    var requestBody = {
-      "slug": slug,
-      "service_version": {
-        "title": titleController.text,
-        "description": description.text,
-        "category_id": categoryValue,
-        "sub_category_id": "string",
-        "intro_video_id?": "string",
-        "thumbnail": "string",
-        "price": priceController.text,
-        "discounted_price": discountedPriceController.text,
-        "images": [""],
-        "duration": durationController.text,
-        "main_image_id": "string"
-      }
-    };
+    var images = listMultipartServiceImage;
+    var thumbNail = await MultipartFile.fromFile(
+      thumbFile!.path,
+      filename: thumbFile!.path.split('/').last,
+    );
+    var mainImage = await MultipartFile.fromFile(
+      imageFile!.path,
+      filename: imageFile!.path.split('/').last,
+    );
 
-    final response = await repo.createService(requestBody);
-    if (response != null) {
-      // success
-    } else {
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text(response.message!),
-      // ));
+    FormData formData = FormData.fromMap({
+      "json": json.encode({
+        "slug": slug,
+        // "owner_id": "",
+        "service_version": {
+          "title": titleController.text,
+          "description": description.text,
+          "category_id": categoryValue!.id,
+          "sub_category_id": subCategoryValue!.id,
+          "thumbnail": thumbFile!.path, // Chuyển đổi đúng dạng MultipartFile
+          "price": priceController.text,
+          "discounted_price": discountedPriceController.text,
+          "duration": int.parse(durationController.text),
+          // "main_image_id": "2", // Chuyển đổi đúng dạng MultipartFile
+        }
+      }).toString(),
+      "images": thumbNail
+      // await MultipartFile.fromFile(
+      //   imageThumbnail!.path,
+      //   filename: imageThumbnail!.path.split('/').last,
+      // )
+      , // Danh sách file ảnh
+    });
+
+    // log(json.encode(jsonBody));
+    // FormData formData = FormData.fromMap({
+    //   "json": json.encode(jsonBody), // convert json to string
+    //   "images": images, // Danh sách file
+    // });
+
+    try {
+      var res = await ApiConfig().dio.post(
+            "/service",
+            data: formData,
+            options: Options(
+              contentType: "multipart/form-data",
+            ),
+          );
+      print(res.data);
+    } catch (e) {
+      if (e is DioError) {
+        print(e.response!.data);
+      }
+      log("ERROR: $e");
     }
     notifyListeners();
   }
 
   Future<void> fetchCategory() async {
-    final response = await repo.fetchCategories();
-    if (response != null) {
-      categoryResponse = response;
-    } else {
-      // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-      //   content: Text(response.message!),
-      // ));
+    try {
+      final response = await repo.fetchCategories();
+      if (response != null) {
+        categoryResponse = response;
+      } else {
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //   content: Text(response.message!),
+        // ));
+      }
+      notifyListeners();
+    } catch (e) {
+      log("ERROR: $e");
     }
-    notifyListeners();
+  }
+
+  Future<void> fetchSubCategory(String id) async {
+    try {
+      final response = await repo.fetchSubCategories(id);
+      if (response != null) {
+        subCategoryResponse = response;
+      } else {
+        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        //   content: Text(response.message!),
+        // ));
+      }
+      notifyListeners();
+    } catch (e) {
+      log("ERROR: $e");
+    }
   }
 
   onReady(context) {
@@ -192,10 +272,28 @@ class AddNewServiceProvider with ChangeNotifier {
     final ImagePicker picker = ImagePicker();
     if (isThumbnail) {
       route.pop(context);
+
       thumbFile = (await picker.pickImage(source: source))!;
+      final dir = await getTemporaryDirectory();
+      String targetPath = '${dir.path}/${thumbFile!.name}.jpg';
+
+      XFile? fileCompressed =
+          await Utils.compressAndGetFile(thumbFile!, targetPath);
+      MultipartFile fileThumbnail =
+          await convertImageToMultiPart(fileCompressed);
+      // imageThumbnail = (fileThumbnail)
+      imageThumbnail = fileCompressed;
     } else {
       route.pop(context);
       imageFile = (await picker.pickImage(source: source))!;
+      final dir =
+          await getTemporaryDirectory(); // or getApplicationDocumentsDirectory();
+      String targetPath = '${dir.path}/${imageFile!.name}.jpg';
+      XFile? fileCompressed =
+          await Utils.compressAndGetFile(imageFile!, targetPath);
+      MultipartFile fileImageService =
+          await convertImageToMultiPart(fileCompressed);
+      listMultipartServiceImage.add(fileImageService);
     }
     notifyListeners();
   }
@@ -247,14 +345,16 @@ class AddNewServiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onChangeCategory(val) {
+  onChangeCategory(CategoryItem val) {
     categoryValue = val;
+    fetchSubCategory(val.id.toString());
     log("VAL :$categoryValue");
     notifyListeners();
   }
 
   onChangeSubCategory(val) {
     subCategoryValue = val;
+
     notifyListeners();
   }
 

@@ -34,14 +34,14 @@ class AddServicemenScreen extends StatelessWidget {
                           icon: eSvgAssets.locationOut,
                           val: value.locationValue,
                           isIcon: true,
-                          categoryList: appArray.locationList,
+                          list: appArray.locationList,
                           onChanged: (val) => value.onLocation(val))
                       .paddingSymmetric(horizontal: Insets.i20),
                   ContainerWithTextLayout(title: appFonts.description)
                       .paddingOnly(top: Insets.i24, bottom: Insets.i8),
                   Stack(children: [
                     TextFieldCommon(
-                      focusNode: value.descriptionFocus,
+                            focusNode: value.descriptionFocus,
                             isNumber: true,
                             controller: value.description,
                             hintText: appFonts.enterDetails,
@@ -49,20 +49,24 @@ class AddServicemenScreen extends StatelessWidget {
                             minLines: 3,
                             isMaxLine: true)
                         .paddingSymmetric(horizontal: Insets.i20),
-                    SvgPicture.asset(eSvgAssets.details, fit: BoxFit.scaleDown,colorFilter: ColorFilter.mode(!value.descriptionFocus.hasFocus ?
-                    value.description.text.isNotEmpty
-                        ? appColor(context).appTheme.darkText
-                            : appColor(context).appTheme.lightText
-                    : appColor(context).appTheme.darkText, BlendMode.srcIn))
+                    SvgPicture.asset(eSvgAssets.details,
+                            fit: BoxFit.scaleDown,
+                            colorFilter: ColorFilter.mode(
+                                !value.descriptionFocus.hasFocus
+                                    ? value.description.text.isNotEmpty
+                                        ? appColor(context).appTheme.darkText
+                                        : appColor(context).appTheme.lightText
+                                    : appColor(context).appTheme.darkText,
+                                BlendMode.srcIn))
                         .paddingOnly(
-                        left: rtl(context) ? 0 : Insets.i35,
-                        right: rtl(context) ? Insets.i35 : 0,
-                        top: Insets.i13)
+                            left: rtl(context) ? 0 : Insets.i35,
+                            right: rtl(context) ? Insets.i35 : 0,
+                            top: Insets.i13)
                   ]),
                   ContainerWithTextLayout(title: appFonts.password)
                       .paddingOnly(bottom: Insets.i8, top: Insets.i20),
                   TextFieldCommon(
-                    focusNode: value.passwordFocus,
+                          focusNode: value.passwordFocus,
                           controller: value.password,
                           hintText: appFonts.enterPassword,
                           prefixIcon: eSvgAssets.lock)
@@ -71,7 +75,8 @@ class AddServicemenScreen extends StatelessWidget {
               ]).paddingSymmetric(vertical: Insets.i20).boxShapeExtension(
                   color: appColor(context).appTheme.fieldCardBg,
                   radius: AppRadius.r12),
-              ButtonCommon(title: appFonts.update,onTap: ()=> route.pop(context))
+              ButtonCommon(
+                      title: appFonts.update, onTap: () => route.pop(context))
                   .paddingOnly(top: Insets.i40, bottom: Insets.i10)
             ]).paddingAll(Insets.i20))),
       );

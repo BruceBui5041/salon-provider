@@ -1,6 +1,8 @@
+import 'dart:convert';
+
 import 'package:dio/dio.dart';
+import 'package:fixit_provider/model/response/check_auth_response.dart';
 import 'package:fixit_provider/model/response/login_response.dart';
-import 'package:json_annotation/json_annotation.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api.g.dart';
@@ -22,5 +24,16 @@ abstract class RestClient {
   Future<dynamic> resendOtp();
 
   @POST("/service")
-  Future<dynamic> createService(@Body() Map<String, dynamic> requestBody);
+  @MultiPart()
+  Future<dynamic> createService(@Body() FormData? formData);
+
+  @GET("/checkauth")
+  Future<CheckAuthResponse> checkAuth();
+
+  @PATCH("/service/publish/{serviceId}")
+  Future<dynamic> publishService(@Path("serviceId") String serviceId,
+      @Body() Map<String, dynamic> requestBody);
+
+  @PUT("/service/createdraft")
+  Future<dynamic> createServiceCraft(@Body() Map<String, dynamic> requestBody);
 }

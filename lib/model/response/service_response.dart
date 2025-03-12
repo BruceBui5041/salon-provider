@@ -1,95 +1,108 @@
-// import 'package:json_annotation/json_annotation.dart';
+// To parse this JSON data, do
+//
+//     final serviceResponse = serviceResponseFromJson(jsonString);
 
-// import 'dart:io';
+import 'package:fixit_provider/model/response/service_version_response.dart';
+import 'package:json_annotation/json_annotation.dart';
+import 'dart:convert';
 
-// part 'service_version_res_dto.g.dart';
+part 'service_response.g.dart';
 
-// @JsonSerializable(explicitToJson: true)
-// class ServiceVersionResponse extends CommonResDTO {
-//   final String title;
-//   final String description;
-//   final CategoryResponse category;
+ServiceResponse serviceResponseFromJson(String str) =>
+    ServiceResponse.fromJson(json.decode(str));
 
-//   @JsonKey(name: 'sub_category')
-//   final CategoryResponse subCategory;
+String serviceResponseToJson(ServiceResponse data) =>
+    json.encode(data.toJson());
 
-//   final UserResponseDTO creator;
+@JsonSerializable()
+class ServiceResponse {
+  final List<ItemService> data;
 
-//   final List<UserResponseDTO> instructors;
+  ServiceResponse({
+    required this.data,
+  });
 
-//   final String slug;
-//   final String thumbnail;
+  ServiceResponse copyWith({
+    List<ItemService>? data,
+  }) =>
+      ServiceResponse(
+        data: data ?? this.data,
+      );
 
-//   @JsonKey(name: 'thumbnailFile')
-//   final File? thumbnailFile;
+  factory ServiceResponse.fromJson(Map<String, dynamic> json) =>
+      ServiceResponse(
+        data: List<ItemService>.from(
+            json["data"].map((x) => ItemService.fromJson(x))),
+      );
 
-//   final String? price;
+  Map<String, dynamic> toJson() => {
+        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+      };
+}
 
-//   @JsonKey(name: 'discounted_price')
-//   final String? discountedPrice;
+@JsonSerializable()
+class ItemService {
+  @JsonKey(name: 'id')
+  final String? id;
+  @JsonKey(name: 'status')
+  final String? status;
+  @JsonKey(name: 'created_at')
+  final DateTime? createdAt;
+  @JsonKey(name: 'updated_at')
+  final DateTime? updatedAt;
+  @JsonKey(name: 'slug')
+  final String? slug;
+  @JsonKey(name: 'rating_count')
+  final int? ratingCount;
+  @JsonKey(name: 'review_info')
+  final dynamic reviewInfo;
+  @JsonKey(name: 'avg_rating')
+  final String? avgRating;
+  @JsonKey(name: 'service_version')
+  final ServiceVersion? serviceVersion;
+  @JsonKey(name: 'versions')
+  final List<ServiceVersion>? versionsResponse;
 
-//   final int? duration;
+  ItemService({
+    required this.id,
+    required this.status,
+    required this.createdAt,
+    required this.updatedAt,
+    required this.slug,
+    required this.ratingCount,
+    required this.reviewInfo,
+    required this.avgRating,
+    this.serviceVersion,
+    this.versionsResponse,
+  });
 
-//   final int? servicemen;
+  ItemService copyWith({
+    String? id,
+    String? status,
+    DateTime? createdAt,
+    DateTime? updatedAt,
+    String? slug,
+    int? ratingCount,
+    dynamic reviewInfo,
+    String? avgRating,
+    ServiceVersion? serviceVersion,
+    List<ServiceVersion>? versionsResponse,
+  }) =>
+      ItemService(
+        id: id ?? this.id,
+        status: status ?? this.status,
+        createdAt: createdAt ?? this.createdAt,
+        updatedAt: updatedAt ?? this.updatedAt,
+        slug: slug ?? this.slug,
+        ratingCount: ratingCount ?? this.ratingCount,
+        reviewInfo: reviewInfo ?? this.reviewInfo,
+        avgRating: avgRating ?? this.avgRating,
+        serviceVersion: serviceVersion ?? this.serviceVersion,
+        versionsResponse: versionsResponse ?? this.versionsResponse,
+      );
 
-//   @JsonKey(name: 'intro_video')
-//   final VideoResDTO introVideo;
+  factory ItemService.fromJson(Map<String, dynamic> json) =>
+      _$ItemServiceFromJson(json);
 
-//   @JsonKey(name: 'published_date')
-//   final String? publishedDate;
-
-//   @JsonKey(name: 'main_image')
-//   final ImageResDTO? mainImage;
-
-//   final List<ImageResDTO>? images;
-
-//   final List<VideoResDTO> videos;
-
-//   @JsonKey(name: 'review_info')
-//   final List<ReviewStar> reviewInfo;
-
-//   @JsonKey(name: 'avg_rating')
-//   final String avgRating;
-
-//   @JsonKey(name: 'rating_count')
-//   final int ratingCount;
-
-//   ServiceVersionResponse({
-//     String? updatedAt,
-//     String? createdAt,
-//     required String id,
-//     Status? status,
-//     required this.title,
-//     required this.description,
-//     required this.category,
-//     required this.subCategory,
-//     required this.creator,
-//     required this.instructors,
-//     required this.slug,
-//     required this.thumbnail,
-//     this.thumbnailFile,
-//     this.price,
-//     this.discountedPrice,
-//     this.duration,
-//     this.servicemen,
-//     required this.introVideo,
-//     this.publishedDate,
-//     this.mainImage,
-//     this.images,
-//     required this.videos,
-//     required this.reviewInfo,
-//     required this.avgRating,
-//     required this.ratingCount,
-//   }) : super(
-//           updatedAt: updatedAt,
-//           createdAt: createdAt,
-//           id: id,
-//           status: status,
-//         );
-
-//   factory ServiceVersionResponse.fromJson(Map<String, dynamic> json) =>
-//       _$ServiceVersionResDTOFromJson(json);
-
-//   @override
-//   Map<String, dynamic> toJson() => _$ServiceVersionResDTOToJson(this);
-// }
+  Map<String, dynamic> toJson() => _$ItemServiceToJson(this);
+}

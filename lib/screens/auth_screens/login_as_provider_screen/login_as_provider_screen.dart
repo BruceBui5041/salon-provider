@@ -2,8 +2,19 @@ import 'package:flutter/gestures.dart';
 
 import '../../../config.dart';
 
-class LoginAsProviderScreen extends StatelessWidget {
+class LoginAsProviderScreen extends StatefulWidget {
   const LoginAsProviderScreen({super.key});
+
+  @override
+  State<LoginAsProviderScreen> createState() => _LoginAsProviderScreenState();
+}
+
+class _LoginAsProviderScreenState extends State<LoginAsProviderScreen> {
+  @override
+  initState() {
+    super.initState();
+    Provider.of<LoginAsProvider>(context, listen: false).checkAuth(context);
+  }
 
   @override
   Widget build(BuildContext context) {

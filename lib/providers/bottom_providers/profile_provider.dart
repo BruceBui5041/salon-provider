@@ -1,5 +1,6 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:fixit_provider/config.dart';
+import 'package:fixit_provider/config/storage_config.dart';
 import 'package:flutter/cupertino.dart';
 
 class ProfileProvider with ChangeNotifier {
@@ -53,8 +54,11 @@ class ProfileProvider with ChangeNotifier {
                     Expanded(
                         child: ButtonCommon(
                             color: appColor(context).appTheme.red,
-                            onTap: () => route.pushNamedAndRemoveUntil(
-                                context, routeName.intro),
+                            onTap: () {
+                              StorageSecureConfig.deleteAll();
+                              route.pushNamedAndRemoveUntil(
+                                  context, routeName.intro);
+                            },
                             title: appFonts.yes))
                   ])
                 ],

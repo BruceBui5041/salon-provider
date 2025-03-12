@@ -1,5 +1,7 @@
 import 'package:fixit_provider/config/constant_api_config.dart';
 import 'package:fixit_provider/config/injection_config.dart';
+import 'package:fixit_provider/providers/app_pages_provider/all_service_provider.dart';
+import 'package:fixit_provider/providers/app_pages_provider/edit_service_provider.dart';
 import 'package:fixit_provider/providers/auth_provider/register_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
@@ -129,6 +131,8 @@ class MyApp extends StatelessWidget {
                   ChangeNotifierProvider(create: (_) => SearchProvider()),
                   ChangeNotifierProvider(create: (_) => ViewLocationProvider()),
                   ChangeNotifierProvider(create: (_) => RegisterProvider()),
+                  ChangeNotifierProvider(create: (_) => AllServiceProvider()),
+                  ChangeNotifierProvider(create: (_) => EditServiceProvider()),
                 ],
                 child: Consumer<ThemeService>(builder: (context, theme, child) {
                   return Consumer<LanguageProvider>(

@@ -113,7 +113,7 @@ class CompanyDetailProvider with ChangeNotifier {
                                   val: areaValue,
                                   hintText: appFonts.selectArea,
                                   isIcon: true,
-                                  categoryList: appArray.areaList,
+                                  list: appArray.areaList,
                                   onChanged: (val) => onAreaTap(val)),
                               const VSpace(Sizes.s20),
                               Row(children: [

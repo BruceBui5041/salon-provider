@@ -87,7 +87,7 @@ class FormPriceLayout extends StatelessWidget {
                 icon: eSvgAssets.receiptDiscount,
                 hintText: appFonts.selectTax,
                 isIcon: true,
-                categoryList: appArray.taxList,
+                list: appArray.taxList,
                 onChanged: (val) => value.onChangeTax(val))
             .paddingSymmetric(horizontal: Insets.i20),
         ContainerWithTextLayout(

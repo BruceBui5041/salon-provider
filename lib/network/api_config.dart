@@ -5,6 +5,7 @@ import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
 import 'package:fixit_provider/config/constant_api_config.dart';
+import 'package:fixit_provider/config/storage_config.dart';
 import 'package:fixit_provider/network/interceptor.dart';
 
 class ApiConfig {
@@ -40,5 +41,10 @@ class ApiConfig {
   // Add method to set cookies
   void setCookies(Uri uri, List<Cookie> cookies) {
     cookieJar.saveFromResponse(uri, cookies);
+  }
+
+  // return cookie
+  void getCookies(Uri uri) {
+    cookieJar.loadForRequest(uri);
   }
 }

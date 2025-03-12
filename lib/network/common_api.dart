@@ -17,6 +17,7 @@ class CommonApi {
         throw Exception("Failed to load data");
       }
     } catch (e) {
+      print(e);
       throw Exception("Failed to load data");
     }
   }

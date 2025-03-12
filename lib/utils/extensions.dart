@@ -1,5 +1,6 @@
 import 'package:diacritic/diacritic.dart';
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:intl/intl.dart';
 
 import '../config.dart';
 
@@ -61,5 +62,31 @@ extension FixitStringExtensions on String {
     slug = slug.replaceAll(RegExp(r'^-+|-+$'), '');
 
     return slug;
+  }
+
+  String toDecimal() {
+    // Loại bỏ các ký tự không phải số hoặc dấu phân cách
+    String cleanedValue = replaceAll(RegExp(r'[^0-9,.-]'), '');
+
+    // Chuyển dấu phẩy thành dấu chấm (nếu có)
+    cleanedValue = cleanedValue.replaceAll(',', '.');
+
+    // Chuyển chuỗi thành số double
+    double? number = double.tryParse(cleanedValue);
+
+    // Nếu không thể parse, trả về 0₫
+    if (number == null) return "0 ₫";
+
+    // Định dạng lại thành tiền tệ Việt Nam
+    final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+
+    return formatCurrency.format(number);
+  }
+}
+
+extension number on int {
+  String convertIntToDecimalLocalVi(int value) {
+    final formatCurrency = NumberFormat.decimalPattern('vi_VN');
+    return formatCurrency.format(value);
   }
 }

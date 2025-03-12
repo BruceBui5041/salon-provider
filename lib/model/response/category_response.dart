@@ -37,7 +37,7 @@ class CategoryResponse {
 }
 
 class CategoryItem {
-  final int? id;
+  final String? id;
   final String? status;
   final DateTime? createdAt;
   final DateTime? updatedAt;
@@ -62,7 +62,7 @@ class CategoryItem {
   });
 
   CategoryItem copyWith({
-    int? id,
+    String? id,
     String? status,
     DateTime? createdAt,
     DateTime? updatedAt,

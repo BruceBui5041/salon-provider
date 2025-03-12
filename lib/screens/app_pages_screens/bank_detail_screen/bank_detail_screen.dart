@@ -28,7 +28,7 @@ class BankDetailScreen extends StatelessWidget {
                     ContainerWithTextLayout(title: appFonts.holderName)
                         .paddingOnly(top: Insets.i10, bottom: Insets.i5),
                     TextFieldCommon(
-                        focusNode: value.holdNameFocus,
+                            focusNode: value.holdNameFocus,
                             controller: value.holderNameCtrl,
                             hintText: appFonts.holderName,
                             prefixIcon: eSvgAssets.profile)
@@ -36,7 +36,7 @@ class BankDetailScreen extends StatelessWidget {
                     ContainerWithTextLayout(title: appFonts.accountNo)
                         .paddingOnly(top: Insets.i10, bottom: Insets.i5),
                     TextFieldCommon(
-                        focusNode: value.accountFocus,
+                            focusNode: value.accountFocus,
                             controller: value.accountCtrl,
                             hintText: appFonts.accountNo,
                             prefixIcon: eSvgAssets.account)
@@ -48,13 +48,13 @@ class BankDetailScreen extends StatelessWidget {
                             val: value.branchValue,
                             hintText: appFonts.branchName,
                             isIcon: true,
-                            categoryList: appArray.branchList,
+                            list: appArray.branchList,
                             onChanged: (val) => value.onBranch(val))
                         .paddingSymmetric(horizontal: Insets.i20),
                     ContainerWithTextLayout(title: appFonts.ifscCode)
                         .paddingOnly(top: Insets.i10, bottom: Insets.i5),
                     TextFieldCommon(
-                        focusNode: value.ifscFocus,
+                            focusNode: value.ifscFocus,
                             controller: value.ifscCtrl,
                             hintText: appFonts.ifscCode,
                             prefixIcon: eSvgAssets.identity)
@@ -62,14 +62,16 @@ class BankDetailScreen extends StatelessWidget {
                     ContainerWithTextLayout(title: appFonts.swiftCode)
                         .paddingOnly(top: Insets.i10, bottom: Insets.i5),
                     TextFieldCommon(
-                        focusNode: value.swiftFocus,
+                            focusNode: value.swiftFocus,
                             controller: value.swiftCtrl,
                             hintText: appFonts.swiftCode,
                             prefixIcon: eSvgAssets.identity)
                         .paddingSymmetric(horizontal: Insets.i20),
                   ]).paddingSymmetric(vertical: Insets.i20)
             ]),
-            ButtonCommon(title: appFonts.update,onTap: ()=> route.pop(context)).paddingOnly(bottom: Insets.i10, top: Insets.i40)
+            ButtonCommon(
+                    title: appFonts.update, onTap: () => route.pop(context))
+                .paddingOnly(bottom: Insets.i10, top: Insets.i40)
           ]).paddingAll(Insets.i20)));
     });
   }

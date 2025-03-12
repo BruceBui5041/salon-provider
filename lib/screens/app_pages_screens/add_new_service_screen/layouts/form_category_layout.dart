@@ -16,20 +16,20 @@ class FormCategoryLayout extends StatelessWidget {
           .paddingOnly(top: Insets.i24, bottom: Insets.i12),
       DropDownLayout(
               icon: eSvgAssets.categorySmall,
-              val: value.categoryValue,
+              val: value.categoryValue!.name,
               hintText: appFonts.select,
               isIcon: true,
-              categoryList: appArray.allCategories,
+              list: appArray.allCategories,
               onChanged: (val) => value.onChangeCategory(val))
           .paddingSymmetric(horizontal: Insets.i20),
       ContainerWithTextLayout(title: language(context, appFonts.subCategory))
           .paddingOnly(top: Insets.i24, bottom: Insets.i12),
       DropDownLayout(
               icon: eSvgAssets.subCategory,
-              val: value.subCategoryValue,
+              val: value.subCategoryValue?.name,
               isIcon: true,
               hintText: appFonts.select,
-              categoryList: appArray.allCategories,
+              list: appArray.allCategories,
               onChanged: (val) => value.onChangeSubCategory(val))
           .paddingSymmetric(horizontal: Insets.i20),
       ContainerWithTextLayout(

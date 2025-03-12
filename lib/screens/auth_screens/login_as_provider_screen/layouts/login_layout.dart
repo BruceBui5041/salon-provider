@@ -76,12 +76,11 @@ class LoginLayout extends StatelessWidget {
               ButtonCommon(
                   title: appFonts.loginNow,
                   onTap: () {
-                    // if (isProvider == true) {
-                    //   value.onLogin(context);
-                    // } else {
-                    //   value2.onLogin(context);
-                    // }
-                    route.pushNamed(context, routeName.dashboard);
+                    if (isProvider == true) {
+                      value.onLogin(context);
+                    } else {
+                      value2.onLogin(context);
+                    }
                   }).paddingSymmetric(horizontal: Insets.i20),
               if (isProvider == true)
                 RichText(

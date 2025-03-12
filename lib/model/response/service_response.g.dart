@@ -1,0 +1,55 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'service_response.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+ServiceResponse _$ServiceResponseFromJson(Map<String, dynamic> json) =>
+    ServiceResponse(
+      data: (json['data'] as List<dynamic>)
+          .map((e) => ItemService.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ServiceResponseToJson(ServiceResponse instance) =>
+    <String, dynamic>{
+      'data': instance.data,
+    };
+
+ItemService _$ItemServiceFromJson(Map<String, dynamic> json) => ItemService(
+      id: json['id'] as String?,
+      status: json['status'] as String?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.parse(json['updated_at'] as String),
+      slug: json['slug'] as String?,
+      ratingCount: (json['rating_count'] as num?)?.toInt(),
+      reviewInfo: json['review_info'],
+      avgRating: json['avg_rating'] as String?,
+      serviceVersion: json['service_version'] == null
+          ? null
+          : ServiceVersion.fromJson(
+              json['service_version'] as Map<String, dynamic>),
+      versionsResponse: (json['versions'] as List<dynamic>?)
+          ?.map((e) => ServiceVersion.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ItemServiceToJson(ItemService instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'status': instance.status,
+      'created_at': instance.createdAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
+      'slug': instance.slug,
+      'rating_count': instance.ratingCount,
+      'review_info': instance.reviewInfo,
+      'avg_rating': instance.avgRating,
+      'service_version': instance.serviceVersion,
+      'versions': instance.versionsResponse,
+    };

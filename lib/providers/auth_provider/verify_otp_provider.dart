@@ -1,7 +1,11 @@
 import 'dart:async';
+import 'package:fixit_provider/config/injection_config.dart';
+import 'package:fixit_provider/screens/auth_screens/verify_otp_screen/repository/verify_otp_repository.dart';
+
 import '../../config.dart';
 
 class VerifyOtpProvider with ChangeNotifier {
+  var repo = getIt<VerifyOtpRepository>();
   TextEditingController otpController = TextEditingController();
   GlobalKey<FormState> otpKey = GlobalKey<FormState>();
 
@@ -11,6 +15,17 @@ class VerifyOtpProvider with ChangeNotifier {
   final FocusNode phoneFocus = FocusNode();
   Duration myDuration = const Duration(seconds: 60);
 
+  Future<void> verifyOtp({Function()? onSucess}) async {
+    String otp = otpController.text;
+    try {
+      await repo.verifyOtp({"otp": otp});
+      if (onSucess != null) {
+        onSucess();
+      }
+    } catch (e) {
+      print(e);
+    }
+  }
 
   defaultTheme(context) {
     final defaultPinTheme = PinTheme(
@@ -24,6 +39,4 @@ class VerifyOtpProvider with ChangeNotifier {
             border: Border.all(color: appColor(context).appTheme.whiteBg)));
     return defaultPinTheme;
   }
-
-
 }

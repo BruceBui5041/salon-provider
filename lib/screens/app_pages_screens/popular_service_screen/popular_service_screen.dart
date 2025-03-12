@@ -10,11 +10,9 @@ class PopularServiceScreen extends StatelessWidget {
         appBar: AppBarCommon(title: appFonts.popularService),
         body: SingleChildScrollView(
             child: Column(children: [
-              SearchTextFieldCommon(
-                focusNode: value.searchFocus,
-                  controller: value.searchCtrl
-                  )
-                  .padding(bottom: Insets.i20),
+          SearchTextFieldCommon(
+                  focusNode: value.searchFocus, controller: value.searchCtrl)
+              .padding(bottom: Insets.i20),
           ...appArray.popularServiceList.asMap().entries.map((e) =>
               FeaturedServicesLayout(
                   data: e.value,

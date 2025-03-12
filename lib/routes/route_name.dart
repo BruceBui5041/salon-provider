@@ -61,4 +61,6 @@ class RouteName {
   final String search = 'search';
   final String viewLocation = 'viewLocation';
   final String registerScreen = 'registerScreen';
+  final String addSingleService = 'addSingleService';
+  final String editService = 'editService';
 }

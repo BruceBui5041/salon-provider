@@ -17,6 +17,12 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   }
 
   @override
+  void dispose() {
+    Provider.of<AddNewServiceProvider>(context, listen: false).clearInput();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<AddNewServiceProvider>(builder: (context1, value, child) {
       return StatefulWrapper(
@@ -46,9 +52,9 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                 ]),
                 ButtonCommon(
                     title: value.isEdit ? appFonts.update : appFonts.addService,
-                    onTap: () =>
-                        route.pop(context)).paddingOnly(
-                    top: Insets.i40, bottom: Insets.i30)
+                    onTap: () {
+                      value.addService();
+                    }).paddingOnly(top: Insets.i40, bottom: Insets.i30)
               ]).paddingSymmetric(horizontal: Insets.i20))),
         ),
       );

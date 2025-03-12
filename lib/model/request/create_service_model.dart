@@ -1,124 +1,139 @@
-// To parse this JSON data, do
-//
-//     final createServiceRequestModel = createServiceRequestModelFromJson(jsonString);
+// import 'dart:convert';
+// import 'package:dio/dio.dart';
+// import 'package:json_annotation/json_annotation.dart';
+// part 'create_service_model.g.dart';
 
-import 'dart:convert';
+// @JsonSerializable()
+// class ServiceRequest {
+//   @JsonKey(name: "slug")
+//   final String slug;
+//   @JsonKey(name: "images")
+//   final List<MultipartFile> images;
 
-CreateServiceRequestModel createServiceRequestModelFromJson(String str) =>
-    CreateServiceRequestModel.fromJson(json.decode(str));
+//   ServiceRequest({
+//     required this.slug,
+//     required this.images,
+//   });
 
-String createServiceRequestModelToJson(CreateServiceRequestModel data) =>
-    json.encode(data.toJson());
+//   // ✅ Convert from JSON
+//   factory ServiceRequest.fromJson(Map<String, dynamic> json) {
+//     return ServiceRequest(
+//       slug: json["slug"],
+//       images: (json["images"] as List)
+//           .map((file) => file as MultipartFile)
+//           .toList(),
+//     );
+//   }
 
-class CreateServiceRequestModel {
-  final String slug;
-  final ServiceVersion serviceVersion;
+//   // ✅ Convert to JSON
+//   Map<String, dynamic> toJson() {
+//     return {
+//       "slug": slug,
+//       "images": images,
+//     };
+//   }
 
-  CreateServiceRequestModel({
-    required this.slug,
-    required this.serviceVersion,
-  });
+//   // ✅ Clone object
+//   ServiceRequest copyWith({
+//     String? slug,
+//     ServiceVersion? serviceVersion,
+//     List<MultipartFile>? images,
+//     MultipartFile? thumbnail,
+//   }) {
+//     return ServiceRequest(
+//       slug: slug ?? this.slug,
+//       images: images ?? this.images,
+//     );
+//   }
+// }
 
-  CreateServiceRequestModel copyWith({
-    String? slug,
-    ServiceVersion? serviceVersion,
-  }) =>
-      CreateServiceRequestModel(
-        slug: slug ?? this.slug,
-        serviceVersion: serviceVersion ?? this.serviceVersion,
-      );
+// // ===============================
+// // 📌 Class con: `ServiceVersion`
+// // ===============================
+// class ServiceVersion {
+//   @JsonKey(name: "title")
+//   final String title;
+//   @JsonKey(name: "description")
+//   final String description;
+//   @JsonKey(name: "category_id")
+//   final String categoryId;
+//   @JsonKey(name: "sub_category_id")
+//   final String subCategoryId;
+//   @JsonKey(name: "thumbnail")
+//   final MultipartFile thumbnail;
+//   @JsonKey(name: "price")
+//   final String price;
+//   @JsonKey(name: "discounted_price")
+//   final String discountedPrice;
+//   @JsonKey(name: "duration")
+//   final int duration;
+//   @JsonKey(name: "main_image_id")
+//   final int mainImageId;
 
-  factory CreateServiceRequestModel.fromJson(Map<String, dynamic> json) =>
-      CreateServiceRequestModel(
-        slug: json["slug"],
-        serviceVersion: ServiceVersion.fromJson(json["service_version"]),
-      );
+//   ServiceVersion({
+//     required this.title,
+//     required this.description,
+//     required this.categoryId,
+//     required this.subCategoryId,
+//     required this.thumbnail,
+//     required this.price,
+//     required this.discountedPrice,
+//     required this.duration,
+//     required this.mainImageId,
+//   });
 
-  Map<String, dynamic> toJson() => {
-        "slug": slug,
-        "service_version": serviceVersion.toJson(),
-      };
-}
+//   // ✅ Convert from JSON
+//   factory ServiceVersion.fromJson(Map<String, dynamic> json) {
+//     return ServiceVersion(
+//       title: json["title"],
+//       description: json["description"],
+//       categoryId: json["category_id"],
+//       subCategoryId: json["sub_category_id"],
+//       thumbnail: json["thumbnail"] as MultipartFile,
+//       price: json["price"],
+//       discountedPrice: json["discounted_price"],
+//       duration: json["duration"],
+//       mainImageId: json["main_image_id"],
+//     );
+//   }
 
-class ServiceVersion {
-  final String title;
-  final String description;
-  final String categoryId;
-  final String subCategoryId;
-  final String introVideoId;
-  final String thumbnail;
-  final String price;
-  final String discountedPrice;
-  final List<String> images;
-  final int duration;
-  final String mainImageId;
+//   // ✅ Convert to JSON
+//   Map<String, dynamic> toJson() {
+//     return {
+//       "title": title,
+//       "description": description,
+//       "category_id": categoryId,
+//       "sub_category_id": subCategoryId,
+//       "thumbnail": thumbnail,
+//       "price": price,
+//       "discounted_price": discountedPrice,
+//       "duration": duration,
+//       "main_image_id": mainImageId,
+//     };
+//   }
 
-  ServiceVersion({
-    required this.title,
-    required this.description,
-    required this.categoryId,
-    required this.subCategoryId,
-    required this.introVideoId,
-    required this.thumbnail,
-    required this.price,
-    required this.discountedPrice,
-    required this.images,
-    required this.duration,
-    required this.mainImageId,
-  });
-
-  ServiceVersion copyWith({
-    String? title,
-    String? description,
-    String? categoryId,
-    String? subCategoryId,
-    String? introVideoId,
-    String? thumbnail,
-    String? price,
-    String? discountedPrice,
-    List<String>? images,
-    int? duration,
-    String? mainImageId,
-  }) =>
-      ServiceVersion(
-        title: title ?? this.title,
-        description: description ?? this.description,
-        categoryId: categoryId ?? this.categoryId,
-        subCategoryId: subCategoryId ?? this.subCategoryId,
-        introVideoId: introVideoId ?? this.introVideoId,
-        thumbnail: thumbnail ?? this.thumbnail,
-        price: price ?? this.price,
-        discountedPrice: discountedPrice ?? this.discountedPrice,
-        images: images ?? this.images,
-        duration: duration ?? this.duration,
-        mainImageId: mainImageId ?? this.mainImageId,
-      );
-
-  factory ServiceVersion.fromJson(Map<String, dynamic> json) => ServiceVersion(
-        title: json["title"],
-        description: json["description"],
-        categoryId: json["category_id"],
-        subCategoryId: json["sub_category_id"],
-        introVideoId: json["intro_video_id?"],
-        thumbnail: json["thumbnail"],
-        price: json["price"],
-        discountedPrice: json["discounted_price"],
-        images: List<String>.from(json["images"].map((x) => x)),
-        duration: json["duration"],
-        mainImageId: json["main_image_id"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "title": title,
-        "description": description,
-        "category_id": categoryId,
-        "sub_category_id": subCategoryId,
-        "intro_video_id?": introVideoId,
-        "thumbnail": thumbnail,
-        "price": price,
-        "discounted_price": discountedPrice,
-        "images": List<dynamic>.from(images.map((x) => x)),
-        "duration": duration,
-        "main_image_id": mainImageId,
-      };
-}
+//   // ✅ Clone object
+//   ServiceVersion copyWith({
+//     String? title,
+//     String? description,
+//     String? categoryId,
+//     String? subCategoryId,
+//     MultipartFile? thumbnail,
+//     String? price,
+//     String? discountedPrice,
+//     int? duration,
+//     int? mainImageId,
+//   }) {
+//     return ServiceVersion(
+//       title: title ?? this.title,
+//       description: description ?? this.description,
+//       categoryId: categoryId ?? this.categoryId,
+//       subCategoryId: subCategoryId ?? this.subCategoryId,
+//       thumbnail: thumbnail ?? this.thumbnail,
+//       price: price ?? this.price,
+//       discountedPrice: discountedPrice ?? this.discountedPrice,
+//       duration: duration ?? this.duration,
+//       mainImageId: mainImageId ?? this.mainImageId,
+//     );
+//   }
+// }
