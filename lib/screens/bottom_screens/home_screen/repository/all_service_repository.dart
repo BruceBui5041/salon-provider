@@ -13,6 +13,10 @@ class AllServiceRepository extends RepositoryConfig {
           [Condition(source: "creator_id", operator: "=", target: userId ?? '')]
         ], fields: [
           FieldItem(field: "versions"),
+          FieldItem(field: "service_version.main_image"),
+          FieldItem(field: "service_version.images"),
+          FieldItem(field: "service_version.category"),
+          FieldItem(field: "images"),
           FieldItem(field: "service_version")
         ]).toJson());
     return res;

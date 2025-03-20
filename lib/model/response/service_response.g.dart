@@ -38,6 +38,9 @@ ItemService _$ItemServiceFromJson(Map<String, dynamic> json) => ItemService(
       versionsResponse: (json['versions'] as List<dynamic>?)
           ?.map((e) => ServiceVersion.fromJson(e as Map<String, dynamic>))
           .toList(),
+      imageResponse: (json['images'] as List<dynamic>?)
+          ?.map((e) => ImageResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ItemServiceToJson(ItemService instance) =>
@@ -52,4 +55,5 @@ Map<String, dynamic> _$ItemServiceToJson(ItemService instance) =>
       'avg_rating': instance.avgRating,
       'service_version': instance.serviceVersion,
       'versions': instance.versionsResponse,
+      'images': instance.imageResponse,
     };

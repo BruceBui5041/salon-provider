@@ -1,3 +1,4 @@
+import 'package:dio/dio.dart';
 import 'package:fixit_provider/common/enum_value.dart';
 import 'package:fixit_provider/config/repository_config.dart';
 import 'package:fixit_provider/model/request/search_request_model.dart';
@@ -16,6 +17,10 @@ class EditServiceRepository extends RepositoryConfig {
     await api.createServiceCraft({
       "service_id": serviceId,
     });
+  }
+
+  Future<void> updateService(String serviceId, FormData formData) async {
+    await api.updateCraftService(serviceId, formData);
   }
 
   Future<void> getAllServiceVersions(String serviceId) async {

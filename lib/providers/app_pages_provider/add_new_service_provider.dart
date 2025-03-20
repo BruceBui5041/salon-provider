@@ -93,6 +93,11 @@ class AddNewServiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void changeDuration(int text) {
+    duration.text = text.toString();
+    notifyListeners();
+  }
+
   Future<void> addService() async {
     var images = listMultipartServiceImage;
     var thumbNail = await MultipartFile.fromFile(
@@ -116,7 +121,7 @@ class AddNewServiceProvider with ChangeNotifier {
           "thumbnail": thumbFile!.path, // Chuyển đổi đúng dạng MultipartFile
           "price": priceController.text,
           "discounted_price": discountedPriceController.text,
-          "duration": int.parse(durationController.text),
+          "duration": int.parse(durationValue!),
           // "main_image_id": "2", // Chuyển đổi đúng dạng MultipartFile
         }
       }).toString(),
@@ -359,7 +364,7 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   onChangeDuration(val) {
-    durationValue = val;
+    durationValue = val.toString();
     notifyListeners();
   }
 }

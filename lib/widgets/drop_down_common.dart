@@ -4,10 +4,12 @@ import 'package:fixit_provider/model/response/category_response.dart';
 
 import '../../../../config.dart';
 
-class DropDownLayout extends StatelessWidget {
-  final String? icon, hintText, val;
-  final List? list;
+class DropDownLayout<T> extends StatelessWidget {
+  final String? icon, hintText;
+  final T? val;
+  final List<T>? list;
   final ValueChanged? onChanged;
+  final Function(T)? showValue;
   final bool? isIcon, isField, isBig, isListIcon, isOnlyText;
 
   const DropDownLayout(
@@ -20,6 +22,7 @@ class DropDownLayout extends StatelessWidget {
       this.isIcon = false,
       this.isBig = false,
       this.list,
+      this.showValue,
       this.isListIcon = false,
       this.isOnlyText = false});
 
@@ -27,7 +30,7 @@ class DropDownLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
             child: ButtonTheme(
-                child: DropdownButtonFormField(
+                child: DropdownButtonFormField<T>(
                     hint: Text(language(context, hintText ?? ""),
                         style: appCss.dmDenseMedium14
                             .textColor(appColor(context).appTheme.lightText)),
@@ -68,31 +71,27 @@ class DropDownLayout extends StatelessWidget {
                     isDense: true,
                     isExpanded: true,
                     items: list!.asMap().entries.map((e) {
-                      var val = e.value as CategoryItem;
-                      return DropdownMenuItem<CategoryItem>(
+                      var val = e.value as T;
+                      return DropdownMenuItem<T>(
                           value: val,
                           child: Row(
                             children: [
-                              if (isListIcon == true)
-                                SizedBox(
-                                        height: Sizes.s13,
-                                        width: Sizes.s13,
-                                        child: Image.network(
-                                          val.image ?? '',
-                                          fit: BoxFit.scaleDown,
-                                        ))
-                                    .paddingAll(Insets.i4)
-                                    .decorated(
-                                        color: appColor(context)
-                                            .appTheme
-                                            .fieldCardBg,
-                                        shape: BoxShape.circle),
-                              if (isListIcon == true) const HSpace(Sizes.s12),
-                              Text(language(context, val.name ?? ''),
-                                  style: appCss.dmDenseMedium14.textColor(val ==
-                                          null
-                                      ? appColor(context).appTheme.lightText
-                                      : appColor(context).appTheme.darkText)),
+                              // if (isListIcon == true)
+                              //   SizedBox(
+                              //           height: Sizes.s13,
+                              //           width: Sizes.s13,
+                              //           child: Image.network(
+                              //             val.image ?? '',
+                              //             fit: BoxFit.scaleDown,
+                              //           ))
+                              //       .paddingAll(Insets.i4)
+                              //       .decorated(
+                              //           color: appColor(context)
+                              //               .appTheme
+                              //               .fieldCardBg,
+                              //           shape: BoxShape.circle),
+                              // if (isListIcon == true) const HSpace(Sizes.s12),
+                              showValue!(val),
                             ],
                           ));
                     }).toList(),

@@ -7,6 +7,7 @@ import 'package:fixit_provider/config.dart';
 import 'package:fixit_provider/config/injection_config.dart';
 import 'package:fixit_provider/model/response/category_response.dart';
 import 'package:fixit_provider/model/response/service_response.dart';
+import 'package:fixit_provider/model/response/service_version_response.dart';
 import 'package:fixit_provider/network/api_config.dart';
 import 'package:fixit_provider/screens/app_pages_screens/add_new_service_screen/repository/add_new_service_repository.dart';
 import 'package:fixit_provider/screens/app_pages_screens/edit_service_screen/repository/edit_service_repository.dart';
@@ -19,6 +20,7 @@ class EditServiceProvider extends ChangeNotifier {
 
   CategoryItem? categoryValue;
   CategoryItem? subCategoryValue;
+  ServiceVersion? serviceVersionCraft;
   String? durationValue;
   int selectIndex = 0;
   String? taxIndex;
@@ -58,6 +60,8 @@ class EditServiceProvider extends ChangeNotifier {
   FocusNode priceFocus = FocusNode();
   FocusNode discountedPriceFocus = FocusNode();
 
+  bool? showDraft = false;
+
   XFile? imageFile, thumbFile;
   String? image, thumbImage;
 
@@ -74,11 +78,26 @@ class EditServiceProvider extends ChangeNotifier {
 
   void passData(ItemService item, {Function? callback}) {
     itemService = item;
+    // if(categoryResponse == null) {
+    //  categoryValue = categoryResponse!.data!
+    //     .firstWhere((element) => element == itemService!.slug);
+    // }
+
     notifyListeners();
     if (callback != null) {
       callback();
     }
     // Your code here
+  }
+
+  void onCraftSelected(ServiceVersion serviceVersion) {
+    serviceVersionCraft = serviceVersion;
+    notifyListeners();
+  }
+
+  void onShowDraft(bool val) {
+    showDraft = val;
+    notifyListeners();
   }
 
   void initData() {
@@ -120,6 +139,8 @@ class EditServiceProvider extends ChangeNotifier {
     }
   }
 
+  Future<void> saveCraft() async {}
+
   Future<void> createCrat() async {
     await repoEdit.createCraft(itemService!.id!);
   }
@@ -150,7 +171,7 @@ class EditServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> addService() async {
+  Future<void> updateServiceCraft({Function()? callBack}) async {
     var images = listMultipartServiceImage;
     var thumbNail = await MultipartFile.fromFile(
       thumbFile!.path,
@@ -192,8 +213,8 @@ class EditServiceProvider extends ChangeNotifier {
     // });
 
     try {
-      var res = await ApiConfig().dio.post(
-            "/service",
+      var res = await ApiConfig().dio.put(
+            "/service/${itemService!.id}",
             data: formData,
             options: Options(
               contentType: "multipart/form-data",
@@ -205,6 +226,9 @@ class EditServiceProvider extends ChangeNotifier {
         print(e.response!.data);
       }
       log("ERROR: $e");
+    }
+    if (callBack != null) {
+      callBack();
     }
     notifyListeners();
   }

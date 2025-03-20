@@ -1,13 +1,8 @@
-import 'dart:math';
-
-import 'package:fixit_provider/common/theme/app_css.dart';
 import 'package:fixit_provider/config.dart';
 import 'package:fixit_provider/model/response/service_response.dart';
 import 'package:fixit_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:fixit_provider/providers/app_pages_provider/edit_service_provider.dart';
-import 'package:fixit_provider/providers/bottom_providers/home_provider.dart';
 import 'package:fixit_provider/widgets/cache_image.dart';
-import 'package:flutter/material.dart';
 
 class AllServiceLayout extends StatefulWidget {
   const AllServiceLayout({super.key});
@@ -55,7 +50,7 @@ class _AllServiceLayoutState extends State<AllServiceLayout> {
                 height: Sizes.s150,
                 width: MediaQuery.of(context).size.width,
                 child: CacheImageWidget(
-                  url: value.serviceVersion?.thumbnail ?? '',
+                  url: value.imageResponse?[0].url ?? '',
                 ),
               ),
               const VSpace(Sizes.s12),

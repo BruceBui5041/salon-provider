@@ -25,6 +25,13 @@ ServiceVersion _$ServiceVersionFromJson(Map<String, dynamic> json) =>
       publishedDate: json['published_date'] == null
           ? null
           : DateTime.parse(json['published_date'] as String),
+      categoryResponse: json['category'] == null
+          ? null
+          : CategoryItem.fromJson(json['category'] as Map<String, dynamic>),
+      mainImageResponse: json['main_image'] == null
+          ? null
+          : MainImageResponse.fromJson(
+              json['main_image'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ServiceVersionToJson(ServiceVersion instance) =>
@@ -40,4 +47,6 @@ Map<String, dynamic> _$ServiceVersionToJson(ServiceVersion instance) =>
       'discounted_price': instance.discountedPrice,
       'duration': instance.duration,
       'published_date': instance.publishedDate?.toIso8601String(),
+      'category': instance.categoryResponse,
+      'main_image': instance.mainImageResponse,
     };

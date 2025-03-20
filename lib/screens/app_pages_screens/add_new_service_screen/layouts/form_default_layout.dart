@@ -177,7 +177,7 @@ class FormServiceDefaultLayout extends StatelessWidget {
         const VSpace(Sizes.s8),
         _titleInput(value),
         const VSpace(Sizes.s8),
-        _durationInput(value),
+        _durationInput(context, value),
         const VSpace(Sizes.s8),
         _priceInput(value),
         const VSpace(Sizes.s8),
@@ -256,8 +256,13 @@ class FormServiceDefaultLayout extends StatelessWidget {
     );
   }
 
-  Widget _durationInput(AddNewServiceProvider value) {
-    return TimeDropdown().paddingSymmetric(horizontal: Insets.i20);
+  Widget _durationInput(BuildContext context, AddNewServiceProvider value) {
+    return TimeDropdown(
+      onChanged: (p0) {
+        Provider.of<AddNewServiceProvider>(context, listen: false)
+            .onChangeDuration(p0);
+      },
+    );
   }
 }
 
@@ -284,6 +289,8 @@ class FormServiceDefaultLayout extends StatelessWidget {
 // }
 
 class TimeDropdown extends StatefulWidget {
+  const TimeDropdown({super.key, this.onChanged});
+  final Function(int)? onChanged;
   @override
   _TimeDropdownState createState() => _TimeDropdownState();
 }
@@ -332,6 +339,7 @@ class _TimeDropdownState extends State<TimeDropdown> {
                 onChanged: (String? newValue) {
                   setState(() {
                     _selectedItem = newValue;
+                    widget.onChanged?.call(convertToMinutes(newValue!));
                     _minutes =
                         newValue != null ? convertToMinutes(newValue) : null;
                   });

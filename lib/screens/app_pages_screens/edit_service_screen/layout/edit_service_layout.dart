@@ -1,4 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:fixit_provider/model/response/category_response.dart';
 import 'package:fixit_provider/model/response/service_version_response.dart';
 import 'package:fixit_provider/providers/app_pages_provider/edit_service_provider.dart';
 import 'package:fixit_provider/widgets/dropdown_common.dart';
@@ -67,9 +68,19 @@ class _FormEditServiceDefaultLayoutState
           padding: EdgeInsets.symmetric(
             horizontal: Insets.i15,
           ),
-          child: DropDownLayout(
+          child: DropDownLayout<CategoryItem>(
+            val: value.categoryResponse != null &&
+                    value.categoryResponse!.data.isNotEmpty
+                ? value.categoryResponse?.data.firstWhere((e) =>
+                    e.id ==
+                    value.itemService!.serviceVersion!.categoryResponse!.id)
+                : null,
             isBig: true,
             isField: true,
+            showValue: (val) => Text(language(context, val.name ?? ''),
+                style: appCss.dmDenseMedium14.textColor(val.name == null
+                    ? appColor(context).appTheme.lightText
+                    : appColor(context).appTheme.darkText)),
             onChanged: (val) => value.onChangeCategory(val),
             list: value.categoryResponse?.data ?? [],
           ),
@@ -88,8 +99,18 @@ class _FormEditServiceDefaultLayoutState
             horizontal: Insets.i15,
           ),
           child: DropDownLayout(
+            val: value.subCategoryResponse != null &&
+                    value.subCategoryResponse!.data.isNotEmpty
+                ? value.subCategoryResponse?.data.firstWhere((e) =>
+                    e.id ==
+                    value.itemService!.serviceVersion!.categoryResponse!.id)
+                : null,
             isBig: true,
             isField: true,
+            showValue: (val) => Text(language(context, val.name ?? ''),
+                style: appCss.dmDenseMedium14.textColor(val.name == null
+                    ? appColor(context).appTheme.lightText
+                    : appColor(context).appTheme.darkText)),
             onChanged: (val) => value.onChangeSubCategory(val),
             list: value.subCategoryResponse?.data ?? [],
           ),
@@ -264,7 +285,13 @@ class _FormEditServiceDefaultLayoutState
   }
 
   Widget _durationInput(EditServiceProvider value) {
-    return TimeDropdown().paddingSymmetric(horizontal: Insets.i20);
+    return TimeDropdown(
+      initValue: value.itemService?.serviceVersion!.duration,
+      onChanged: (val) {
+        Provider.of<EditServiceProvider>(context, listen: false)
+            .onChangeDuration(val);
+      },
+    );
   }
 
   Widget _dropdownDraftService(
@@ -285,9 +312,13 @@ class _FormEditServiceDefaultLayoutState
                   "${item.title} (${item.publishedDate != null ? "Published" : "Draft"})",
               // itemImage: (item) => item.,
               onChanged: (newValue) {
-                setState(() {
-                  // selectedCategory = newValue;
-                });
+                print(newValue);
+
+                Provider.of<EditServiceProvider>(context, listen: false)
+                    .onCraftSelected(newValue!);
+                Provider.of<EditServiceProvider>(context, listen: false)
+                    .onShowDraft(
+                        newValue!.publishedDate != null ? false : true);
               },
             )),
       ],
@@ -318,6 +349,9 @@ class _FormEditServiceDefaultLayoutState
 // }
 
 class TimeDropdown extends StatefulWidget {
+  const TimeDropdown({super.key, this.onChanged, this.initValue});
+  final Function(int)? onChanged;
+  final int? initValue;
   @override
   _TimeDropdownState createState() => _TimeDropdownState();
 }
@@ -327,6 +361,15 @@ class _TimeDropdownState extends State<TimeDropdown> {
   int? _minutes;
 
   final List<String> _timeItems = ['15p', '30p', '1h', '2h', '3h', '5h'];
+
+  @override
+  void initState() {
+    _selectedItem = widget.initValue != null
+        ? _timeItems.firstWhere(
+            (element) => convertToMinutes(element) == widget.initValue)
+        : null;
+    super.initState();
+  }
 
   // Hàm chuyển đổi giá trị thành số phút
   int convertToMinutes(String time) {
@@ -365,6 +408,7 @@ class _TimeDropdownState extends State<TimeDropdown> {
                 }).toList(),
                 onChanged: (String? newValue) {
                   setState(() {
+                    widget.onChanged!(convertToMinutes(newValue!));
                     _selectedItem = newValue;
                     _minutes =
                         newValue != null ? convertToMinutes(newValue) : null;

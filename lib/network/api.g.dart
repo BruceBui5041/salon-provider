@@ -138,6 +138,33 @@ class _RestClient implements RestClient {
   }
 
   @override
+  Future<dynamic> updateCraftService(String id, FormData? formData) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    queryParameters.removeWhere((k, v) => v == null);
+    final _headers = <String, dynamic>{};
+    final _data = formData;
+    final _options = _setStreamType<dynamic>(
+      Options(
+        method: 'PUT',
+        headers: _headers,
+        extra: _extra,
+        contentType: 'multipart/form-data',
+      )
+          .compose(
+            _dio.options,
+            '/service/${id}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch(_options);
+    final _value = _result.data;
+    return _value;
+  }
+
+  @override
   Future<CheckAuthResponse> checkAuth() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};

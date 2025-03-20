@@ -27,6 +27,11 @@ abstract class RestClient {
   @MultiPart()
   Future<dynamic> createService(@Body() FormData? formData);
 
+  @PUT("/service/{serviceId}")
+  @MultiPart()
+  Future<dynamic> updateCraftService(
+      @Path("serviceId") String id, @Body() FormData? formData);
+
   @GET("/checkauth")
   Future<CheckAuthResponse> checkAuth();
 

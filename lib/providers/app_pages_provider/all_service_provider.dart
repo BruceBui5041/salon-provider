@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:fixit_provider/config/injection_config.dart';
 import 'package:fixit_provider/model/response/service_response.dart';
 import 'package:fixit_provider/screens/bottom_screens/home_screen/repository/all_service_repository.dart';

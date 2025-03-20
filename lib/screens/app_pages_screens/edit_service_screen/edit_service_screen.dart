@@ -28,9 +28,13 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<EditServiceProvider>(builder: (context1, value, child) {
-      var isCanSetDraft = value.itemService?.versionsResponse
+      bool? isCanSetDraft = value.itemService?.versionsResponse
           ?.where((e) => e.publishedDate == null)
-          .toList();
+          .toList()
+          .isEmpty;
+      if (value.showDraft!) {
+        isCanSetDraft = true;
+      }
       return StatefulWrapper(
         onInit: () => Future.delayed(
             const Duration(milliseconds: 500), () => value.initData()),
@@ -52,31 +56,42 @@ class _EditServiceScreenState extends State<EditServiceScreen> {
                         FormEditServiceDefaultLayout(),
                       ]).paddingSymmetric(vertical: Insets.i20)
                 ]),
-                if (isCanSetDraft!.isEmpty)
-                  ButtonCommon(
-                      color: Colors.red,
-                      title: "New draft",
-                      onTap: () {
-                        value.publishService(callBack: () {
-                          Navigator.of(context).pop();
-                        });
-                      }).paddingOnly(
-                    top: Insets.i40,
-                    bottom: Insets.i10,
+                if (value.showDraft!)
+                  Row(
+                    children: [
+                      if (!isCanSetDraft!)
+                        Expanded(
+                          child: Padding(
+                            padding: const EdgeInsets.only(right: Insets.i10),
+                            child: ButtonCommon(
+                                color: Colors.red,
+                                title: "New draft",
+                                onTap: () {
+                                  value.publishService(callBack: () {
+                                    Navigator.of(context).pop();
+                                  });
+                                }).paddingOnly(
+                              bottom: Insets.i10,
+                            ),
+                          ),
+                        ),
+                      if (isCanSetDraft)
+                        Expanded(
+                          child: ButtonCommon(
+                              color: Colors.red,
+                              title: "Save",
+                              onTap: () {
+                                value.updateServiceCraft(callBack: () {
+                                  Navigator.of(context).pop();
+                                });
+                              }).paddingOnly(
+                            // top: Insets.i40,
+                            bottom: Insets.i10,
+                          ),
+                        ),
+                    ],
                   ),
-                if (isCanSetDraft.isEmpty)
-                  ButtonCommon(
-                      color: Colors.red,
-                      title: "Save",
-                      onTap: () {
-                        value.publishService(callBack: () {
-                          Navigator.of(context).pop();
-                        });
-                      }).paddingOnly(
-                    // top: Insets.i40,
-                    bottom: Insets.i10,
-                  ),
-                if (isCanSetDraft.isNotEmpty)
+                if (isCanSetDraft!)
                   ButtonCommon(
                       color: Colors.green,
                       title: "Publish",

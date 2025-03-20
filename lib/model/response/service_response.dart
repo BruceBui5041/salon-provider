@@ -2,6 +2,7 @@
 //
 //     final serviceResponse = serviceResponseFromJson(jsonString);
 
+import 'package:fixit_provider/model/response/image_response.dart';
 import 'package:fixit_provider/model/response/service_version_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
@@ -62,6 +63,8 @@ class ItemService {
   final ServiceVersion? serviceVersion;
   @JsonKey(name: 'versions')
   final List<ServiceVersion>? versionsResponse;
+  @JsonKey(name: "images")
+  final List<ImageResponse>? imageResponse;
 
   ItemService({
     required this.id,
@@ -74,6 +77,7 @@ class ItemService {
     required this.avgRating,
     this.serviceVersion,
     this.versionsResponse,
+    this.imageResponse,
   });
 
   ItemService copyWith({
@@ -87,6 +91,7 @@ class ItemService {
     String? avgRating,
     ServiceVersion? serviceVersion,
     List<ServiceVersion>? versionsResponse,
+    List<ImageResponse>? imageResponse,
   }) =>
       ItemService(
         id: id ?? this.id,
@@ -99,6 +104,7 @@ class ItemService {
         avgRating: avgRating ?? this.avgRating,
         serviceVersion: serviceVersion ?? this.serviceVersion,
         versionsResponse: versionsResponse ?? this.versionsResponse,
+        imageResponse: imageResponse ?? this.imageResponse,
       );
 
   factory ItemService.fromJson(Map<String, dynamic> json) =>

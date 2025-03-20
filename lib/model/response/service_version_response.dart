@@ -1,4 +1,8 @@
+import 'package:fixit_provider/model/response/category_response.dart';
+import 'package:fixit_provider/model/response/image_response.dart';
+import 'package:fixit_provider/model/response/main_image_response.dart';
 import 'package:json_annotation/json_annotation.dart';
+
 part 'service_version_response.g.dart';
 
 enum ServiceVersionEnum {
@@ -39,7 +43,11 @@ class ServiceVersion {
   final int? duration;
   @JsonKey(name: 'published_date')
   final DateTime? publishedDate;
+  @JsonKey(name: "category")
+  final CategoryItem? categoryResponse;
 
+  @JsonKey(name: "main_image")
+  final MainImageResponse? mainImageResponse;
   ServiceVersion({
     required this.id,
     required this.status,
@@ -52,6 +60,8 @@ class ServiceVersion {
     required this.discountedPrice,
     required this.duration,
     required this.publishedDate,
+    this.categoryResponse,
+    this.mainImageResponse,
   });
 
   ServiceVersion copyWith({
@@ -66,6 +76,9 @@ class ServiceVersion {
     String? discountedPrice,
     int? duration,
     DateTime? publishedDate,
+    CategoryItem? categoryResponse,
+    ImageResponse? imageResponse,
+    MainImageResponse? mainImageResponse,
   }) =>
       ServiceVersion(
         id: id ?? this.id,
@@ -79,6 +92,7 @@ class ServiceVersion {
         discountedPrice: discountedPrice ?? this.discountedPrice,
         duration: duration ?? this.duration,
         publishedDate: publishedDate ?? this.publishedDate,
+        categoryResponse: categoryResponse ?? this.categoryResponse,
       );
 
   factory ServiceVersion.fromJson(Map<String, dynamic> json) =>
