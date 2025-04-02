@@ -31,6 +31,9 @@ target 'Runner' do
   use_frameworks!
   use_modular_headers!
 
+  pod 'SDWebImage', '~> 5.17.0', :modular_headers => true
+  pod 'SDWebImageWebPCoder', '~> 0.13.0', :modular_headers => true
+
   flutter_install_all_ios_pods File.dirname(File.realpath(__FILE__))
   target 'RunnerTests' do
     inherit! :search_paths
