@@ -60,7 +60,6 @@ class FormServiceDefaultLayout extends StatelessWidget {
             isBig: true,
             isField: true,
             onChanged: (val) => value.onChangeCategory(val),
-            list: value.categoryResponse?.data ?? [],
           ),
         )
       ],
@@ -81,7 +80,6 @@ class FormServiceDefaultLayout extends StatelessWidget {
             isBig: true,
             isField: true,
             onChanged: (val) => value.onChangeSubCategory(val),
-            list: value.subCategoryResponse?.data ?? [],
           ),
         )
       ],

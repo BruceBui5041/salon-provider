@@ -1,4 +1,4 @@
-import 'package:fixit_provider/screens/app_pages_screens/add_new_service_screen/layouts/form_default_layout.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/form_default_layout.dart';
 
 import '../../../config.dart';
 
@@ -44,10 +44,10 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                   const Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // FormServiceImageLayout(),
-                        // FormCategoryLayout(),
-                        // FormPriceLayout()
-                        FormServiceDefaultLayout(),
+                        FormServiceImageLayout(),
+                        FormCategoryLayout(),
+                        FormPriceLayout()
+                        // FormServiceDefaultLayout(),
                       ]).paddingSymmetric(vertical: Insets.i20)
                 ]),
                 ButtonCommon(

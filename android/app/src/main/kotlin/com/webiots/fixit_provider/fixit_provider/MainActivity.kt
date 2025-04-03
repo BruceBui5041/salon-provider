@@ -1,4 +1,4 @@
-package com.webiots.fixit_provider
+package com.meomeojsc.salonprovider
 
 import io.flutter.embedding.android.FlutterActivity
 

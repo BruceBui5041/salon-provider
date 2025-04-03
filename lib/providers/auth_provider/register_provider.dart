@@ -1,6 +1,6 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/screens/auth_screens/register_screen/repository/register_repository.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/repositories/register_repository.dart';
 
 class RegisterProvider extends ChangeNotifier {
   var repo = getIt<RegisterRepository>();

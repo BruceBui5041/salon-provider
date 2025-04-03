@@ -1,7 +1,5 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/cookie_config.dart';
-import 'package:fixit_provider/config/storage_config.dart';
-import 'package:flutter/material.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/cookie_config.dart';
 
 class CacheImageWidget extends StatefulWidget {
   final String? url;
@@ -21,33 +19,16 @@ class _CacheImageWidgetState extends State<CacheImageWidget> {
 
   @override
   Widget build(BuildContext context) {
-    return FutureBuilder(
-        future: StorageConfig.readList(),
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: const CircularProgressIndicator());
-          } else if (snapshot.hasError) {
-            return const Icon(Icons.error);
-          } else if (snapshot.data == null) {
-            return const Icon(Icons.error, color: Colors.red);
-          }
-
-          return CachedNetworkImage(
-            httpHeaders: {
-              'Set-Cookie': snapshot.data![0], // add your cookie here
-            },
-            fit: BoxFit.cover,
-            imageUrl: widget.url ?? '',
-            progressIndicatorBuilder: (context, url, downloadProgress) =>
-                Center(
-                    child: CircularProgressIndicator(
-                        value: downloadProgress.progress)),
-            errorWidget: (context, url, error) => Image.network(
-              "https://placehold.co/600x400/png",
-              fit: BoxFit.cover,
-              width: MediaQuery.of(context).size.width,
-            ),
-          );
-        });
+    return CachedNetworkImage(
+      fit: BoxFit.cover,
+      imageUrl: widget.url ?? '',
+      progressIndicatorBuilder: (context, url, downloadProgress) => Center(
+          child: CircularProgressIndicator(value: downloadProgress.progress)),
+      errorWidget: (context, url, error) => Image.network(
+        "https://placehold.co/600x400/png",
+        fit: BoxFit.cover,
+        width: MediaQuery.of(context).size.width,
+      ),
+    );
   }
 }

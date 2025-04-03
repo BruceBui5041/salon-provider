@@ -1,7 +1,8 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/model/response/service_response.dart';
-import 'package:fixit_provider/screens/app_pages_screens/popular_service_screen/repository/popular_service_repository.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/model/response/service_response.dart';
+import 'package:salon_provider/repositories/popular_service_repository.dart';
+import 'package:salon_provider/screens/bottom_screens/booking_screen/custom_booking_screen.dart';
 import '../../model/blog_model.dart';
 
 class DashboardProvider with ChangeNotifier {
@@ -102,7 +103,8 @@ class DashboardProvider with ChangeNotifier {
   final List<Widget> pages = [
     HomeScreen(),
     //NoInternetScreen(),
-    BookingScreen(),
+    // BookingScreen(),
+    CustomBookingScreen(),
     WalletScreen(),
     ProfileScreen()
   ];

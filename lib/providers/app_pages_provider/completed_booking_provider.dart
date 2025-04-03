@@ -1,13 +1,13 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import '../../model/pending_booking_model.dart';
 
 class CompletedBookingProvider with ChangeNotifier {
-
   PendingBookingModel? completedBookingModel;
 
   TextEditingController reasonCtrl = TextEditingController();
-  onReady(context){
-    completedBookingModel = PendingBookingModel.fromJson(appArray.completedBookingList);
+  onReady(context) {
+    completedBookingModel =
+        PendingBookingModel.fromJson(appArray.completedBookingList);
     notifyListeners();
   }
 
@@ -19,6 +19,4 @@ class CompletedBookingProvider with ChangeNotifier {
           return BookingStatusDialog();
         });
   }
-
-
 }

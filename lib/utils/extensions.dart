@@ -48,6 +48,10 @@ extension FixitUserExtensions on Widget {
 }
 
 extension FixitStringExtensions on String {
+  String capitalizeFirst() {
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
+  }
+
   String toSlug() {
     // Chuyển thành chữ thường
     String slug = toLowerCase();
@@ -64,7 +68,7 @@ extension FixitStringExtensions on String {
     return slug;
   }
 
-  String toDecimal() {
+  String toCurrencyVnd() {
     // Loại bỏ các ký tự không phải số hoặc dấu phân cách
     String cleanedValue = replaceAll(RegExp(r'[^0-9,.-]'), '');
 
@@ -75,10 +79,11 @@ extension FixitStringExtensions on String {
     double? number = double.tryParse(cleanedValue);
 
     // Nếu không thể parse, trả về 0₫
-    if (number == null) return "0 ₫";
+    if (number == null) return "0 vnđ";
 
     // Định dạng lại thành tiền tệ Việt Nam
-    final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: '₫');
+    final formatCurrency =
+        NumberFormat.currency(locale: 'vi_VN', symbol: 'vnđ');
 
     return formatCurrency.format(number);
   }

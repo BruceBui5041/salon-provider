@@ -1,9 +1,7 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/model/payment_history_model.dart';
-
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/model/payment_history_model.dart';
 
 class WalletProvider with ChangeNotifier {
-
   List<PaymentHistoryModel> paymentHistoryList = [];
 
   int countryValue = 0;
@@ -11,23 +9,24 @@ class WalletProvider with ChangeNotifier {
   TextEditingController amountCtrl = TextEditingController();
   FocusNode amountFocus = FocusNode();
 
-  onTapGateway(val){
+  onTapGateway(val) {
     countryValue = val;
     notifyListeners();
   }
 
-  onReady (){
+  onReady() {
     paymentHistoryList = [];
     notifyListeners();
     appArray.paymentHistoryList.asMap().entries.forEach((element) {
-      if(!paymentHistoryList.contains(PaymentHistoryModel.fromJson(element.value))) {
+      if (!paymentHistoryList
+          .contains(PaymentHistoryModel.fromJson(element.value))) {
         paymentHistoryList.add(PaymentHistoryModel.fromJson(element.value));
       }
     });
     notifyListeners();
   }
 
-  onTapAdd(context){
+  onTapAdd(context) {
     showModalBottomSheet(
       context: context,
       backgroundColor: Colors.transparent,
@@ -37,6 +36,4 @@ class WalletProvider with ChangeNotifier {
       },
     );
   }
-
-
 }

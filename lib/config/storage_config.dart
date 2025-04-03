@@ -1,69 +1,85 @@
 import 'dart:convert';
-
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 
 class StorageConfig {
+  // Keys
   static const keyAccessToken = 'access_token';
   static const keyCookies = 'cookies';
+  static const keyUserId = 'user_id';
 
-  static var storage = FlutterSecureStorage();
+  // Private instance
+  static SharedPreferences? _prefs;
+
+  // Initialization
+  static Future<void> init() async {
+    _prefs = await SharedPreferences.getInstance();
+  }
+
+  // Access Token Methods
   static Future<void> saveAccessToken(String token) async {
-    await storage.write(key: keyAccessToken, value: token);
+    await _ensureInitialized();
+    await _prefs!.setString(keyAccessToken, token);
   }
 
-  static Future<String?> getAccessToken() async {
-    return await storage.read(key: keyAccessToken);
+  static String? getAccessToken() {
+    _ensureInitialized();
+    return _prefs!.getString(keyAccessToken);
   }
 
+  // Cookie Methods
   static Future<void> saveCookies(List<Cookie> cookies) async {
-    await storage.write(key: keyCookies, value: "access_token=$cookies");
+    await _ensureInitialized();
+    await _prefs!.setString(keyCookies, "access_token=$cookies");
   }
 
-  static Future<String?> getCookies() async {
-    return await storage.read(key: keyCookies);
+  static String? getCookies() {
+    _ensureInitialized();
+    return _prefs!.getString(keyCookies);
   }
 
-  /// Lưu List<String> vào Secure Storage
+  // List Storage Methods
   static Future<void> saveList(List<String> data) async {
-    String jsonString = jsonEncode(data); // Chuyển List thành chuỗi JSON
-    await storage.write(key: keyCookies, value: jsonString);
+    await _ensureInitialized();
+    String jsonString = jsonEncode(data);
+    await _prefs!.setString(keyCookies, jsonString);
   }
 
-  /// Đọc List<String> từ Secure Storage
-  static Future<List<String>> readList() async {
-    String? jsonString = await storage.read(key: keyCookies);
+  static List<String> readList() {
+    _ensureInitialized();
+    String? jsonString = _prefs!.getString(keyCookies);
     if (jsonString != null) {
-      List<dynamic> jsonList =
-          jsonDecode(jsonString); // Giải mã chuỗi JSON thành List
-      return List<String>.from(jsonList); // Chuyển về List<String>
+      List<dynamic> jsonList = jsonDecode(jsonString);
+      return List<String>.from(jsonList);
     }
-    return []; // Trả về danh sách rỗng nếu không có dữ liệu
+    return [];
   }
-}
 
-FlutterSecureStorage storageConfig = FlutterSecureStorage();
-
-class StorageSecureConfig {
-  static const userId = 'user_id';
-
-  // write
+  // Generic Storage Methods
   static Future<void> write(String key, String value) async {
-    await storageConfig.write(key: key, value: value);
+    await _ensureInitialized();
+    await _prefs!.setString(key, value);
   }
 
-  //read
-  static Future<String?> read(String key) async {
-    return await storageConfig.read(key: key);
+  static String? read(String key) {
+    _ensureInitialized();
+    return _prefs!.getString(key);
   }
 
-  //clear
   static Future<void> delete(String key) async {
-    await storageConfig.delete(key: key);
+    await _ensureInitialized();
+    await _prefs!.remove(key);
   }
 
-  //clear all
   static Future<void> deleteAll() async {
-    await storageConfig.deleteAll();
+    await _ensureInitialized();
+    await _prefs!.clear();
+  }
+
+  // Private helper method to ensure initialization
+  static Future<void> _ensureInitialized() async {
+    if (_prefs == null) {
+      await init();
+    }
   }
 }

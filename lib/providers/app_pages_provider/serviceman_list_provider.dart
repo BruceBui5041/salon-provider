@@ -1,7 +1,6 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class ServicemanListProvider with ChangeNotifier {
-
   List statusList = [];
   int selectIndex = 0;
   String? yearValue;
@@ -12,12 +11,12 @@ class ServicemanListProvider with ChangeNotifier {
   FocusNode searchFocus = FocusNode();
   FocusNode categoryFocus = FocusNode();
 
-  onTapYear(val){
+  onTapYear(val) {
     yearValue = val;
     notifyListeners();
   }
 
-  onExperience(val){
+  onExperience(val) {
     expValue = val;
     notifyListeners();
   }
@@ -31,18 +30,19 @@ class ServicemanListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onFilter(index){
+  onFilter(index) {
     selectIndex = index;
     notifyListeners();
   }
 
-  onTapFilter(context){
+  onTapFilter(context) {
     showModalBottomSheet(
       isScrollControlled: true,
       isDismissible: true,
-      context: context, builder: (context) {
-      return ServicemenBookingFilterLayout();
-    },);
+      context: context,
+      builder: (context) {
+        return ServicemenBookingFilterLayout();
+      },
+    );
   }
-
 }

@@ -1,5 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:fixit_provider/widgets/wallet_drop_down.dart';
+import 'package:salon_provider/widgets/wallet_drop_down.dart';
 
 import '../../../../config.dart';
 

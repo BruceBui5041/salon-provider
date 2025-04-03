@@ -1,4 +1,4 @@
-import 'package:fixit_provider/screens/bottom_screens/home_screen/layouts/all_service_layout.dart';
+import 'package:salon_provider/screens/bottom_screens/home_screen/layouts/all_service_layout.dart';
 
 import '../../../../config.dart';
 

@@ -1,6 +1,6 @@
-import 'package:fixit_provider/model/response/category_response.dart';
-import 'package:fixit_provider/model/response/image_response.dart';
-import 'package:fixit_provider/model/response/main_image_response.dart';
+import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/model/response/image_response.dart';
+import 'package:salon_provider/model/response/main_image_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'service_version_response.g.dart';
@@ -45,9 +45,9 @@ class ServiceVersion {
   final DateTime? publishedDate;
   @JsonKey(name: "category")
   final CategoryItem? categoryResponse;
-
   @JsonKey(name: "main_image")
   final MainImageResponse? mainImageResponse;
+
   ServiceVersion({
     required this.id,
     required this.status,

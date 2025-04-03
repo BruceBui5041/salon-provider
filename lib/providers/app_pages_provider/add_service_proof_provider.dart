@@ -1,7 +1,6 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class AddServiceProofProvider with ChangeNotifier {
-
   TextEditingController titleCtrl = TextEditingController();
   TextEditingController descriptionCtrl = TextEditingController();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
@@ -20,7 +19,8 @@ class AddServiceProofProvider with ChangeNotifier {
   }
 
   onSubmit(context) {
-    if (descriptionCtrl.text.isNotEmpty && titleCtrl.text.isNotEmpty &&
+    if (descriptionCtrl.text.isNotEmpty &&
+        titleCtrl.text.isNotEmpty &&
         proofList.isNotEmpty) {
       route.pop(context);
     } else {
@@ -45,21 +45,19 @@ class AddServiceProofProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   onImagePick(context) {
     showLayout(context, onTap: (index) {
       if (index == 0) {
-        getImage(context, ImageSource.gallery).then((value) =>
-            proofList.add(imageFile!.path));
+        getImage(context, ImageSource.gallery)
+            .then((value) => proofList.add(imageFile!.path));
 
         notifyListeners();
       } else {
-        getImage(context, ImageSource.camera).then((value) =>
-            proofList.add(imageFile!.path));
+        getImage(context, ImageSource.camera)
+            .then((value) => proofList.add(imageFile!.path));
 
         notifyListeners();
       }
     });
   }
-
 }

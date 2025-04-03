@@ -14,10 +14,10 @@ class AddServicemenScreen extends StatelessWidget {
             body: SingleChildScrollView(
                 child: Column(children: [
               Column(children: [
-                AddServicemenProfileLayout(),
+                // AddServicemenProfileLayout(),
                 const VSpace(Sizes.s35),
                 Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                  ServicemenDetailForm(),
+                  // ServicemenDetailForm(),
                   ContainerWithTextLayout(title: appFonts.knownLanguage)
                       .paddingOnly(bottom: Insets.i8, top: Insets.i20),
                   KnownLanguageLayout(),
@@ -34,7 +34,6 @@ class AddServicemenScreen extends StatelessWidget {
                           icon: eSvgAssets.locationOut,
                           val: value.locationValue,
                           isIcon: true,
-                          list: appArray.locationList,
                           onChanged: (val) => value.onLocation(val))
                       .paddingSymmetric(horizontal: Insets.i20),
                   ContainerWithTextLayout(title: appFonts.description)

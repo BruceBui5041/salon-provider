@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:salon_provider/widgets/cache_image.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../config.dart';
@@ -46,18 +47,19 @@ class CustomerServiceLayout extends StatelessWidget {
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Row(children: [
           Container(
-              height: Sizes.s40,
-              width: Sizes.s40,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  image: DecorationImage(
-                      image: AssetImage(image!), fit: BoxFit.cover))),
+            height: Sizes.s40,
+            width: Sizes.s40,
+            child: CacheImageWidget(
+              url: image,
+            ),
+          ),
           const HSpace(Sizes.s12),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(name!,
+            Text(name ?? "",
                 style: appCss.dmDenseMedium14
                     .textColor(appColor(context).appTheme.darkText)),
-            if (language(context, title) != language(context, appFonts.customerDetails))
+            if (language(context, title) !=
+                language(context, appFonts.customerDetails))
               Row(children: [
                 RatingBar(
                     initialRating: rate ?? 3.5,
@@ -69,9 +71,11 @@ class CustomerServiceLayout extends StatelessWidget {
                     ignoreGestures: true,
                     ratingWidget: RatingWidget(
                         full: SvgPicture.asset(eSvgAssets.star),
-                        empty: SvgPicture.asset(eSvgAssets.starOut,colorFilter: ColorFilter.mode(appColor(context).appTheme.lightText, BlendMode.srcIn)),
-                        half: SvgPicture.asset(eSvgAssets.star
-                    )),
+                        empty: SvgPicture.asset(eSvgAssets.starOut,
+                            colorFilter: ColorFilter.mode(
+                                appColor(context).appTheme.lightText,
+                                BlendMode.srcIn)),
+                        half: SvgPicture.asset(eSvgAssets.star)),
                     onRatingUpdate: (double value) {}),
                 /*SvgPicture.asset(starCondition(rate!)),*/
                 const HSpace(Sizes.s4),
@@ -85,7 +89,7 @@ class CustomerServiceLayout extends StatelessWidget {
           Row(children: [
             SocialIconCommon(icon: eSvgAssets.chatOut, onTap: chatTap),
             const HSpace(Sizes.s12),
-            SocialIconCommon(icon: eSvgAssets.phone, onTap: ()=> onTapPhone())
+            SocialIconCommon(icon: eSvgAssets.phone, onTap: () => onTapPhone())
           ])
       ])
     ]))
@@ -98,11 +102,10 @@ class CustomerServiceLayout extends StatelessWidget {
       await launchUrl(url);
     } else {
       throw 'Could not launch $url';
-    }}
-
-  onTapPhone(){
-    makePhoneCall(Uri.parse('tel:+91 8200798552'));
-
+    }
   }
 
+  onTapPhone() {
+    makePhoneCall(Uri.parse('tel:+91 8200798552'));
+  }
 }

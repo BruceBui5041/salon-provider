@@ -2,15 +2,15 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:fixit_provider/common/Utils.dart';
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/model/response/category_response.dart';
-import 'package:fixit_provider/model/response/service_response.dart';
-import 'package:fixit_provider/model/response/service_version_response.dart';
-import 'package:fixit_provider/network/api_config.dart';
-import 'package:fixit_provider/screens/app_pages_screens/add_new_service_screen/repository/add_new_service_repository.dart';
-import 'package:fixit_provider/screens/app_pages_screens/edit_service_screen/repository/edit_service_repository.dart';
+import 'package:salon_provider/common/Utils.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/model/response/service_response.dart';
+import 'package:salon_provider/model/response/service_version_response.dart';
+import 'package:salon_provider/network/api_config.dart';
+import 'package:salon_provider/repositories/add_new_service_repository.dart';
+import 'package:salon_provider/repositories/edit_service_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:path_provider/path_provider.dart';
 

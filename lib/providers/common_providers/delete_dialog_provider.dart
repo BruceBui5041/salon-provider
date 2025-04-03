@@ -1,5 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import 'package:flutter/cupertino.dart';
 
 class DeleteDialogProvider with ChangeNotifier {

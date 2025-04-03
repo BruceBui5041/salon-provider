@@ -43,7 +43,6 @@ class BookingServicemenListFilter extends StatelessWidget {
                             icon: eSvgAssets.calender,
                             val: value.yearValue,
                             isIcon: true,
-                            list: appArray.jobExperienceList,
                             onChanged: (val) => value.onTapYear(val))
                       ])
                       .paddingAll(AppRadius.r15)

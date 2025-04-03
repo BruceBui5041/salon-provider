@@ -17,6 +17,7 @@ SearchRequestBody _$SearchRequestBodyFromJson(Map<String, dynamic> json) =>
       fields: (json['fields'] as List<dynamic>)
           .map(const FieldItemConverter().fromJson)
           .toList(),
+      orderBy: json['order_by'] as String?,
     );
 
 Map<String, dynamic> _$SearchRequestBodyToJson(SearchRequestBody instance) =>
@@ -25,6 +26,7 @@ Map<String, dynamic> _$SearchRequestBodyToJson(SearchRequestBody instance) =>
       'conditions': instance.conditions
           .map((e) => e.map((e) => e.toJson()).toList())
           .toList(),
+      'order_by': instance.orderBy,
       'fields': instance.fields.map(const FieldItemConverter().toJson).toList(),
     };
 

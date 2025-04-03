@@ -1,10 +1,8 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import '../../model/booking_model.dart';
 import '../../widgets/withdraw_amount_bottom_sheet.dart';
 
-
 class HomeProvider with ChangeNotifier {
-
   List recentBookingList = [];
   bool isSwitch = true;
   int selectedIndex = 0;
@@ -25,12 +23,12 @@ class HomeProvider with ChangeNotifier {
   final double width = 12;
   String? withdrawValue;
 
-   List<BarChartGroupData>? rawBarGroups;
-   List<BarChartGroupData>? showingBarGroups;
+  List<BarChartGroupData>? rawBarGroups;
+  List<BarChartGroupData>? showingBarGroups;
 
   int touchedGroupIndex = -1;
 
-  onChangeType(index){
+  onChangeType(index) {
     selectType = index;
     notifyListeners();
   }
@@ -40,23 +38,17 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
-  BarChartGroupData makeGroupData(int x, double y1, double y2,context) {
-    return BarChartGroupData(
-        barsSpace: 1,
-        x: x,
-        barRods: [
-          BarChartRodData(
-
-              toY: y1, color: appColor(context).appTheme.fieldCardBg, width: width)
-        ]
-    );
+  BarChartGroupData makeGroupData(int x, double y1, double y2, context) {
+    return BarChartGroupData(barsSpace: 1, x: x, barRods: [
+      BarChartRodData(
+          toY: y1, color: appColor(context).appTheme.fieldCardBg, width: width)
+    ]);
   }
 
-  onToolTip(FlTouchEvent event, response,context) {
+  onToolTip(FlTouchEvent event, response, context) {
     if (response == null || response.spot == null) {
-        touchedGroupIndex = -1;
-        showingBarGroups = List.of(rawBarGroups!);
+      touchedGroupIndex = -1;
+      showingBarGroups = List.of(rawBarGroups!);
       return;
     }
     touchedGroupIndex = response.spot!.touchedBarGroupIndex;
@@ -68,119 +60,108 @@ class HomeProvider with ChangeNotifier {
     showingBarGroups = List.of(rawBarGroups!);
     if (touchedGroupIndex != -1) {
       var sum = 0.0;
-      for (final rod
-      in showingBarGroups![touchedGroupIndex].barRods) {
+      for (final rod in showingBarGroups![touchedGroupIndex].barRods) {
         sum += rod.toY;
       }
-      final avg = sum /
-          showingBarGroups![touchedGroupIndex]
-              .barRods
-              .length;
+      final avg = sum / showingBarGroups![touchedGroupIndex].barRods.length;
 
       showingBarGroups![touchedGroupIndex] =
           showingBarGroups![touchedGroupIndex].copyWith(
-            barRods: showingBarGroups![touchedGroupIndex]
-                .barRods
-                .map((rod) {
-              return rod.copyWith(
-                  toY: avg, color: appColor(context).appTheme.primary);
-            }).toList(),
-          );
+        barRods: showingBarGroups![touchedGroupIndex].barRods.map((rod) {
+          return rod.copyWith(
+              toY: avg, color: appColor(context).appTheme.primary);
+        }).toList(),
+      );
     }
-
   }
 
-  onTapWmy(index){
+  onTapWmy(index) {
     selectedIndex = index;
     notifyListeners();
   }
 
-  onTapIndexOne(value){
+  onTapIndexOne(value) {
     value.selectIndex = 1;
     value.notifyListeners();
   }
 
-  onTapBookings(data,context){
-    if(data.status == appFonts.pending) {
+  onTapBookings(data, context) {
+    if (data.status == appFonts.pending) {
       //route.pushNamed(context, routeName.packageBookingScreen);
-      if(data.servicemanLists.isNotEmpty) {
-        route.pushNamed(context, routeName.pendingBooking,arg: true);
+      if (data.servicemanLists.isNotEmpty) {
+        route.pushNamed(context, routeName.pendingBooking, arg: true);
       } else {
-        route.pushNamed(context, routeName.pendingBooking,arg: false);
+        route.pushNamed(context, routeName.pendingBooking, arg: false);
       }
-    } else if(data.status == appFonts.accepted) {
-      if(isFreelancer) {
+    } else if (data.status == appFonts.accepted) {
+      if (isFreelancer) {
         route.pushNamed(context, routeName.assignBooking);
       } else {
         route.pushNamed(context, routeName.acceptedBooking);
       }
-    } else if(data.status == appFonts.pendingApproval) {
+    } else if (data.status == appFonts.pendingApproval) {
       route.pushNamed(context, routeName.pendingApprovalBooking);
-    } else if(data.status == appFonts.ongoing) {
-      if(data.servicemanLists.isNotEmpty) {
-        route.pushNamed(context, routeName.ongoingBooking,arg: {
-          "bool": false
-        });
+    } else if (data.status == appFonts.ongoing) {
+      if (data.servicemanLists.isNotEmpty) {
+        route
+            .pushNamed(context, routeName.ongoingBooking, arg: {"bool": false});
       } else {
-        route.pushNamed(context, routeName.ongoingBooking,arg: {
-          "bool": true
-        });
+        route.pushNamed(context, routeName.ongoingBooking, arg: {"bool": true});
       }
-    } else if(data.status == appFonts.hold) {
+    } else if (data.status == appFonts.hold) {
       route.pushNamed(context, routeName.holdBooking);
-    } else if(data.status == appFonts.completed) {
+    } else if (data.status == appFonts.completed) {
       route.pushNamed(context, routeName.completedBooking);
-    } else if(data.status == appFonts.cancelled) {
+    } else if (data.status == appFonts.cancelled) {
       route.pushNamed(context, routeName.cancelledBooking);
-    } else if(data.status == appFonts.assigned) {
-      if(data.servicemanLists.isNotEmpty) {
-        route.pushNamed(context, routeName.assignBooking,arg: {
-          "bool": true
-        });
+    } else if (data.status == appFonts.assigned) {
+      if (data.servicemanLists.isNotEmpty) {
+        route.pushNamed(context, routeName.assignBooking, arg: {"bool": true});
       } else {
-        route.pushNamed(context, routeName.assignBooking,arg: {
-          "bool": false
-        });
+        route.pushNamed(context, routeName.assignBooking, arg: {"bool": false});
       }
     }
   }
 
-   onTapOption(index,context){
-    final value = Provider.of<DashboardProvider>(context,listen: false);
-        if(index == 2 ){
-          route.pushNamed(context, routeName.serviceList);
-        } else if (index == 3){
-          route.pushNamed(context, routeName.categories);
-        } else if (index == 0){
-          route.pushNamed(context, routeName.earnings);
-        } else {
-          value.selectIndex = 1;
-          value.notifyListeners();
-        }
-   }
+  onTapOption(index, context) {
+    final value = Provider.of<DashboardProvider>(context, listen: false);
+    if (index == 2) {
+      route.pushNamed(context, routeName.serviceList);
+    } else if (index == 3) {
+      route.pushNamed(context, routeName.categories);
+    } else if (index == 0) {
+      route.pushNamed(context, routeName.earnings);
+    } else {
+      value.selectIndex = 1;
+      value.notifyListeners();
+    }
+  }
 
-  onTapSwitch(val,data){
+  onTapSwitch(val, data) {
     data["isStatus"] = val;
     notifyListeners();
   }
 
-  onReady(context,sync){
+  onReady(context, sync) {
     recentBookingList = [];
-    List recentBooking = isFreelancer ? appArray.freelancerBookingList : appArray.bookingList;
+    List recentBooking =
+        isFreelancer ? appArray.freelancerBookingList : appArray.bookingList;
     notifyListeners();
     recentBooking.asMap().entries.forEach((element) {
-      if(!recentBookingList.contains(BookingModel.fromJson(element.value))) {
+      if (!recentBookingList.contains(BookingModel.fromJson(element.value))) {
         recentBookingList.add(BookingModel.fromJson(element.value));
       }
     });
-    messageFocus.addListener(() {notifyListeners();});
-    final barGroup1 = makeGroupData(0, 5, 12,context);
-    final barGroup2 = makeGroupData(1, 16, 12,context);
-    final barGroup3 = makeGroupData(2, 18, 5,context);
-    final barGroup4 = makeGroupData(3, 20, 16,context);
-    final barGroup5 = makeGroupData(4, 17, 6,context);
-    final barGroup6 = makeGroupData(5, 19, 1.5,context);
-    final barGroup7 = makeGroupData(6, 10, 1.5,context);
+    messageFocus.addListener(() {
+      notifyListeners();
+    });
+    final barGroup1 = makeGroupData(0, 5, 12, context);
+    final barGroup2 = makeGroupData(1, 16, 12, context);
+    final barGroup3 = makeGroupData(2, 18, 5, context);
+    final barGroup4 = makeGroupData(3, 20, 16, context);
+    final barGroup5 = makeGroupData(4, 17, 6, context);
+    final barGroup6 = makeGroupData(5, 19, 1.5, context);
+    final barGroup7 = makeGroupData(6, 10, 1.5, context);
 
     final items = [
       barGroup1,
@@ -199,14 +180,14 @@ class HomeProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onWithdraw(context){
+  onWithdraw(context) {
     showModalBottomSheet(
       isScrollControlled: true,
       isDismissible: true,
-      context: context, builder: (context1) {
-      return WithdrawAmountBottomSheet();
-    },);
+      context: context,
+      builder: (context1) {
+        return WithdrawAmountBottomSheet();
+      },
+    );
   }
-
-
 }

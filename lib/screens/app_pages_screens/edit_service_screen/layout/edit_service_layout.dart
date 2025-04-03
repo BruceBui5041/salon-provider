@@ -1,8 +1,8 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:fixit_provider/model/response/category_response.dart';
-import 'package:fixit_provider/model/response/service_version_response.dart';
-import 'package:fixit_provider/providers/app_pages_provider/edit_service_provider.dart';
-import 'package:fixit_provider/widgets/dropdown_common.dart';
+import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/model/response/service_version_response.dart';
+import 'package:salon_provider/providers/app_pages_provider/edit_service_provider.dart';
+import 'package:salon_provider/widgets/dropdown_common.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../../config.dart';
@@ -64,27 +64,27 @@ class _FormEditServiceDefaultLayoutState
       children: [
         ContainerWithTextLayout(title: language(context, appFonts.categories))
             .paddingOnly(top: Insets.i24, bottom: Insets.i12),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Insets.i15,
-          ),
-          child: DropDownLayout<CategoryItem>(
-            val: value.categoryResponse != null &&
-                    value.categoryResponse!.data.isNotEmpty
-                ? value.categoryResponse?.data.firstWhere((e) =>
-                    e.id ==
-                    value.itemService!.serviceVersion!.categoryResponse!.id)
-                : null,
-            isBig: true,
-            isField: true,
-            showValue: (val) => Text(language(context, val.name ?? ''),
-                style: appCss.dmDenseMedium14.textColor(val.name == null
-                    ? appColor(context).appTheme.lightText
-                    : appColor(context).appTheme.darkText)),
-            onChanged: (val) => value.onChangeCategory(val),
-            list: value.categoryResponse?.data ?? [],
-          ),
-        )
+        // Padding(
+        //   padding: EdgeInsets.symmetric(
+        //     horizontal: Insets.i15,
+        //   ),
+        //   child: DropDownLayout<CategoryItem>(
+        //     val: value.categoryResponse != null &&
+        //             value.categoryResponse!.data.isNotEmpty
+        //         ? value.categoryResponse?.data.firstWhere((e) =>
+        //             e.id ==
+        //             value.itemService!.serviceVersion!.categoryResponse!.id)
+        //         : null,
+        //     isBig: true,
+        //     isField: true,
+        //     showValue: (val) => Text(language(context, val.name ?? ''),
+        //         style: appCss.dmDenseMedium14.textColor(val.name == null
+        //             ? appColor(context).appTheme.lightText
+        //             : appColor(context).appTheme.darkText)),
+        //     onChanged: (val) => value.onChangeCategory(val),
+        //     list: value.categoryResponse?.data ?? [],
+        //   ),
+        // )
       ],
     );
   }
@@ -94,27 +94,27 @@ class _FormEditServiceDefaultLayoutState
       children: [
         ContainerWithTextLayout(title: language(context, appFonts.subCategory))
             .paddingOnly(top: Insets.i24, bottom: Insets.i12),
-        Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: Insets.i15,
-          ),
-          child: DropDownLayout(
-            val: value.subCategoryResponse != null &&
-                    value.subCategoryResponse!.data.isNotEmpty
-                ? value.subCategoryResponse?.data.firstWhere((e) =>
-                    e.id ==
-                    value.itemService!.serviceVersion!.categoryResponse!.id)
-                : null,
-            isBig: true,
-            isField: true,
-            showValue: (val) => Text(language(context, val.name ?? ''),
-                style: appCss.dmDenseMedium14.textColor(val.name == null
-                    ? appColor(context).appTheme.lightText
-                    : appColor(context).appTheme.darkText)),
-            onChanged: (val) => value.onChangeSubCategory(val),
-            list: value.subCategoryResponse?.data ?? [],
-          ),
-        )
+        // Padding(
+        //   padding: EdgeInsets.symmetric(
+        //     horizontal: Insets.i15,
+        //   ),
+        //   child: DropDownLayout(
+        //     val: value.subCategoryResponse != null &&
+        //             value.subCategoryResponse!.data.isNotEmpty
+        //         ? value.subCategoryResponse?.data.firstWhere((e) =>
+        //             e.id ==
+        //             value.itemService!.serviceVersion!.categoryResponse!.id)
+        //         : null,
+        //     isBig: true,
+        //     isField: true,
+        //     showValue: (val) => Text(language(context, val.name ?? ''),
+        //         style: appCss.dmDenseMedium14.textColor(val.name == null
+        //             ? appColor(context).appTheme.lightText
+        //             : appColor(context).appTheme.darkText)),
+        //     onChanged: (val) => value.onChangeSubCategory(val),
+        //     list: value.subCategoryResponse?.data ?? [],
+        //   ),
+        // )
       ],
     );
   }

@@ -1,14 +1,15 @@
-import 'package:fixit_provider/network/api.dart';
-import 'package:fixit_provider/network/api_config.dart';
-import 'package:fixit_provider/network/common_api.dart';
-import 'package:fixit_provider/screens/app_pages_screens/add_new_service_screen/repository/add_new_service_repository.dart';
-import 'package:fixit_provider/screens/app_pages_screens/edit_service_screen/repository/edit_service_repository.dart';
-import 'package:fixit_provider/screens/app_pages_screens/popular_service_screen/repository/popular_service_repository.dart';
-import 'package:fixit_provider/screens/auth_screens/login_as_provider_screen/repository/login_repository.dart';
-import 'package:fixit_provider/screens/auth_screens/register_screen/repository/register_repository.dart';
-import 'package:fixit_provider/screens/auth_screens/verify_otp_screen/repository/verify_otp_repository.dart';
-import 'package:fixit_provider/screens/bottom_screens/booking_screen/repository/booking_repository.dart';
-import 'package:fixit_provider/screens/bottom_screens/home_screen/repository/all_service_repository.dart';
+import 'package:salon_provider/network/api.dart';
+import 'package:salon_provider/network/api_config.dart';
+import 'package:salon_provider/network/common_api.dart';
+import 'package:salon_provider/repositories/add_new_service_repository.dart';
+import 'package:salon_provider/repositories/edit_service_repository.dart';
+import 'package:salon_provider/repositories/popular_service_repository.dart';
+import 'package:salon_provider/repositories/login_repository.dart';
+import 'package:salon_provider/repositories/register_repository.dart';
+import 'package:salon_provider/repositories/token_repository.dart';
+import 'package:salon_provider/repositories/verify_otp_repository.dart';
+import 'package:salon_provider/repositories/booking_repository.dart';
+import 'package:salon_provider/repositories/all_service_repository.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -28,6 +29,7 @@ Future<void> initInjector() async {
   getIt.registerLazySingleton(() => PopularServiceRepository());
   getIt.registerLazySingleton(() => AllServiceRepository());
   getIt.registerLazySingleton(() => EditServiceRepository());
+  getIt.registerLazySingleton(() => TokenRepository());
 
   // getIt.registerLazySingleton(() => RegisterRepository());
   // getIt.registerLazySingleton(() => VerifyOtpRepository());

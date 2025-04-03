@@ -1,15 +1,9 @@
-// ignore_for_file: unnecessary_null_comparison
-
-import 'package:fixit_provider/model/response/category_response.dart';
-
 import '../../../../config.dart';
 
-class DropDownLayout<T> extends StatelessWidget {
-  final String? icon, hintText;
-  final T? val;
-  final List<T>? list;
+class DropDownLayout extends StatelessWidget {
+  final String? icon, hintText, val;
+  final List? categoryList;
   final ValueChanged? onChanged;
-  final Function(T)? showValue;
   final bool? isIcon, isField, isBig, isListIcon, isOnlyText;
 
   const DropDownLayout(
@@ -21,8 +15,7 @@ class DropDownLayout<T> extends StatelessWidget {
       this.isField = false,
       this.isIcon = false,
       this.isBig = false,
-      this.list,
-      this.showValue,
+      this.categoryList,
       this.isListIcon = false,
       this.isOnlyText = false});
 
@@ -30,7 +23,7 @@ class DropDownLayout<T> extends StatelessWidget {
   Widget build(BuildContext context) {
     return DropdownButtonHideUnderline(
             child: ButtonTheme(
-                child: DropdownButtonFormField<T>(
+                child: DropdownButtonFormField(
                     hint: Text(language(context, hintText ?? ""),
                         style: appCss.dmDenseMedium14
                             .textColor(appColor(context).appTheme.lightText)),
@@ -70,28 +63,31 @@ class DropDownLayout<T> extends StatelessWidget {
                     icon: SvgPicture.asset(eSvgAssets.dropDown, colorFilter: ColorFilter.mode(val == null ? appColor(context).appTheme.lightText : appColor(context).appTheme.darkText, BlendMode.srcIn)),
                     isDense: true,
                     isExpanded: true,
-                    items: list!.asMap().entries.map((e) {
-                      var val = e.value as T;
-                      return DropdownMenuItem<T>(
-                          value: val,
+                    items: (categoryList ?? [])!.asMap().entries.map((e) {
+                      return DropdownMenuItem(
+                          value: e.value,
                           child: Row(
                             children: [
-                              // if (isListIcon == true)
-                              //   SizedBox(
-                              //           height: Sizes.s13,
-                              //           width: Sizes.s13,
-                              //           child: Image.network(
-                              //             val.image ?? '',
-                              //             fit: BoxFit.scaleDown,
-                              //           ))
-                              //       .paddingAll(Insets.i4)
-                              //       .decorated(
-                              //           color: appColor(context)
-                              //               .appTheme
-                              //               .fieldCardBg,
-                              //           shape: BoxShape.circle),
-                              // if (isListIcon == true) const HSpace(Sizes.s12),
-                              showValue!(val),
+                              if (isListIcon == true)
+                                SizedBox(
+                                        height: Sizes.s13,
+                                        width: Sizes.s13,
+                                        child: SvgPicture.asset(
+                                          e.value["image"],
+                                          fit: BoxFit.scaleDown,
+                                        ))
+                                    .paddingAll(Insets.i4)
+                                    .decorated(
+                                        color: appColor(context)
+                                            .appTheme
+                                            .fieldCardBg,
+                                        shape: BoxShape.circle),
+                              if (isListIcon == true) const HSpace(Sizes.s12),
+                              Text(language(context, e.value),
+                                  style: appCss.dmDenseMedium14.textColor(val ==
+                                          null
+                                      ? appColor(context).appTheme.lightText
+                                      : appColor(context).appTheme.darkText)),
                             ],
                           ));
                     }).toList(),

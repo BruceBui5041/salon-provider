@@ -1,8 +1,8 @@
 import 'dart:io';
 
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/screens/app_pages_screens/completed_booking_screen/layouts/completed_booking_payment_summary_layout.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/screens/app_pages_screens/completed_booking_screen/layouts/completed_booking_payment_summary_layout.dart';
 
 class CompletedBookingScreen extends StatelessWidget {
   const CompletedBookingScreen({super.key});

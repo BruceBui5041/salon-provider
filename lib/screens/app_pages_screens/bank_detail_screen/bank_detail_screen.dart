@@ -48,7 +48,6 @@ class BankDetailScreen extends StatelessWidget {
                             val: value.branchValue,
                             hintText: appFonts.branchName,
                             isIcon: true,
-                            list: appArray.branchList,
                             onChanged: (val) => value.onBranch(val))
                         .paddingSymmetric(horizontal: Insets.i20),
                     ContainerWithTextLayout(title: appFonts.ifscCode)

@@ -1,17 +1,14 @@
 import 'dart:developer';
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class AddServicemenProvider with ChangeNotifier {
-
   String dialCode = "+91";
-  String? countryValue ;
-  String? locationValue ;
+  String? countryValue;
+  String? locationValue;
   String? chosenValue;
-  XFile? imageFile,profileFile;
+  XFile? imageFile, profileFile;
   final List<Color> colorCollection = <Color>[];
   String languageSelect = "[]";
-
-
 
   TextEditingController userName = TextEditingController();
   TextEditingController phoneName = TextEditingController();
@@ -31,7 +28,8 @@ class AddServicemenProvider with ChangeNotifier {
   final FocusNode identityNumberFocus = FocusNode();
   final FocusNode emailFocus = FocusNode();
 
-  addColorToArray() { //Here you can add color as your requirement and call it in initState
+  addColorToArray() {
+    //Here you can add color as your requirement and call it in initState
     colorCollection.add(Colors.green);
     colorCollection.add(Colors.red);
     colorCollection.add(Colors.pink);
@@ -43,13 +41,17 @@ class AddServicemenProvider with ChangeNotifier {
     colorCollection.add(Colors.deepOrange);
     notifyListeners();
   }
+
   onLanguageSelect(options) {
     languageSelect = options.toString();
     notifyListeners();
   }
-  onReady(){
+
+  onReady() {
     addColorToArray();
-    descriptionFocus.addListener(() { notifyListeners();});
+    descriptionFocus.addListener(() {
+      notifyListeners();
+    });
     notifyListeners();
   }
 
@@ -68,35 +70,34 @@ class AddServicemenProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onLocation(val){
+  onLocation(val) {
     locationValue = val;
     notifyListeners();
   }
 
   // GET IMAGE FROM GALLERY
-  Future getImage(context, source,isProfile) async {
+  Future getImage(context, source, isProfile) async {
     final ImagePicker picker = ImagePicker();
-    if(isProfile == true){
+    if (isProfile == true) {
       route.pop(context);
       profileFile = (await picker.pickImage(source: source))!;
-    }else {
+    } else {
       route.pop(context);
       imageFile = (await picker.pickImage(source: source))!;
     }
     notifyListeners();
   }
 
-  onImagePick(context,isProfile) {
-    showLayout(context,onTap: (index) {
-
+  onImagePick(context, isProfile) {
+    showLayout(context, onTap: (index) {
       log("INDEX : $index");
       if (index == 0) {
-        getImage(context, ImageSource.gallery,isProfile);
+        getImage(context, ImageSource.gallery, isProfile);
       } else {
-        getImage(context, ImageSource.camera,isProfile);
+        getImage(context, ImageSource.camera, isProfile);
       }
     });
-  }/*
+  } /*
 onReady(){
     servicePackageModel = ServicePackageModel.fromJson(appArray.packageDetailList);
     notifyListeners();

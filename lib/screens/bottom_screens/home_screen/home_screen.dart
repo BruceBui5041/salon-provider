@@ -1,5 +1,5 @@
-import 'package:fixit_provider/providers/app_pages_provider/all_service_provider.dart';
-import 'package:fixit_provider/screens/bottom_screens/home_screen/layouts/all_service_layout.dart';
+import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
+import 'package:salon_provider/screens/bottom_screens/home_screen/layouts/all_service_layout.dart';
 
 import '../../../config.dart';
 
@@ -61,22 +61,22 @@ class _HomeScreenState extends State<HomeScreen>
                 const VSpace(Sizes.s15),
                 WalletBalanceLayout(onTap: () => value.onWithdraw(context)),
                 const VSpace(Sizes.s16),
-                // StaggeredGrid.count(
-                //         crossAxisCount: 10,
-                //         mainAxisSpacing: 12,
-                //         crossAxisSpacing: 12,
-                //         children: appArray.earningList
-                //             .asMap()
-                //             .entries
-                //             .map((e) => GridViewLayout(
-                //                 data: e.value,
-                //                 index: e.key,
-                //                 animation: animation,
-                //                 onTap: () => value.onTapOption(e.key, context)))
-                //             .toList())
-                //     .paddingSymmetric(horizontal: Insets.i20),
+                StaggeredGrid.count(
+                        crossAxisCount: 10,
+                        mainAxisSpacing: 12,
+                        crossAxisSpacing: 12,
+                        children: appArray.earningList
+                            .asMap()
+                            .entries
+                            .map((e) => GridViewLayout(
+                                data: e.value,
+                                index: e.key,
+                                animation: animation,
+                                onTap: () => value.onTapOption(e.key, context)))
+                            .toList())
+                    .paddingSymmetric(horizontal: Insets.i20),
                 // // const VSpace(Sizes.s25),
-                // //     const StaticDetailChart(),
+                // const StaticDetailChart(),
                 const AllCategoriesLayout(),
               ]).paddingOnly(bottom: Insets.i110))));
     });

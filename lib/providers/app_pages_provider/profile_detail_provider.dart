@@ -1,7 +1,8 @@
 import 'dart:async';
+import 'package:salon_provider/screens/app_pages_screens/profile_detail_screen/layouts/selection_option_layout.dart';
 import 'package:flutter/cupertino.dart';
 import '../../config.dart';
-import '../../screens/app_pages_screens/add_serviceman_screen/layouts/selection_option_layout.dart';
+// import '../../screens/app_pages_screens/add_serviceman_screen/layouts/selection_option_layout.dart';
 
 class ProfileDetailProvider with ChangeNotifier {
   TextEditingController txtName = TextEditingController();

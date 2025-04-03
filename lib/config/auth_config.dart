@@ -1,11 +1,11 @@
-import 'package:fixit_provider/config/storage_config.dart';
+import 'package:salon_provider/config/storage_config.dart';
 
 class AuthConfig {
   static Future<void> setUserId(String userId) async {
-    await StorageSecureConfig.write(StorageSecureConfig.userId, userId);
+    await StorageConfig.write(StorageConfig.keyUserId, userId);
   }
 
   static Future<String?> getUserId() async {
-    return await StorageSecureConfig.read(StorageSecureConfig.userId);
+    return StorageConfig.read(StorageConfig.keyUserId);
   }
 }

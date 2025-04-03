@@ -1,7 +1,7 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/model/response/booking_response.dart';
-import 'package:fixit_provider/screens/bottom_screens/booking_screen/repository/booking_repository.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/repositories/booking_repository.dart';
 
 import '../../model/booking_model.dart';
 import '../../screens/bottom_screens/booking_screen/layouts/booking_filter_layout.dart';

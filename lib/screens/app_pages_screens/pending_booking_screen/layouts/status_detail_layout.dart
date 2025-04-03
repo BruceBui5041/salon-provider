@@ -1,5 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:fixit_provider/model/pending_booking_model.dart';
+import 'package:salon_provider/model/pending_booking_model.dart';
 import '../../../../config.dart';
 
 class StatusDetailLayout extends StatelessWidget {

@@ -1,8 +1,9 @@
 import 'dart:convert';
 
 import 'package:dio/dio.dart';
-import 'package:fixit_provider/model/response/check_auth_response.dart';
-import 'package:fixit_provider/model/response/login_response.dart';
+import 'package:salon_provider/model/response/check_auth_response.dart';
+import 'package:salon_provider/model/response/gen_qr_response.dart';
+import 'package:salon_provider/model/response/login_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api.g.dart';
@@ -41,4 +42,14 @@ abstract class RestClient {
 
   @PUT("/service/createdraft")
   Future<dynamic> createServiceCraft(@Body() Map<String, dynamic> requestBody);
+
+  @POST("/payment/generateqr")
+  Future<GenQrResponse> getGenQrCode(@Body() Map<String, dynamic> requestBody);
+
+  @PATCH("/booking/cancel/{id}")
+  Future<void> cancelBooking(
+      @Path("id") String id, @Body() Map<String, dynamic> requestBody);
+
+  @POST("/userdevice")
+  Future<void> saveUserDevice(@Body() Map<String, dynamic> requestBody);
 }

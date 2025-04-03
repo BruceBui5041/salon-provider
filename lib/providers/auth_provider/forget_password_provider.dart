@@ -1,4 +1,4 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class ForgetPasswordProvider with ChangeNotifier {
   TextEditingController forgetController = TextEditingController();

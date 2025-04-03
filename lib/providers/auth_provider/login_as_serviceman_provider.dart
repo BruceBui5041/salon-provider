@@ -1,6 +1,6 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/screens/auth_screens/login_as_provider_screen/repository/login_repository.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/repositories/login_repository.dart';
 
 class LoginAsServicemanProvider with ChangeNotifier {
   var repo = getIt<LoginScreenRepository>();

@@ -1,5 +1,5 @@
-import 'package:fixit_provider/screens/app_pages_screens/add_new_location/layouts/select_category.dart';
-import 'package:fixit_provider/screens/app_pages_screens/add_new_location/layouts/text_field_layout.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_location/layouts/select_category.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_location/layouts/text_field_layout.dart';
 
 import '../../../config.dart';
 
@@ -13,15 +13,19 @@ class AddNewLocation extends StatelessWidget {
               () => value.getOnInitData(context)),
           child: PopScope(
             canPop: true,
-            onPopInvoked: (bool didPop)=> value.onBack(),
+            onPopInvoked: (bool didPop) => value.onBack(),
             child: Scaffold(
-                appBar: AppBarCommon(title: value.isEdit ? appFonts.editLocation : appFonts.addNewLocation,onTap: ()=> value.onBackButton(context)),
+                appBar: AppBarCommon(
+                    title: value.isEdit
+                        ? appFonts.editLocation
+                        : appFonts.addNewLocation,
+                    onTap: () => value.onBackButton(context)),
                 body: SingleChildScrollView(
                     child: Form(
-                      key: value.locationFormKey,
-                      child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
+                  key: value.locationFormKey,
+                  child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
                         textCommon.dmSensMediumDark14(context,
                             text: appFonts.selectCategory),
                         const VSpace(Sizes.s20),
@@ -36,20 +40,21 @@ class AddNewLocation extends StatelessWidget {
                                     index: e.key,
                                     selectedIndex: value.selectIndex))
                                 .toList()),
-                                const LocationTextFieldLayout().paddingSymmetric(vertical: Insets.i15),
-
-
+                        const LocationTextFieldLayout()
+                            .paddingSymmetric(vertical: Insets.i15),
                         const VSpace(Sizes.s35),
                         ButtonCommon(
-                            title:value.isEdit ? appFonts.updateLocation : appFonts.addLocation,
+                            title: value.isEdit
+                                ? appFonts.updateLocation
+                                : appFonts.addLocation,
                             onTap: () => value.onAddLocation(context))
                       ])
-                          .paddingAll(Insets.i20)
-                          .boxShapeExtension(
-                              color: appColor(context).appTheme.fieldCardBg,
-                              radius: AppRadius.r12)
-                          .padding(horizontal: Insets.i20, vertical: Insets.i20),
-                    ))),
+                      .paddingAll(Insets.i20)
+                      .boxShapeExtension(
+                          color: appColor(context).appTheme.fieldCardBg,
+                          radius: AppRadius.r12)
+                      .padding(horizontal: Insets.i20, vertical: Insets.i20),
+                ))),
           ));
     });
   }

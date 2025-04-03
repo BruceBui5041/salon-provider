@@ -1,4 +1,4 @@
-import 'package:fixit_provider/widgets/multi_dropdown_common.dart';
+import 'package:salon_provider/widgets/multi_dropdown_common.dart';
 import 'package:flutter/cupertino.dart';
 import '../config.dart';
 

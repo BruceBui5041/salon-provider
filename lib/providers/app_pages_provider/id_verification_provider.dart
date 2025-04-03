@@ -1,7 +1,6 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class IdVerificationProvider extends ChangeNotifier {
-
   XFile? imageFile;
 
   // GET IMAGE FROM GALLERY
@@ -22,5 +21,4 @@ class IdVerificationProvider extends ChangeNotifier {
       notifyListeners();
     });
   }
-
 }

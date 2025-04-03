@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/network/api_config.dart';
+import 'package:salon_provider/common/Utils.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/network/api_config.dart';
 
 typedef FromJson<T> = T Function(Map<String, dynamic> json);
 
@@ -17,8 +18,8 @@ class CommonApi {
         throw Exception("Failed to load data");
       }
     } catch (e) {
-      print(e);
-      throw Exception("Failed to load data");
+      Utils.warning(e.toString());
+      throw Exception(e.toString());
     }
   }
 }

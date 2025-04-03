@@ -2,7 +2,7 @@
 
 // import 'dart:ui' as ui;
 
-// import 'package:fixit_provider/config.dart';
+// import 'package:salon_provider/config.dart';
 
 // class CustomThumbShape extends SfThumbShape {
 //   final ui.Image image;

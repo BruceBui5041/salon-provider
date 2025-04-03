@@ -63,4 +63,5 @@ class RouteName {
   final String registerScreen = 'registerScreen';
   final String addSingleService = 'addSingleService';
   final String editService = 'editService';
+  final String customPendingBooking = 'customPendingBooking';
 }

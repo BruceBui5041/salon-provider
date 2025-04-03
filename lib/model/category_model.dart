@@ -1,4 +1,4 @@
-import 'package:fixit_provider/model/media_model.dart';
+import 'package:salon_provider/model/media_model.dart';
 
 class CategoryModel {
   int? id;

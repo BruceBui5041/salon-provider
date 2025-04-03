@@ -1,28 +1,28 @@
 import 'dart:developer';
 
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import '../../model/pending_booking_model.dart';
 
-
 class OngoingBookingProvider with ChangeNotifier {
-
   PendingBookingModel? ongoingBookingModel;
   String? amount;
   bool isServicemen = false;
   TextEditingController reasonCtrl = TextEditingController();
-  onReady(context){
-    if(isFreelancer) {
+  onReady(context) {
+    if (isFreelancer) {
       isServicemen = false;
     }
-   if(isFreelancer != true){
-     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
-     log("DATATAAATA ${data}");
-     if(data != null){
-       amount = data["amount"];
-       isServicemen = data["bool"] ?? false;
-     }
-   }
-    ongoingBookingModel = PendingBookingModel.fromJson( isServicemen ? appArray.ongoingBookingWithList : appArray.ongoingBookingList);
+    if (isFreelancer != true) {
+      dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
+      log("DATATAAATA ${data}");
+      if (data != null) {
+        amount = data["amount"];
+        isServicemen = data["bool"] ?? false;
+      }
+    }
+    ongoingBookingModel = PendingBookingModel.fromJson(isServicemen
+        ? appArray.ongoingBookingWithList
+        : appArray.ongoingBookingList);
     notifyListeners();
   }
 
@@ -34,5 +34,4 @@ class OngoingBookingProvider with ChangeNotifier {
           return BookingStatusDialog();
         });
   }
-
 }

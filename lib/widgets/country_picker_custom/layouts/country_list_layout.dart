@@ -1,4 +1,4 @@
-import 'package:fixit_provider/widgets/country_picker_custom/country_picker_custom.dart';
+import 'package:salon_provider/widgets/country_picker_custom/country_picker_custom.dart';
 import 'package:flutter/cupertino.dart';
 import '../../../../config.dart';
 

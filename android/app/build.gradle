@@ -1,5 +1,8 @@
 plugins {
     id "com.android.application"
+    // START: FlutterFire Configuration
+    id 'com.google.gms.google-services'
+    // END: FlutterFire Configuration
     id "kotlin-android"
     // The Flutter Gradle Plugin must be applied after the Android and Kotlin Gradle plugins.
     id "dev.flutter.flutter-gradle-plugin"
@@ -29,11 +32,13 @@ if (flutterVersionName == null) {
 }
 
 android {
-    namespace "com.webiots.fixit_provider"
+    namespace "com.meomeojsc.salonprovider"
     compileSdkVersion 34
     ndkVersion flutter.ndkVersion
 
     compileOptions {
+        coreLibraryDesugaringEnabled true
+
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
@@ -48,8 +53,8 @@ android {
 
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
-        applicationId "com.webiots.fixit_provider"
-        namespace "com.webiots.fixit_provider" 
+        applicationId "com.meomeojsc.salonprovider"
+        namespace "com.meomeojsc.salonprovider" 
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-gradle-build-configuration.
         minSdkVersion 23
@@ -59,7 +64,7 @@ android {
         // Thêm dòng sau để định nghĩa giá trị cho placeholder
        
         // Thêm dòng sau để định nghĩa giá trị cho placeholder
-        // manifestPlaceholders = [applicationName: "com.webiots.fixit_provider"]
+        // manifestPlaceholders = [applicationName: "com.meomeojsc.salonprovider"]
     }
 
     buildTypes {
@@ -78,7 +83,8 @@ flutter {
 }
 
 dependencies {
-    
+    coreLibraryDesugaring 'com.android.tools:desugar_jdk_libs:2.0.4'
+
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
     implementation "androidx.activity:activity:1.6.0-alpha05"
 }

@@ -1,5 +1,5 @@
 import 'package:country_list_pick/support/code_countries_en.dart';
-import 'package:fixit_provider/widgets/country_picker_custom/selection_item_list.dart';
+import 'package:salon_provider/widgets/country_picker_custom/selection_item_list.dart';
 
 import '../../config.dart';
 

@@ -1,12 +1,11 @@
 import 'dart:developer';
 
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import 'package:flutter/services.dart';
 import '../../model/countty_model.dart';
 
-
 class SignUpCompanyProvider with ChangeNotifier {
-  GlobalKey<FormState>  signupFormKey = GlobalKey<FormState>();
+  GlobalKey<FormState> signupFormKey = GlobalKey<FormState>();
   double slider = 0.0;
   String dialCode = "+91";
   String languageSelect = "[]";
@@ -14,10 +13,10 @@ class SignUpCompanyProvider with ChangeNotifier {
   String? countryValue;
   int pageIndex = 0;
   int fPageIndex = 0;
-  CountryModel? countryCompany,countryProvider,stateCompany,stateProvider;
+  CountryModel? countryCompany, countryProvider, stateCompany, stateProvider;
   List<CountryModel> countryList = [];
   List<CountryModel> stateList = [];
-  ScrollController controller =  ScrollController();
+  ScrollController controller = ScrollController();
 
   TextEditingController companyName = TextEditingController();
   TextEditingController phoneName = TextEditingController();
@@ -39,7 +38,6 @@ class SignUpCompanyProvider with ChangeNotifier {
   TextEditingController ownerName = TextEditingController();
   TextEditingController providerPhoneNumber = TextEditingController();
   TextEditingController providerEmail = TextEditingController();
-
 
   final FocusNode companyNameFocus = FocusNode();
   final FocusNode phoneNameFocus = FocusNode();
@@ -85,50 +83,52 @@ class SignUpCompanyProvider with ChangeNotifier {
   }
 
   onLanguageSelect(options) {
-   languageSelect = options.toString();
-   notifyListeners();
+    languageSelect = options.toString();
+    notifyListeners();
   }
 
-  onLocationDelete(index,context,sync){
-   final value = Provider.of<DeleteDialogProvider>(context, listen: false);
+  onLocationDelete(index, context, sync) {
+    final value = Provider.of<DeleteDialogProvider>(context, listen: false);
 
-   value.onDeleteDialog(sync, context, eImageAssets.location, appFonts.delete, appFonts.areYiuSureDeleteLocation, (){
-     appArray.serviceAvailableAreaList.removeAt(index);
-     route.pop(context);
-     notifyListeners();
-   });
-   value.notifyListeners();
-
+    value.onDeleteDialog(sync, context, eImageAssets.location, appFonts.delete,
+        appFonts.areYiuSureDeleteLocation, () {
+      appArray.serviceAvailableAreaList.removeAt(index);
+      route.pop(context);
+      notifyListeners();
+    });
+    value.notifyListeners();
   }
 
   onChangeCountryCompany(val) {
     countryCompany = val;
     notifyListeners();
   }
+
   onChangeStateCompany(val) {
     stateCompany = val;
     notifyListeners();
   }
 
-  onReady(){
+  onReady() {
     countryList = [];
     stateList = [];
     notifyListeners();
     appArray.countryObjectList.asMap().entries.forEach((element) {
-      if(!countryList.contains(CountryModel.fromJson(element.value))) {
+      if (!countryList.contains(CountryModel.fromJson(element.value))) {
         countryList.add(CountryModel.fromJson(element.value));
       }
     });
 
     appArray.countryObjectList.asMap().entries.forEach((element) {
-      if(!stateList.contains(CountryModel.fromJson(element.value))) {
+      if (!stateList.contains(CountryModel.fromJson(element.value))) {
         stateList.add(CountryModel.fromJson(element.value));
       }
     });
-    descriptionFocus.addListener(() {notifyListeners();});
+    descriptionFocus.addListener(() {
+      notifyListeners();
+    });
     notifyListeners();
   }
-
 
   changeDialCode(CountryCodeCustom country) {
     dialCode = country.dialCode!;
@@ -140,7 +140,6 @@ class SignUpCompanyProvider with ChangeNotifier {
     notifyListeners();
   }
 
-
   slidingValue(newValue) {
     slider = newValue;
     notifyListeners();
@@ -151,17 +150,18 @@ class SignUpCompanyProvider with ChangeNotifier {
     notifyListeners();
   }
 
-   scrollAnimated(double position) {
-    controller.animateTo(position, duration: Duration(seconds: 1), curve: Curves.ease);
+  scrollAnimated(double position) {
+    controller.animateTo(position,
+        duration: Duration(seconds: 1), curve: Curves.ease);
     notifyListeners();
   }
 
-  onFreelancerTap(context) async{
+  onFreelancerTap(context) async {
     scrollAnimated(1);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     fPageIndex++;
-    if(fPageIndex == 2) {
-      prefs.setBool(session.isLogin,true);
+    if (fPageIndex == 2) {
+      prefs.setBool(session.isLogin, true);
       notifyListeners();
       route.pushReplacementNamed(context, routeName.dashboard);
     }
@@ -169,28 +169,27 @@ class SignUpCompanyProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onNext(context) async{
+  onNext(context) async {
     scrollAnimated(1);
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     pageIndex++;
-    if(pageIndex == 3){
-      prefs.setBool(session.isLogin,true);
-       route.pushReplacementNamed(context, routeName.dashboard);
+    if (pageIndex == 3) {
+      prefs.setBool(session.isLogin, true);
+      route.pushReplacementNamed(context, routeName.dashboard);
     }
     log("INDEXEPAGE $pageIndex");
     notifyListeners();
   }
 
-  popInvokeFree (didPop) async{
+  popInvokeFree(didPop) async {
     scrollAnimated(1);
     fPageIndex = 0;
     notifyListeners();
   }
 
-  popInvoke (didPop) async{
+  popInvoke(didPop) async {
     scrollAnimated(1);
-    pageIndex --;
+    pageIndex--;
     notifyListeners();
   }
-
 }

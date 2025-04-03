@@ -1,4 +1,4 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class ChartData {
   ChartData(this.x, this.y, [this.color]);

@@ -65,7 +65,7 @@ class WithdrawAmountBottomSheet extends StatelessWidget {
                                     val: value.withdrawValue,
                                     hintText: appFonts.selectBank,
                                     isIcon: true,
-                                    list: appArray.branchList,
+                                    // list: appArray.branchList,
                                     onChanged: (val) =>
                                         value.onWithdrawTap(val)),
                                 const VSpace(Sizes.s20),

@@ -39,7 +39,7 @@ class SignUpOneFreelancer extends StatelessWidget {
                 icon: eSvgAssets.identity,
                 val: value.countryValue,
                 isIcon: true,
-                list: appArray.identityList,
+                // list: appArray.identityList,
                 onChanged: (val) => value.onChangeCountry(val))
             .paddingSymmetric(horizontal: Insets.i20),
         Text(language(context, appFonts.identityNo),

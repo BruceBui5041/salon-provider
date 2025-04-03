@@ -2,12 +2,12 @@ import 'dart:convert';
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
-import 'package:fixit_provider/common/Utils.dart';
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/model/response/category_response.dart';
-import 'package:fixit_provider/network/api_config.dart';
-import 'package:fixit_provider/screens/app_pages_screens/add_new_service_screen/repository/add_new_service_repository.dart';
+import 'package:salon_provider/common/Utils.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/network/api_config.dart';
+import 'package:salon_provider/repositories/add_new_service_repository.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AddNewServiceProvider with ChangeNotifier {
@@ -99,47 +99,31 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   Future<void> addService() async {
-    var images = listMultipartServiceImage;
-    var thumbNail = await MultipartFile.fromFile(
-      thumbFile!.path,
-      filename: thumbFile!.path.split('/').last,
-    );
-    var mainImage = await MultipartFile.fromFile(
-      imageFile!.path,
-      filename: imageFile!.path.split('/').last,
-    );
-
-    FormData formData = FormData.fromMap({
-      "json": json.encode({
-        "slug": slug,
-        // "owner_id": "",
-        "service_version": {
-          "title": titleController.text,
-          "description": description.text,
-          "category_id": categoryValue!.id,
-          "sub_category_id": subCategoryValue!.id,
-          "thumbnail": thumbFile!.path, // Chuyển đổi đúng dạng MultipartFile
-          "price": priceController.text,
-          "discounted_price": discountedPriceController.text,
-          "duration": int.parse(durationValue!),
-          // "main_image_id": "2", // Chuyển đổi đúng dạng MultipartFile
-        }
-      }).toString(),
-      "images": thumbNail
-      // await MultipartFile.fromFile(
-      //   imageThumbnail!.path,
-      //   filename: imageThumbnail!.path.split('/').last,
-      // )
-      , // Danh sách file ảnh
-    });
-
-    // log(json.encode(jsonBody));
-    // FormData formData = FormData.fromMap({
-    //   "json": json.encode(jsonBody), // convert json to string
-    //   "images": images, // Danh sách file
-    // });
-
     try {
+      FormData formData = FormData.fromMap({
+        "json": json.encode({
+          "slug": serviceName.text.toSlug(),
+          "service_version": {
+            "title": serviceName.text,
+            "description": featuredPoints.text,
+            "category_id": categoryValue!.id,
+            "sub_category_id": subCategoryValue!.id,
+            "thumbnail": "",
+            "price": amount.text,
+            "discounted_price": discount.text,
+            "duration": int.parse(durationValue ?? "15") *
+                1000, // Convert to milliseconds
+            "main_image_id": "0"
+          }
+        }),
+        "images": thumbFile != null
+            ? await MultipartFile.fromFile(
+                thumbFile!.path,
+                filename: thumbFile!.path.split('/').last,
+              )
+            : null,
+      });
+
       var res = await ApiConfig().dio.post(
             "/service",
             data: formData,
@@ -147,10 +131,16 @@ class AddNewServiceProvider with ChangeNotifier {
               contentType: "multipart/form-data",
             ),
           );
-      print(res.data);
+
+      if (res.statusCode == 200) {
+        // Handle success
+        log("Service added successfully: ${res.data}");
+      } else {
+        log("Failed to add service: ${res.statusMessage}");
+      }
     } catch (e) {
-      if (e is DioError) {
-        print(e.response!.data);
+      if (e is DioException) {
+        Utils.error(e);
       }
       log("ERROR: $e");
     }

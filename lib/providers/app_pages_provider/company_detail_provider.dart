@@ -1,6 +1,6 @@
 import 'dart:ui' as ui;
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:fixit_provider/model/countty_model.dart';
+import 'package:salon_provider/model/countty_model.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
 import '../../config.dart';
@@ -113,7 +113,7 @@ class CompanyDetailProvider with ChangeNotifier {
                                   val: areaValue,
                                   hintText: appFonts.selectArea,
                                   isIcon: true,
-                                  list: appArray.areaList,
+                                  // list: appArray.areaList,
                                   onChanged: (val) => onAreaTap(val)),
                               const VSpace(Sizes.s20),
                               Row(children: [

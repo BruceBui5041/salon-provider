@@ -1,4 +1,4 @@
-# fixit_provider
+# salon_provider
 
 A new Flutter project.
 

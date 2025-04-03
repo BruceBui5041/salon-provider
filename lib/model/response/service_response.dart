@@ -2,8 +2,8 @@
 //
 //     final serviceResponse = serviceResponseFromJson(jsonString);
 
-import 'package:fixit_provider/model/response/image_response.dart';
-import 'package:fixit_provider/model/response/service_version_response.dart';
+import 'package:salon_provider/model/response/image_response.dart';
+import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 

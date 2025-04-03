@@ -1,9 +1,11 @@
 import 'package:cookie_jar/cookie_jar.dart';
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/auth_config.dart';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/config/storage_config.dart';
-import 'package:fixit_provider/screens/auth_screens/login_as_provider_screen/repository/login_repository.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/auth_config.dart';
+import 'package:salon_provider/config/cookie_config.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/config/storage_config.dart';
+import 'package:salon_provider/helper/notification_helper.dart';
+import 'package:salon_provider/repositories/login_repository.dart';
 
 class LoginAsProvider with ChangeNotifier {
   TextEditingController emailController = TextEditingController();
@@ -61,6 +63,12 @@ class LoginAsProvider with ChangeNotifier {
 
   Future<void> checkAuth(BuildContext context) async {
     var res = await repo.checkAuth();
+    List<String> cookiesList = await StorageConfig.readList();
+    if (cookiesList.isEmpty) {
+      await StorageConfig.deleteAll();
+      return;
+    }
+
     if (res != null) {
       await AuthConfig.setUserId(res.data.id);
       route.pushNamed(context, routeName.dashboard);

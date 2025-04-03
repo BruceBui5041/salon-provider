@@ -1,4 +1,4 @@
-import 'package:fixit_provider/widgets/common_fonts.dart';
+import 'package:salon_provider/widgets/common_fonts.dart';
 
 import '../common/app_array.dart';
 import '../common/app_fonts.dart';

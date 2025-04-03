@@ -1,4 +1,4 @@
-import 'package:fixit_provider/providers/auth_provider/register_provider.dart';
+import 'package:salon_provider/providers/auth_provider/register_provider.dart';
 import 'package:flutter/gestures.dart';
 import '../../../../config.dart';
 

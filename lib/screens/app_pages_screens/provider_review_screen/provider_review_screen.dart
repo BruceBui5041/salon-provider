@@ -55,7 +55,7 @@ class ProviderReviewScreen extends StatelessWidget {
                       isIcon: false,
                       hintText: appFonts.all,
                       val: value.settingExValue,
-                      list: appArray.reviewLowHighList,
+                      // list: appArray.reviewLowHighList,
                       onChanged: (val) => value.onSettingReview(val)))
             ]),
             const VSpace(Sizes.s15),

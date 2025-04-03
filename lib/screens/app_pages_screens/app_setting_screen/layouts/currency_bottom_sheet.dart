@@ -1,5 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:fixit_provider/screens/app_pages_screens/app_setting_screen/layouts/bullet_layout.dart';
+import 'package:salon_provider/screens/app_pages_screens/app_setting_screen/layouts/bullet_layout.dart';
 import 'package:flutter/cupertino.dart';
 
 import '../../../../config.dart';

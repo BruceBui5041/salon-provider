@@ -1,8 +1,8 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/model/response/service_response.dart';
-import 'package:fixit_provider/providers/app_pages_provider/all_service_provider.dart';
-import 'package:fixit_provider/providers/app_pages_provider/edit_service_provider.dart';
-import 'package:fixit_provider/widgets/cache_image.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/model/response/service_response.dart';
+import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
+import 'package:salon_provider/providers/app_pages_provider/edit_service_provider.dart';
+import 'package:salon_provider/widgets/cache_image.dart';
 
 class AllServiceLayout extends StatefulWidget {
   const AllServiceLayout({super.key});
@@ -64,7 +64,7 @@ class _AllServiceLayoutState extends State<AllServiceLayout> {
                           style: appCss.dmDenseSemiBold15
                               .textColor(appColor(context).appTheme.darkText)),
                       Text(
-                          "\$${value.serviceVersion?.price?.toDecimal() ?? ''}",
+                          "\$${value.serviceVersion?.price?.toCurrencyVnd() ?? ''}",
                           style: appCss.dmDenseBold16
                               .textColor(appColor(context).appTheme.darkText))
                     ]),

@@ -1,6 +1,6 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/config/constant_api_config.dart';
-import 'package:fixit_provider/config/cookie_config.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/constant_api_config.dart';
+import 'package:salon_provider/config/cookie_config.dart';
 
 class IntroProvider with ChangeNotifier {
   int selectedIndex = 0;

@@ -1,6 +1,8 @@
 import 'dart:async';
-import 'package:fixit_provider/config/injection_config.dart';
-import 'package:fixit_provider/screens/auth_screens/verify_otp_screen/repository/verify_otp_repository.dart';
+import 'package:salon_provider/common/Utils.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/helper/notification_helper.dart';
+import 'package:salon_provider/repositories/verify_otp_repository.dart';
 
 import '../../config.dart';
 
@@ -19,6 +21,10 @@ class VerifyOtpProvider with ChangeNotifier {
     String otp = otpController.text;
     try {
       await repo.verifyOtp({"otp": otp});
+      NotificationHelper().getToken(onSuccess: (token) async {
+        Utils.debug('FCM Token: $token');
+        await repo.saveUserDevice(token);
+      });
       if (onSucess != null) {
         onSucess();
       }

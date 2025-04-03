@@ -4,9 +4,9 @@ import 'package:cookie_jar/cookie_jar.dart';
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
 import 'package:dio_cookie_manager/dio_cookie_manager.dart';
-import 'package:fixit_provider/config/constant_api_config.dart';
-import 'package:fixit_provider/config/storage_config.dart';
-import 'package:fixit_provider/network/interceptor.dart';
+import 'package:salon_provider/config/constant_api_config.dart';
+import 'package:salon_provider/config/storage_config.dart';
+import 'package:salon_provider/network/interceptor.dart';
 
 class ApiConfig {
   ApiConfig._instance();

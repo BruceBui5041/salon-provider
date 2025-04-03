@@ -8,7 +8,10 @@ part 'search_request_model.g.dart';
 @JsonSerializable(explicitToJson: true)
 class SearchRequestBody {
   final String model;
+  @JsonKey(name: 'conditions')
   final List<List<Condition>> conditions;
+  @JsonKey(name: 'order_by')
+  final String? orderBy;
 
   @FieldItemConverter()
   final List<FieldItem> fields;
@@ -17,6 +20,7 @@ class SearchRequestBody {
     required this.model,
     required this.conditions,
     required this.fields,
+    this.orderBy,
   });
 
   factory SearchRequestBody.fromJson(Map<String, dynamic> json) =>

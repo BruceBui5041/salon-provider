@@ -1,4 +1,4 @@
-import 'package:fixit_provider/config/config_env.dart';
+import 'package:salon_provider/config/config_env.dart';
 
 class ConstantApiConfig {
   // Thể hiện duy nhất của lớp
