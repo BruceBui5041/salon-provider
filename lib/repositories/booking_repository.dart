@@ -5,7 +5,6 @@ import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/gen_qr_response.dart';
 import 'package:salon_provider/model/response/payment_qr_transaction.dart';
-import 'package:salon_provider/model/response/service_version_response.dart';
 
 class BookingRepository extends RepositoryConfig {
   // Future<BookingReso> getBookingDetails(String bookingId) async {
@@ -43,19 +42,12 @@ class BookingRepository extends RepositoryConfig {
     return res;
   }
 
-  Future<BookingResponse> getBookings() async {
-    var userId = await AuthConfig.getUserId();
+  Future<BookingResponse> getBookings({
+    List<List<Condition>>? conditions,
+  }) async {
     var requestBody = SearchRequestBody(
         model: EnumColumn.booking.name,
-        conditions: [
-          [
-            Condition(
-              source: "service_man_id",
-              operator: "=",
-              target: userId ?? "",
-            ),
-          ]
-        ],
+        conditions: conditions ?? [],
         fields: [
           FieldItem(field: "service_versions"),
           FieldItem(field: "service_versions.main_image"),

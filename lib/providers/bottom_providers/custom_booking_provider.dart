@@ -1,9 +1,12 @@
+import 'dart:async';
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
+import 'package:salon_provider/model/request/search_request_model.dart';
+import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/custom_booking_layout.dart';
 
-import '../../model/booking_model.dart';
 import '../../screens/bottom_screens/booking_screen/layouts/booking_filter_layout.dart';
 import '../../widgets/year_dialog.dart';
 
@@ -12,6 +15,150 @@ class CustomBookingProvider with ChangeNotifier {
   TextEditingController searchCtrl = TextEditingController();
   FocusNode searchFocus = FocusNode();
   FocusNode categoriesFocus = FocusNode();
+  BuildContext? _context;
+  Timer? _debounce;
+  String _previousSearchText = "";
+
+  // Add these constants at the top of the class
+  static const String bookingStatusPending = "pending";
+  static const String bookingStatusConfirmed = "confirmed";
+  static const String bookingStatusInProgress = "in_progress";
+  static const String bookingStatusCompleted = "completed";
+  static const String bookingStatusCancelled = "cancelled";
+
+  CustomBookingProvider() {
+    searchCtrl.addListener(_onSearchChanged);
+  }
+
+  @override
+  void dispose() {
+    _debounce?.cancel();
+    searchCtrl.dispose();
+    super.dispose();
+  }
+
+  void _onSearchChanged() {
+    if (_context != null) {
+      // Skip if both previous and current search texts are empty
+      if (_previousSearchText.isEmpty && searchCtrl.text.isEmpty) {
+        return;
+      }
+
+      if (_debounce?.isActive ?? false) _debounce!.cancel();
+      _debounce = Timer(const Duration(milliseconds: 500), () {
+        _previousSearchText = searchCtrl.text;
+        _searchBookings();
+      });
+    }
+  }
+
+  Future<void> _searchBookings() async {
+    isProcessing = true;
+    notifyListeners();
+
+    try {
+      List<List<Condition>> conditions = [];
+      var userId = await AuthConfig.getUserId();
+      var serviceManCondition = Condition(
+        source: "service_man_id",
+        operator: "=",
+        target: userId ?? "",
+      );
+
+      // Add search text condition
+      if (searchCtrl.text.isNotEmpty) {
+        conditions.add([
+          serviceManCondition,
+          Condition(
+            source: "service_versions.title",
+            operator: "like",
+            target: searchCtrl.text,
+          ),
+        ]);
+      } else {
+        conditions.add([serviceManCondition]);
+      }
+
+      // Add status filter condition
+      if (statusIndex > 0 && statusIndex < appArray.bookingStatusList.length) {
+        String status;
+        switch (statusIndex) {
+          case 1:
+            status = bookingStatusPending;
+            break;
+          case 2:
+            status = bookingStatusConfirmed;
+            break;
+          case 3:
+            status = bookingStatusInProgress;
+            break;
+          case 4:
+            status = bookingStatusCompleted;
+            break;
+          case 5:
+            status = bookingStatusCancelled;
+            break;
+          default:
+            status = bookingStatusPending;
+        }
+        conditions[0].add(
+          Condition(
+            source: "booking_status",
+            operator: "=",
+            target: status,
+          ),
+        );
+      }
+
+      // Add date range filter condition
+      if (rangeStart != null && rangeEnd != null) {
+        // Create start and end dates at midnight for proper date comparison
+        final startDate =
+            DateTime(rangeStart!.year, rangeStart!.month, rangeStart!.day);
+        final endDate = DateTime(
+            rangeEnd!.year, rangeEnd!.month, rangeEnd!.day, 23, 59, 59);
+
+        conditions[0].addAll([
+          Condition(
+            source: "booking_date",
+            operator: ">=",
+            target: startDate.toIso8601String(),
+          ),
+          Condition(
+            source: "booking_date",
+            operator: "<=",
+            target: endDate.toIso8601String(),
+          ),
+        ]);
+      }
+
+      // Add category filter conditions
+      if (statusList.isNotEmpty) {
+        conditions[0].addAll(
+          statusList
+              .map((categoryId) => Condition(
+                    source: "service_versions.category.id",
+                    operator: "=",
+                    target: categoryId.toString(),
+                  ))
+              .toList(),
+        );
+      }
+
+      var res = await repo.getBookings(conditions: conditions);
+      bookingList = res.data;
+      freelancerBookingList = res.data;
+      notifyListeners();
+    } catch (e) {
+      // Handle error if needed
+      bookingList = [];
+      freelancerBookingList = [];
+      notifyListeners();
+    } finally {
+      isProcessing = false;
+      notifyListeners();
+    }
+  }
 
   String? month;
   List<ItemBooking> bookingList = [];
@@ -42,25 +189,108 @@ class CustomBookingProvider with ChangeNotifier {
   FocusNode reasonFocus = FocusNode();
   TextEditingController reasonCtrl = TextEditingController();
 
+  Widget buildBookingList(BuildContext context) {
+    return Column(
+      children: [
+        SearchTextFieldCommon(
+          focusNode: searchFocus,
+          controller: searchCtrl,
+        ).paddingSymmetric(horizontal: Insets.i20),
+        const SizedBox(height: Insets.i15),
+        Expanded(
+          child: isProcessing
+              ? const Center(
+                  child: CircularProgressIndicator(),
+                )
+              : bookingList.isEmpty
+                  ? Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset(
+                            isFreelancer
+                                ? eImageAssets.noListFree
+                                : eImageAssets.noBooking,
+                            height: Sizes.s180,
+                            width: Sizes.s180,
+                          ),
+                          const SizedBox(height: Sizes.s15),
+                          Text(
+                            "Ohh no ! List is empty",
+                            style: appCss.dmDenseMedium18.textColor(
+                              appColor(context).appTheme.primary,
+                            ),
+                          ),
+                          const SizedBox(height: Sizes.s8),
+                          Text(
+                            "Your booking list is empty because your user hasn't made any bookings yet.",
+                            textAlign: TextAlign.center,
+                            style: appCss.dmDenseMedium14.textColor(
+                              appColor(context)
+                                  .appTheme
+                                  .darkText
+                                  .withOpacity(0.5),
+                            ),
+                          ).paddingSymmetric(horizontal: Insets.i20),
+                        ],
+                      ),
+                    )
+                  : ListView.builder(
+                      padding: EdgeInsets.symmetric(horizontal: Insets.i20),
+                      shrinkWrap: true,
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: isFreelancer
+                          ? freelancerBookingList.length
+                          : bookingList.length,
+                      itemBuilder: (context, index) {
+                        final booking = isFreelancer
+                            ? freelancerBookingList[index]
+                            : bookingList[index];
+                        return CustomBookingLayout(
+                          data: booking,
+                          onTap: () => onTapBookings(booking, context),
+                        );
+                      },
+                    ),
+        ),
+      ],
+    );
+  }
+
   onReady(context) async {
+    _context = context;
     isProcessing = true;
     notifyListeners();
 
-    bookingList = [];
-    freelancerBookingList = [];
-    notifyListeners();
-
     try {
-      var res = await repo.getBookings();
-      if (res.data.isNotEmpty) {
-        res.data.asMap().entries.forEach((element) {
-          bookingList = res.data;
-          freelancerBookingList = res.data;
-        });
+      List<List<Condition>>? conditions;
+
+      var userId = await AuthConfig.getUserId();
+      conditions = [
+        [
+          Condition(
+            source: "service_man_id",
+            operator: "=",
+            target: userId ?? "",
+          ),
+        ]
+      ];
+      if (searchCtrl.text.isNotEmpty) {
+        conditions[0].add(Condition(
+          source: "service_versions.title",
+          operator: "like",
+          target: searchCtrl.text,
+        ));
       }
+
+      var res = await repo.getBookings(conditions: conditions);
+      bookingList = res.data;
+      freelancerBookingList = res.data;
       onInit();
     } catch (e) {
       // Handle error if needed
+      bookingList = [];
+      freelancerBookingList = [];
     } finally {
       isProcessing = false;
       notifyListeners();
@@ -284,5 +514,26 @@ class CustomBookingProvider with ChangeNotifier {
         return BookingFilterLayout();
       },
     );
+  }
+
+  onApplyFilter(context) {
+    route.pop(context);
+    _searchBookings();
+  }
+
+  onClearFilter(context) {
+    statusIndex = 0;
+    statusList.clear();
+    rangeStart = null;
+    rangeEnd = null;
+    isAssignMe = false;
+    route.pop(context);
+    _searchBookings();
+  }
+
+  bool get hasActiveFilters {
+    return statusIndex > 0 || // Status filter is active
+        statusList.isNotEmpty || // Category filter is active
+        (rangeStart != null && rangeEnd != null); // Date range filter is active
   }
 }

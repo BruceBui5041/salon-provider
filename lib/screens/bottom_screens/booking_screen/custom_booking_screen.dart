@@ -41,9 +41,32 @@ class CustomBookingScreen extends StatelessWidget {
             appCss.dmDenseBold18.textColor(appColor(context).appTheme.darkText),
       ),
       actions: [
-        _buildActionButton(
-          icon: eSvgAssets.filter,
-          onTap: () => provider.onTapFilter(context),
+        Stack(
+          children: [
+            _buildActionButton(
+              icon: eSvgAssets.filter,
+              onTap: () => provider.onTapFilter(context),
+              color: provider.hasActiveFilters
+                  ? appColor(context).appTheme.primary
+                  : appColor(context).appTheme.fieldCardBg,
+              svgColor: provider.hasActiveFilters
+                  ? appColor(context).appTheme.whiteColor
+                  : appColor(context).appTheme.darkText,
+            ),
+            if (provider.hasActiveFilters)
+              Positioned(
+                right: 0,
+                top: 0,
+                child: Container(
+                  width: Sizes.s10,
+                  height: Sizes.s10,
+                  decoration: BoxDecoration(
+                    color: appColor(context).appTheme.red,
+                    shape: BoxShape.circle,
+                  ),
+                ),
+              ),
+          ],
         ),
         _buildActionButton(
           icon: eSvgAssets.chat,
@@ -61,25 +84,18 @@ class CustomBookingScreen extends StatelessWidget {
   Widget _buildActionButton({
     required String icon,
     required VoidCallback onTap,
+    Color? color,
+    Color? svgColor,
   }) {
     return CommonArrow(
       arrow: icon,
       onTap: onTap,
+      color: color,
+      svgColor: svgColor,
     );
   }
 
   Widget _buildBody(BuildContext context, CustomBookingProvider provider) {
-    final hasBookings = provider.bookingList.isNotEmpty ||
-        provider.freelancerBookingList.isNotEmpty;
-    if (provider.isProcessing) {
-      return const Center(
-        child: CircularProgressIndicator(),
-      );
-    }
-    if (!hasBookings) {
-      return _buildEmptyState(context);
-    }
-
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -87,7 +103,15 @@ class CustomBookingScreen extends StatelessWidget {
           _buildSearchField(provider),
           _buildAllBookingsHeader(context),
           if (isFreelancer != true) _buildAssignMeSwitch(context, provider),
-          _buildBookingList(context, provider),
+          if (provider.isProcessing)
+            const Center(
+              child: CircularProgressIndicator(),
+            ).paddingSymmetric(vertical: Insets.i50)
+          else if (provider.bookingList.isNotEmpty ||
+              provider.freelancerBookingList.isNotEmpty)
+            _buildBookingList(context, provider)
+          else
+            _buildEmptyState(context),
         ],
       ).padding(
         horizontal: Insets.i20,

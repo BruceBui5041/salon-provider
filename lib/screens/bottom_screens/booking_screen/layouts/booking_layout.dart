@@ -28,7 +28,7 @@ class BookingLayout extends StatelessWidget {
                       .textColor(appColor(context).appTheme.darkText))
               .paddingOnly(top: Insets.i8, bottom: Insets.i3),
           Row(children: [
-            Text(language(context, "\$${data!.price!}"),
+            Text(language(context, " ${data!.price!}"),
                 style: appCss.dmDenseBold18
                     .textColor(appColor(context).appTheme.primary)),
             const HSpace(Sizes.s8),

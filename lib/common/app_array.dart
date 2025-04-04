@@ -2693,8 +2693,8 @@ class AppArray {
       "bookingNumber": "#15263",
       "image": eImageAssets.b8,
       "package_id": null,
-      "required_servicemen": 3,
       "isExpand": false,
+      "required_servicemen": 3,
       "name": "Chimney sweeping",
       "price": "21.78",
       "status": appFonts.cancelled,
@@ -2798,12 +2798,11 @@ class AppArray {
 
   var bookingStatusList = [
     "All booking",
-    'Pending booking',
-    "Accepted booking",
-    "Assigned booking",
-    "Servicemen’s pending approval booking",
-    "Ongoing booking",
-    "Hold booking",
+    "Pending",
+    "Confirmed",
+    "In Progress",
+    "Completed",
+    "Cancelled"
   ];
 
   var bookingStatus = [
