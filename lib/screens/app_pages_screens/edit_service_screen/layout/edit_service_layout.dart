@@ -357,28 +357,29 @@ class TimeDropdown extends StatefulWidget {
 }
 
 class _TimeDropdownState extends State<TimeDropdown> {
-  String? _selectedItem;
+  int? _selectedItem;
   int? _minutes;
 
-  final List<String> _timeItems = ['15p', '30p', '1h', '2h', '3h', '5h'];
+  final List<int> _timeItems = [15, 30, 60, 120, 180, 300];
 
   @override
   void initState() {
-    _selectedItem = widget.initValue != null
-        ? _timeItems.firstWhere(
-            (element) => convertToMinutes(element) == widget.initValue)
-        : null;
+    _selectedItem = widget.initValue;
     super.initState();
   }
 
-  // Hàm chuyển đổi giá trị thành số phút
-  int convertToMinutes(String time) {
-    if (time.endsWith('p')) {
-      return int.parse(time.replaceAll('p', ''));
-    } else if (time.endsWith('h')) {
-      return int.parse(time.replaceAll('h', '')) * 60;
+  String convertToLabel(int time) {
+    if (time < 60) {
+      return '$time phút';
+    } else {
+      int hours = time ~/ 60;
+      int minutes = time % 60;
+      if (minutes == 0) {
+        return '$hours giờ';
+      } else {
+        return '$hours giờ $minutes phút';
+      }
     }
-    return 0;
   }
 
   @override
@@ -397,29 +398,24 @@ class _TimeDropdownState extends State<TimeDropdown> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             mainAxisSize: MainAxisSize.min,
             children: [
-              DropdownButton<String>(
+              DropdownButton<int>(
                 value: _selectedItem,
                 hint: Text('Chọn thời gian'),
-                items: _timeItems.map((String value) {
-                  return DropdownMenuItem<String>(
+                items: _timeItems.map((int value) {
+                  return DropdownMenuItem<int>(
                     value: value,
-                    child: Text(value),
+                    child: Text(convertToLabel(value)),
                   );
                 }).toList(),
-                onChanged: (String? newValue) {
+                onChanged: (int? newValue) {
                   setState(() {
-                    widget.onChanged!(convertToMinutes(newValue!));
                     _selectedItem = newValue;
-                    _minutes =
-                        newValue != null ? convertToMinutes(newValue) : null;
+                    if (newValue != null) {
+                      widget.onChanged?.call(newValue);
+                    }
                   });
                 },
               ),
-              if (_minutes != null)
-                Padding(
-                  padding: const EdgeInsets.only(top: 10.0, left: 20.0),
-                  child: Text('Số phút: $_minutes'),
-                ),
             ],
           ),
         ),

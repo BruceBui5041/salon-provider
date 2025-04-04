@@ -10,7 +10,7 @@ class AllServiceRepository extends RepositoryConfig {
     var res = await commonRestClient.search<ServiceResponse>(
         ServiceResponse.fromJson,
         SearchRequestBody(model: EnumColumn.service.name, conditions: [
-          [Condition(source: "creator_id", operator: "=", target: userId ?? '')]
+          [Condition(source: "owner_id", operator: "=", target: userId ?? '')]
         ], fields: [
           FieldItem(field: "versions"),
           FieldItem(field: "service_version.main_image"),

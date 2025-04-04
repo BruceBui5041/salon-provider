@@ -36,7 +36,7 @@ class SearchRequestBody {
 class Condition {
   final String source;
   final String operator;
-  final String target;
+  final dynamic target;
 
   Condition({
     required this.source,
