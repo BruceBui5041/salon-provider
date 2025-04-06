@@ -10,7 +10,31 @@ class AllServiceRepository extends RepositoryConfig {
     var res = await commonRestClient.search<ServiceResponse>(
         ServiceResponse.fromJson,
         SearchRequestBody(model: EnumColumn.service.name, conditions: [
-          [Condition(source: "owner_id", operator: "=", target: userId ?? '')]
+          [
+            Condition(source: "owner_id", operator: "=", target: userId ?? ''),
+          ]
+        ], fields: [
+          FieldItem(field: "versions"),
+          FieldItem(field: "service_version.main_image"),
+          FieldItem(field: "service_version.images"),
+          FieldItem(field: "service_version.category"),
+          FieldItem(field: "images"),
+          FieldItem(field: "service_version")
+        ]).toJson());
+    return res;
+  }
+
+  Future<ServiceResponse> getServiceById(String id) async {
+    String? userId = await AuthConfig.getUserId();
+    var res = await commonRestClient.search<ServiceResponse>(
+        ServiceResponse.fromJson,
+        SearchRequestBody(model: EnumColumn.service.name, conditions: [
+          // [
+          //   Condition(source: "owner_id", operator: "=", target: userId ?? ''),
+          // ],
+          [
+            Condition(source: "id", operator: "=", target: id),
+          ]
         ], fields: [
           FieldItem(field: "versions"),
           FieldItem(field: "service_version.main_image"),

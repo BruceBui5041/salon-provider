@@ -21,7 +21,38 @@ class FormCategoryLayout extends StatelessWidget {
       children: [
         _buildCategorySection(context, value),
         _buildSubCategorySection(context, value),
-        _buildCommissionSection(context),
+        _buildDuration(context, value),
+        // _buildCommissionSection(context),
+      ],
+    );
+  }
+
+  Widget _buildDuration(BuildContext context, AddNewServiceProvider value) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        ContainerWithTextLayout(title: language(context, appFonts.duration))
+            .paddingOnly(top: Insets.i24, bottom: Insets.i12),
+        Row(children: [
+          Expanded(
+              flex: 2,
+              child: TextFieldCommon(
+                  keyboardType: TextInputType.number,
+                  focusNode: value.durationFocus,
+                  controller: value.duration,
+                  hintText: appFonts.addServiceTime,
+                  prefixIcon: eSvgAssets.timer)),
+          const HSpace(Sizes.s6),
+          Expanded(
+              flex: 1,
+              child: DarkDropDownLayout(
+                  isBig: true,
+                  val: value.durationValue,
+                  hintText: appFonts.hour,
+                  isIcon: false,
+                  categoryList: appArray.durationList,
+                  onChanged: (val) => value.onChangeDuration(val)))
+        ]).paddingSymmetric(horizontal: Insets.i20),
       ],
     );
   }
@@ -56,7 +87,7 @@ class FormCategoryLayout extends StatelessWidget {
                     width: Sizes.s30,
                     decoration: BoxDecoration(
                       color: appColor(context).appTheme.fieldCardBg,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppRadius.r100),
                     ),
                     child: CacheImageWidget(
                       url: item.image ?? '',
@@ -97,6 +128,7 @@ class FormCategoryLayout extends StatelessWidget {
           onChanged: (CategoryItem? val) => value.onChangeSubCategory(val!),
           itemBuilder: (BuildContext context, CategoryItem item) {
             return Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(AppRadius.r100),
@@ -105,7 +137,7 @@ class FormCategoryLayout extends StatelessWidget {
                     width: Sizes.s30,
                     decoration: BoxDecoration(
                       color: appColor(context).appTheme.fieldCardBg,
-                      shape: BoxShape.circle,
+                      borderRadius: BorderRadius.circular(AppRadius.r100),
                     ),
                     child: CacheImageWidget(
                       url: item.image ?? '',

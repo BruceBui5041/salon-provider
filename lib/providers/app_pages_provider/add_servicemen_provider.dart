@@ -1,5 +1,6 @@
 import 'dart:developer';
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/model/response/service_response.dart';
 
 class AddServicemenProvider with ChangeNotifier {
   String dialCode = "+91";
@@ -9,6 +10,7 @@ class AddServicemenProvider with ChangeNotifier {
   XFile? imageFile, profileFile;
   final List<Color> colorCollection = <Color>[];
   String languageSelect = "[]";
+  ItemService? itemService;
 
   TextEditingController userName = TextEditingController();
   TextEditingController phoneName = TextEditingController();

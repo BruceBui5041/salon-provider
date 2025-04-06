@@ -2,8 +2,36 @@ import 'package:salon_provider/model/response/category_response.dart';
 import 'package:salon_provider/model/response/image_response.dart';
 import 'package:salon_provider/model/response/main_image_response.dart';
 import 'package:json_annotation/json_annotation.dart';
+import 'package:salon_provider/model/response/service_response.dart';
 
 part 'service_version_response.g.dart';
+
+@JsonSerializable()
+class ServiceVersionCommonResponse {
+  @JsonKey(name: "data")
+  final List<ServiceVersion>? data;
+
+  ServiceVersionCommonResponse({
+    this.data,
+  });
+
+  ServiceVersionCommonResponse copyWith({
+    List<ServiceVersion>? data,
+  }) =>
+      ServiceVersionCommonResponse(
+        data: data ?? this.data,
+      );
+
+  factory ServiceVersionCommonResponse.fromJson(Map<String, dynamic> json) =>
+      ServiceVersionCommonResponse(
+        data: List<ServiceVersion>.from(
+            json["data"]?.map((x) => ServiceVersion.fromJson(x)) ?? []),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "data": List<dynamic>.from(data?.map((x) => x.toJson()) ?? []),
+      };
+}
 
 enum ServiceVersionEnum {
   id,
@@ -47,6 +75,10 @@ class ServiceVersion {
   final CategoryItem? categoryResponse;
   @JsonKey(name: "main_image")
   final MainImageResponse? mainImageResponse;
+  @JsonKey(name: "service")
+  final ItemService? service;
+  @JsonKey(name: "images")
+  final List<ImageResponse>? images;
 
   ServiceVersion({
     required this.id,
@@ -62,6 +94,8 @@ class ServiceVersion {
     required this.publishedDate,
     this.categoryResponse,
     this.mainImageResponse,
+    this.service,
+    this.images,
   });
 
   ServiceVersion copyWith({
@@ -79,6 +113,8 @@ class ServiceVersion {
     CategoryItem? categoryResponse,
     ImageResponse? imageResponse,
     MainImageResponse? mainImageResponse,
+    ItemService? service,
+    List<ImageResponse>? images,
   }) =>
       ServiceVersion(
         id: id ?? this.id,
@@ -93,6 +129,9 @@ class ServiceVersion {
         duration: duration ?? this.duration,
         publishedDate: publishedDate ?? this.publishedDate,
         categoryResponse: categoryResponse ?? this.categoryResponse,
+        mainImageResponse: mainImageResponse ?? this.mainImageResponse,
+        service: service ?? this.service,
+        images: images ?? this.images,
       );
 
   factory ServiceVersion.fromJson(Map<String, dynamic> json) =>

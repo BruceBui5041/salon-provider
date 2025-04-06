@@ -6,6 +6,20 @@ part of 'service_version_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
+ServiceVersionCommonResponse _$ServiceVersionCommonResponseFromJson(
+        Map<String, dynamic> json) =>
+    ServiceVersionCommonResponse(
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => ServiceVersion.fromJson(e as Map<String, dynamic>))
+          .toList(),
+    );
+
+Map<String, dynamic> _$ServiceVersionCommonResponseToJson(
+        ServiceVersionCommonResponse instance) =>
+    <String, dynamic>{
+      'data': instance.data,
+    };
+
 ServiceVersion _$ServiceVersionFromJson(Map<String, dynamic> json) =>
     ServiceVersion(
       id: json['id'] as String?,
@@ -32,6 +46,12 @@ ServiceVersion _$ServiceVersionFromJson(Map<String, dynamic> json) =>
           ? null
           : MainImageResponse.fromJson(
               json['main_image'] as Map<String, dynamic>),
+      service: json['service'] == null
+          ? null
+          : ItemService.fromJson(json['service'] as Map<String, dynamic>),
+      images: (json['images'] as List<dynamic>?)
+          ?.map((e) => ImageResponse.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$ServiceVersionToJson(ServiceVersion instance) =>
@@ -49,4 +69,6 @@ Map<String, dynamic> _$ServiceVersionToJson(ServiceVersion instance) =>
       'published_date': instance.publishedDate?.toIso8601String(),
       'category': instance.categoryResponse,
       'main_image': instance.mainImageResponse,
+      'service': instance.service,
+      'images': instance.images,
     };

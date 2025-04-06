@@ -8,8 +8,8 @@ part of 'service_response.dart';
 
 ServiceResponse _$ServiceResponseFromJson(Map<String, dynamic> json) =>
     ServiceResponse(
-      data: (json['data'] as List<dynamic>)
-          .map((e) => ItemService.fromJson(e as Map<String, dynamic>))
+      data: (json['data'] as List<dynamic>?)
+          ?.map((e) => ItemService.fromJson(e as Map<String, dynamic>))
           .toList(),
     );
 

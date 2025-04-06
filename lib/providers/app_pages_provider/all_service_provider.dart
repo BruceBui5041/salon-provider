@@ -10,7 +10,7 @@ class AllServiceProvider extends ChangeNotifier {
 
   Future<void> getAllServices() async {
     var res = await repo.getAllServices();
-    if (res.data.isNotEmpty) {
+    if (res.data != null && res.data!.isNotEmpty) {
       serviceResponse = res;
     }
 

@@ -30,7 +30,7 @@ class DashboardProvider with ChangeNotifier {
     notifyListeners();
     var res = await repo.getPopularService();
     if (res != null) {
-      serviceList = res.data;
+      serviceList = res.data ?? [];
       notifyListeners();
     }
   }

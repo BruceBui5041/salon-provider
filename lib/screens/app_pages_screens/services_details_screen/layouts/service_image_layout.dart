@@ -1,4 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:salon_provider/widgets/cache_image.dart';
 
 import '../../../../config.dart';
 
@@ -35,18 +36,24 @@ class ServiceImageLayout extends StatelessWidget {
                   ]))),
       Stack(children: [
         Container(
-            width: MediaQuery.of(context).size.width,
-            height: Sizes.s230,
-            decoration: ShapeDecoration(
-                image: DecorationImage(
-                    image: AssetImage(image!), fit: BoxFit.cover),
-                shape: const SmoothRectangleBorder(
-                    borderRadius: SmoothBorderRadius.only(
-                        bottomRight: SmoothRadius(
-                            cornerRadius: AppRadius.r20, cornerSmoothing: 1),
-                        bottomLeft: SmoothRadius(
-                            cornerRadius: AppRadius.r20,
-                            cornerSmoothing: 1))))),
+          width: MediaQuery.of(context).size.width,
+          height: Sizes.s230,
+          decoration: ShapeDecoration(
+            // image: DecorationImage(
+            //     image: AssetImage(image!), fit: BoxFit.cover),
+            shape: const SmoothRectangleBorder(
+              borderRadius: SmoothBorderRadius.only(
+                bottomRight: SmoothRadius(
+                    cornerRadius: AppRadius.r20, cornerSmoothing: 1),
+                bottomLeft: SmoothRadius(
+                    cornerRadius: AppRadius.r20, cornerSmoothing: 1),
+              ),
+            ),
+          ),
+          child: CacheImageWidget(
+            url: image!,
+          ),
+        ),
         SizedBox(
                 width: MediaQuery.of(context).size.width,
                 height: Sizes.s230,

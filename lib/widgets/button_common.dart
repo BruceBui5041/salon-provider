@@ -31,29 +31,34 @@ class ButtonCommon extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        width: width ?? MediaQuery.of(context).size.width,
-        height: height,
-        margin: EdgeInsets.symmetric(horizontal: margin!),
-        decoration: ShapeDecoration(
-            color: color ?? appColor(context).appTheme.primary,
-            shape: SmoothRectangleBorder(
-                side: BorderSide(
-                    color: borderColor ?? appColor(context).appTheme.trans),
-                borderRadius: SmoothBorderRadius(
-                    cornerRadius: radius!, cornerSmoothing: 1))),
-        child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Expanded(
-            child: Text(language(context, title),
-                textAlign: TextAlign.center,
-                overflow: TextOverflow.ellipsis,
-                style: style ??
-                    appCss.dmDenseRegular16
-                        .textColor(appColor(context).appTheme.whiteColor)),
-          ),
-          if (icon != null)
-            Row(children: [icon ?? const HSpace(0), const HSpace(Sizes.s10)])
-                .paddingOnly(left: Insets.i8),
-        ])).inkWell(onTap: onTap);
+    return GestureDetector(
+      onTap: () {
+        route.pushNamed(context, routeName.customServiceDetails);
+      },
+      child: Container(
+          width: width ?? MediaQuery.of(context).size.width,
+          height: height,
+          margin: EdgeInsets.symmetric(horizontal: margin!),
+          decoration: ShapeDecoration(
+              color: color ?? appColor(context).appTheme.primary,
+              shape: SmoothRectangleBorder(
+                  side: BorderSide(
+                      color: borderColor ?? appColor(context).appTheme.trans),
+                  borderRadius: SmoothBorderRadius(
+                      cornerRadius: radius!, cornerSmoothing: 1))),
+          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+            Expanded(
+              child: Text(language(context, title),
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: style ??
+                      appCss.dmDenseRegular16
+                          .textColor(appColor(context).appTheme.whiteColor)),
+            ),
+            if (icon != null)
+              Row(children: [icon ?? const HSpace(0), const HSpace(Sizes.s10)])
+                  .paddingOnly(left: Insets.i8),
+          ])).inkWell(onTap: onTap),
+    );
   }
 }

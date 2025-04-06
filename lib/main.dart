@@ -4,6 +4,7 @@ import 'package:salon_provider/config/storage_config.dart';
 import 'package:salon_provider/helper/notification_helper.dart';
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/custom_pending_booking_provider.dart';
+import 'package:salon_provider/providers/app_pages_provider/custom_service_details_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/edit_service_provider.dart';
 import 'package:salon_provider/providers/auth_provider/register_provider.dart';
 import 'package:salon_provider/providers/bottom_providers/custom_booking_provider.dart';
@@ -150,6 +151,8 @@ class MyApp extends StatelessWidget {
                       create: (_) => CustomBookingProvider()),
                   ChangeNotifierProvider(
                       create: (_) => CustomPendingBookingProvider()),
+                  ChangeNotifierProvider(
+                      create: (_) => CustomServiceDetailsProvider()),
                 ],
                 child: Consumer<ThemeService>(builder: (context, theme, child) {
                   return Consumer<LanguageProvider>(

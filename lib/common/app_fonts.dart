@@ -490,6 +490,7 @@ class AppFonts {
   final addNewServicemen = "addNewServicemen";
   final serviceLocation = "serviceLocation";
   final mainLocation = "mainLocation";
+  final mainImage = "mainImage";
   final onlyViewBookings = "onlyViewBookings";
   final search = "search";
   final delete = "delete";

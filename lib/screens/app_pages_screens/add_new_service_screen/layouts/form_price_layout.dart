@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:salon_provider/model/response/service_version_response.dart';
+import 'package:salon_provider/widgets/dropdown_common.dart';
 
 import '../../../../config.dart';
 
@@ -15,11 +17,12 @@ class FormPriceLayout extends StatelessWidget {
       builder: (context, value, child) {
         return Column(
           children: [
-            _buildPriceSection(context, value),
+            // _buildPriceSection(context, value),
             _buildAmountSection(context, value),
-            _buildTaxSection(context, value),
+            // _buildTaxSection(context, value),
             _buildFeaturedPointsSection(context, value),
-            _buildStatusSection(context, value),
+            // _dropdownDraftService(context, value),
+            // _buildStatusSection(context, value),
           ],
         );
       },
@@ -66,12 +69,16 @@ class FormPriceLayout extends StatelessWidget {
   /// Builds the amount input section based on selected price type
   Widget _buildAmountSection(
       BuildContext context, AddNewServiceProvider value) {
-    if (value.selectIndex == 0) {
-      return _buildSingleAmountInput(context, value);
-    } else if (value.selectIndex == 1) {
-      return _buildAmountWithDiscountInput(context, value);
-    }
-    return const SizedBox.shrink();
+    // if (value.selectIndex == 0) {
+    //   return _buildSingleAmountInput(context, value);
+    // } else if (value.selectIndex == 1) {
+    //   return _buildAmountWithDiscountInput(context, value);
+    // }
+    // return const SizedBox.shrink();
+    return Row(children: [
+      // Expanded(child: _buildSingleAmountInput(context, value)),
+      Expanded(child: _buildAmountWithDiscountInput(context, value)),
+    ]);
   }
 
   /// Builds a single amount input field

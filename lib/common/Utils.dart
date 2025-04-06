@@ -33,6 +33,8 @@ class Utils {
 
   // Error level log
   static void error(DioException e, [dynamic error, StackTrace? stackTrace]) {
+    _logger.e(e.response!.data['message'],
+        error: error, stackTrace: stackTrace);
     _logger.e(e.response!.data['log'], error: error, stackTrace: stackTrace);
   }
 

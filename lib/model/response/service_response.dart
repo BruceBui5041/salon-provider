@@ -17,10 +17,10 @@ String serviceResponseToJson(ServiceResponse data) =>
 
 @JsonSerializable()
 class ServiceResponse {
-  final List<ItemService> data;
+  final List<ItemService>? data;
 
   ServiceResponse({
-    required this.data,
+    this.data,
   });
 
   ServiceResponse copyWith({
@@ -33,11 +33,11 @@ class ServiceResponse {
   factory ServiceResponse.fromJson(Map<String, dynamic> json) =>
       ServiceResponse(
         data: List<ItemService>.from(
-            json["data"].map((x) => ItemService.fromJson(x))),
+            json["data"]?.map((x) => ItemService.fromJson(x)) ?? []),
       );
 
   Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
+        "data": List<dynamic>.from(data?.map((x) => x.toJson()) ?? []),
       };
 }
 
@@ -67,14 +67,14 @@ class ItemService {
   final List<ImageResponse>? imageResponse;
 
   ItemService({
-    required this.id,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.slug,
-    required this.ratingCount,
-    required this.reviewInfo,
-    required this.avgRating,
+    this.id,
+    this.status,
+    this.createdAt,
+    this.updatedAt,
+    this.slug,
+    this.ratingCount,
+    this.reviewInfo,
+    this.avgRating,
     this.serviceVersion,
     this.versionsResponse,
     this.imageResponse,

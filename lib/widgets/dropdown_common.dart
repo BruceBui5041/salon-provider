@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:salon_provider/common/theme/app_css.dart';
 
 class DropDownCommon<T> extends StatelessWidget {
   final String? icon, hintText;
@@ -7,8 +8,9 @@ class DropDownCommon<T> extends StatelessWidget {
   final List<T>? list;
   final ValueChanged<T?>? onChanged;
   final bool? isIcon, isField, isBig, isListIcon, isOnlyText;
-  final String Function(T item) itemLabel;
+  final Widget Function(T item) itemLabel;
   final String Function(T item)? itemImage;
+  final bool? isShowBackground;
 
   const DropDownCommon({
     super.key,
@@ -24,49 +26,70 @@ class DropDownCommon<T> extends StatelessWidget {
     this.list,
     this.isListIcon = false,
     this.isOnlyText = false,
+    this.isShowBackground = false,
   });
 
   @override
   Widget build(BuildContext context) {
-    return DropdownButtonHideUnderline(
-      child: ButtonTheme(
-        child: DropdownButtonFormField<T>(
-          hint: Text(hintText ?? ""),
-          decoration: InputDecoration(
-            prefixIcon: isIcon == true && icon != null
-                ? SvgPicture.asset(icon!, fit: BoxFit.scaleDown)
-                : null,
-            contentPadding: EdgeInsets.zero,
-            isDense: true,
-            border: OutlineInputBorder(
+    return Container(
+      height: 50,
+      padding: EdgeInsets.symmetric(horizontal: Insets.i15),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(8),
+      ),
+      child: Center(
+        child: DropdownButtonHideUnderline(
+          child: ButtonTheme(
+            child: DropdownButtonFormField<T>(
+              hint: Text(hintText ?? ""),
+              decoration: InputDecoration(
+                prefixIcon: isIcon == true && icon != null
+                    ? SvgPicture.asset(icon!, fit: BoxFit.scaleDown)
+                    : null,
+                contentPadding: EdgeInsets.zero,
+                isDense: true,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(8),
+                  borderSide: BorderSide.none,
+                ),
+              ),
+              value: val,
               borderRadius: BorderRadius.circular(8),
-              borderSide: BorderSide.none,
+              icon: Icon(Icons.arrow_drop_down),
+              isDense: true,
+              isExpanded: true,
+              items: list?.map((item) {
+                return DropdownMenuItem<T>(
+                  key: Key(item.toString()),
+                  value: item,
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: isShowBackground == true
+                          ? Colors.grey.shade300
+                          : Colors.white,
+                      borderRadius: BorderRadius.circular(8),
+                    ),
+                    child: Row(
+                      children: [
+                        // if (isListIcon == true && itemImage != null)
+                        //   SizedBox(
+                        //     height: 13,
+                        //     width: 13,
+                        //     child: Image.network(itemImage!(item),
+                        //         fit: BoxFit.scaleDown),
+                        //   ),
+                        // if (isListIcon == true) SizedBox(width: 12),
+                        // Text(itemLabel(item))
+                        itemLabel(item)
+                      ],
+                    ),
+                  ),
+                );
+              }).toList(),
+              onChanged: onChanged,
             ),
           ),
-          value: val,
-          borderRadius: BorderRadius.circular(8),
-          icon: Icon(Icons.arrow_drop_down),
-          isDense: true,
-          isExpanded: true,
-          items: list?.map((item) {
-            return DropdownMenuItem<T>(
-              value: item,
-              child: Row(
-                children: [
-                  if (isListIcon == true && itemImage != null)
-                    SizedBox(
-                      height: 13,
-                      width: 13,
-                      child: Image.network(itemImage!(item),
-                          fit: BoxFit.scaleDown),
-                    ),
-                  if (isListIcon == true) SizedBox(width: 12),
-                  Text(itemLabel(item)),
-                ],
-              ),
-            );
-          }).toList(),
-          onChanged: onChanged,
         ),
       ),
     );

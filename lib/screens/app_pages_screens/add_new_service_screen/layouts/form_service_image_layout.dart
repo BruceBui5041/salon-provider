@@ -1,5 +1,6 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/material.dart';
+import 'package:salon_provider/widgets/cache_image.dart';
 
 import '../../../../config.dart';
 
@@ -16,7 +17,7 @@ class FormServiceImageLayout extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildServiceImagesSection(context, value),
-        _buildThumbnailSection(context, value),
+        _buildMainImageSection(context, value),
         _buildServiceNameSection(context, value),
       ],
     );
@@ -68,22 +69,33 @@ class FormServiceImageLayout extends StatelessWidget {
 
   /// Builds a single image preview container
   Widget _buildImagePreview(String imagePath) {
-    return Container(
-      height: Sizes.s70,
-      width: Sizes.s70,
-      decoration: ShapeDecoration(
-        image: DecorationImage(
-          image: AssetImage(imagePath),
-          fit: BoxFit.cover,
-        ),
-        shape: RoundedRectangleBorder(
+    return Padding(
+      padding: const EdgeInsets.only(right: Insets.i15),
+      child: ClipRRect(
           borderRadius: SmoothBorderRadius(
             cornerRadius: AppRadius.r8,
-            cornerSmoothing: 1,
+            cornerSmoothing: 2,
           ),
-        ),
-      ),
-    ).paddingOnly(right: Insets.i15);
+          child: SizedBox(
+            height: Sizes.s75,
+            width: Sizes.s75,
+            // decoration: ShapeDecoration(
+            //   image: DecorationImage(
+            //     image: AssetImage(imagePath),
+            //     fit: BoxFit.cover,
+            //   ),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: SmoothBorderRadius(
+            //       cornerRadius: AppRadius.r8,
+            //       cornerSmoothing: 1,
+            //     ),
+            //   ),
+            // ),
+            child: CacheImageWidget(
+              url: imagePath,
+            ),
+          )),
+    );
   }
 
   /// Builds the list of service images with delete functionality
@@ -109,13 +121,16 @@ class FormServiceImageLayout extends StatelessWidget {
   }
 
   /// Builds the thumbnail image section
-  Widget _buildThumbnailSection(
+  Widget _buildMainImageSection(
       BuildContext context, AddNewServiceProvider value) {
+    if (value.itemServiceSelected?.imageResponse == null) {
+      return const SizedBox();
+    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ContainerWithTextLayout(
-          title: language(context, appFonts.thumbnailImage),
+          title: language(context, appFonts.mainImage),
         ).paddingOnly(top: Insets.i24, bottom: Insets.i12),
         _buildThumbnailPreview(context, value),
         const VSpace(Sizes.s8),
@@ -127,9 +142,20 @@ class FormServiceImageLayout extends StatelessWidget {
   /// Builds the thumbnail image preview
   Widget _buildThumbnailPreview(
       BuildContext context, AddNewServiceProvider value) {
-    if (value.thumbImage != null && value.thumbImage != "") {
-      return _buildImagePreview(value.thumbImage!);
+    List<Widget> _listImage = [];
+    if (value.itemServiceSelected?.imageResponse != null) {
+      value.itemServiceSelected?.imageResponse!.map((e) {
+        _listImage.add(_buildImagePreview(e.url ?? ""));
+      }).toList();
     }
+    // if (value.thumbImage != null && value.thumbImage != "") {
+    return Wrap(
+      spacing: Insets.i5,
+      runSpacing: Insets.i5,
+      children: _listImage,
+    );
+    // return _buildImagePreview(value.thumbImage!);
+    // }
 
     if (value.thumbFile != null) {
       return AddServiceImageLayout(

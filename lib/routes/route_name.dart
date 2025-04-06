@@ -14,6 +14,8 @@ class RouteName {
   final String serviceList = 'serviceList';
   final String addNewService = 'addNewService';
   final String serviceDetails = 'serviceDetails';
+  final String customServiceDetails = 'customServiceDetails';
+
   final String serviceReview = 'serviceReview';
   final String locationList = 'locationList';
   final String categories = 'categories';

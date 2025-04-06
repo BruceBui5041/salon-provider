@@ -6,6 +6,8 @@ import 'package:salon_provider/common/Utils.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/model/response/service_response.dart';
+import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:salon_provider/network/api_config.dart';
 import 'package:salon_provider/repositories/add_new_service_repository.dart';
 import 'package:path_provider/path_provider.dart';
@@ -15,6 +17,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
   CategoryItem? categoryValue;
   CategoryItem? subCategoryValue;
+  List<ServiceVersion>? publishDateVersion;
   String? durationValue;
   int selectIndex = 0;
   String? taxIndex;
@@ -22,7 +25,14 @@ class AddNewServiceProvider with ChangeNotifier {
   String argData = 'NULL';
   String? thumbNailImage;
   String? mainImage;
+  bool? showDraft = false;
+  ItemService? itemServiceSelected;
+  List<ServiceVersion>? serviceVersionList;
+  ServiceVersion? serviceVersionSelected;
 
+  bool? isShowDraft = false;
+
+  //
   TextEditingController serviceName = TextEditingController();
   TextEditingController description = TextEditingController();
   TextEditingController duration = TextEditingController();
@@ -99,6 +109,16 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   Future<void> addService() async {
+    // var images = listMultipartServiceImage;
+    var image = await MultipartFile.fromFile(
+      thumbFile!.path,
+      filename: thumbFile!.path.split('/').last,
+    );
+    var mainImage = await MultipartFile.fromFile(
+      imageFile!.path,
+      filename: imageFile!.path.split('/').last,
+    );
+
     try {
       FormData formData = FormData.fromMap({
         "json": json.encode({
@@ -108,7 +128,7 @@ class AddNewServiceProvider with ChangeNotifier {
             "description": featuredPoints.text,
             "category_id": categoryValue!.id,
             "sub_category_id": subCategoryValue!.id,
-            "thumbnail": "",
+            // "thumbnail": thumbFile!.path,
             "price": amount.text,
             "discounted_price": discount.text,
             "duration": int.parse(durationValue ?? "15") *
@@ -116,12 +136,7 @@ class AddNewServiceProvider with ChangeNotifier {
             "main_image_id": "0"
           }
         }),
-        "images": thumbFile != null
-            ? await MultipartFile.fromFile(
-                thumbFile!.path,
-                filename: thumbFile!.path.split('/').last,
-              )
-            : null,
+        "images": [image],
       });
 
       var res = await ApiConfig().dio.post(
@@ -145,6 +160,25 @@ class AddNewServiceProvider with ChangeNotifier {
       log("ERROR: $e");
     }
     notifyListeners();
+  }
+
+  Future<void> publishService({Function? callBack}) async {
+    try {
+      await repo.publisthService(
+          itemServiceSelected!.id!, serviceVersionSelected!.id!);
+
+      if (callBack != null) {
+        callBack();
+      }
+    } catch (e) {
+      if (e is DioException) {
+        print(e.response!.data);
+      }
+    }
+  }
+
+  Future<void> createCraft() async {
+    await repo.createCraft(itemServiceSelected!.id!);
   }
 
   Future<void> fetchCategory() async {
@@ -179,7 +213,7 @@ class AddNewServiceProvider with ChangeNotifier {
     }
   }
 
-  onReady(context) {
+  onReady(context) async {
     log("AGGG argdata $argData");
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
     log("AGGG DATATA $data");
@@ -193,24 +227,94 @@ class AddNewServiceProvider with ChangeNotifier {
     });
 
     if (data != "") {
+      var category = categoryResponse?.data
+          .where((element) => element.name == data["category"])
+          .toList();
+
+      var subCategory = subCategoryResponse?.data
+          .where((element) => element.name == data["sub_category"])
+          .toList();
+      if (category!.isNotEmpty) {
+        await fetchSubCategory(category!.first.id.toString());
+        subCategory = subCategoryResponse?.data
+            .where((element) => element.name == data["sub_category"])
+            .toList();
+      }
+      showDraft = data["showDraft"] ?? false;
+
       isEdit = data["isEdit"] ?? false;
       image = data["image"] ?? "";
       thumbImage = data["thumb_image"] ?? "";
       serviceName.text = data["service_name"] ?? "";
-      categoryValue = data["category"] ?? 3;
-      subCategoryValue = data["sub_category"] ?? 3;
+      categoryValue = category!.isNotEmpty ? category.first : null;
+      subCategoryValue = subCategory!.isNotEmpty ? subCategory.first : null;
       description.text = data["description"] ?? "";
-      duration.text = data["duration"] ?? "2";
+      duration.text = (data["duration"] ?? "15").toString();
       availableService.text = data["area"] ?? "";
       minRequired.text = data["req_servicemen"] ?? "1";
-      amount.text = data["price"] ?? "1";
+      amount.text = (data["price"] ?? "0").toString().toCurrencyVnd();
       taxIndex = data["tax"] ?? 0;
       featuredPoints.text = data["featured_points"] ?? "";
-      isSwitch = data["status"] ?? true;
+      isSwitch = data["status"] ?? false;
+      itemServiceSelected = data["itemServiceSelected"];
 
-      log("categoryValue ;$categoryValue");
+      serviceVersionList = data["itemServiceSelected"]?.versionsResponse;
+      // serviceVersionSelected = itemServiceSelected?.serviceVersion;
+      log("itemServiceSelected ;${itemServiceSelected!.toJson()}");
+
       notifyListeners();
     }
+  }
+
+  onInit(ItemService itemService) async {
+    var category = categoryResponse?.data
+        .where((element) =>
+            element.name == itemService.serviceVersion?.categoryResponse?.name)
+        .toList();
+
+    var subCategory = subCategoryResponse?.data
+        .where((element) =>
+            element.name == itemService.serviceVersion?.categoryResponse?.name)
+        .toList();
+    if (category!.isNotEmpty) {
+      await fetchSubCategory(category!.first.id.toString());
+      subCategory = subCategoryResponse?.data
+          .where((element) =>
+              element.name ==
+              itemService.serviceVersion?.categoryResponse?.name)
+          .toList();
+    }
+    showDraft = itemService.serviceVersion?.status == "active" ?? false;
+
+    isEdit = itemService.serviceVersion?.status == "active" ?? false;
+    image = itemService.serviceVersion?.mainImageResponse?.url ?? "";
+    thumbImage = itemService.serviceVersion?.thumbnail ?? "";
+    serviceName.text = itemService.serviceVersion?.title ?? "";
+    categoryValue = category!.isNotEmpty ? category.first : null;
+    subCategoryValue = subCategory!.isNotEmpty ? subCategory.first : null;
+    description.text = itemService.serviceVersion?.description ?? "";
+    duration.text = (itemService.serviceVersion?.duration ?? "15").toString();
+    // availableService.text = itemService.serviceVersion?.service?.area ?? "";
+    // minRequired.text = itemService.serviceVersion?.service?.reqServicemen ?? "1";
+    amount.text =
+        (itemService.serviceVersion?.price ?? "0").toString().toCurrencyVnd();
+    // taxIndex = itemService.serviceVersion?.service?.tax ?? 0;
+    // featuredPoints.text = itemService.serviceVersion?.service?.featuredPoints ?? "";
+    isSwitch = itemService.serviceVersion?.status == "active" ?? false;
+    itemServiceSelected = itemService;
+    // serviceVersionSelected = itemService.versionsResponse
+    //         ?.where((element) => element.status == "active")
+    //         .toList()
+    //         .first ??
+    //     (itemService.versionsResponse != null &&
+    //             itemService.versionsResponse!.isNotEmpty
+    //         ? itemService.versionsResponse!.first
+    //         : null);
+  }
+
+  void onShowDraft(bool val) {
+    showDraft = val;
+    notifyListeners();
   }
 
   onBack() {
@@ -259,6 +363,24 @@ class AddNewServiceProvider with ChangeNotifier {
   onAvailableServiceTap(context) async {
     var result = await route.push(context, LocationListScreen());
     availableService.text = result;
+    notifyListeners();
+  }
+
+  Future<void> onCraftSelected(ServiceVersion serviceVersion) async {
+    // serviceVersionSelected = serviceVersion;
+    var res = await repo.fetchServiceVersion(serviceVersion.id ?? "");
+    log("res ;${res.toJson()}");
+    onInit(res.data?.first.service ??
+        ItemService(
+          // id: 0,
+          status: "",
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          slug: "",
+          ratingCount: null,
+          reviewInfo: null,
+          avgRating: '', id: '',
+        ));
     notifyListeners();
   }
 
@@ -342,6 +464,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
   onChangeCategory(CategoryItem val) {
     categoryValue = val;
+    subCategoryValue = null;
     fetchSubCategory(val.id.toString());
     log("VAL :$categoryValue");
     notifyListeners();

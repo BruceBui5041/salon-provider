@@ -22,8 +22,7 @@ class _AllServiceLayoutState extends State<AllServiceLayout> {
               ]))
           .paddingAll(Insets.i15)
           .boxBorderExtension(context,
-              isShadow: true, bColor: appColor(context).appTheme.stroke)
-          .inkWell(onTap: () {});
+              isShadow: true, bColor: appColor(context).appTheme.stroke);
     });
   }
 
@@ -31,14 +30,19 @@ class _AllServiceLayoutState extends State<AllServiceLayout> {
     if (value.serviceResponse == null) {
       return const SizedBox();
     }
+    final list = value.serviceResponse!.data?.take(2).toList();
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),
         // itemCount: 10/,
-        itemCount: value.serviceResponse!.data.length,
+        itemCount: list!.length,
         itemBuilder: (context, index) {
-          return _serviceItem(
-              context, value.serviceResponse!.data[index], index);
+          return GestureDetector(
+              onTap: () {
+                // route.pushNamed(context, routeName.customServiceDetails);
+                print("asda");
+              },
+              child: _serviceItem(context, list[index], index));
         });
   }
 
@@ -143,7 +147,7 @@ class _AllServiceLayoutState extends State<AllServiceLayout> {
         .boxBorderExtension(context,
             isShadow: true, bColor: appColor(context).appTheme.stroke)
         .inkWell(onTap: () {
-      //
+      route.pushNamed(context, routeName.customServiceDetails, arg: value);
     }).paddingOnly(bottom: Insets.i15);
   }
 }

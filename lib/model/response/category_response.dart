@@ -61,6 +61,16 @@ class CategoryItem {
     required this.subCategories,
   });
 
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) ||
+      other is CategoryItem &&
+          runtimeType == other.runtimeType &&
+          id == other.id;
+
+  @override
+  int get hashCode => id.hashCode;
+
   CategoryItem copyWith({
     String? id,
     String? status,
