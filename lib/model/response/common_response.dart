@@ -1,12 +1,12 @@
 class BaseResponse<T> {
-  final List<T> data;
+  final T data;
 
   BaseResponse({
     required this.data,
   });
 
   BaseResponse copyWith({
-    List<T>? data,
+    T? data,
   }) =>
       BaseResponse(
         data: data ?? this.data,
@@ -18,13 +18,19 @@ class BaseResponse<T> {
     Map<String, dynamic> json,
     T Function(Map<String, dynamic> json) fromJsonT,
   ) {
-    return BaseResponse<T>(
-      data: json["data"] == null
-          ? []
-          : List<T>.from(
-              json["data"].map((x) => fromJsonT(x as Map<String, dynamic>)),
-            ),
-    );
+    if (json["data"] == null) {
+      throw Exception("Data is null");
+    }
+
+    if (json["data"] is List) {
+      return BaseResponse<T>(
+        data: json["data"].map<dynamic>((x) => fromJsonT(x)).toList() as T,
+      );
+    } else {
+      return BaseResponse<T>(
+        data: fromJsonT(json["data"]),
+      );
+    }
   }
 
   /// Phương thức để chuyển BaseResponse sang JSON
@@ -32,8 +38,14 @@ class BaseResponse<T> {
   Map<String, dynamic> toJson(
     Map<String, dynamic> Function(T value) toJsonT,
   ) {
-    return {
-      "data": List<dynamic>.from(data.map((x) => toJsonT(x))),
-    };
+    if (data is List) {
+      return {
+        "data": (data as List).map((x) => toJsonT(x)).toList(),
+      };
+    } else {
+      return {
+        "data": toJsonT(data),
+      };
+    }
   }
 }

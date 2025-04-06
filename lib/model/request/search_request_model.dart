@@ -13,6 +13,12 @@ class SearchRequestBody {
   @JsonKey(name: 'order_by')
   final String? orderBy;
 
+  @JsonKey(name: 'limit')
+  final int? limit;
+
+  @JsonKey(name: 'offset')
+  final int? offset;
+
   @FieldItemConverter()
   final List<FieldItem> fields;
 
@@ -21,6 +27,8 @@ class SearchRequestBody {
     required this.conditions,
     required this.fields,
     this.orderBy,
+    this.limit,
+    this.offset,
   });
 
   factory SearchRequestBody.fromJson(Map<String, dynamic> json) =>

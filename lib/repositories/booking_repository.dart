@@ -44,18 +44,23 @@ class BookingRepository extends RepositoryConfig {
 
   Future<BookingResponse> getBookings({
     List<List<Condition>>? conditions,
+    int? limit,
+    int? offset,
   }) async {
     var requestBody = SearchRequestBody(
-        model: EnumColumn.booking.name,
-        conditions: conditions ?? [],
-        fields: [
-          FieldItem(field: "service_versions"),
-          FieldItem(field: "service_versions.main_image"),
-          FieldItem(field: "payment.payment_qr"),
-          FieldItem(field: "service_man"),
-          FieldItem(field: "service_versions.category"),
-        ],
-        orderBy: "id desc");
+      model: EnumColumn.booking.name,
+      conditions: conditions ?? [],
+      fields: [
+        FieldItem(field: "service_versions"),
+        FieldItem(field: "service_versions.main_image"),
+        FieldItem(field: "payment.payment_qr"),
+        FieldItem(field: "service_man"),
+        FieldItem(field: "service_versions.category"),
+      ],
+      orderBy: "id desc",
+      limit: limit,
+      offset: offset,
+    );
     final response = await commonRestClient.search(
         BookingResponse.fromJson, requestBody.toJson());
     return response;

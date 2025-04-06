@@ -14,6 +14,7 @@ import 'firebase_options.dart';
 import 'common/languages/app_language.dart';
 import 'common/theme/app_theme.dart';
 import 'config.dart';
+import 'package:salon_provider/providers/app_pages_provider/home_screen_provider.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -62,6 +63,7 @@ class MyApp extends StatelessWidget {
                   ChangeNotifierProvider(create: (_) => LocationProvider()),
                   ChangeNotifierProvider(create: (_) => DashboardProvider()),
                   ChangeNotifierProvider(create: (_) => HomeProvider()),
+                  ChangeNotifierProvider(create: (_) => HomeScreenProvider()),
                   ChangeNotifierProvider(
                       create: (_) => EarningHistoryProvider()),
                   ChangeNotifierProvider(create: (_) => NotificationProvider()),

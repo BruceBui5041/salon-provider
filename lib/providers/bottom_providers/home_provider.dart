@@ -1,9 +1,11 @@
 import 'package:salon_provider/config.dart';
 import '../../model/booking_model.dart';
+import '../../model/response/booking_response.dart';
 import '../../widgets/withdraw_amount_bottom_sheet.dart';
 
 class HomeProvider with ChangeNotifier {
   List recentBookingList = [];
+  List<ItemBooking> bookingsApiData = [];
   bool isSwitch = true;
   int selectedIndex = 0;
   int selectType = 0;
@@ -27,6 +29,42 @@ class HomeProvider with ChangeNotifier {
   List<BarChartGroupData>? showingBarGroups;
 
   int touchedGroupIndex = -1;
+
+  // Update recentBookingList from API data
+  void updateRecentBookings(List<ItemBooking> bookings) {
+    bookingsApiData = bookings;
+    recentBookingList = [];
+
+    // Convert API bookings to BookingModel
+    for (var booking in bookings) {
+      String? serviceName;
+      String? serviceImage;
+
+      if (booking.serviceVersions != null &&
+          booking.serviceVersions!.isNotEmpty) {
+        serviceName = booking.serviceVersions![0].title;
+        if (booking.serviceVersions![0].mainImageResponse != null) {
+          serviceImage = booking.serviceVersions![0].mainImageResponse!.url;
+        }
+      }
+
+      final bookingModel = BookingModel(
+        bookingNumber: booking.id,
+        status: booking.bookingStatus,
+        name: serviceName ?? "Unnamed Service",
+        image: serviceImage,
+        price: booking.price,
+        dateTime: booking.bookingDate?.toString(),
+        payment: booking.payment?.paymentMethod,
+        location: "",
+        servicemanLists: [],
+      );
+
+      recentBookingList.add(bookingModel);
+    }
+
+    notifyListeners();
+  }
 
   onChangeType(index) {
     selectType = index;

@@ -2,8 +2,10 @@ import 'dart:convert';
 
 import 'package:dio/dio.dart';
 import 'package:salon_provider/model/response/check_auth_response.dart';
+import 'package:salon_provider/model/response/earning_response.dart';
 import 'package:salon_provider/model/response/gen_qr_response.dart';
 import 'package:salon_provider/model/response/login_response.dart';
+import 'package:salon_provider/model/response/common_response.dart';
 import 'package:retrofit/retrofit.dart';
 
 part 'api.g.dart';
@@ -52,4 +54,10 @@ abstract class RestClient {
 
   @POST("/userdevice")
   Future<void> saveUserDevice(@Body() Map<String, dynamic> requestBody);
+
+  @GET("/user/provider-earnings")
+  Future<BaseResponse<ProviderEarningResponse>> getProviderEarnings(
+      {@Query("year") int? year,
+      @Query("month") int? month,
+      @Query("user_id") String? userId});
 }

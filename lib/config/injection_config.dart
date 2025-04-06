@@ -10,6 +10,7 @@ import 'package:salon_provider/repositories/token_repository.dart';
 import 'package:salon_provider/repositories/verify_otp_repository.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
 import 'package:salon_provider/repositories/all_service_repository.dart';
+import 'package:salon_provider/repositories/user_repository.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -30,6 +31,7 @@ Future<void> initInjector() async {
   getIt.registerLazySingleton(() => AllServiceRepository());
   getIt.registerLazySingleton(() => EditServiceRepository());
   getIt.registerLazySingleton(() => TokenRepository());
+  getIt.registerLazySingleton(() => UserRepository());
 
   // getIt.registerLazySingleton(() => RegisterRepository());
   // getIt.registerLazySingleton(() => VerifyOtpRepository());

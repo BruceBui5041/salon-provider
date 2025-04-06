@@ -18,6 +18,8 @@ SearchRequestBody _$SearchRequestBodyFromJson(Map<String, dynamic> json) =>
           .map(const FieldItemConverter().fromJson)
           .toList(),
       orderBy: json['order_by'] as String?,
+      limit: (json['limit'] as num?)?.toInt(),
+      offset: (json['offset'] as num?)?.toInt(),
     );
 
 Map<String, dynamic> _$SearchRequestBodyToJson(SearchRequestBody instance) =>
@@ -27,6 +29,8 @@ Map<String, dynamic> _$SearchRequestBodyToJson(SearchRequestBody instance) =>
           .map((e) => e.map((e) => e.toJson()).toList())
           .toList(),
       'order_by': instance.orderBy,
+      'limit': instance.limit,
+      'offset': instance.offset,
       'fields': instance.fields.map(const FieldItemConverter().toJson).toList(),
     };
 
