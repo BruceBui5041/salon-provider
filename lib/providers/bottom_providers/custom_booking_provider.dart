@@ -6,6 +6,7 @@ import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/custom_booking_layout.dart';
+import 'package:salon_provider/model/response/category_response.dart';
 
 import '../../screens/bottom_screens/booking_screen/layouts/booking_filter_layout.dart';
 import '../../widgets/year_dialog.dart';
@@ -134,15 +135,27 @@ class CustomBookingProvider with ChangeNotifier {
 
       // Add category filter conditions
       if (statusList.isNotEmpty) {
-        conditions[0].addAll(
-          statusList
-              .map((categoryId) => Condition(
-                    source: "service_versions.category.id",
-                    operator: "=",
-                    target: categoryId.toString(),
-                  ))
-              .toList(),
-        );
+        // Collect all category IDs into a single list
+        List<String> categoryIds = statusList
+            .map((index) {
+              if (index is int && index >= 0 && index < categories.length) {
+                return categories[index].id.toString();
+              }
+              return null;
+            })
+            .where((id) => id != null)
+            .cast<String>()
+            .toList();
+
+        if (categoryIds.isNotEmpty) {
+          conditions[0].add(
+            Condition(
+              source: "service_versions.category.id",
+              operator: "in",
+              target: categoryIds,
+            ),
+          );
+        }
       }
 
       var res = await repo.getBookings(conditions: conditions);
@@ -164,6 +177,8 @@ class CustomBookingProvider with ChangeNotifier {
   List<ItemBooking> bookingList = [];
   List<ItemBooking> freelancerBookingList = [];
   List statusList = [];
+  List<CategoryItem> categories = [];
+  bool isLoadingCategories = false;
   bool isExpand = false, isAssignMe = false;
   bool isProcessing = false;
   int selectIndex = 0;
@@ -287,12 +302,31 @@ class CustomBookingProvider with ChangeNotifier {
       bookingList = res.data;
       freelancerBookingList = res.data;
       onInit();
+
+      // Fetch categories
+      await fetchCategories();
     } catch (e) {
       // Handle error if needed
       bookingList = [];
       freelancerBookingList = [];
     } finally {
       isProcessing = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchCategories() async {
+    isLoadingCategories = true;
+    notifyListeners();
+
+    try {
+      var res = await repo.getCategories();
+      categories = res.data;
+    } catch (e) {
+      // Handle error if needed
+      categories = [];
+    } finally {
+      isLoadingCategories = false;
       notifyListeners();
     }
   }
@@ -481,11 +515,12 @@ class CustomBookingProvider with ChangeNotifier {
     pageController = controller;
   }
 
-  onCategoryChange(context, id) {
-    if (!statusList.contains(id)) {
-      statusList.add(id);
+  onCategoryChange(context, CategoryItem category) {
+    var index = categories.indexOf(category);
+    if (!statusList.contains(index)) {
+      statusList.add(index);
     } else {
-      statusList.remove(id);
+      statusList.remove(index);
     }
 
     notifyListeners();

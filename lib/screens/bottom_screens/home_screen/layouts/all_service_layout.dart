@@ -63,8 +63,7 @@ class _AllServiceLayoutState extends State<AllServiceLayout> {
                               value.serviceVersion?.title ?? 'Unknown'),
                           style: appCss.dmDenseSemiBold15
                               .textColor(appColor(context).appTheme.darkText)),
-                      Text(
-                          "\$${value.serviceVersion?.price?.toCurrencyVnd() ?? ''}",
+                      Text(value.serviceVersion?.price?.toCurrencyVnd() ?? '',
                           style: appCss.dmDenseBold16
                               .textColor(appColor(context).appTheme.darkText))
                     ]),

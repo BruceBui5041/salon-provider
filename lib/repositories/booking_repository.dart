@@ -1,8 +1,8 @@
 import 'package:salon_provider/common/enum_value.dart';
-import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/model/response/category_response.dart';
 import 'package:salon_provider/model/response/gen_qr_response.dart';
 import 'package:salon_provider/model/response/payment_qr_transaction.dart';
 
@@ -58,6 +58,22 @@ class BookingRepository extends RepositoryConfig {
         orderBy: "id desc");
     final response = await commonRestClient.search(
         BookingResponse.fromJson, requestBody.toJson());
+    return response;
+  }
+
+  Future<CategoryResponse> getCategories({
+    List<List<Condition>>? conditions,
+  }) async {
+    var requestBody = SearchRequestBody(
+      model: EnumColumn.category.name,
+      conditions: conditions ?? [],
+      fields: [
+        FieldItem(field: "id"),
+        FieldItem(field: "name"),
+      ],
+    );
+    final response = await commonRestClient.search(
+        CategoryResponse.fromJson, requestBody.toJson());
     return response;
   }
 

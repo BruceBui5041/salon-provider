@@ -23,7 +23,27 @@ class ListTileLayout extends StatelessWidget {
       IntrinsicHeight(
           child: Row(children: [
         isBooking == true
-            ? SvgPicture.asset(booking["icon"],colorFilter: ColorFilter.mode(appColor(context).appTheme.darkText, BlendMode.srcIn))
+            ? booking["icon"] != null &&
+                    booking["icon"].toString().startsWith("http")
+                ? CachedNetworkImage(
+                    imageUrl: booking["icon"],
+                    height: Sizes.s32,
+                    width: Sizes.s32,
+                    placeholder: (context, url) =>
+                        const CircularProgressIndicator(),
+                    errorWidget: (context, url, error) => SvgPicture.asset(
+                      eSvgAssets.category,
+                      height: Sizes.s20,
+                      width: Sizes.s20,
+                      colorFilter: ColorFilter.mode(
+                          appColor(context).appTheme.darkText, BlendMode.srcIn),
+                    ),
+                  )
+                : SvgPicture.asset(eSvgAssets.category,
+                    height: Sizes.s20,
+                    width: Sizes.s20,
+                    colorFilter: ColorFilter.mode(
+                        appColor(context).appTheme.darkText, BlendMode.srcIn))
             : data!.media != null && data!.media!.isNotEmpty
                 ? CachedNetworkImage(
                     imageUrl: data!.media![0].originalUrl!,

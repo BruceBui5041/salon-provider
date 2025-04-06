@@ -82,17 +82,44 @@ class BookingFilterLayout extends StatelessWidget {
                                     controller: value.categoryCtrl)
                                 .padding(
                                     bottom: Insets.i15, horizontal: Insets.i20),
-                            ...appArray.bookingCategoriesList
-                                .asMap()
-                                .entries
-                                .map((e) => ListTileLayout(
-                                    booking: e.value,
-                                    isBooking: true,
-                                    selectedCategory: value.statusList,
-                                    index: e.key,
-                                    onTap: () =>
-                                        value.onCategoryChange(context, e.key)))
-                                .toList()
+                            value.isLoadingCategories
+                                ? const Center(
+                                    child: CircularProgressIndicator(),
+                                  ).paddingSymmetric(vertical: Insets.i20)
+                                : value.categories.isEmpty
+                                    ? Center(
+                                        child: Text(
+                                          "No categories found",
+                                          style: appCss.dmDenseMedium14
+                                              .textColor(appColor(context)
+                                                  .appTheme
+                                                  .darkText),
+                                        ),
+                                      ).paddingSymmetric(vertical: Insets.i20)
+                                    : Column(
+                                        children: value.categories
+                                            .asMap()
+                                            .entries
+                                            .map((entry) => ListTileLayout(
+                                                    booking: {
+                                                      "icon": entry
+                                                              .value.image ??
+                                                          eImageAssets.appLogo,
+                                                      "title":
+                                                          entry.value.name ??
+                                                              "",
+                                                      "id": entry.value.id,
+                                                    },
+                                                    isBooking: true,
+                                                    selectedCategory:
+                                                        value.statusList,
+                                                    index: entry.key,
+                                                    onTap: () =>
+                                                        value.onCategoryChange(
+                                                            context,
+                                                            entry.value)))
+                                            .toList(),
+                                      )
                           ])))
                         : Expanded(
                             child: SingleChildScrollView(

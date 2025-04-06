@@ -33,7 +33,7 @@ Map<String, dynamic> _$SearchRequestBodyToJson(SearchRequestBody instance) =>
 Condition _$ConditionFromJson(Map<String, dynamic> json) => Condition(
       source: json['source'] as String,
       operator: json['operator'] as String,
-      target: json['target'] as String,
+      target: json['target'],
     );
 
 Map<String, dynamic> _$ConditionToJson(Condition instance) => <String, dynamic>{

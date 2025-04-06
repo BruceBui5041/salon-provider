@@ -138,7 +138,7 @@ class _BookingInfo extends StatelessWidget {
         Row(
           children: [
             Text(
-              "\$${data?.discountedPrice?.toCurrencyVnd() ?? '0'.toCurrencyVnd()}",
+              data?.discountedPrice?.toCurrencyVnd() ?? '0'.toCurrencyVnd(),
               style: appCss.dmDenseBold18.textColor(theme.primary),
             ),
           ],
@@ -163,7 +163,7 @@ class _ServiceImage extends StatelessWidget {
       decoration: ShapeDecoration(
         image: DecorationImage(
           image: NetworkImage(
-            data!.serviceVersions!.first!.mainImageResponse!.url!,
+            data!.serviceVersions!.first.mainImageResponse!.url!,
           ),
           fit: BoxFit.cover,
         ),

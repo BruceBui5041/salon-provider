@@ -79,11 +79,10 @@ extension FixitStringExtensions on String {
     double? number = double.tryParse(cleanedValue);
 
     // Nếu không thể parse, trả về 0₫
-    if (number == null) return "0 vnđ";
+    if (number == null) return "0 đ";
 
     // Định dạng lại thành tiền tệ Việt Nam
-    final formatCurrency =
-        NumberFormat.currency(locale: 'vi_VN', symbol: 'vnđ');
+    final formatCurrency = NumberFormat.currency(locale: 'vi_VN', symbol: 'đ');
 
     return formatCurrency.format(number);
   }
