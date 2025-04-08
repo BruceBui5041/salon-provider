@@ -33,17 +33,16 @@ class UserRepository extends RepositoryConfig {
     try {
       String? userId = await AuthConfig.getUserId();
       var response = await commonRestClient.search<UserResponse>(
-          UserResponse.fromJson,
           SearchRequestBody(model: EnumColumn.user.name, conditions: [
-            [
-              Condition(source: "id", operator: "=", target: userId ?? ''),
-            ]
-          ], fields: [
-            FieldItem(field: "roles"),
-            FieldItem(field: "user_profile"),
-          ]).toJson());
-
-      return response;
+        [
+          Condition(source: "id", operator: "=", target: userId ?? ''),
+        ]
+      ], fields: [
+        FieldItem(field: "roles"),
+        FieldItem(field: "user_profile"),
+      ]).toJson());
+      var user = UserResponse.fromJson(response);
+      return user;
     } catch (e) {
       throw Exception('Failed to fetch user: $e');
     }

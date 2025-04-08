@@ -6,33 +6,6 @@ import 'package:salon_provider/model/response/service_response.dart';
 
 part 'service_version_response.g.dart';
 
-@JsonSerializable()
-class ServiceVersionCommonResponse {
-  @JsonKey(name: "data")
-  final List<ServiceVersion>? data;
-
-  ServiceVersionCommonResponse({
-    this.data,
-  });
-
-  ServiceVersionCommonResponse copyWith({
-    List<ServiceVersion>? data,
-  }) =>
-      ServiceVersionCommonResponse(
-        data: data ?? this.data,
-      );
-
-  factory ServiceVersionCommonResponse.fromJson(Map<String, dynamic> json) =>
-      ServiceVersionCommonResponse(
-        data: List<ServiceVersion>.from(
-            json["data"]?.map((x) => ServiceVersion.fromJson(x)) ?? []),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data?.map((x) => x.toJson()) ?? []),
-      };
-}
-
 enum ServiceVersionEnum {
   id,
   status,

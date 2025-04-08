@@ -123,7 +123,7 @@ class FormServiceImageLayout extends StatelessWidget {
   /// Builds the thumbnail image section
   Widget _buildMainImageSection(
       BuildContext context, AddNewServiceProvider value) {
-    if (value.itemServiceSelected?.imageResponse == null) {
+    if (value.serviceSelected?.imageResponse == null) {
       return const SizedBox();
     }
     return Column(
@@ -143,8 +143,8 @@ class FormServiceImageLayout extends StatelessWidget {
   Widget _buildThumbnailPreview(
       BuildContext context, AddNewServiceProvider value) {
     List<Widget> _listImage = [];
-    if (value.itemServiceSelected?.imageResponse != null) {
-      value.itemServiceSelected?.imageResponse!.map((e) {
+    if (value.serviceSelected?.imageResponse != null) {
+      value.serviceSelected?.imageResponse!.map((e) {
         _listImage.add(_buildImagePreview(e.url ?? ""));
       }).toList();
     }

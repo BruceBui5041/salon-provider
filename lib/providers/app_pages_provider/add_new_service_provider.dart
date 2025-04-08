@@ -26,7 +26,7 @@ class AddNewServiceProvider with ChangeNotifier {
   String? thumbNailImage;
   String? mainImage;
   bool? showDraft = false;
-  ItemService? itemServiceSelected;
+  ItemService? serviceSelected;
   List<ServiceVersion>? serviceVersionList;
   ServiceVersion? serviceVersionSelected;
 
@@ -69,8 +69,8 @@ class AddNewServiceProvider with ChangeNotifier {
 
   String? slug = "";
 
-  CategoryResponse? categoryResponse;
-  CategoryResponse? subCategoryResponse;
+  List<CategoryItem>? categoryResponse;
+  List<CategoryItem>? subCategoryResponse;
 
   CategoryItem? categoryItem;
 
@@ -165,7 +165,7 @@ class AddNewServiceProvider with ChangeNotifier {
   Future<void> publishService({Function? callBack}) async {
     try {
       await repo.publisthService(
-          itemServiceSelected!.id!, serviceVersionSelected!.id!);
+          serviceSelected!.id!, serviceVersionSelected!.id!);
 
       if (callBack != null) {
         callBack();
@@ -178,7 +178,7 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   Future<void> createCraft() async {
-    await repo.createCraft(itemServiceSelected!.id!);
+    await repo.createCraft(serviceSelected!.id!);
   }
 
   Future<void> fetchCategory() async {
@@ -227,17 +227,17 @@ class AddNewServiceProvider with ChangeNotifier {
     });
 
     if (data != "") {
-      var category = categoryResponse?.data
-          .where((element) => element.name == data["category"])
+      var category = categoryResponse
+          ?.where((element) => element.name == data["category"])
           .toList();
 
-      var subCategory = subCategoryResponse?.data
-          .where((element) => element.name == data["sub_category"])
+      var subCategory = subCategoryResponse
+          ?.where((element) => element.name == data["sub_category"])
           .toList();
       if (category!.isNotEmpty) {
-        await fetchSubCategory(category!.first.id.toString());
-        subCategory = subCategoryResponse?.data
-            .where((element) => element.name == data["sub_category"])
+        await fetchSubCategory(category.first.id.toString());
+        subCategory = subCategoryResponse
+            ?.where((element) => element.name == data["sub_category"])
             .toList();
       }
       showDraft = data["showDraft"] ?? false;
@@ -246,7 +246,7 @@ class AddNewServiceProvider with ChangeNotifier {
       image = data["image"] ?? "";
       thumbImage = data["thumb_image"] ?? "";
       serviceName.text = data["service_name"] ?? "";
-      categoryValue = category!.isNotEmpty ? category.first : null;
+      categoryValue = category.isNotEmpty ? category.first : null;
       subCategoryValue = subCategory!.isNotEmpty ? subCategory.first : null;
       description.text = data["description"] ?? "";
       duration.text = (data["duration"] ?? "15").toString();
@@ -256,41 +256,41 @@ class AddNewServiceProvider with ChangeNotifier {
       taxIndex = data["tax"] ?? 0;
       featuredPoints.text = data["featured_points"] ?? "";
       isSwitch = data["status"] ?? false;
-      itemServiceSelected = data["itemServiceSelected"];
+      serviceSelected = data["itemServiceSelected"];
 
       serviceVersionList = data["itemServiceSelected"]?.versionsResponse;
       // serviceVersionSelected = itemServiceSelected?.serviceVersion;
-      log("itemServiceSelected ;${itemServiceSelected!.toJson()}");
+      log("itemServiceSelected ;${serviceSelected!.toJson()}");
 
       notifyListeners();
     }
   }
 
   onInit(ItemService itemService) async {
-    var category = categoryResponse?.data
-        .where((element) =>
+    var category = categoryResponse
+        ?.where((element) =>
             element.name == itemService.serviceVersion?.categoryResponse?.name)
         .toList();
 
-    var subCategory = subCategoryResponse?.data
-        .where((element) =>
+    var subCategory = subCategoryResponse
+        ?.where((element) =>
             element.name == itemService.serviceVersion?.categoryResponse?.name)
         .toList();
     if (category!.isNotEmpty) {
-      await fetchSubCategory(category!.first.id.toString());
-      subCategory = subCategoryResponse?.data
-          .where((element) =>
+      await fetchSubCategory(category.first.id.toString());
+      subCategory = subCategoryResponse
+          ?.where((element) =>
               element.name ==
               itemService.serviceVersion?.categoryResponse?.name)
           .toList();
     }
     showDraft = itemService.serviceVersion?.status == "active" ?? false;
 
-    isEdit = itemService.serviceVersion?.status == "active" ?? false;
+    // isEdit = itemService.serviceVersion?.status == "active" ?? false;
     image = itemService.serviceVersion?.mainImageResponse?.url ?? "";
     thumbImage = itemService.serviceVersion?.thumbnail ?? "";
     serviceName.text = itemService.serviceVersion?.title ?? "";
-    categoryValue = category!.isNotEmpty ? category.first : null;
+    categoryValue = category.isNotEmpty ? category.first : null;
     subCategoryValue = subCategory!.isNotEmpty ? subCategory.first : null;
     description.text = itemService.serviceVersion?.description ?? "";
     duration.text = (itemService.serviceVersion?.duration ?? "15").toString();
@@ -301,7 +301,7 @@ class AddNewServiceProvider with ChangeNotifier {
     // taxIndex = itemService.serviceVersion?.service?.tax ?? 0;
     // featuredPoints.text = itemService.serviceVersion?.service?.featuredPoints ?? "";
     isSwitch = itemService.serviceVersion?.status == "active" ?? false;
-    itemServiceSelected = itemService;
+    // serviceSelected = itemService;
     // serviceVersionSelected = itemService.versionsResponse
     //         ?.where((element) => element.status == "active")
     //         .toList()
@@ -369,8 +369,8 @@ class AddNewServiceProvider with ChangeNotifier {
   Future<void> onCraftSelected(ServiceVersion serviceVersion) async {
     // serviceVersionSelected = serviceVersion;
     var res = await repo.fetchServiceVersion(serviceVersion.id ?? "");
-    log("res ;${res.toJson()}");
-    onInit(res.data?.first.service ??
+
+    onInit(res.first.service ??
         ItemService(
           // id: 0,
           status: "",

@@ -67,8 +67,8 @@ class EditServiceProvider extends ChangeNotifier {
 
   String? slug = "";
 
-  CategoryResponse? categoryResponse;
-  CategoryResponse? subCategoryResponse;
+  List<CategoryItem>? categoryResponse;
+  List<CategoryItem>? subCategoryResponse;
 
   CategoryItem? categoryItem;
 

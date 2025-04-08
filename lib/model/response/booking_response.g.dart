@@ -6,18 +6,6 @@ part of 'booking_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-BookingResponse _$BookingResponseFromJson(Map<String, dynamic> json) =>
-    BookingResponse(
-      data: (json['data'] as List<dynamic>)
-          .map((e) => ItemBooking.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$BookingResponseToJson(BookingResponse instance) =>
-    <String, dynamic>{
-      'data': instance.data,
-    };
-
 ItemBooking _$ItemBookingFromJson(Map<String, dynamic> json) => ItemBooking(
       id: json['id'] as String?,
       status: json['status'] as String?,

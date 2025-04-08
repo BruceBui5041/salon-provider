@@ -15,15 +15,18 @@ class AddNewServiceRepository extends RepositoryConfig {
     });
   }
 
-  Future<CategoryResponse> fetchCategories() async {
-    return await commonRestClient.search<CategoryResponse>(
-        CategoryResponse.fromJson,
+  Future<List<CategoryItem>> fetchCategories() async {
+    var response = await commonRestClient.search<List<CategoryItem>>(
         SearchRequestBody(model: "category", conditions: [
-          [Condition(source: "status", operator: "=", target: "active")]
-        ], fields: [
-          FieldItem(field: "parent"),
-          FieldItem(field: "sub_categories"),
-        ]).toJson());
+      [Condition(source: "status", operator: "=", target: "active")]
+    ], fields: [
+      FieldItem(field: "parent"),
+      FieldItem(field: "sub_categories"),
+    ]).toJson());
+    var res = (response as List<dynamic>)
+        .map((e) => CategoryItem.fromJson(e))
+        .toList();
+    return res;
   }
 
   Future<void> publisthService(
@@ -34,30 +37,35 @@ class AddNewServiceRepository extends RepositoryConfig {
     });
   }
 
-  Future<CategoryResponse> fetchSubCategories(String id) async {
-    return await commonRestClient.search<CategoryResponse>(
-        CategoryResponse.fromJson,
+  Future<List<CategoryItem>> fetchSubCategories(String id) async {
+    var response = await commonRestClient.search<List<CategoryItem>>(
         SearchRequestBody(model: "category", conditions: [
-          [
-            Condition(source: "status", operator: "=", target: "active"),
-            Condition(source: "id", operator: "=", target: id)
-          ]
-        ], fields: [
-          FieldItem(field: "parent"),
-          FieldItem(field: "sub_categories"),
-        ]).toJson());
+      [
+        Condition(source: "status", operator: "=", target: "active"),
+        Condition(source: "id", operator: "=", target: id)
+      ]
+    ], fields: [
+      FieldItem(field: "parent"),
+      FieldItem(field: "sub_categories"),
+    ]).toJson());
+    var res = (response as List<dynamic>)
+        .map((e) => CategoryItem.fromJson(e))
+        .toList();
+    return res;
   }
 
-  Future<ServiceVersionCommonResponse> fetchServiceVersion(String id) async {
-    var res = await commonRestClient.search<ServiceVersionCommonResponse>(
-        ServiceVersionCommonResponse.fromJson,
+  Future<List<ServiceVersion>> fetchServiceVersion(String id) async {
+    var response = await commonRestClient.search<List<ServiceVersion>>(
         SearchRequestBody(model: "service_version", conditions: [
-          [
-            Condition(source: "id", operator: "=", target: id),
-          ]
-        ], fields: [
-          FieldItem(field: "service"),
-        ]).toJson());
+      [
+        Condition(source: "id", operator: "=", target: id),
+      ]
+    ], fields: [
+      FieldItem(field: "service"),
+    ]).toJson());
+    var res = (response as List<dynamic>)
+        .map((e) => ServiceVersion.fromJson(e))
+        .toList();
     return res;
   }
 }

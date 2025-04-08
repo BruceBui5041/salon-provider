@@ -21,7 +21,8 @@ abstract class RestClient {
   Future<dynamic> verifyOtp(@Body() Map<String, dynamic> requestBody);
 
   @POST("/login")
-  Future<LoginResponse> loginUser(@Body() Map<String, dynamic> requestBody);
+  Future<BaseResponse<LoginItem>> loginUser(
+      @Body() Map<String, dynamic> requestBody);
 
   @POST("/logout")
   Future<BaseResponse<bool>> logoutUser();

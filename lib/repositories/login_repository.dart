@@ -10,7 +10,7 @@ import 'package:dio/dio.dart';
 
 class LoginScreenRepository extends RepositoryConfig {
   var restClient = getIt.get<RestClient>();
-  Future<LoginResponse> loginUser(String phoneNumber) async {
+  Future<BaseResponse<LoginItem>> loginUser(String phoneNumber) async {
     return await restClient
         .loginUser({"auth_type": "phone_number", "phone_number": phoneNumber});
   }

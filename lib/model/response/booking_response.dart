@@ -19,26 +19,26 @@ part 'booking_response.g.dart';
 // String bookingResponseToJson(BookingResponse data) =>
 //     json.encode(data.toJson());
 
-@JsonSerializable()
-class BookingResponse {
-  final List<ItemBooking> data;
+// @JsonSerializable()
+// class BookingResponse {
+//   final List<ItemBooking> data;
 
-  BookingResponse({
-    required this.data,
-  });
+//   BookingResponse({
+//     required this.data,
+//   });
 
-  BookingResponse copyWith({
-    List<ItemBooking>? data,
-  }) =>
-      BookingResponse(
-        data: data ?? this.data,
-      );
+//   BookingResponse copyWith({
+//     List<ItemBooking>? data,
+//   }) =>
+//       BookingResponse(
+//         data: data ?? this.data,
+//       );
 
-  factory BookingResponse.fromJson(Map<String, dynamic> json) =>
-      _$BookingResponseFromJson(json);
+//   factory BookingResponse.fromJson(Map<String, dynamic> json) =>
+//       _$BookingResponseFromJson(json);
 
-  Map<String, dynamic> toJson() => _$BookingResponseToJson(this);
-}
+//   Map<String, dynamic> toJson() => _$BookingResponseToJson(this);
+// }
 
 @JsonSerializable()
 class ItemBooking {

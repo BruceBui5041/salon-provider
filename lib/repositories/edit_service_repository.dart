@@ -1,8 +1,5 @@
 import 'package:dio/dio.dart';
-import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/config/repository_config.dart';
-import 'package:salon_provider/model/request/search_request_model.dart';
-import 'package:salon_provider/model/response/service_response.dart';
 
 class EditServiceRepository extends RepositoryConfig {
   Future<void> publisthService(
@@ -23,12 +20,12 @@ class EditServiceRepository extends RepositoryConfig {
     await api.updateCraftService(serviceId, formData);
   }
 
-  Future<void> getAllServiceVersions(String serviceId) async {
-    var body = SearchRequestBody(model: EnumColumn.service.name, conditions: [
-      [
-        Condition(source: "id", operator: "=", target: serviceId),
-      ]
-    ], fields: []);
-    await commonRestClient.search(ServiceResponse.fromJson, body.toJson());
-  }
+  // Future<void> getAllServiceVersions(String serviceId) async {
+  //   var body = SearchRequestBody(model: EnumColumn.service.name, conditions: [
+  //     [
+  //       Condition(source: "id", operator: "=", target: serviceId),
+  //     ]
+  //   ], fields: []);
+  //   await commonRestClient.search(body.toJson());
+  // }
 }

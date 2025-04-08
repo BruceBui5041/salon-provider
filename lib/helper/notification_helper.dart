@@ -75,11 +75,16 @@ class NotificationHelper {
   }
 
   Future<String?> getToken({Function(String)? onSuccess}) async {
-    var token = await _firebaseMessaging.getToken();
-    if (onSuccess != null) {
-      onSuccess(token ?? '');
+    try {
+      var token = await _firebaseMessaging.getToken();
+      if (onSuccess != null) {
+        onSuccess(token ?? '');
+      }
+      return token;
+    } catch (e) {
+      print('Error getting token: $e');
+      return null;
     }
-    return token;
   }
 
   Future<String?> generateDeviceToken({Function(String)? onSuccess}) async {

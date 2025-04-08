@@ -10,7 +10,6 @@ class CustomServiceDetailsProvider with ChangeNotifier {
   String? selectedImage;
   ItemService? itemService;
   List locationList = [];
-  ServiceResponse? serviceResponse;
   var repo = getIt.get<AllServiceRepository>();
 
   onInit(context) async {
@@ -19,7 +18,7 @@ class CustomServiceDetailsProvider with ChangeNotifier {
     var service = arg as ItemService;
     try {
       var res = await repo.getServiceById(service.id ?? "");
-      itemService = res.data?[0];
+      itemService = res;
     } catch (e) {
       if (e is DioException) {
         Utils.error(e);

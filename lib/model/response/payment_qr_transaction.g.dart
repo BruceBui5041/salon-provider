@@ -6,21 +6,6 @@ part of 'payment_qr_transaction.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-PaymentTransactionResponse _$PaymentTransactionResponseFromJson(
-        Map<String, dynamic> json) =>
-    PaymentTransactionResponse(
-      data: (json['data'] as List<dynamic>)
-          .map((e) =>
-              ItemPaymentQrTransaction.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$PaymentTransactionResponseToJson(
-        PaymentTransactionResponse instance) =>
-    <String, dynamic>{
-      'data': instance.data,
-    };
-
 ItemPaymentQrTransaction _$ItemPaymentQrTransactionFromJson(
         Map<String, dynamic> json) =>
     ItemPaymentQrTransaction(
