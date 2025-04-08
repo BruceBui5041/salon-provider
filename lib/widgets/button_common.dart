@@ -48,14 +48,12 @@ class ButtonCommon extends StatelessWidget {
                       cornerRadius: radius!, cornerSmoothing: 1))),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (title != null)
-              Expanded(
-                child: Text(title ?? "",
-                    textAlign: TextAlign.center,
-                    overflow: TextOverflow.ellipsis,
-                    style: style ??
-                        appCss.dmDenseRegular16
-                            .textColor(appColor(context).appTheme.whiteColor)),
-              ),
+              Text(title ?? "",
+                  textAlign: TextAlign.center,
+                  overflow: TextOverflow.ellipsis,
+                  style: style ??
+                      appCss.dmDenseRegular16
+                          .textColor(appColor(context).appTheme.whiteColor)),
             if (icon != null)
               Row(children: [icon ?? const HSpace(0), const HSpace(Sizes.s10)])
                   .paddingOnly(left: Insets.i8),

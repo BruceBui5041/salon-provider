@@ -11,10 +11,11 @@ import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:salon_provider/network/api_config.dart';
 import 'package:salon_provider/repositories/add_new_service_repository.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:salon_provider/repositories/all_service_repository.dart';
 
 class AddNewServiceProvider with ChangeNotifier {
   var repo = getIt<AddNewServiceRepository>();
-
+  var repoService = getIt<AllServiceRepository>();
   CategoryItem? categoryValue;
   CategoryItem? subCategoryValue;
   List<ServiceVersion>? publishDateVersion;
@@ -32,6 +33,7 @@ class AddNewServiceProvider with ChangeNotifier {
   String? mainImageId;
   bool? isDraft = false;
   bool? isLoadingData = false;
+  Map<String, dynamic> currentService = {};
 
   // Add properties for draft service dropdown
   String? selectedDraftService;
@@ -114,6 +116,18 @@ class AddNewServiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> fetchCurrentService() async {
+    await Future.delayed(const Duration(milliseconds: 500));
+
+    var serviceInit = await repoService.getServiceById(serviceSelected!.id!);
+    serviceVersionList = serviceInit.versionsResponse;
+    serviceVersionSelected = serviceInit.serviceVersion;
+    log("serviceVersionList ${json.encode(serviceVersionList)}");
+    onInitService(currentService);
+
+    notifyListeners();
+  }
+
   Future<void> addService() async {
     // var images = listMultipartServiceImage;
     MultipartFile? image;
@@ -124,10 +138,10 @@ class AddNewServiceProvider with ChangeNotifier {
       );
     }
 
-    // var mainImage = await MultipartFile.fromFile(
-    //   imageFile!.path,
-    //   filename: imageFile!.path.split('/').last,
-    // );
+    var mainImage = await MultipartFile.fromFile(
+      imageFile!.path,
+      filename: imageFile!.path.split('/').last,
+    );
 
     try {
       FormData formData = FormData.fromMap({
@@ -141,8 +155,7 @@ class AddNewServiceProvider with ChangeNotifier {
             // "thumbnail": thumbFile!.path,
             "price": amount.text,
             "discounted_price": discount.text,
-            "duration": int.parse(duration.text ?? "15") *
-                1000, // Convert to milliseconds
+            "duration": int.parse(duration.text), // Convert to milliseconds
             "main_image_id": "0"
           }
         }),
@@ -176,11 +189,11 @@ class AddNewServiceProvider with ChangeNotifier {
     try {
       await repo.publisthService(
           serviceSelected!.id!, serviceVersionSelected!.id!);
-      var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
-      onInit(res, res.categoryResponse!);
-      // if (callBack != null) {
-      //   callBack();
-      // }
+      await repo.fetchServiceVersion(serviceVersionSelected!.id!);
+      // onInit(res, res.categoryResponse!);
+      if (callBack != null) {
+        callBack();
+      }
     } catch (e) {
       if (e is DioException) {
         print(e.response!.data);
@@ -214,12 +227,12 @@ class AddNewServiceProvider with ChangeNotifier {
         "status": isSwitch ? "active" : "inactive",
         "title": serviceName.text,
         "description": featuredPoints.text,
-        "category_id": categoryValue!.id,
-        "sub_category_id": subCategoryValue!.id,
+        "category_id": categoryValue?.id,
+        "sub_category_id": subCategoryValue?.id,
         "thumbnail": null,
         "price": int.parse(priceText),
         "discounted_price": int.parse(discountText),
-        "duration": int.parse(duration.text ?? "15"), // Convert to milliseconds
+        "duration": int.parse(duration.text), // Convert to milliseconds
         "main_image_id": null,
         "service_men_ids": [],
         "published_date": null,
@@ -263,6 +276,9 @@ class AddNewServiceProvider with ChangeNotifier {
             ),
           );
       print(res.data);
+      if (callBack != null) {
+        callBack();
+      }
     } catch (e) {
       if (e is DioException) {
         Utils.error(e);
@@ -275,10 +291,11 @@ class AddNewServiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> createCraft() async {
+  Future<void> createCraft({Function()? callBack}) async {
     await repo.createCraft(serviceSelected!.id!);
-    var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
-    onInit(res, res.categoryResponse!);
+    if (callBack != null) {
+      callBack();
+    }
   }
 
   Future<void> fetchCategory() async {
@@ -303,10 +320,15 @@ class AddNewServiceProvider with ChangeNotifier {
 
   onReady(context) async {
     isLoadingData = true;
-    log("AGGG argdata $argData");
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
-    log("AGGG DATATA $data");
+    currentService = data;
+    onInitService(currentService);
+    isLoadingData = false;
 
+    notifyListeners();
+  }
+
+  onInitService(Map<String, dynamic> currentServiceTmp) async {
     featuredPointsFocus.addListener(() {
       notifyListeners();
     });
@@ -314,48 +336,50 @@ class AddNewServiceProvider with ChangeNotifier {
     descriptionFocus.addListener(() {
       notifyListeners();
     });
-
-    if (data != "") {
+    serviceSelected = currentService["itemServiceSelected"];
+    var serviceInit = await repoService.getServiceById(serviceSelected!.id!);
+    if (currentServiceTmp != "") {
       var category = categoryResponse
-          ?.where((element) => element.name == data["category"])
+          ?.where((element) => element.name == currentServiceTmp["category"])
           .toList();
 
       var subCategory = (subCategoryResponse ?? [])
-          .where((element) => element.name == data["sub_category"])
+          .where((element) => element.name == currentServiceTmp["sub_category"])
           .toList();
       if (category != null && category.isNotEmpty) {
         await fetchSubCategory(category.first.id.toString());
         subCategory = (subCategoryResponse ?? [])
-            .where((element) => element.name == data["sub_category"])
+            .where(
+                (element) => element.name == currentServiceTmp["sub_category"])
             .toList();
       }
-      showDraft = data["showDraft"] ?? false;
+      showDraft = currentServiceTmp["showDraft"] ?? false;
 
-      isEdit = data["isEdit"] ?? false;
-      image = data["image"] ?? "";
-      thumbImage = data["thumb_image"] ?? "";
-      serviceName.text = data["service_name"] ?? "";
+      isEdit = currentServiceTmp["isEdit"] ?? false;
+      image = serviceInit.serviceVersion?.mainImageResponse?.url ?? "";
+      thumbImage = serviceInit.serviceVersion?.thumbnail ?? "";
+      serviceName.text = serviceInit.serviceVersion?.title ?? "";
       categoryValue =
           (category != null && category.isNotEmpty) ? category.first : null;
       subCategoryValue = (subCategory.isNotEmpty) ? subCategory.first : null;
 
-      description.text = data["description"] ?? "";
-      duration.text = (data["duration"] ?? "15").toString();
-      availableService.text = data["area"] ?? "";
-      minRequired.text = data["req_servicemen"] ?? "1";
-      amount.text = (data["price"] ?? "0").toString().toCurrencyVnd();
-      taxIndex = data["tax"] ?? 0;
-      featuredPoints.text = data["featured_points"] ?? "";
-      isSwitch = data["status"] ?? false;
-      serviceSelected = data["itemServiceSelected"];
-      discount.text = (data["discount"] ?? "0").toString().toCurrencyVnd();
+      featuredPoints.text = serviceInit.serviceVersion?.description ?? "";
+      duration.text = (serviceInit.serviceVersion?.duration ?? "15").toString();
 
-      serviceVersionList = data["itemServiceSelected"]?.versionsResponse;
+      amount.text =
+          (serviceInit.serviceVersion?.price ?? "0").toString().toCurrencyVnd();
+      featuredPoints.text = serviceInit.serviceVersion?.description ?? "";
+      isSwitch = serviceInit.serviceVersion?.status == "active";
+
+      discount.text = (serviceInit.serviceVersion?.discountedPrice ?? "0")
+          .toString()
+          .toCurrencyVnd();
+
+      serviceVersionList =
+          currentServiceTmp["itemServiceSelected"]?.versionsResponse;
       serviceVersionSelected = serviceSelected?.serviceVersion;
       isDraft = serviceVersionSelected?.publishedDate == null;
-      log("itemServiceSelected ;${serviceSelected!.toJson()}");
       await Future.delayed(const Duration(milliseconds: 500));
-      isLoadingData = false;
     }
     notifyListeners();
   }
@@ -375,6 +399,8 @@ class AddNewServiceProvider with ChangeNotifier {
           .where((element) =>
               element.name == serviceVersion.categoryResponse?.name)
           .toList();
+      categoryValue = category.first;
+      subCategoryValue = subCategory.isNotEmpty ? subCategory.first : null;
     }
     showDraft = serviceVersion.status == "active";
 
@@ -382,23 +408,16 @@ class AddNewServiceProvider with ChangeNotifier {
     thumbImage = serviceVersion.thumbnail ?? "";
     serviceName.text = serviceVersion.title ?? "";
     categoryValue = category.isNotEmpty ? category.first : null;
-    subCategoryValue = subCategory.isNotEmpty ? subCategory.first : null;
+    subCategoryValue = subCategoryValue;
     description.text = serviceVersion.description ?? "";
     duration.text = (serviceVersion.duration ?? "15").toString();
+    discount.text =
+        (serviceVersion.discountedPrice ?? "0").toString().toCurrencyVnd();
 
-    // availableService.text = itemService.serviceVersion?.service?.area ?? "";
-    // minRequired.text = itemService.serviceVersion?.service?.reqServicemen ?? "1";
     amount.text = (serviceVersion.price ?? "0").toString().toCurrencyVnd();
-    // taxIndex = itemService.serviceVersion?.service?.tax ?? 0;
-    // featuredPoints.text = itemService.serviceVersion?.service?.featuredPoints ?? "";
+    featuredPoints.text = serviceVersion.description ?? "";
     isSwitch = serviceVersion.status == "active";
-    // itemServiceSelected = serviceVersion;
-    // serviceVersionSelected = itemServiceSelected?.versionsResponse
-
-    //         ?.where((element) => element.status == "active")
-    //         .toList()
-    //         .first ??
-    //     null;
+    notifyListeners();
   }
 
   void onShowDraft(bool val) {
@@ -464,7 +483,6 @@ class AddNewServiceProvider with ChangeNotifier {
     serviceVersionSelected = serviceVersion;
     var res = await repo.fetchServiceVersion(serviceVersion.id ?? "");
 
-    // CategoryItem? category = res.categoryResponse;
     onInit(res, res.categoryResponse);
 
     notifyListeners();

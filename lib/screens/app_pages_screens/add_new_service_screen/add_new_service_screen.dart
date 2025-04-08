@@ -29,14 +29,11 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddNewServiceProvider>(builder: (context1, value, child) {
-      bool? isCanSetDraft = value.serviceSelected?.versionsResponse
-          ?.where((e) => e.publishedDate == null)
-          .toList()
-          .isEmpty;
-      // if (value.showDraft ?? false) {
-      //   isCanSetDraft = true;
-      // }
       return StatefulWrapper(
+          onDispose: () {
+            Provider.of<AddNewServiceProvider>(context, listen: false)
+                .clearInput();
+          },
           onInit: () => Future.delayed(
               const Duration(milliseconds: 20), () => value.onReady(context)),
           child: PopScope(
@@ -61,19 +58,21 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   Widget _bodyAddNew(AddNewServiceProvider value) {
     return Column(children: [
       // _dropdownDraftService(context, value),
-      Stack(children: [
-        const FieldsBackground(),
-        SingleChildScrollView(
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            if (value.isEdit) _toolEdit(value),
-            FormServiceImageLayout(),
-            FormCategoryLayout(),
-            FormPriceLayout(),
-            // FormServiceDefaultLayout(),
-          ]).paddingSymmetric(vertical: Insets.i20),
-        )
-      ]),
+      Expanded(
+        child: Stack(children: [
+          const FieldsBackground(),
+          SingleChildScrollView(
+            child:
+                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              if (value.isEdit) _toolEdit(value),
+              FormServiceImageLayout(),
+              FormCategoryLayout(),
+              FormPriceLayout(),
+              // FormServiceDefaultLayout(),
+            ]).paddingSymmetric(vertical: Insets.i20),
+          )
+        ]),
+      ),
 
       ButtonCommon(
           title: value.isEdit ? appFonts.update : appFonts.addService,
@@ -90,7 +89,12 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   Widget _bodyEdit(AddNewServiceProvider value) {
     return Column(children: [
       // _dropdownDraftService(context, value),
-      if (value.isEdit) _dropdownDraftServiceCustom(value),
+      if (value.isEdit)
+        Row(
+          children: [
+            Expanded(child: _dropdownDraftServiceCustom(value)),
+          ],
+        ),
       Divider(),
       Expanded(
         child: Stack(children: [
@@ -110,9 +114,9 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
       if (value.isEdit)
         Row(
           children: [
-            Expanded(child: _btnSave(value)),
-            const SizedBox(width: Insets.i10),
-            Expanded(child: _btnPublish(value)),
+            if (value.isDraft == true) Expanded(child: _btnSave(value)),
+            if (value.serviceVersionSelected?.status != "active")
+              Expanded(child: _btnPublish(value)),
           ],
         ),
       if (!value.isEdit)
@@ -215,19 +219,25 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
 
   Widget _btnNewDraft(AddNewServiceProvider value) {
     return Expanded(
-      child: ButtonCommon(
-          color: Colors.red,
-          icon: Icon(
-            Icons.edit_document,
-            color: Colors.white,
-          ),
-          title: null,
-          onTap: () {
-            value.createCraft();
-            // value.publishService(callBack: () {
-            //   Navigator.of(context).pop();
-            // });
-          }),
+      child: Padding(
+        padding: const EdgeInsets.symmetric(horizontal: Insets.i5),
+        child: ButtonCommon(
+            // color: Colors.red,
+
+            icon: Icon(
+              Icons.edit_document,
+              color: Colors.white,
+            ),
+            title: null,
+            onTap: () {
+              value.createCraft(callBack: () {
+                value.fetchCurrentService();
+              });
+              // value.publishService(callBack: () {
+              //   Navigator.of(context).pop();
+              // });
+            }),
+      ),
     );
   }
 
@@ -245,7 +255,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
             title: "Save",
             onTap: () {
               value.updateServiceCraft(callBack: () {
-                Navigator.of(context).pop();
+                value.fetchCurrentService();
               });
             }),
       );
@@ -254,28 +264,32 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   }
 
   Widget _btnPublish(AddNewServiceProvider value) {
-    if (value.serviceVersionSelected?.status == "active") {
-      return const SizedBox();
-    }
+    // if (value.serviceVersionSelected?.status == "active") {
+    //   return const SizedBox();
+    // }
     // if (value.serviceVersionSelected?.publishedDate != null) {}
-    return SizedBox(
-      height: 50,
-      width: double.infinity,
-      child: ButtonCommon(
-          color: Colors.green,
-          icon: Icon(
-            Icons.publish,
-            color: Colors.white,
-          ),
-          title: "Publish",
-          onTap: () {
-            value.publishService(callBack: () {
-              Provider.of<AllServiceProvider>(context, listen: false)
-                  .getAllServices();
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: Insets.i5),
+      child: SizedBox(
+        height: 50,
+        width: double.infinity,
+        child: ButtonCommon(
+            color: Colors.green,
+            icon: Icon(
+              Icons.publish,
+              color: Colors.white,
+            ),
+            title: "Publish",
+            onTap: () {
+              value.publishService(callBack: () {
+                value.fetchCurrentService();
 
-              Navigator.of(context).popUntil((route) => route.isFirst);
-            });
-          }),
+                Provider.of<AllServiceProvider>(context, listen: false)
+                    .getAllServices();
+                // Navigator.of(context).popUntil((route) => route.isFirst);
+              });
+            }),
+      ),
     );
   }
 }
