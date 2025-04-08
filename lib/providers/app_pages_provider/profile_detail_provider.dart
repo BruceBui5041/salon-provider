@@ -2,18 +2,31 @@ import 'dart:async';
 import 'package:salon_provider/screens/app_pages_screens/profile_detail_screen/layouts/selection_option_layout.dart';
 import 'package:flutter/cupertino.dart';
 import '../../config.dart';
+import '../../model/response/user_response.dart';
 // import '../../screens/app_pages_screens/add_serviceman_screen/layouts/selection_option_layout.dart';
 
 class ProfileDetailProvider with ChangeNotifier {
-  TextEditingController txtName = TextEditingController();
+  TextEditingController txtFirstName = TextEditingController();
+  TextEditingController txtLastName = TextEditingController();
   TextEditingController txtEmail = TextEditingController();
   TextEditingController txtPhone = TextEditingController();
   String dialCode = '+91';
-  final FocusNode nameFocus = FocusNode();
+  final FocusNode firstNameFocus = FocusNode();
+  final FocusNode lastNameFocus = FocusNode();
   final FocusNode emailFocus = FocusNode();
   final FocusNode phoneFocus = FocusNode();
   XFile? imageFile;
   SharedPreferences? preferences;
+  UserResponse? user;
+
+  void initWithUser(UserResponse userResponse) {
+    user = userResponse;
+    txtFirstName.text = user?.firstname ?? "";
+    txtLastName.text = user?.lastname ?? "";
+    txtEmail.text = user?.email ?? "";
+    txtPhone.text = user?.phoneNumber ?? "";
+    notifyListeners();
+  }
 
   onUpdate(context) {
     showDialog(

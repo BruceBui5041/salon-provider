@@ -2,16 +2,43 @@ import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/storage_config.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:salon_provider/model/response/user_response.dart';
+import 'package:salon_provider/repositories/user_repository.dart';
 
 class ProfileProvider with ChangeNotifier {
+  final UserRepository _userRepository = UserRepository();
+  UserResponse? _user;
+  bool _isLoading = false;
+  String? _error;
   List<ProfileModel> profileLists = [];
 
   dynamic timeSlot;
 
-  onReady() {
+  UserResponse? get user => _user;
+  bool get isLoading => _isLoading;
+  String? get error => _error;
+
+  onReady() async {
     profileLists =
         appArray.profileList.map((e) => ProfileModel.fromJson(e)).toList();
+    await fetchUser();
     notifyListeners();
+  }
+
+  Future<void> fetchUser() async {
+    try {
+      _isLoading = true;
+      _error = null;
+      notifyListeners();
+
+      _user = await _userRepository.getUser();
+      _error = null;
+    } catch (e) {
+      _error = e.toString();
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
   }
 
   onDeleteAccount(context, sync) {

@@ -1,8 +1,16 @@
 class BaseResponse<T> {
-  final T data;
+  final T? data;
+  final String? message;
+  final bool? status_code;
+  final String? error_key;
+  final String? log;
 
   BaseResponse({
-    required this.data,
+    this.data,
+    this.message,
+    this.status_code,
+    this.error_key,
+    this.log,
   });
 
   BaseResponse copyWith({
@@ -47,11 +55,14 @@ class BaseResponse<T> {
   ) {
     if (data is List) {
       return {
-        "data": (data as List).map((x) => toJsonT(x)).toList(),
+        "data": (data as List).map((x) => toJsonT(x as T)).toList(),
       };
     } else {
+      if (data == null) {
+        return {"data": null};
+      }
       return {
-        "data": toJsonT(data),
+        "data": toJsonT(data as T),
       };
     }
   }

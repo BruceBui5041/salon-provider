@@ -8,29 +8,41 @@ class TextFieldLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Column(children: [
-      ContainerWithTextLayout(title: appFonts.userName),
+      ContainerWithTextLayout(title: appFonts.firstName),
       const VSpace(Sizes.s8),
       TextFieldCommon(
-          controller: value!.txtName,
-          hintText: appFonts.enterName,
-          focusNode: value!.nameFocus,
-          onFieldSubmitted: (values) => validation.fieldFocusChange(
-              context, value!.nameFocus, value!.emailFocus),
-          prefixIcon: eSvgAssets.user,
-          validator: (value) => validation.nameValidation(
-              context, value)).paddingSymmetric(horizontal: Insets.i20),
+              controller: value!.txtFirstName,
+              hintText: appFonts.enterFirstName,
+              focusNode: value!.firstNameFocus,
+              onFieldSubmitted: (values) => validation.fieldFocusChange(
+                  context, value!.firstNameFocus, value!.lastNameFocus),
+              prefixIcon: eSvgAssets.user,
+              validator: (value) => validation.nameValidation(context, value))
+          .paddingSymmetric(horizontal: Insets.i20),
+      const VSpace(Sizes.s15),
+      ContainerWithTextLayout(title: appFonts.lastName),
+      const VSpace(Sizes.s8),
+      TextFieldCommon(
+              controller: value!.txtLastName,
+              hintText: appFonts.enterLastName,
+              focusNode: value!.lastNameFocus,
+              onFieldSubmitted: (values) => validation.fieldFocusChange(
+                  context, value!.lastNameFocus, value!.emailFocus),
+              prefixIcon: eSvgAssets.user,
+              validator: (value) => validation.nameValidation(context, value))
+          .paddingSymmetric(horizontal: Insets.i20),
       const VSpace(Sizes.s15),
       ContainerWithTextLayout(title: language(context, appFonts.email)),
       const VSpace(Sizes.s8),
       TextFieldCommon(
-          controller: value!.txtEmail,
-          hintText: language(context, appFonts.enterEmail),
-          focusNode: value!.emailFocus,
-          onFieldSubmitted: (values) => validation.fieldFocusChange(
-              context, value!.emailFocus, value!.phoneFocus),
-          prefixIcon: eSvgAssets.email,
-          validator: (value) => validation.emailValidation(
-              context, value)).paddingSymmetric(horizontal: Insets.i20),
+              controller: value!.txtEmail,
+              hintText: language(context, appFonts.enterEmail),
+              focusNode: value!.emailFocus,
+              onFieldSubmitted: (values) => validation.fieldFocusChange(
+                  context, value!.emailFocus, value!.phoneFocus),
+              prefixIcon: eSvgAssets.email,
+              validator: (value) => validation.emailValidation(context, value))
+          .paddingSymmetric(horizontal: Insets.i20),
       const VSpace(Sizes.s15),
       ContainerWithTextLayout(title: language(context, appFonts.phoneNo)),
       const VSpace(Sizes.s10),
