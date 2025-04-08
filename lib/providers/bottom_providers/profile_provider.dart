@@ -54,8 +54,14 @@ class ProfileProvider with ChangeNotifier {
                     Expanded(
                         child: ButtonCommon(
                             color: appColor(context).appTheme.red,
-                            onTap: () {
-                              StorageConfig.deleteAll();
+                            onTap: () async {
+                              final loginProvider =
+                                  Provider.of<LoginAsProvider>(
+                                context,
+                                listen: false,
+                              );
+                              await loginProvider.logoutUser();
+
                               route.pushNamedAndRemoveUntil(
                                   context, routeName.intro);
                             },

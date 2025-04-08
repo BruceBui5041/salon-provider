@@ -32,7 +32,7 @@ class LoginAsProvider with ChangeNotifier {
         } else {
           var userId = response.data.user.id;
 
-          AuthConfig.setUserId(userId);
+          await AuthConfig.setUserId(userId);
 
           // pref!.setString("token", response.data!.token!);
           // pref!.setString("user_id", response.data!.id!);
@@ -58,6 +58,13 @@ class LoginAsProvider with ChangeNotifier {
         //     content: Text(response.message!),
         //     backgroundColor: appColor(context).appTheme.error));
       }
+    }
+  }
+
+  Future<void> logoutUser() async {
+    var res = await repo.logoutUser();
+    if (res.data == true) {
+      await StorageConfig.deleteAll();
     }
   }
 

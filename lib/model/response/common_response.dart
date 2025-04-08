@@ -26,6 +26,13 @@ class BaseResponse<T> {
       return BaseResponse<T>(
         data: json["data"].map<dynamic>((x) => fromJsonT(x)).toList() as T,
       );
+    } else if (json["data"] is bool ||
+        json["data"] is int ||
+        json["data"] is String ||
+        json["data"] is double) {
+      return BaseResponse<T>(
+        data: json["data"] as T,
+      );
     } else {
       return BaseResponse<T>(
         data: fromJsonT(json["data"]),
