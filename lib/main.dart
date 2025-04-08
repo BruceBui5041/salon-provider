@@ -165,7 +165,8 @@ class MyApp extends StatelessWidget {
                           theme: AppTheme.fromType(ThemeType.light).themeData,
                           darkTheme:
                               AppTheme.fromType(ThemeType.dark).themeData,
-                          locale: lang.locale,
+                          // locale: lang.locale,
+                          locale: const Locale("en"),
                           localizationsDelegates: const [
                             AppLocalizations.delegate,
                             AppLocalizationDelagate(),

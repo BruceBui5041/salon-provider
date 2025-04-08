@@ -8,6 +8,7 @@ class AppArray {
     const Locale('ar'),
     const Locale('fr'),
     const Locale('es'),
+    const Locale('vi'),
   ];
 
   // language list
@@ -35,6 +36,12 @@ class AppArray {
       "locale": const Locale("es", 'ES'),
       "icon": eImageAssets.es,
       "code": "es"
+    },
+    {
+      "title": appFonts.vietnamese,
+      "locale": const Locale("vi", 'VN'),
+      "icon": eImageAssets.es,
+      "code": "vi"
     },
   ];
 

@@ -57,6 +57,7 @@ class AddNewServiceRepository extends RepositoryConfig {
   Future<List<ServiceVersion>> fetchServiceVersion(String id) async {
     var response = await commonRestClient.search<List<ServiceVersion>>(
         SearchRequestBody(model: "service_version", conditions: [
+
       [
         Condition(source: "id", operator: "=", target: id),
       ]

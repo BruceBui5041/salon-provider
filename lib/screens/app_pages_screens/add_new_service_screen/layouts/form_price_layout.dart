@@ -1,8 +1,4 @@
-import 'dart:developer';
-
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:salon_provider/model/response/service_version_response.dart';
-import 'package:salon_provider/widgets/dropdown_common.dart';
 
 import '../../../../config.dart';
 

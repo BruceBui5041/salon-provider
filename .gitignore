@@ -56,3 +56,4 @@ app.*.map.json
 .pub
 
 /ios/Pods/
+android/.gradle/8.3/fileHashes/fileHashes.lock

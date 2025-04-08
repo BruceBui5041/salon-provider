@@ -4,6 +4,7 @@ import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:salon_provider/model/response/category_response.dart';
 import 'package:salon_provider/widgets/cache_image.dart';
 import 'package:salon_provider/widgets/custom_drop_down_common.dart';
+import 'package:salon_provider/widgets/dropdown_common.dart';
 
 import '../../../../config.dart';
 
@@ -34,24 +35,35 @@ class FormCategoryLayout extends StatelessWidget {
         ContainerWithTextLayout(title: language(context, appFonts.duration))
             .paddingOnly(top: Insets.i24, bottom: Insets.i12),
         Row(children: [
+          // Expanded(
+          //     flex: 2,
+          //     child: TextFieldCommon(
+          //         keyboardType: TextInputType.number,
+          //         focusNode: value.durationFocus,
+          //         controller: value.duration,
+          //         hintText: appFonts.addServiceTime,
+          //         prefixIcon: eSvgAssets.timer)),
+          //create dropdown
           Expanded(
               flex: 2,
-              child: TextFieldCommon(
-                  keyboardType: TextInputType.number,
-                  focusNode: value.durationFocus,
-                  controller: value.duration,
-                  hintText: appFonts.addServiceTime,
-                  prefixIcon: eSvgAssets.timer)),
+              child: CustomDropDownLayout(
+                  value: value.durationValue ?? "15",
+                  icon: eSvgAssets.timer,
+                  itemBuilder: (BuildContext context, item) {
+                    return Text(item + " minutes");
+                  },
+                  items: ["15", "30", "45", "60", "120", "180", "300"],
+                  onChanged: (val) => value.onChangeDuration(val ?? ""))),
           const HSpace(Sizes.s6),
-          Expanded(
-              flex: 1,
-              child: DarkDropDownLayout(
-                  isBig: true,
-                  val: value.durationValue,
-                  hintText: appFonts.hour,
-                  isIcon: false,
-                  categoryList: appArray.durationList,
-                  onChanged: (val) => value.onChangeDuration(val)))
+          // Expanded(
+          //     flex: 1,
+          //     child: DarkDropDownLayout(
+          //         isBig: true,
+          //         val: "minutes",
+          //         hintText: appFonts.hour,
+          //         isIcon: false,
+          //         categoryList: ["minutes"],
+          //         onChanged: null))
         ]).paddingSymmetric(horizontal: Insets.i20),
       ],
     );
@@ -123,7 +135,12 @@ class FormCategoryLayout extends StatelessWidget {
         // ).paddingSymmetric(horizontal: Insets.i20),
         CustomDropDownLayout<CategoryItem>(
           icon: eSvgAssets.subCategory,
-          value: value.subCategoryValue,
+
+          value: (value.subCategoryResponse?.isNotEmpty ?? false) &&
+                  (value.subCategoryValue == null)
+              ? value.subCategoryResponse?.first
+              : value.subCategoryValue,
+
           items: value.subCategoryResponse,
           onChanged: (CategoryItem? val) => value.onChangeSubCategory(val!),
           itemBuilder: (BuildContext context, CategoryItem item) {
