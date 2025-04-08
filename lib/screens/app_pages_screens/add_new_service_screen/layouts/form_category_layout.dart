@@ -87,7 +87,7 @@ class FormCategoryLayout extends StatelessWidget {
         CustomDropDownLayout<CategoryItem>(
           icon: eSvgAssets.categorySmall,
           value: value.categoryValue,
-          items: value.categoryResponse?.data,
+          items: value.categoryResponse,
           onChanged: (CategoryItem? val) => value.onChangeCategory(val!),
           itemBuilder: (BuildContext context, item) {
             return Row(
@@ -135,10 +135,12 @@ class FormCategoryLayout extends StatelessWidget {
         // ).paddingSymmetric(horizontal: Insets.i20),
         CustomDropDownLayout<CategoryItem>(
           icon: eSvgAssets.subCategory,
+
           value: (value.subCategoryResponse?.isNotEmpty ?? false) &&
                   (value.subCategoryValue == null)
               ? value.subCategoryResponse?.first
               : value.subCategoryValue,
+
           items: value.subCategoryResponse,
           onChanged: (CategoryItem? val) => value.onChangeSubCategory(val!),
           itemBuilder: (BuildContext context, CategoryItem item) {

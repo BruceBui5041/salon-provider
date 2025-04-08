@@ -3,6 +3,7 @@ import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/model/response/common_response.dart';
 import 'package:salon_provider/model/response/gen_qr_response.dart';
 import 'package:salon_provider/model/response/payment_qr_transaction.dart';
 
@@ -10,7 +11,7 @@ class BookingRepository extends RepositoryConfig {
   // Future<BookingReso> getBookingDetails(String bookingId) async {
   //   return await bookingProvider.getBookingDetails(bookingId);
   // }
-  Future<BookingResponse> getBookingByIdBooking(String bookingId) async {
+  Future<List<ItemBooking>> getBookingByIdBooking(String bookingId) async {
     var body = SearchRequestBody(model: "booking", conditions: [
       [
         Condition(source: "id", operator: "=", target: bookingId),
@@ -18,8 +19,11 @@ class BookingRepository extends RepositoryConfig {
     ], fields: [
       FieldItem(field: "payment.payment_qr"),
     ]);
-    var res =
-        await commonRestClient.search(BookingResponse.fromJson, body.toJson());
+    var response =
+        await commonRestClient.search<List<ItemBooking>>(body.toJson());
+    var res = (response as List<dynamic>)
+        .map((e) => ItemBooking.fromJson(e))
+        .toList();
     return res;
   }
 
@@ -28,7 +32,7 @@ class BookingRepository extends RepositoryConfig {
     return res;
   }
 
-  Future<PaymentTransactionResponse> getPaymentByIdPayment(
+  Future<List<ItemPaymentQrTransaction>> getPaymentByIdPayment(
       String paymentId) async {
     var body = SearchRequestBody(model: "payment", conditions: [
       [
@@ -37,12 +41,15 @@ class BookingRepository extends RepositoryConfig {
     ], fields: [
       FieldItem(field: "payment_qr"),
     ]);
-    var res = await commonRestClient.search(
-        PaymentTransactionResponse.fromJson, body.toJson());
+    var response = await commonRestClient
+        .search<List<ItemPaymentQrTransaction>>(body.toJson());
+    var res = (response as List<dynamic>)
+        .map((e) => ItemPaymentQrTransaction.fromJson(e))
+        .toList();
     return res;
   }
 
-  Future<BookingResponse> getBookings({
+  Future<List<ItemBooking>> getBookings({
     List<List<Condition>>? conditions,
     int? limit,
     int? offset,
@@ -61,12 +68,15 @@ class BookingRepository extends RepositoryConfig {
       limit: limit,
       offset: offset,
     );
-    final response = await commonRestClient.search(
-        BookingResponse.fromJson, requestBody.toJson());
-    return response;
+    final response =
+        await commonRestClient.search<List<ItemBooking>>(requestBody.toJson());
+    var res = (response as List<dynamic>)
+        .map((e) => ItemBooking.fromJson(e))
+        .toList();
+    return res;
   }
 
-  Future<CategoryResponse> getCategories({
+  Future<List<CategoryItem>> getCategories({
     List<List<Condition>>? conditions,
   }) async {
     var requestBody = SearchRequestBody(
@@ -77,9 +87,12 @@ class BookingRepository extends RepositoryConfig {
         FieldItem(field: "name"),
       ],
     );
-    final response = await commonRestClient.search(
-        CategoryResponse.fromJson, requestBody.toJson());
-    return response;
+    final response =
+        await commonRestClient.search<List<CategoryItem>>(requestBody.toJson());
+    var res = (response as List<dynamic>)
+        .map((e) => CategoryItem.fromJson(e))
+        .toList();
+    return res;
   }
 
   // Future<void> updateBooking(Booking booking) async {}

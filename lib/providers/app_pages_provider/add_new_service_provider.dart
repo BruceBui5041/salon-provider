@@ -26,7 +26,7 @@ class AddNewServiceProvider with ChangeNotifier {
   String? thumbNailImage;
   String? mainImage;
   bool? showDraft = false;
-  ItemService? itemServiceSelected;
+  ItemService? serviceSelected;
   List<ServiceVersion>? serviceVersionList;
   ServiceVersion? serviceVersionSelected;
   String? mainImageId;
@@ -75,6 +75,8 @@ class AddNewServiceProvider with ChangeNotifier {
   String? slug = "";
 
   CategoryResponse? categoryResponse;
+
+
   List<CategoryItem>? subCategoryResponse;
 
   CategoryItem? categoryItem;
@@ -174,12 +176,14 @@ class AddNewServiceProvider with ChangeNotifier {
   Future<void> publishService({Function? callBack}) async {
     try {
       await repo.publisthService(
+
           itemServiceSelected!.id!, serviceVersionSelected!.id!);
       var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
       onInit(res.data!.first, res.data?.first.categoryResponse!);
       // if (callBack != null) {
       //   callBack();
       // }
+
     } catch (e) {
       if (e is DioException) {
         print(e.response!.data);
@@ -278,6 +282,7 @@ class AddNewServiceProvider with ChangeNotifier {
     await repo.createCraft(itemServiceSelected!.id!);
     var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
     onInit(res.data!.first, res.data?.first.categoryResponse!);
+
   }
 
   Future<void> fetchCategory() async {
@@ -327,8 +332,8 @@ class AddNewServiceProvider with ChangeNotifier {
     });
 
     if (data != "") {
-      var category = categoryResponse?.data
-          .where((element) => element.name == data["category"])
+      var category = categoryResponse
+          ?.where((element) => element.name == data["category"])
           .toList();
 
       var subCategory = (subCategoryResponse ?? [])
@@ -338,6 +343,7 @@ class AddNewServiceProvider with ChangeNotifier {
         await fetchSubCategory(category.first.id.toString());
         subCategory = (subCategoryResponse ?? [])
             .where((element) => element.name == data["sub_category"])
+
             .toList();
       }
       showDraft = data["showDraft"] ?? false;
@@ -351,6 +357,7 @@ class AddNewServiceProvider with ChangeNotifier {
       subCategoryValue = (subCategory != null && subCategory.isNotEmpty)
           ? subCategory.first
           : null;
+
       description.text = data["description"] ?? "";
       duration.text = (data["duration"] ?? "15").toString();
       availableService.text = data["area"] ?? "";
@@ -368,6 +375,7 @@ class AddNewServiceProvider with ChangeNotifier {
       log("itemServiceSelected ;${itemServiceSelected!.toJson()}");
       await Future.delayed(const Duration(milliseconds: 500));
       isLoadingData = false;
+
     }
     notifyListeners();
   }
@@ -397,6 +405,7 @@ class AddNewServiceProvider with ChangeNotifier {
     subCategoryValue = subCategory.isNotEmpty ? subCategory.first : null;
     description.text = serviceVersion.description ?? "";
     duration.text = (serviceVersion.duration ?? "15").toString();
+
     // availableService.text = itemService.serviceVersion?.service?.area ?? "";
     // minRequired.text = itemService.serviceVersion?.service?.reqServicemen ?? "1";
     amount.text = (serviceVersion.price ?? "0").toString().toCurrencyVnd();
@@ -405,6 +414,7 @@ class AddNewServiceProvider with ChangeNotifier {
     isSwitch = serviceVersion.status == "active" ?? false;
     // itemServiceSelected = serviceVersion;
     // serviceVersionSelected = itemServiceSelected?.versionsResponse
+
     //         ?.where((element) => element.status == "active")
     //         .toList()
     //         .first ??
@@ -473,9 +483,11 @@ class AddNewServiceProvider with ChangeNotifier {
   Future<void> onDraftSelected(ServiceVersion serviceVersion) async {
     serviceVersionSelected = serviceVersion;
     var res = await repo.fetchServiceVersion(serviceVersion.id ?? "");
+
     log("res ;${res.toJson()}");
     CategoryItem? category = res.data?.first.categoryResponse;
     onInit(res.data!.first, res.data?.first.categoryResponse!);
+
     notifyListeners();
   }
 

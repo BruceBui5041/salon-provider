@@ -159,8 +159,8 @@ class CustomBookingProvider with ChangeNotifier {
       }
 
       var res = await repo.getBookings(conditions: conditions);
-      bookingList = res.data;
-      freelancerBookingList = res.data;
+      bookingList = res ?? [];
+      freelancerBookingList = res ?? [];
       notifyListeners();
     } catch (e) {
       // Handle error if needed
@@ -299,8 +299,8 @@ class CustomBookingProvider with ChangeNotifier {
       }
 
       var res = await repo.getBookings(conditions: conditions);
-      bookingList = res.data;
-      freelancerBookingList = res.data;
+      bookingList = res ?? [];
+      freelancerBookingList = res ?? [];
       onInit();
 
       // Fetch categories
@@ -321,7 +321,7 @@ class CustomBookingProvider with ChangeNotifier {
 
     try {
       var res = await repo.getCategories();
-      categories = res.data;
+      categories = res;
     } catch (e) {
       // Handle error if needed
       categories = [];

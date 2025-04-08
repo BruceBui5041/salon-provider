@@ -49,7 +49,7 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
       );
 
       // Update the HomeProvider's recentBookingList with the API results
-      homeProvider.updateRecentBookings(bookingResponse.data);
+      homeProvider.updateRecentBookings(bookingResponse ?? []);
 
       setState(() {
         isLoading = false;

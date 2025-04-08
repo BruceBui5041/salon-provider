@@ -31,7 +31,8 @@ class ProfileProvider with ChangeNotifier {
       _error = null;
       notifyListeners();
 
-      _user = await _userRepository.getUser();
+      final response = await _userRepository.getUser();
+      _user = response;
       _error = null;
     } catch (e) {
       _error = e.toString();

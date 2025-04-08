@@ -4,13 +4,13 @@ import 'package:salon_provider/repositories/all_service_repository.dart';
 import 'package:flutter/material.dart';
 
 class AllServiceProvider extends ChangeNotifier {
-  ServiceResponse? serviceResponse;
+  List<ItemService>? serviceResponse;
 
   var repo = getIt.get<AllServiceRepository>();
 
   Future<void> getAllServices() async {
     var res = await repo.getAllServices();
-    if (res.data != null && res.data!.isNotEmpty) {
+    if (res != null && res!.isNotEmpty) {
       serviceResponse = res;
     }
 

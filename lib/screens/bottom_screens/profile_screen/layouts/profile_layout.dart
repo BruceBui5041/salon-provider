@@ -34,13 +34,13 @@ class ProfileLayout extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
-                            SvgPicture.asset(user.email.isNotEmpty
+                            SvgPicture.asset(user.email != null
                                 ? eSvgAssets.email
                                 : eSvgAssets.phone),
                             const HSpace(Sizes.s5),
                             Text(
-                                user.email.isNotEmpty
-                                    ? user.email
+                                user.email!.isNotEmpty
+                                    ? user.email!
                                     : user.phoneNumber ?? "",
                                 style: appCss.dmDenseMedium12.textColor(
                                     appColor(context).appTheme.lightText))

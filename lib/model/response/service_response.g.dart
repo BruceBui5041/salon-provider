@@ -6,18 +6,6 @@ part of 'service_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ServiceResponse _$ServiceResponseFromJson(Map<String, dynamic> json) =>
-    ServiceResponse(
-      data: (json['data'] as List<dynamic>?)
-          ?.map((e) => ItemService.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$ServiceResponseToJson(ServiceResponse instance) =>
-    <String, dynamic>{
-      'data': instance.data,
-    };
-
 ItemService _$ItemServiceFromJson(Map<String, dynamic> json) => ItemService(
       id: json['id'] as String?,
       status: json['status'] as String?,

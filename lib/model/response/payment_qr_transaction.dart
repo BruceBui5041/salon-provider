@@ -8,34 +8,6 @@ import 'dart:convert';
 
 part 'payment_qr_transaction.g.dart';
 
-PaymentTransactionResponse paymentTransactionResponseFromJson(String str) =>
-    PaymentTransactionResponse.fromJson(json.decode(str));
-
-String paymentTransactionResponseToJson(PaymentTransactionResponse data) =>
-    json.encode(data.toJson());
-
-@JsonSerializable()
-class PaymentTransactionResponse {
-  @JsonKey(name: "data")
-  final List<ItemPaymentQrTransaction> data;
-
-  PaymentTransactionResponse({
-    required this.data,
-  });
-
-  PaymentTransactionResponse copyWith({
-    List<ItemPaymentQrTransaction>? data,
-  }) =>
-      PaymentTransactionResponse(
-        data: data ?? this.data,
-      );
-
-  factory PaymentTransactionResponse.fromJson(Map<String, dynamic> json) =>
-      _$PaymentTransactionResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$PaymentTransactionResponseToJson(this);
-}
-
 @JsonSerializable()
 class ItemPaymentQrTransaction {
   @JsonKey(name: "id")

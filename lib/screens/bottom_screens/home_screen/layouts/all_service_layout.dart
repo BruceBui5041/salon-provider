@@ -30,7 +30,7 @@ class _AllServiceLayoutState extends State<AllServiceLayout> {
     if (value.serviceResponse == null) {
       return const SizedBox();
     }
-    final list = value.serviceResponse!.data?.take(2).toList();
+    final list = value.serviceResponse!.take(2).toList();
     return ListView.builder(
         shrinkWrap: true,
         physics: const NeverScrollableScrollPhysics(),

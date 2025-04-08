@@ -26,13 +26,13 @@ class LoginAsProvider with ChangeNotifier {
       formKey.currentState!.save();
       final response = await repo.loginUser(phoneController.text);
       if (response != null) {
-        if (response.data.challenge == "otp") {
+        if (response.data?.challenge == "otp") {
           await repo.resendOtp(context);
           route.pushNamed(context, routeName.verifyOtp);
         } else {
-          var userId = response.data.user.id;
+          var userId = response.data?.user.id;
 
-          await AuthConfig.setUserId(userId);
+          await AuthConfig.setUserId(userId ?? "");
 
           // pref!.setString("token", response.data!.token!);
           // pref!.setString("user_id", response.data!.id!);

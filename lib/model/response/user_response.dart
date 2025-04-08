@@ -7,10 +7,14 @@ part 'user_response.g.dart';
 
 @JsonSerializable()
 class UserResponse extends CommonResponse {
-  final String firstname;
-  final String lastname;
-  final List<RoleResponse> roles;
-  final String email;
+  @JsonKey(name: 'firstname')
+  final String? firstname;
+  @JsonKey(name: 'lastname')
+  final String? lastname;
+  @JsonKey(name: 'roles')
+  final List<RoleResponse>? roles;
+  @JsonKey(name: 'email')
+  final String? email;
   @JsonKey(name: 'profile_picture_url')
   final String? profilePictureUrl;
   @JsonKey(name: 'user_profile')

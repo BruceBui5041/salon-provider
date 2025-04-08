@@ -6,20 +6,6 @@ part of 'service_version_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ServiceVersionCommonResponse _$ServiceVersionCommonResponseFromJson(
-        Map<String, dynamic> json) =>
-    ServiceVersionCommonResponse(
-      data: (json['data'] as List<dynamic>?)
-          ?.map((e) => ServiceVersion.fromJson(e as Map<String, dynamic>))
-          .toList(),
-    );
-
-Map<String, dynamic> _$ServiceVersionCommonResponseToJson(
-        ServiceVersionCommonResponse instance) =>
-    <String, dynamic>{
-      'data': instance.data,
-    };
-
 ServiceVersion _$ServiceVersionFromJson(Map<String, dynamic> json) =>
     ServiceVersion(
       id: json['id'] as String?,

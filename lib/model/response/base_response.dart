@@ -4,13 +4,13 @@ part 'base_response.g.dart';
 
 @JsonSerializable()
 class CommonResponse {
-  final String id;
+  final String? id;
 
   @JsonKey(name: 'created_at')
-  final DateTime createdAt;
+  final DateTime? createdAt;
 
   @JsonKey(name: 'updated_at')
-  final DateTime updatedAt;
+  final DateTime? updatedAt;
 
   CommonResponse({
     required this.id,

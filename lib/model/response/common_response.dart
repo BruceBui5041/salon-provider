@@ -1,15 +1,25 @@
+import 'package:json_annotation/json_annotation.dart';
+
+part 'common_response.g.dart';
+
+@JsonSerializable(genericArgumentFactories: true)
 class BaseResponse<T> {
+  @JsonKey(name: 'data')
   final T? data;
+  @JsonKey(name: 'message')
   final String? message;
-  final bool? status_code;
-  final String? error_key;
+  @JsonKey(name: 'status_code')
+  final bool? statusCode;
+  @JsonKey(name: 'error_key')
+  final String? errorKey;
+  @JsonKey(name: 'log')
   final String? log;
 
   BaseResponse({
     this.data,
     this.message,
-    this.status_code,
-    this.error_key,
+    this.statusCode,
+    this.errorKey,
     this.log,
   });
 
@@ -20,50 +30,10 @@ class BaseResponse<T> {
         data: data ?? this.data,
       );
 
-  /// Factory constructor để tạo BaseResponse từ JSON
-  /// [fromJsonT] là hàm chuyển đổi từ Map<String, dynamic> sang T
   factory BaseResponse.fromJson(
-    Map<String, dynamic> json,
-    T Function(Map<String, dynamic> json) fromJsonT,
-  ) {
-    if (json["data"] == null) {
-      throw Exception("Data is null");
-    }
+          Map<String, dynamic> json, T Function(Object? json) fromJsonT) =>
+      _$BaseResponseFromJson(json, fromJsonT);
 
-    if (json["data"] is List) {
-      return BaseResponse<T>(
-        data: json["data"].map<dynamic>((x) => fromJsonT(x)).toList() as T,
-      );
-    } else if (json["data"] is bool ||
-        json["data"] is int ||
-        json["data"] is String ||
-        json["data"] is double) {
-      return BaseResponse<T>(
-        data: json["data"] as T,
-      );
-    } else {
-      return BaseResponse<T>(
-        data: fromJsonT(json["data"]),
-      );
-    }
-  }
-
-  /// Phương thức để chuyển BaseResponse sang JSON
-  /// [toJsonT] là hàm chuyển đổi từ T sang Map<String, dynamic>
-  Map<String, dynamic> toJson(
-    Map<String, dynamic> Function(T value) toJsonT,
-  ) {
-    if (data is List) {
-      return {
-        "data": (data as List).map((x) => toJsonT(x as T)).toList(),
-      };
-    } else {
-      if (data == null) {
-        return {"data": null};
-      }
-      return {
-        "data": toJsonT(data as T),
-      };
-    }
-  }
+  Map<String, dynamic> toJson(Object? Function(T value) toJsonT) =>
+      _$BaseResponseToJson(this, toJsonT);
 }

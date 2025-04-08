@@ -7,32 +7,6 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 part 'login_response.g.dart';
 
-LoginResponse loginResponseFromJson(String str) =>
-    LoginResponse.fromJson(json.decode(str));
-
-String loginResponseToJson(LoginResponse data) => json.encode(data.toJson());
-
-@JsonSerializable()
-class LoginResponse {
-  final LoginItem data;
-
-  LoginResponse({
-    required this.data,
-  });
-
-  LoginResponse copyWith({
-    LoginItem? data,
-  }) =>
-      LoginResponse(
-        data: data ?? this.data,
-      );
-
-  factory LoginResponse.fromJson(Map<String, dynamic> json) =>
-      _$LoginResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$LoginResponseToJson(this);
-}
-
 @JsonSerializable()
 class LoginItem {
   final Token token;

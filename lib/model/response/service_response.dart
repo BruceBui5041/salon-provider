@@ -9,38 +9,6 @@ import 'dart:convert';
 
 part 'service_response.g.dart';
 
-ServiceResponse serviceResponseFromJson(String str) =>
-    ServiceResponse.fromJson(json.decode(str));
-
-String serviceResponseToJson(ServiceResponse data) =>
-    json.encode(data.toJson());
-
-@JsonSerializable()
-class ServiceResponse {
-  final List<ItemService>? data;
-
-  ServiceResponse({
-    this.data,
-  });
-
-  ServiceResponse copyWith({
-    List<ItemService>? data,
-  }) =>
-      ServiceResponse(
-        data: data ?? this.data,
-      );
-
-  factory ServiceResponse.fromJson(Map<String, dynamic> json) =>
-      ServiceResponse(
-        data: List<ItemService>.from(
-            json["data"]?.map((x) => ItemService.fromJson(x)) ?? []),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data?.map((x) => x.toJson()) ?? []),
-      };
-}
-
 @JsonSerializable()
 class ItemService {
   @JsonKey(name: 'id')

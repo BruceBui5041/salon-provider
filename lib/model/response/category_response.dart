@@ -2,40 +2,6 @@
 //
 //     final categoryResponse = categoryResponseFromJson(jsonString);
 
-import 'package:meta/meta.dart';
-import 'dart:convert';
-
-CategoryResponse categoryResponseFromJson(String str) =>
-    CategoryResponse.fromJson(json.decode(str));
-
-String categoryResponseToJson(CategoryResponse data) =>
-    json.encode(data.toJson());
-
-class CategoryResponse {
-  final List<CategoryItem> data;
-
-  CategoryResponse({
-    required this.data,
-  });
-
-  CategoryResponse copyWith({
-    List<CategoryItem>? data,
-  }) =>
-      CategoryResponse(
-        data: data ?? this.data,
-      );
-
-  factory CategoryResponse.fromJson(Map<String, dynamic> json) =>
-      CategoryResponse(
-        data: List<CategoryItem>.from(
-            json["data"].map((x) => CategoryItem.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "data": List<dynamic>.from(data.map((x) => x.toJson())),
-      };
-}
-
 class CategoryItem {
   final String? id;
   final String? status;
