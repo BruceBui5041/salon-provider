@@ -17,6 +17,9 @@ class LanguageHelper {
       case 'arabic':
         convertedLocale = const Locale('ar', 'AE');
         break;
+      case 'vietnamese':
+        convertedLocale = const Locale('vi', 'VN');
+        break;
       default:
         convertedLocale = const Locale('en', 'EN');
     }
@@ -39,6 +42,9 @@ class LanguageHelper {
         break;
       case 'ru':
         langName = "Русский";
+        break;
+      case 'vi':
+        langName = "Tiếng Việt";
         break;
       default:
         langName = "English";

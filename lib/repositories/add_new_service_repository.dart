@@ -57,6 +57,7 @@ class AddNewServiceRepository extends RepositoryConfig {
           ]
         ], fields: [
           FieldItem(field: "service"),
+          FieldItem(field: "category"),
         ]).toJson());
     return res;
   }

@@ -94,6 +94,8 @@ class LanguageProvider with ChangeNotifier {
   setVal(value) {
     if (value == "en") {
       currentLanguage = "english";
+    } else if (value == "vi") {
+      currentLanguage = "vietnamese";
     } else if (value == "fr") {
       currentLanguage = "french";
     } else if (value == "es") {

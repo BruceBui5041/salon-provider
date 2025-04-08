@@ -68,6 +68,7 @@ class AppFonts {
   final arabic = "arabic";
   final french = "french";
   final spanish = "spanish";
+  final vietnamese = "vietnamese";
   final enterZip = "enterZip";
   final pleaseCity = "pleaseCity";
   final pleaseAddress = "pleaseAddress";

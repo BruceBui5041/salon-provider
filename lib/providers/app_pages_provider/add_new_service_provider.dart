@@ -29,8 +29,13 @@ class AddNewServiceProvider with ChangeNotifier {
   ItemService? itemServiceSelected;
   List<ServiceVersion>? serviceVersionList;
   ServiceVersion? serviceVersionSelected;
+  String? mainImageId;
+  bool? isDraft = false;
+  bool? isLoadingData = false;
 
-  bool? isShowDraft = false;
+  // Add properties for draft service dropdown
+  String? selectedDraftService;
+  List<String> draftServices = [];
 
   //
   TextEditingController serviceName = TextEditingController();
@@ -70,7 +75,7 @@ class AddNewServiceProvider with ChangeNotifier {
   String? slug = "";
 
   CategoryResponse? categoryResponse;
-  CategoryResponse? subCategoryResponse;
+  List<CategoryItem>? subCategoryResponse;
 
   CategoryItem? categoryItem;
 
@@ -110,14 +115,18 @@ class AddNewServiceProvider with ChangeNotifier {
 
   Future<void> addService() async {
     // var images = listMultipartServiceImage;
-    var image = await MultipartFile.fromFile(
-      thumbFile!.path,
-      filename: thumbFile!.path.split('/').last,
-    );
-    var mainImage = await MultipartFile.fromFile(
-      imageFile!.path,
-      filename: imageFile!.path.split('/').last,
-    );
+    MultipartFile? image;
+    if (thumbFile != null) {
+      image = await MultipartFile.fromFile(
+        thumbFile!.path,
+        filename: thumbFile!.path.split('/').last,
+      );
+    }
+
+    // var mainImage = await MultipartFile.fromFile(
+    //   imageFile!.path,
+    //   filename: imageFile!.path.split('/').last,
+    // );
 
     try {
       FormData formData = FormData.fromMap({
@@ -131,12 +140,12 @@ class AddNewServiceProvider with ChangeNotifier {
             // "thumbnail": thumbFile!.path,
             "price": amount.text,
             "discounted_price": discount.text,
-            "duration": int.parse(durationValue ?? "15") *
+            "duration": int.parse(duration.text ?? "15") *
                 1000, // Convert to milliseconds
             "main_image_id": "0"
           }
         }),
-        "images": [image],
+        "images": image != null ? [image] : [],
       });
 
       var res = await ApiConfig().dio.post(
@@ -166,10 +175,11 @@ class AddNewServiceProvider with ChangeNotifier {
     try {
       await repo.publisthService(
           itemServiceSelected!.id!, serviceVersionSelected!.id!);
-
-      if (callBack != null) {
-        callBack();
-      }
+      var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
+      onInit(res.data!.first, res.data?.first.categoryResponse!);
+      // if (callBack != null) {
+      //   callBack();
+      // }
     } catch (e) {
       if (e is DioException) {
         print(e.response!.data);
@@ -177,8 +187,97 @@ class AddNewServiceProvider with ChangeNotifier {
     }
   }
 
+  Future<void> updateServiceCraft({Function()? callBack}) async {
+    MultipartFile? image;
+    if (thumbFile != null) {
+      image = await MultipartFile.fromFile(
+        thumbFile!.path,
+        filename: thumbFile!.path.split('/').last,
+      );
+    }
+    String priceText = amount.text
+        .replaceAll(".", "")
+        .replaceAll(",", "")
+        .replaceAll("đ", "")
+        .replaceAll(" ", "");
+    String discountText = discount.text
+        .replaceAll(".", "")
+        .replaceAll(",", "")
+        .replaceAll("đ", "")
+        .replaceAll(" ", "");
+    Map<String, dynamic> jsonBody = {
+      "id": itemServiceSelected!.id,
+      "slug": serviceName.text.toSlug(),
+      "service_version": {
+        "id": serviceVersionSelected!.id,
+        "status": isSwitch ? "active" : "inactive",
+        "title": serviceName.text,
+        "description": featuredPoints.text,
+        "category_id": categoryValue!.id,
+        "sub_category_id": subCategoryValue!.id,
+        "thumbnail": null,
+        "price": int.parse(priceText),
+        "discounted_price": int.parse(discountText),
+        "duration": int.parse(duration.text ?? "15"), // Convert to milliseconds
+        "main_image_id": null,
+        "service_men_ids": [],
+        "published_date": null,
+        "version_images": []
+      },
+      // "images": image != null ? [image] : null,
+    };
+    // Map<String, dynamic> jsonBody = {
+    //   "id": "3zMaaX26T3NwrU",
+    //   "slug": "dich-vu-trang-diem",
+    //   "service_version": {
+    //     "id": "DCZmkENgyLwGgWG",
+    //     "status": "inactive",
+    //     "title": "dich vu Trang diem",
+    //     "description": "What ever",
+    //     "category_id": "3w5rMLKLTUiANS",
+    //     "sub_category_id": "3srLErYxdoMerk",
+    //     "main_image_id": "3mKb6RrXJbHcTi",
+    //     "thumbnail":
+    //         "https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net/https://d3i048dqjftjb3.cloudfront.net//Users/devkhoa/Library/Developer/CoreSimulator/Devices/E8359957-5801-4779-B34D-D1EDB74E37F6/data/Containers/Data/Application/7ABEA53C-A3CB-47B7-BFC6-C5D6E137CFE0/tmp/image_picker_B9DFD3AD-A9B8-48F2-9212-23106F73801E-28858-000003AF3DFC1DE0.jpg",
+    //     "price": "102000",
+    //     "discounted_price": null,
+    //     "duration": 15,
+    //     "service_men_ids": [],
+    //     "published_date": null,
+    //     "version_images": []
+    //   }
+    // };
+    log(json.encode(jsonBody));
+    FormData formData = FormData.fromMap({
+      "json": json.encode(jsonBody),
+      if (image != null) "images": [image],
+    });
+
+    try {
+      var res = await ApiConfig().dio.put(
+            "/service/${itemServiceSelected!.id}",
+            data: formData,
+            options: Options(
+              contentType: "multipart/form-data",
+            ),
+          );
+      print(res.data);
+    } catch (e) {
+      if (e is DioException) {
+        Utils.error(e);
+      }
+      log("ERROR: $e");
+    }
+    // if (callBack != null) {
+    //   callBack();
+    // }
+    notifyListeners();
+  }
+
   Future<void> createCraft() async {
     await repo.createCraft(itemServiceSelected!.id!);
+    var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
+    onInit(res.data!.first, res.data?.first.categoryResponse!);
   }
 
   Future<void> fetchCategory() async {
@@ -201,7 +300,7 @@ class AddNewServiceProvider with ChangeNotifier {
     try {
       final response = await repo.fetchSubCategories(id);
       if (response != null) {
-        subCategoryResponse = response;
+        subCategoryResponse = response.data.first.subCategories;
       } else {
         // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
         //   content: Text(response.message!),
@@ -214,6 +313,7 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   onReady(context) async {
+    isLoadingData = true;
     log("AGGG argdata $argData");
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
     log("AGGG DATATA $data");
@@ -231,12 +331,12 @@ class AddNewServiceProvider with ChangeNotifier {
           .where((element) => element.name == data["category"])
           .toList();
 
-      var subCategory = subCategoryResponse?.data
+      var subCategory = (subCategoryResponse ?? [])
           .where((element) => element.name == data["sub_category"])
           .toList();
-      if (category!.isNotEmpty) {
-        await fetchSubCategory(category!.first.id.toString());
-        subCategory = subCategoryResponse?.data
+      if (category != null && category.isNotEmpty) {
+        await fetchSubCategory(category.first.id.toString());
+        subCategory = (subCategoryResponse ?? [])
             .where((element) => element.name == data["sub_category"])
             .toList();
       }
@@ -246,8 +346,11 @@ class AddNewServiceProvider with ChangeNotifier {
       image = data["image"] ?? "";
       thumbImage = data["thumb_image"] ?? "";
       serviceName.text = data["service_name"] ?? "";
-      categoryValue = category!.isNotEmpty ? category.first : null;
-      subCategoryValue = subCategory!.isNotEmpty ? subCategory.first : null;
+      categoryValue =
+          (category != null && category.isNotEmpty) ? category.first : null;
+      subCategoryValue = (subCategory != null && subCategory.isNotEmpty)
+          ? subCategory.first
+          : null;
       description.text = data["description"] ?? "";
       duration.text = (data["duration"] ?? "15").toString();
       availableService.text = data["area"] ?? "";
@@ -257,59 +360,55 @@ class AddNewServiceProvider with ChangeNotifier {
       featuredPoints.text = data["featured_points"] ?? "";
       isSwitch = data["status"] ?? false;
       itemServiceSelected = data["itemServiceSelected"];
+      discount.text = (data["discount"] ?? "0").toString().toCurrencyVnd();
 
       serviceVersionList = data["itemServiceSelected"]?.versionsResponse;
-      // serviceVersionSelected = itemServiceSelected?.serviceVersion;
+      serviceVersionSelected = itemServiceSelected?.serviceVersion;
+      isDraft = serviceVersionSelected?.publishedDate == null;
       log("itemServiceSelected ;${itemServiceSelected!.toJson()}");
-
-      notifyListeners();
+      await Future.delayed(const Duration(milliseconds: 500));
+      isLoadingData = false;
     }
+    notifyListeners();
   }
 
-  onInit(ItemService itemService) async {
+  onInit(ServiceVersion serviceVersion, CategoryItem? categoryItem) async {
     var category = categoryResponse?.data
-        .where((element) =>
-            element.name == itemService.serviceVersion?.categoryResponse?.name)
+        .where((element) => element.name == categoryItem?.name)
         .toList();
 
-    var subCategory = subCategoryResponse?.data
-        .where((element) =>
-            element.name == itemService.serviceVersion?.categoryResponse?.name)
+    var subCategory = (subCategoryResponse ?? [])
+        .where(
+            (element) => element.name == serviceVersion.categoryResponse?.name)
         .toList();
     if (category!.isNotEmpty) {
-      await fetchSubCategory(category!.first.id.toString());
-      subCategory = subCategoryResponse?.data
+      await fetchSubCategory(category.first.id.toString());
+      subCategory = (subCategoryResponse ?? [])
           .where((element) =>
-              element.name ==
-              itemService.serviceVersion?.categoryResponse?.name)
+              element.name == serviceVersion.categoryResponse?.name)
           .toList();
     }
-    showDraft = itemService.serviceVersion?.status == "active" ?? false;
+    showDraft = serviceVersion.status == "active" ?? false;
 
-    isEdit = itemService.serviceVersion?.status == "active" ?? false;
-    image = itemService.serviceVersion?.mainImageResponse?.url ?? "";
-    thumbImage = itemService.serviceVersion?.thumbnail ?? "";
-    serviceName.text = itemService.serviceVersion?.title ?? "";
-    categoryValue = category!.isNotEmpty ? category.first : null;
-    subCategoryValue = subCategory!.isNotEmpty ? subCategory.first : null;
-    description.text = itemService.serviceVersion?.description ?? "";
-    duration.text = (itemService.serviceVersion?.duration ?? "15").toString();
+    image = serviceVersion.mainImageResponse?.url ?? "";
+    thumbImage = serviceVersion.thumbnail ?? "";
+    serviceName.text = serviceVersion.title ?? "";
+    categoryValue = category.isNotEmpty ? category.first : null;
+    subCategoryValue = subCategory.isNotEmpty ? subCategory.first : null;
+    description.text = serviceVersion.description ?? "";
+    duration.text = (serviceVersion.duration ?? "15").toString();
     // availableService.text = itemService.serviceVersion?.service?.area ?? "";
     // minRequired.text = itemService.serviceVersion?.service?.reqServicemen ?? "1";
-    amount.text =
-        (itemService.serviceVersion?.price ?? "0").toString().toCurrencyVnd();
+    amount.text = (serviceVersion.price ?? "0").toString().toCurrencyVnd();
     // taxIndex = itemService.serviceVersion?.service?.tax ?? 0;
     // featuredPoints.text = itemService.serviceVersion?.service?.featuredPoints ?? "";
-    isSwitch = itemService.serviceVersion?.status == "active" ?? false;
-    itemServiceSelected = itemService;
-    // serviceVersionSelected = itemService.versionsResponse
+    isSwitch = serviceVersion.status == "active" ?? false;
+    // itemServiceSelected = serviceVersion;
+    // serviceVersionSelected = itemServiceSelected?.versionsResponse
     //         ?.where((element) => element.status == "active")
     //         .toList()
     //         .first ??
-    //     (itemService.versionsResponse != null &&
-    //             itemService.versionsResponse!.isNotEmpty
-    //         ? itemService.versionsResponse!.first
-    //         : null);
+    //     null;
   }
 
   void onShowDraft(bool val) {
@@ -366,21 +465,17 @@ class AddNewServiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> onCraftSelected(ServiceVersion serviceVersion) async {
-    // serviceVersionSelected = serviceVersion;
+  void setIsDraft(bool val) {
+    isDraft = val;
+    notifyListeners();
+  }
+
+  Future<void> onDraftSelected(ServiceVersion serviceVersion) async {
+    serviceVersionSelected = serviceVersion;
     var res = await repo.fetchServiceVersion(serviceVersion.id ?? "");
     log("res ;${res.toJson()}");
-    onInit(res.data?.first.service ??
-        ItemService(
-          // id: 0,
-          status: "",
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          slug: "",
-          ratingCount: null,
-          reviewInfo: null,
-          avgRating: '', id: '',
-        ));
+    CategoryItem? category = res.data?.first.categoryResponse;
+    onInit(res.data!.first, res.data?.first.categoryResponse!);
     notifyListeners();
   }
 
@@ -477,7 +572,18 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   onChangeDuration(val) {
-    durationValue = val.toString();
+    durationValue = val;
+    notifyListeners();
+  }
+
+  void updateSelectedDraftService(String newValue) {
+    selectedDraftService = newValue;
+    notifyListeners();
+  }
+
+  void loadDraftServices() {
+    // TODO: Load draft services from API or local storage
+    draftServices = ['Draft 1', 'Draft 2', 'Draft 3']; // Example data
     notifyListeners();
   }
 }

@@ -3,7 +3,7 @@ import 'package:figma_squircle_updated/figma_squircle.dart';
 import '../../config.dart';
 
 class ButtonCommon extends StatelessWidget {
-  final String title;
+  final String? title;
   final double? padding, margin, radius, height, fontSize, width;
   final GestureTapCallback? onTap;
   final TextStyle? style;
@@ -13,7 +13,7 @@ class ButtonCommon extends StatelessWidget {
 
   const ButtonCommon(
       {Key? key,
-      required this.title,
+      this.title,
       this.padding,
       this.margin = 0,
       this.radius = AppRadius.r8,
@@ -47,14 +47,15 @@ class ButtonCommon extends StatelessWidget {
                   borderRadius: SmoothBorderRadius(
                       cornerRadius: radius!, cornerSmoothing: 1))),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Expanded(
-              child: Text(language(context, title),
-                  textAlign: TextAlign.center,
-                  overflow: TextOverflow.ellipsis,
-                  style: style ??
-                      appCss.dmDenseRegular16
-                          .textColor(appColor(context).appTheme.whiteColor)),
-            ),
+            if (title != null)
+              Expanded(
+                child: Text(title ?? "",
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: style ??
+                        appCss.dmDenseRegular16
+                            .textColor(appColor(context).appTheme.whiteColor)),
+              ),
             if (icon != null)
               Row(children: [icon ?? const HSpace(0), const HSpace(Sizes.s10)])
                   .paddingOnly(left: Insets.i8),
