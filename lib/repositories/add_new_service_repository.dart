@@ -54,19 +54,16 @@ class AddNewServiceRepository extends RepositoryConfig {
     return res;
   }
 
-  Future<List<ServiceVersion>> fetchServiceVersion(String id) async {
-    var response = await commonRestClient.search<List<ServiceVersion>>(
+  Future<ServiceVersion> fetchServiceVersion(String id) async {
+    var response = await commonRestClient.search<ServiceVersion>(
         SearchRequestBody(model: "service_version", conditions: [
-
       [
         Condition(source: "id", operator: "=", target: id),
       ]
     ], fields: [
       FieldItem(field: "service"),
     ]).toJson());
-    var res = (response as List<dynamic>)
-        .map((e) => ServiceVersion.fromJson(e))
-        .toList();
+    var res = ServiceVersion.fromJson(response);
     return res;
   }
 }

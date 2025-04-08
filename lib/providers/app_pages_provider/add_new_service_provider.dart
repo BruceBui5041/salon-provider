@@ -74,8 +74,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
   String? slug = "";
 
-  CategoryResponse? categoryResponse;
-
+  List<CategoryItem>? categoryResponse = [];
 
   List<CategoryItem>? subCategoryResponse;
 
@@ -176,14 +175,12 @@ class AddNewServiceProvider with ChangeNotifier {
   Future<void> publishService({Function? callBack}) async {
     try {
       await repo.publisthService(
-
-          itemServiceSelected!.id!, serviceVersionSelected!.id!);
+          serviceSelected!.id!, serviceVersionSelected!.id!);
       var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
-      onInit(res.data!.first, res.data?.first.categoryResponse!);
+      onInit(res, res.categoryResponse!);
       // if (callBack != null) {
       //   callBack();
       // }
-
     } catch (e) {
       if (e is DioException) {
         print(e.response!.data);
@@ -210,7 +207,7 @@ class AddNewServiceProvider with ChangeNotifier {
         .replaceAll("đ", "")
         .replaceAll(" ", "");
     Map<String, dynamic> jsonBody = {
-      "id": itemServiceSelected!.id,
+      "id": serviceSelected!.id,
       "slug": serviceName.text.toSlug(),
       "service_version": {
         "id": serviceVersionSelected!.id,
@@ -259,7 +256,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
     try {
       var res = await ApiConfig().dio.put(
-            "/service/${itemServiceSelected!.id}",
+            "/service/${serviceSelected!.id}",
             data: formData,
             options: Options(
               contentType: "multipart/form-data",
@@ -279,22 +276,15 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   Future<void> createCraft() async {
-    await repo.createCraft(itemServiceSelected!.id!);
+    await repo.createCraft(serviceSelected!.id!);
     var res = await repo.fetchServiceVersion(serviceVersionSelected!.id!);
-    onInit(res.data!.first, res.data?.first.categoryResponse!);
-
+    onInit(res, res.categoryResponse!);
   }
 
   Future<void> fetchCategory() async {
     try {
       final response = await repo.fetchCategories();
-      if (response != null) {
-        categoryResponse = response;
-      } else {
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //   content: Text(response.message!),
-        // ));
-      }
+      categoryResponse = response;
       notifyListeners();
     } catch (e) {
       log("ERROR: $e");
@@ -304,13 +294,7 @@ class AddNewServiceProvider with ChangeNotifier {
   Future<void> fetchSubCategory(String id) async {
     try {
       final response = await repo.fetchSubCategories(id);
-      if (response != null) {
-        subCategoryResponse = response.data.first.subCategories;
-      } else {
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //   content: Text(response.message!),
-        // ));
-      }
+      subCategoryResponse = response.first.subCategories;
       notifyListeners();
     } catch (e) {
       log("ERROR: $e");
@@ -343,7 +327,6 @@ class AddNewServiceProvider with ChangeNotifier {
         await fetchSubCategory(category.first.id.toString());
         subCategory = (subCategoryResponse ?? [])
             .where((element) => element.name == data["sub_category"])
-
             .toList();
       }
       showDraft = data["showDraft"] ?? false;
@@ -354,9 +337,7 @@ class AddNewServiceProvider with ChangeNotifier {
       serviceName.text = data["service_name"] ?? "";
       categoryValue =
           (category != null && category.isNotEmpty) ? category.first : null;
-      subCategoryValue = (subCategory != null && subCategory.isNotEmpty)
-          ? subCategory.first
-          : null;
+      subCategoryValue = (subCategory.isNotEmpty) ? subCategory.first : null;
 
       description.text = data["description"] ?? "";
       duration.text = (data["duration"] ?? "15").toString();
@@ -366,22 +347,21 @@ class AddNewServiceProvider with ChangeNotifier {
       taxIndex = data["tax"] ?? 0;
       featuredPoints.text = data["featured_points"] ?? "";
       isSwitch = data["status"] ?? false;
-      itemServiceSelected = data["itemServiceSelected"];
+      serviceSelected = data["itemServiceSelected"];
       discount.text = (data["discount"] ?? "0").toString().toCurrencyVnd();
 
       serviceVersionList = data["itemServiceSelected"]?.versionsResponse;
-      serviceVersionSelected = itemServiceSelected?.serviceVersion;
+      serviceVersionSelected = serviceSelected?.serviceVersion;
       isDraft = serviceVersionSelected?.publishedDate == null;
-      log("itemServiceSelected ;${itemServiceSelected!.toJson()}");
+      log("itemServiceSelected ;${serviceSelected!.toJson()}");
       await Future.delayed(const Duration(milliseconds: 500));
       isLoadingData = false;
-
     }
     notifyListeners();
   }
 
   onInit(ServiceVersion serviceVersion, CategoryItem? categoryItem) async {
-    var category = categoryResponse?.data
+    var category = categoryResponse!
         .where((element) => element.name == categoryItem?.name)
         .toList();
 
@@ -389,14 +369,14 @@ class AddNewServiceProvider with ChangeNotifier {
         .where(
             (element) => element.name == serviceVersion.categoryResponse?.name)
         .toList();
-    if (category!.isNotEmpty) {
+    if (category.isNotEmpty) {
       await fetchSubCategory(category.first.id.toString());
       subCategory = (subCategoryResponse ?? [])
           .where((element) =>
               element.name == serviceVersion.categoryResponse?.name)
           .toList();
     }
-    showDraft = serviceVersion.status == "active" ?? false;
+    showDraft = serviceVersion.status == "active";
 
     image = serviceVersion.mainImageResponse?.url ?? "";
     thumbImage = serviceVersion.thumbnail ?? "";
@@ -411,7 +391,7 @@ class AddNewServiceProvider with ChangeNotifier {
     amount.text = (serviceVersion.price ?? "0").toString().toCurrencyVnd();
     // taxIndex = itemService.serviceVersion?.service?.tax ?? 0;
     // featuredPoints.text = itemService.serviceVersion?.service?.featuredPoints ?? "";
-    isSwitch = serviceVersion.status == "active" ?? false;
+    isSwitch = serviceVersion.status == "active";
     // itemServiceSelected = serviceVersion;
     // serviceVersionSelected = itemServiceSelected?.versionsResponse
 
@@ -484,9 +464,8 @@ class AddNewServiceProvider with ChangeNotifier {
     serviceVersionSelected = serviceVersion;
     var res = await repo.fetchServiceVersion(serviceVersion.id ?? "");
 
-    log("res ;${res.toJson()}");
-    CategoryItem? category = res.data?.first.categoryResponse;
-    onInit(res.data!.first, res.data?.first.categoryResponse!);
+    // CategoryItem? category = res.categoryResponse;
+    onInit(res, res.categoryResponse);
 
     notifyListeners();
   }

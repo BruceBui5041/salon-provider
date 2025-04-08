@@ -29,6 +29,13 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddNewServiceProvider>(builder: (context1, value, child) {
+      bool? isCanSetDraft = value.serviceSelected?.versionsResponse
+          ?.where((e) => e.publishedDate == null)
+          .toList()
+          .isEmpty;
+      // if (value.showDraft ?? false) {
+      //   isCanSetDraft = true;
+      // }
       return StatefulWrapper(
           onInit: () => Future.delayed(
               const Duration(milliseconds: 20), () => value.onReady(context)),
@@ -128,6 +135,11 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   Widget _dropdownDraftServiceCustom(AddNewServiceProvider value) {
     var initServiceVersion = value.serviceVersionList
         ?.firstWhere((e) => e.id == value.serviceVersionSelected?.id);
+    bool isDraftExist = value.serviceSelected?.versionsResponse
+            ?.where((e) => e.publishedDate == null)
+            .toList()
+            .isNotEmpty ??
+        false;
     return Row(
       children: [
         Expanded(
@@ -194,37 +206,29 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
             ),
           ),
         ),
-        const SizedBox(width: Insets.i4),
+        // const SizedBox(width: Insets.i4),
         if (value.serviceVersionSelected?.publishedDate != null)
-          Expanded(child: _btnNewDraft(value)),
+          if (!isDraftExist) _btnNewDraft(value),
       ],
     );
   }
 
   Widget _btnNewDraft(AddNewServiceProvider value) {
-    bool isDraftExist = value.itemServiceSelected?.versionsResponse
-            ?.where((e) => e.publishedDate == null)
-            .toList()
-            .isNotEmpty ??
-        false;
-    if (!isDraftExist) {
-      return Expanded(
-        child: ButtonCommon(
-            color: Colors.red,
-            icon: Icon(
-              Icons.edit_document,
-              color: Colors.white,
-            ),
-            title: null,
-            onTap: () {
-              value.createCraft();
-              // value.publishService(callBack: () {
-              //   Navigator.of(context).pop();
-              // });
-            }),
-      );
-    }
-    return const SizedBox();
+    return Expanded(
+      child: ButtonCommon(
+          color: Colors.red,
+          icon: Icon(
+            Icons.edit_document,
+            color: Colors.white,
+          ),
+          title: null,
+          onTap: () {
+            value.createCraft();
+            // value.publishService(callBack: () {
+            //   Navigator.of(context).pop();
+            // });
+          }),
+    );
   }
 
   Widget _btnSave(AddNewServiceProvider value) {
