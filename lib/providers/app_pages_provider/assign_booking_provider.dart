@@ -1,30 +1,29 @@
 import 'dart:developer';
 
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import '../../model/pending_booking_model.dart';
 
-
-
 class AssignBookingProvider with ChangeNotifier {
-
   PendingBookingModel? assignBookingModel;
   bool isServicemen = false;
-   String? amount;
+  String? amount;
 
   TextEditingController reasonCtrl = TextEditingController();
   FocusNode reasonFocus = FocusNode();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  onReady(context){
-   if(isFreelancer != true){
-     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
-     log("AMOUNT DSAT $data");
-     if(data != ""){
-       isServicemen = data["bool"];
-       amount = data["amount"];
-     }
-   }
+  onReady(context) {
+    if (isFreelancer != true) {
+      dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
+      log("AMOUNT DSAT $data");
+      if (data != "") {
+        isServicemen = data["bool"];
+        amount = data["amount"];
+      }
+    }
 
-    assignBookingModel = PendingBookingModel.fromJson( isServicemen ? appArray.assignBookingDetailWithList : appArray.assignBookingDetailList);
+    assignBookingModel = PendingBookingModel.fromJson(isServicemen
+        ? appArray.assignBookingDetailWithList
+        : appArray.assignBookingDetailList);
     notifyListeners();
   }
 
@@ -37,8 +36,7 @@ class AssignBookingProvider with ChangeNotifier {
         });
   }
 
-  onStartServicePass(context){
-
+  onStartServicePass(context) {
     showDialog(
         context: context,
         builder: (context1) {
@@ -50,24 +48,20 @@ class AssignBookingProvider with ChangeNotifier {
               isTwoButton: true,
               firstBText: appFonts.cancel,
               secondBText: appFonts.yes,
-              firstBTap: ()=> route.pop(context),
-              secondBTap: (){
+              firstBTap: () => route.pop(context),
+              secondBTap: () {
                 route.pop(context);
-                if(isFreelancer){
+                if (isFreelancer) {
                   route.pushNamed(context, routeName.ongoingBooking);
                 } else {
-                  route.pushNamed(context, routeName.ongoingBooking, arg: {
-                    "amount": amount
-                  });
+                  route.pushNamed(context, routeName.ongoingBooking,
+                      arg: {"amount": amount});
                 }
-
-              }
-          );
+              });
         });
   }
 
-
-  onCancel(context){
+  onCancel(context) {
     showDialog(
         context: context,
         builder: (context1) {
@@ -77,34 +71,32 @@ class AssignBookingProvider with ChangeNotifier {
               image: eGifAssets.error,
               subtext: appFonts.areYouSureCancelService,
               height: Sizes.s145,
-              firstBTap: ()=> route.pop(context),
-              secondBTap: (){
+              firstBTap: () => route.pop(context),
+              secondBTap: () {
                 route.pop(context);
                 showDialog(
                     context: context,
                     builder: (context1) => AppAlertDialogCommon(
-                      globalKey: formKey,
-                        isField: true,
-                        focusNode: reasonFocus,
-                        validator: (val)=> validation.commonValidation(context, val),
-                        controller: reasonCtrl,
-                        title: appFonts.reasonOfCancelBooking,
-                        singleText: appFonts.send,
-                      singleTap: (){
-
-                        if(formKey.currentState!.validate()){
-                          route.pop(context);
-                          route.pop(context);
-                          route.pushNamed(context, routeName.cancelledBooking);
-                        }
-                      },
-                    ));
+                          globalKey: formKey,
+                          isField: true,
+                          focusNode: reasonFocus,
+                          validator: (val) =>
+                              validation.commonValidation(context, val),
+                          controller: reasonCtrl,
+                          title: appFonts.reasonOfCancelBooking,
+                          singleText: appFonts.send,
+                          singleTap: () {
+                            if (formKey.currentState!.validate()) {
+                              route.pop(context);
+                              route.pop(context);
+                              route.pushNamed(
+                                  context, routeName.cancelledBooking);
+                            }
+                          },
+                        ));
               },
               secondBText: appFonts.yes,
-              firstBText: appFonts.cancel
-          );
+              firstBText: appFonts.cancel);
         });
   }
-
-
 }

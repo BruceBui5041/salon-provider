@@ -1,10 +1,8 @@
 import 'dart:developer';
 
-import 'package:fixit_provider/config.dart';
-
+import 'package:salon_provider/config.dart';
 
 class TimeSlotProvider with ChangeNotifier {
-
   TextEditingController hourGap = TextEditingController();
   FocusNode hourGapFocus = FocusNode();
 
@@ -17,19 +15,17 @@ class TimeSlotProvider with ChangeNotifier {
   int indexs = 0;
   FixedExtentScrollController? controller;
 
-
   String? gapValue;
 
-    onToggle(data,val) {
-      data["status"] = val;
-      notifyListeners();
-    }
+  onToggle(data, val) {
+    data["status"] = val;
+    notifyListeners();
+  }
 
-    onMonthChange(val) {
-      gapValue = val;
-      notifyListeners();
-    }
-
+  onMonthChange(val) {
+    gapValue = val;
+    notifyListeners();
+  }
 
   onHourScroll(index) {
     scrollHourIndex = index;
@@ -46,7 +42,7 @@ class TimeSlotProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  selectTimeBottomSheet(context,val,index,type) {
+  selectTimeBottomSheet(context, val, index, type) {
     scrollHourIndex = 0;
     scrollMinIndex = 0;
     notifyListeners();
@@ -55,55 +51,54 @@ class TimeSlotProvider with ChangeNotifier {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       builder: (context2) {
-        return SelectTimeSheet(onTap: ()=> onAddTime(val,index,context,type));
+        return SelectTimeSheet(
+            onTap: () => onAddTime(val, index, context, type));
       },
     );
   }
 
-
-
-  onAddTime(val,index,context,type){
-      int hr = scrollHourIndex + 1;
-      int mn = scrollMinIndex + 1;
+  onAddTime(val, index, context, type) {
+    int hr = scrollHourIndex + 1;
+    int mn = scrollMinIndex + 1;
 
     log("VALALA $val");
     log("INSDE $index");
 
-    if(type == "start") {
+    if (type == "start") {
       appArray.timeSlotList[index]["start_at"] =
-      "${hr.toString()} : ${mn.toString()}";
-    }else{
+          "${hr.toString()} : ${mn.toString()}";
+    } else {
       appArray.timeSlotList[index]["end_at"] =
-      "${hr.toString()} : ${mn.toString()}";
+          "${hr.toString()} : ${mn.toString()}";
     }
     notifyListeners();
     route.pop(context);
   }
 
-  onHourChange(index){
+  onHourChange(index) {
     scrollHourIndex = index;
     notifyListeners();
   }
 
-  onMinChange(index){
+  onMinChange(index) {
     scrollMinIndex = index;
     notifyListeners();
   }
 
-  onAmPmChange(index){
+  onAmPmChange(index) {
     scrollDayIndex = index;
     notifyListeners();
   }
 
-  onUpdateHour(context){
-    showDialog(context: context, builder: (context) => AlertDialogCommon(
-        title: appFonts.updateSuccessfully,
-        height: Sizes.s140,
-        image: eGifAssets.successGif,
-        subtext: language(context, appFonts.hurrayUpdateHour),
-        bText1: language(context, appFonts.okay),
-        b1OnTap: ()=> route.pop(context)
-    ));
+  onUpdateHour(context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialogCommon(
+            title: appFonts.updateSuccessfully,
+            height: Sizes.s140,
+            image: eGifAssets.successGif,
+            subtext: language(context, appFonts.hurrayUpdateHour),
+            bText1: language(context, appFonts.okay),
+            b1OnTap: () => route.pop(context)));
   }
-
 }

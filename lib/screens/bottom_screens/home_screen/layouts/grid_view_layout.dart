@@ -1,3 +1,5 @@
+import 'package:figma_squircle_updated/figma_squircle.dart';
+
 import '../../../../config.dart';
 import 'dart:math';
 
@@ -13,7 +15,13 @@ class GridViewLayout extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return StaggeredGridTile.count(
-        crossAxisCellCount: index == 0 ? 6 : index == 1 ? 4 : index == 2 ? 4 : 6,
+        crossAxisCellCount: index == 0
+            ? 6
+            : index == 1
+                ? 4
+                : index == 2
+                    ? 4
+                    : 6,
         mainAxisCellCount: 3.4,
         child: Container(
                 decoration: ShapeDecoration(
@@ -27,12 +35,15 @@ class GridViewLayout extends StatelessWidget {
                 child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Transform(
+                      RepaintBoundary(
+                        child: Transform(
                           alignment: FractionalOffset.center,
                           transform: Matrix4.identity()
                             ..setEntry(3, 2, 0.0015)
                             ..rotateY(pi * animation!.value),
-                          child: SvgPicture.asset(data["image"])),
+                          child: SvgPicture.asset(data["image"]),
+                        ),
+                      ),
                       const VSpace(Sizes.s8),
                       Text(language(context, data["title"]),
                           overflow: TextOverflow.ellipsis,
@@ -41,7 +52,7 @@ class GridViewLayout extends StatelessWidget {
                       Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
-                            Text("${index == 0 ? "\$" : ""}${data["price"]}",
+                            Text("${data["price"]}",
                                 style: appCss.dmDenseBold16.textColor(
                                     appColor(context).appTheme.primary)),
                             SvgPicture.asset(eSvgAssets.anchorArrowRight,

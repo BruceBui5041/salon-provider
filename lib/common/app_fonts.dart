@@ -1,8 +1,11 @@
 class AppFonts {
-
-
   final fixit = "fixit";
   final login = "login";
+
+  final firstName = "First name";
+  final enterFirstName = "Enter First name";
+  final lastName = "Last name";
+  final enterLastName = "Enter Last Name";
 
   final email = "email";
   final enterEmail = "enterEmail";
@@ -193,6 +196,7 @@ class AppFonts {
   final theMaximumImage = "theMaximumImage";
   final thumbnailImage = "thumbnailImage";
   final serviceName = "serviceName";
+  final serviceDetail = "Service Detail";
   final category = "category";
   final applicableCommission = "applicableCommission";
   final noteHighest = "noteHighest";
@@ -486,6 +490,7 @@ class AppFonts {
   final addNewServicemen = "addNewServicemen";
   final serviceLocation = "serviceLocation";
   final mainLocation = "mainLocation";
+  final mainImage = "mainImage";
   final onlyViewBookings = "onlyViewBookings";
   final search = "search";
   final delete = "delete";
@@ -552,27 +557,4 @@ class AppFonts {
   final addSelectLocation = "addSelectLocation";
   final selectLocationFirst = "Select location first...";
   final areYouSure = "Are you sure want to Logout ?";
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 }

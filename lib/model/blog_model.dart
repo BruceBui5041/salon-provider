@@ -1,4 +1,4 @@
-import 'package:fixit_provider/model/wallet_model.dart';
+import 'package:salon_provider/model/wallet_model.dart';
 
 import '../config.dart';
 import 'media_model.dart';
@@ -24,22 +24,22 @@ class BlogModel {
 
   BlogModel(
       {this.id,
-        this.title,
-        this.slug,
-        this.description,
-        this.content,
-        this.metaTitle,
-        this.metaDescription,
-        this.isFeatured,
-        this.status,
-        this.createdById,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.media,
-        this.categories,
-        this.createdBy,
-        this.tags});
+      this.title,
+      this.slug,
+      this.description,
+      this.content,
+      this.metaTitle,
+      this.metaDescription,
+      this.isFeatured,
+      this.status,
+      this.createdById,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.media,
+      this.categories,
+      this.createdBy,
+      this.tags});
 
   BlogModel.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -150,23 +150,23 @@ class CreatedBy {
 
   CreatedBy(
       {this.id,
-        this.name,
-        this.email,
-        this.systemReserve,
-        this.phone,
-        this.code,
-        this.providerId,
-        this.status,
-        this.isFeatured,
-        this.type,
-        this.emailVerifiedAt,
-        this.createdBy,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.primaryAddress,
-        this.media,
-        this.wallet});
+      this.name,
+      this.email,
+      this.systemReserve,
+      this.phone,
+      this.code,
+      this.providerId,
+      this.status,
+      this.isFeatured,
+      this.type,
+      this.emailVerifiedAt,
+      this.createdBy,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.primaryAddress,
+      this.media,
+      this.wallet});
 
   CreatedBy.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -191,9 +191,8 @@ class CreatedBy {
         media!.add(Media.fromJson(v));
       });
     }
-    wallet = json['wallet'] != null
-        ? WalletModel.fromJson(json['wallet'])
-        : null;
+    wallet =
+        json['wallet'] != null ? WalletModel.fromJson(json['wallet']) : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -237,16 +236,16 @@ class Tags {
 
   Tags(
       {this.id,
-        this.name,
-        this.slug,
-        this.type,
-        this.description,
-        this.createdById,
-        this.status,
-        this.createdAt,
-        this.updatedAt,
-        this.deletedAt,
-        this.pivot});
+      this.name,
+      this.slug,
+      this.type,
+      this.description,
+      this.createdById,
+      this.status,
+      this.createdAt,
+      this.updatedAt,
+      this.deletedAt,
+      this.pivot});
 
   Tags.fromJson(Map<String, dynamic> json) {
     id = json['id'];

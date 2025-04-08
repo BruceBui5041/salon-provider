@@ -2,15 +2,25 @@ import 'package:flutter/gestures.dart';
 
 import '../../../config.dart';
 
-class IntroScreen extends StatelessWidget {
+class IntroScreen extends StatefulWidget {
   const IntroScreen({super.key});
+
+  @override
+  State<IntroScreen> createState() => _IntroScreenState();
+}
+
+class _IntroScreenState extends State<IntroScreen> {
+  @override
+  initState() {
+    super.initState();
+    Provider.of<IntroProvider>(context, listen: false).checkCookie(context);
+  }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<IntroProvider>(builder: (context, value, child) {
       return PopScope(
         canPop: false,
-
         child: Scaffold(
             body: Column(children: [
           Stack(children: [

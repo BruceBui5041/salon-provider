@@ -1,7 +1,6 @@
 import 'dart:developer';
-import 'package:fixit_provider/common/languages/language_helper.dart';
+import 'package:salon_provider/common/languages/language_helper.dart';
 import '../../config.dart';
-
 
 class LanguageProvider with ChangeNotifier {
   String currentLanguage = appFonts.english;
@@ -13,7 +12,7 @@ class LanguageProvider with ChangeNotifier {
   LanguageProvider(this.sharedPreferences) {
     var selectedLocale = sharedPreferences.getString("selectedLocale");
     var listenIndex = sharedPreferences.getInt("index");
-    if(listenIndex != null){
+    if (listenIndex != null) {
       selectedIndex = listenIndex;
     } else {
       selectedIndex = 0;
@@ -32,15 +31,15 @@ class LanguageProvider with ChangeNotifier {
 
   LanguageHelper languageHelper = LanguageHelper();
 
-  onRadioChange(index, value){
+  onRadioChange(index, value) {
     selectedIndex = index;
     selectLanguage = value["title"];
-     sharedPreferences.setInt("index", selectedIndex);
-   log("SELECT LANGUAGE $selectLanguage");
+    sharedPreferences.setInt("index", selectedIndex);
+    log("SELECT LANGUAGE $selectLanguage");
     notifyListeners();
   }
 
-   changeLocale(String newLocale) {
+  changeLocale(String newLocale) {
     log("sharedPreferences a1: $selectLanguage");
     Locale convertedLocale;
 
@@ -57,7 +56,7 @@ class LanguageProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onBoardLanguageChange(String newLocale){
+  onBoardLanguageChange(String newLocale) {
     log("sharedPreferences a1: $newLocale");
     Locale convertedLocale;
 
@@ -74,8 +73,7 @@ class LanguageProvider with ChangeNotifier {
 
   getLocal() {
     var selectedLocale = sharedPreferences.getString("selectedLocale");
-return selectedLocale;
-
+    return selectedLocale;
   }
 
   defineCurrentLanguage(context) {
@@ -106,6 +104,6 @@ return selectedLocale;
       currentLanguage = "english";
     }
     notifyListeners();
-   // changeLocale(currentLanguage);
+    // changeLocale(currentLanguage);
   }
 }

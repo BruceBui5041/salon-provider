@@ -1,10 +1,12 @@
+import 'package:figma_squircle_updated/figma_squircle.dart';
+
 import '../../../../config.dart';
 
 class AvailableServiceLayout extends StatelessWidget {
   final dynamic data;
   final GestureTapCallback? onTap;
 
-  const AvailableServiceLayout({super.key, this.data,this.onTap});
+  const AvailableServiceLayout({super.key, this.data, this.onTap});
 
   @override
   Widget build(BuildContext context) {
@@ -35,11 +37,10 @@ class AvailableServiceLayout extends StatelessWidget {
                 endIndent: 3)
             .paddingSymmetric(horizontal: Insets.i4),
         Expanded(
-          child: Text(data["year"],
-              overflow: TextOverflow.ellipsis,
-              style: appCss.dmDenseRegular12
-                  .textColor(appColor(context).appTheme.lightText))
-        )
+            child: Text(data["year"],
+                overflow: TextOverflow.ellipsis,
+                style: appCss.dmDenseRegular12
+                    .textColor(appColor(context).appTheme.lightText)))
       ])),
       const VSpace(Sizes.s12),
       Row(
@@ -52,6 +53,9 @@ class AvailableServiceLayout extends StatelessWidget {
                   .toList())
           .paddingSymmetric(horizontal: Insets.i10, vertical: Insets.i10)
           .boxShapeExtension(color: appColor(context).appTheme.fieldCardBg)
-    ]).paddingAll(Insets.i12).boxBorderExtension(context, isShadow: true).inkWell(onTap: onTap);
+    ])
+        .paddingAll(Insets.i12)
+        .boxBorderExtension(context, isShadow: true)
+        .inkWell(onTap: onTap);
   }
 }

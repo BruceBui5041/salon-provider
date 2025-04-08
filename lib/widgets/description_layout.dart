@@ -6,7 +6,12 @@ class DescriptionLayoutCommon extends StatelessWidget {
   final bool? isExpanded;
 
   const DescriptionLayoutCommon(
-      {super.key, this.icon, this.title, this.subtitle, this.padding,this.isExpanded = false });
+      {super.key,
+      this.icon,
+      this.title,
+      this.subtitle,
+      this.padding,
+      this.isExpanded = false});
 
   @override
   Widget build(BuildContext context) {
@@ -23,16 +28,17 @@ class DescriptionLayoutCommon extends StatelessWidget {
                 width: 1,
                 color: appColor(context).appTheme.stroke)
             .paddingSymmetric(horizontal: Insets.i9),
-        isExpanded == true ? Expanded(
-          child: Text(language(context, title!),
-              overflow: TextOverflow.ellipsis,
-              style: appCss.dmDenseMedium12
-                  .textColor(appColor(context).appTheme.darkText)),
-        )  :
-        Text(language(context, title!),
-            overflow: TextOverflow.ellipsis,
-            style: appCss.dmDenseMedium12
-                .textColor(appColor(context).appTheme.darkText))
+        isExpanded == true
+            ? Expanded(
+                child: Text(language(context, title!),
+                    overflow: TextOverflow.ellipsis,
+                    style: appCss.dmDenseMedium12
+                        .textColor(appColor(context).appTheme.darkText)),
+              )
+            : Text(language(context, title ?? ""),
+                overflow: TextOverflow.ellipsis,
+                style: appCss.dmDenseMedium12
+                    .textColor(appColor(context).appTheme.darkText))
       ]),
       Text(language(context, subtitle!),
               style: appCss.dmDenseMedium12

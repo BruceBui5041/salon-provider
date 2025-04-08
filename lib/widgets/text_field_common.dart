@@ -16,33 +16,35 @@ class TextFieldCommon extends StatefulWidget {
   final ValueChanged<String>? onFieldSubmitted;
   final String? counterText, prefixIcon;
   final TextStyle? hintStyle;
-  final bool? isNumber,isEnable;
+  final bool? isNumber, isEnable;
   final GestureTapCallback? onTap;
 
   const TextFieldCommon(
       {super.key,
-        required this.hintText,
-        this.validator,
-        this.controller,
-        this.suffixIcon,
-        this.prefixIcon,
-        this.border,
-        this.obscureText = false,
-        this.fillColor,
-        this.vertical,
-        this.keyboardType,
-        this.focusNode,
-        this.onChanged,
-        this.onFieldSubmitted,
-        this.radius,
-        this.isNumber = false,
-        this.maxLength,
-        this.minLines,
-        this.maxLines,
-        this.counterText,
-        this.hintStyle,
-        this.hPadding,
-        this.isMaxLine = false,this.onTap,this.isEnable = true});
+      required this.hintText,
+      this.validator,
+      this.controller,
+      this.suffixIcon,
+      this.prefixIcon,
+      this.border,
+      this.obscureText = false,
+      this.fillColor,
+      this.vertical,
+      this.keyboardType,
+      this.focusNode,
+      this.onChanged,
+      this.onFieldSubmitted,
+      this.radius,
+      this.isNumber = false,
+      this.maxLength,
+      this.minLines,
+      this.maxLines,
+      this.counterText,
+      this.hintStyle,
+      this.hPadding,
+      this.isMaxLine = false,
+      this.onTap,
+      this.isEnable = true});
 
   @override
   State<TextFieldCommon> createState() => _TextFieldCommonState();
@@ -55,20 +57,16 @@ class _TextFieldCommonState extends State<TextFieldCommon> {
   void initState() {
     // TODO: implement initState
 
-      widget.focusNode!.addListener(() {
-        setState(() {});
-
-
+    widget.focusNode!.addListener(() {
+      setState(() {});
     });
     super.initState();
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     return TextFormField(
-      enabled: widget.isEnable,
+        enabled: widget.isEnable,
         maxLines: widget.maxLines ?? 1,
         style: appCss.dmDenseMedium14
             .textColor(appColor(context).appTheme.darkText),
@@ -106,21 +104,31 @@ class _TextFieldCommonState extends State<TextFieldCommon> {
                 borderSide: BorderSide.none),
             contentPadding: widget.isMaxLine
                 ? const EdgeInsets.only(
-                left: Sizes.s45,
-                right: Insets.i15,
-                top: Insets.i15,
-                bottom: Insets.i15)
+                    left: Sizes.s45,
+                    right: Insets.i15,
+                    top: Insets.i15,
+                    bottom: Insets.i15)
                 : EdgeInsets.symmetric(
-                horizontal: widget.hPadding ?? Insets.i15,
-                vertical: widget.vertical ?? Insets.i15),
+                    horizontal: widget.hPadding ?? Insets.i15,
+                    vertical: widget.vertical ?? Insets.i15),
             suffixIcon: widget.suffixIcon,
             prefixIcon: widget.isNumber == true
                 ? null
-                : SvgPicture.asset(widget.prefixIcon!,
-                fit: BoxFit.scaleDown,
-                colorFilter:
-                ColorFilter.mode(  !widget.focusNode!.hasFocus ? widget.controller!.text.isNotEmpty ? appColor(context).appTheme.darkText: appColor(context).appTheme.lightText :  appColor(context).appTheme.darkText, BlendMode.srcIn)),
-            hintStyle: widget.hintStyle ?? appCss.dmDenseMedium14.textColor(appColor(context).appTheme.lightText),
-            hintText: language(context, widget.hintText),errorMaxLines: 2));
+                : widget.prefixIcon == null
+                    ? null
+                    : SvgPicture.asset(widget.prefixIcon!,
+                        fit: BoxFit.scaleDown,
+                        colorFilter: ColorFilter.mode(
+                            !widget.focusNode!.hasFocus
+                                ? widget.controller!.text.isNotEmpty
+                                    ? appColor(context).appTheme.darkText
+                                    : appColor(context).appTheme.lightText
+                                : appColor(context).appTheme.darkText,
+                            BlendMode.srcIn)),
+            hintStyle: widget.hintStyle ??
+                appCss.dmDenseMedium14
+                    .textColor(appColor(context).appTheme.lightText),
+            hintText: language(context, widget.hintText),
+            errorMaxLines: 2));
   }
 }

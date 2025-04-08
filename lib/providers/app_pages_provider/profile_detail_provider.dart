@@ -1,10 +1,8 @@
-import 'dart:convert';
-import 'dart:developer';
 import 'dart:async';
+import 'package:salon_provider/screens/app_pages_screens/profile_detail_screen/layouts/selection_option_layout.dart';
 import 'package:flutter/cupertino.dart';
 import '../../config.dart';
-import '../../screens/app_pages_screens/add_serviceman_screen/layouts/selection_option_layout.dart';
-
+// import '../../screens/app_pages_screens/add_serviceman_screen/layouts/selection_option_layout.dart';
 
 class ProfileDetailProvider with ChangeNotifier {
   TextEditingController txtName = TextEditingController();
@@ -17,17 +15,17 @@ class ProfileDetailProvider with ChangeNotifier {
   XFile? imageFile;
   SharedPreferences? preferences;
 
-  onUpdate(context){
-    showDialog(context: context, builder: (context) => AlertDialogCommon(
-      title: appFonts.updateSuccessfully,
-      height: Sizes.s140,
-      image: eGifAssets.successGif,
-      subtext: language(context, appFonts.hurrayUpdateProfile),
-      bText1: language(context, appFonts.okay),
-      b1OnTap: ()=> route.pop(context)
-    ));
+  onUpdate(context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialogCommon(
+            title: appFonts.updateSuccessfully,
+            height: Sizes.s140,
+            image: eGifAssets.successGif,
+            subtext: language(context, appFonts.hurrayUpdateProfile),
+            bText1: language(context, appFonts.okay),
+            b1OnTap: () => route.pop(context)));
   }
-
 
   var selectList = [
     {"image": eSvgAssets.gallery, "title": appFonts.chooseFromGallery},
@@ -88,8 +86,4 @@ class ProfileDetailProvider with ChangeNotifier {
       },
     );
   }
-
-
-
-
 }

@@ -1,0 +1,2 @@
+/Users/devkhoa/Desktop/salon_spa/salon-provider/android/app/.cxx/Debug/102x1gn2/x86_64/CMakeFiles/edit_cache.dir
+/Users/devkhoa/Desktop/salon_spa/salon-provider/android/app/.cxx/Debug/102x1gn2/x86_64/CMakeFiles/rebuild_cache.dir

@@ -1,25 +1,25 @@
-import 'package:fixit_provider/config.dart';
-import 'package:fixit_provider/model/notification_model.dart';
+import 'package:salon_provider/config.dart';
+import 'package:salon_provider/model/notification_model.dart';
 
 class NotificationProvider with ChangeNotifier {
   bool isNotification = false;
   AnimationController? animationController;
-  List <NotificationModel> notificationList = [];
+  List<NotificationModel> notificationList = [];
 
-
-  onRefresh(){
+  onRefresh() {
     isNotification = true;
     notifyListeners();
   }
 
-  onAnimate(TickerProvider sync){
+  onAnimate(TickerProvider sync) {
     animationController = AnimationController(
         vsync: sync, duration: const Duration(milliseconds: 1200));
     _runAnimation();
     notificationList = [];
     notifyListeners();
     appArray.notificationList.asMap().entries.forEach((element) {
-      if(!notificationList.contains(NotificationModel.fromJson(element.value))) {
+      if (!notificationList
+          .contains(NotificationModel.fromJson(element.value))) {
         notificationList.add(NotificationModel.fromJson(element.value));
       }
     });
@@ -33,16 +33,18 @@ class NotificationProvider with ChangeNotifier {
     }
   }
 
-  onDeleteNotification(context,sync){
+  onDeleteNotification(context, sync) {
     final value = Provider.of<DeleteDialogProvider>(context, listen: false);
 
-    value.onDeleteDialog(sync, context, eImageAssets.notificationBell, appFonts.deleteNotification, appFonts.areYouDeleteNotification, (){
+    value.onDeleteDialog(sync, context, eImageAssets.notificationBell,
+        appFonts.deleteNotification, appFonts.areYouDeleteNotification, () {
       route.pop(context);
-      value.onResetPass(context, language(context, appFonts.hurrayNotificationCleared), language(context, appFonts.okay), ()=> route.pop(context));
-
+      value.onResetPass(
+          context,
+          language(context, appFonts.hurrayNotificationCleared),
+          language(context, appFonts.okay),
+          () => route.pop(context));
     });
     value.notifyListeners();
-
   }
-
 }

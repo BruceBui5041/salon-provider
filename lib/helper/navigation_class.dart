@@ -1,6 +1,4 @@
-import '../config.dart';
-
-
+import 'package:salon_provider/config.dart';
 
 class NavigationClass {
   pushNamedAndRemoveUntil(context, pageName, {arg}) =>
@@ -8,37 +6,49 @@ class NavigationClass {
         context,
         pageName,
         arguments: arg,
-            (route) => false,
+        (route) => false,
       );
 
-  pushNamed(context, pageName, {arg}) async{
-    final result = await  Navigator.pushNamed(context, pageName, arguments: arg,);
+  pushNamed(context, pageName, {arg}) async {
+    final result = await Navigator.pushNamed(
+      context,
+      pageName,
+      arguments: arg,
+    );
     return result;
   }
 
-  push(context, pageName, {arg}) async{
-    final result = await  Navigator.push(context, MaterialPageRoute(builder: (context) => pageName,));
+  push(context, pageName, {arg}) async {
+    final result = await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => pageName,
+        ));
     return result;
   }
 
-
-
-  pop(context,{arg}) {
+  pop(context, {arg}) {
     Navigator.pop(context, arg);
   }
 
-  popAndPushNamed(context,pageName, {arg,result}) {
-    Navigator.popAndPushNamed(context, pageName,arguments: arg,result: result,);
-
+  popAndPushNamed(context, pageName, {arg, result}) {
+    Navigator.popAndPushNamed(
+      context,
+      pageName,
+      arguments: arg,
+      result: result,
+    );
   }
 
-  pushReplacementNamed(context,pageName,{args}){
-    Navigator.pushReplacementNamed(context, pageName,arguments: args,);
+  pushReplacementNamed(context, pageName, {args}) {
+    Navigator.pushReplacementNamed(
+      context,
+      pageName,
+      arguments: args,
+    );
   }
 
-  pushAndRemoveUntil(context,pageName){
+  pushAndRemoveUntil(context, pageName) {
     Navigator.of(context).pushAndRemoveUntil(context, pageName);
-
-
   }
 }

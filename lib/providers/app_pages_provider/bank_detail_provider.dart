@@ -1,7 +1,6 @@
-import '../../config.dart';
+import 'package:salon_provider/config.dart';
 
 class BankDetailProvider with ChangeNotifier {
-
   String? branchValue;
 
   TextEditingController bankNameCtrl = TextEditingController();
@@ -16,9 +15,8 @@ class BankDetailProvider with ChangeNotifier {
   FocusNode ifscFocus = FocusNode();
   FocusNode swiftFocus = FocusNode();
 
- onBranch(val){
+  onBranch(val) {
     branchValue = val;
-  notifyListeners();
-}
-
+    notifyListeners();
+  }
 }

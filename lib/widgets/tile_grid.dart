@@ -1,4 +1,4 @@
-import '../config.dart';
+import 'package:salon_provider/config.dart';
 
 class Tiles extends StatelessWidget {
   const Tiles({
@@ -16,7 +16,6 @@ class Tiles extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     const defaultColor = Color(0xFF34568B);
 
     final child = Container(

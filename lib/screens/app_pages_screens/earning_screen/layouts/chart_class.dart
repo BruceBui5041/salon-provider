@@ -1,6 +1,4 @@
-
-
-import '../../../../config.dart';
+import 'package:salon_provider/config.dart';
 
 class ChartData {
   ChartData(this.x, this.y, [this.color]);
@@ -9,10 +7,11 @@ class ChartData {
   final Color? color;
 }
 
-
 class ChartDatas {
-  ChartDatas(this.x, this.y, );
+  ChartDatas(
+    this.x,
+    this.y,
+  );
   final int x;
   final double y;
-
 }

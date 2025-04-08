@@ -28,7 +28,10 @@ class _ServiceListScreenState extends State<ServiceListScreen>
                           : eSvgAssets.arrowLeft,
                       onTap: () => route.pop(context)).paddingAll(Insets.i8),
                   actions: [
-                    CommonArrow(arrow: eSvgAssets.search,onTap: ()=> route.pushNamed(context, routeName.search))
+                    CommonArrow(
+                            arrow: eSvgAssets.search,
+                            onTap: () =>
+                                route.pushNamed(context, routeName.search))
                         .paddingOnly(right: Insets.i10),
                     CommonArrow(
                             arrow: eSvgAssets.add,
@@ -62,10 +65,10 @@ class _ServiceListScreenState extends State<ServiceListScreen>
                     .paddingSymmetric(vertical: Insets.i15)
                     .decorated(color: appColor(context).appTheme.fieldCardBg)
                     .paddingOnly(top: Insets.i10, bottom: Insets.i25),
-                if (value.categoryList.isNotEmpty &&
-                    value.categoryList[value.selectedIndex].hasSubCategories !=
-                        null)
-                  const ServiceListBottomLayout()
+                // if (value.categoryList.isNotEmpty &&
+                //     value.categoryList[value.selectedIndex].hasSubCategories !=
+                //         null)
+                //   const ServiceListBottomLayout()
               ]))));
     });
   }

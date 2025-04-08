@@ -1,5 +1,4 @@
-import 'package:fixit_provider/config.dart';
-
+import 'package:salon_provider/config.dart';
 
 class AddExtraChargesProvider with ChangeNotifier {
   TextEditingController chargeTitleCtrl = TextEditingController();
@@ -16,14 +15,14 @@ class AddExtraChargesProvider with ChangeNotifier {
   }
 
   onRemoveService() {
-    if(val > 1) {
+    if (val > 1) {
       val--;
       notifyListeners();
     }
   }
 
-  onAddCharge(context){
-    if(formKey.currentState!.validate()) {
+  onAddCharge(context) {
+    if (formKey.currentState!.validate()) {
       showModalBottomSheet(
           isScrollControlled: true,
           context: context,
@@ -33,10 +32,9 @@ class AddExtraChargesProvider with ChangeNotifier {
     }
   }
 
-  onUpdateBill(context){
+  onUpdateBill(context) {
     route.pop(context);
     route.pop(context);
     notifyListeners();
   }
-
 }

@@ -1,10 +1,9 @@
 import 'dart:developer';
 
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import 'package:geolocator/geolocator.dart';
 
 class ViewLocationProvider with ChangeNotifier {
-
   LatLng? position;
   GoogleMapController? mapController;
   double? newLog, newLat;
@@ -17,7 +16,6 @@ class ViewLocationProvider with ChangeNotifier {
   }
 
   getUserCurrentLocation(context) async {
-
     await Geolocator.requestPermission().then((value) async {
       log("GEO LOCATION : $value");
       Position position1 = await Geolocator.getCurrentPosition(
@@ -34,12 +32,10 @@ class ViewLocationProvider with ChangeNotifier {
   }
 
   getAddressFromLatLng(context) async {
-
     log("NHNNN : ${position!.latitude}");
     await placemarkFromCoordinates(
-        newLat ?? position!.latitude, newLog ?? position!.longitude)
+            newLat ?? position!.latitude, newLog ?? position!.longitude)
         .then((List<Placemark> placeMarks) async {
-
       place = placeMarks[0];
       markers = {};
       log("place : ${placeMarks[0]}");
@@ -56,21 +52,20 @@ class ViewLocationProvider with ChangeNotifier {
             notifyListeners();
           },
           markerId: MarkerId(LatLng(
-              newLat ?? position!.latitude, newLog ?? position!.longitude)
+                  newLat ?? position!.latitude, newLog ?? position!.longitude)
               .toString()),
           position: LatLng(
               newLat ?? position!.latitude, newLog ?? position!.longitude),
           infoWindow:
-          InfoWindow(title: place!.name, snippet: place!.subLocality),
+              InfoWindow(title: place!.name, snippet: place!.subLocality),
           icon: await BitmapDescriptor.fromAssetImage(
               const ImageConfiguration(devicePixelRatio: 2.5),
               eImageAssets.currentLocation) //Icon for Marker
-      ));
+          ));
       notifyListeners();
       log("NEW : ${position!.latitude}/ ${position!.longitude}");
     }).catchError((e) {
       debugPrint("ee : $e");
     });
   }
-
 }

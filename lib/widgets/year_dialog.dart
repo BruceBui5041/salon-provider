@@ -1,11 +1,10 @@
-import 'dart:developer';
-
 import '../../../../config.dart';
 
 class YearAlertDialog extends StatelessWidget {
   final DateTime? selectedDate;
   final ValueChanged<DateTime> onChanged;
-  const YearAlertDialog({super.key, this.selectedDate, required this.onChanged});
+  const YearAlertDialog(
+      {super.key, this.selectedDate, required this.onChanged});
 
   @override
   Widget build(BuildContext context) {
@@ -18,16 +17,17 @@ class YearAlertDialog extends StatelessWidget {
               child: Theme(
                   data: ThemeData(
                       useMaterial3: true,
-                      colorScheme:  ColorScheme.light(
+                      colorScheme: ColorScheme.light(
                           primary: appColor(context).appTheme.primary,
                           onSurface: appColor(context).appTheme.darkText)),
                   child: YearPicker(
                       initialDate: DateTime.now(),
                       firstDate:
-                      DateTime.now().subtract(const Duration(days: 1)),
+                          DateTime.now().subtract(const Duration(days: 1)),
                       lastDate: DateTime(2040),
-                      selectedDate: selectedDate/*dateTimePvr.selectedYear*/,
-                      onChanged: onChanged/*(DateTime dateTime) {
+                      selectedDate: selectedDate /*dateTimePvr.selectedYear*/,
+                      onChanged:
+                          onChanged /*(DateTime dateTime) {
                         dateTimePvr.selectedYear = dateTime;
                         dateTimePvr.showYear = "${dateTime.year}";
                         dateTimePvr.focusedDay.value = DateTime.utc(
@@ -39,7 +39,8 @@ class YearAlertDialog extends StatelessWidget {
                             dateTimePvr.focusedDay.value);
                         route.pop(context);
                         log("YEAR CHANGE : ${dateTimePvr.focusedDay.value}");
-                      }*/))));
+                      }*/
+                      ))));
     });
   }
 }

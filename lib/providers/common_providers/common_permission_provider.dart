@@ -1,11 +1,8 @@
-
-import '../../config.dart';
-
+import 'package:salon_provider/config.dart';
 
 class CommonPermissionProvider extends ChangeNotifier {
   //location permission
   Future<bool> checkIfLocationEnabled() async {
-
     if (await Permission.location.request().isGranted) {
       return true;
     } else if (await Permission.locationAlways.request().isGranted) {
@@ -16,5 +13,4 @@ class CommonPermissionProvider extends ChangeNotifier {
       return false;
     }
   }
-
 }

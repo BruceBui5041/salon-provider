@@ -1,29 +1,28 @@
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class BookingServicemenListProvider with ChangeNotifier {
-    List selectCategory = [];
+  List selectCategory = [];
 
   TextEditingController searchCtrl = TextEditingController();
   FocusNode searchFocus = FocusNode();
   String? yearValue;
-      int selectedIndex = 0;
+  int selectedIndex = 0;
   List selectedRates = [];
   bool isAvailable = false;
   int? required;
   String? amount;
 
-  onReady(context){
+  onReady(context) {
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
 
-    if(data != null){
+    if (data != null) {
       required = data["servicemen"];
       amount = data["amount"];
       notifyListeners();
     }
-
   }
 
-  onClearTap(context){
+  onClearTap(context) {
     route.pop(context);
     selectedRates = [];
     notifyListeners();
@@ -48,7 +47,7 @@ class BookingServicemenListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onTapRadio(index){
+  onTapRadio(index) {
     selectedIndex = index;
     notifyListeners();
   }
@@ -105,17 +104,17 @@ class BookingServicemenListProvider with ChangeNotifier {
                 secondBText: appFonts.yes,
                 secondBTap: () {
                   route.pop(context);
-                  route.pushNamed(context, routeName.assignBooking, arg: {
-                    "bool": true,
-                    "amount": amount
-                  });
+                  route.pushNamed(context, routeName.assignBooking,
+                      arg: {"bool": true, "amount": amount});
                 });
           });
     } else {
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
           content: Text("Please select servicemen",
               style: appCss.dmDenseMedium14
-                  .textColor(appColor(context).appTheme.whiteColor)),backgroundColor: appColor(context).appTheme.red,behavior: SnackBarBehavior.floating));
+                  .textColor(appColor(context).appTheme.whiteColor)),
+          backgroundColor: appColor(context).appTheme.red,
+          behavior: SnackBarBehavior.floating));
     }
   }
 }

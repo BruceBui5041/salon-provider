@@ -1,10 +1,7 @@
-import 'dart:convert';
 import 'dart:developer';
 import '../../config.dart';
 
-
 class NewLocationProvider with ChangeNotifier {
-
   List locationList = [];
   int selectIndex = 0;
   int? argIndex;
@@ -43,20 +40,20 @@ class NewLocationProvider with ChangeNotifier {
 
   getOnInitData(context) {
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? '';
-     log("ARGS DATA ${data}");
-     if(data != "" ){
-       argIndex = data["index"] ?? 0;
-       isEdit = data["isEdit"] ?? false;
-       selectIndex = data["data"]["category"] ?? '';
-       latitudeCtrl.text = data["data"]["latitude"] ?? '';
-       longitudeCtrl.text = data["data"]["longitude"] ?? '';
-       countryCtrl.text = data["data"]["country"] ?? '';
-       stateCtrl.text = data["data"]["state"] ?? '';
-       zipCtrl.text = data["data"]["zip_code"] ?? '';
-       streetCtrl.text = data["data"]["street"] ?? '';
-       cityCtrl.text = data["data"]["city"] ?? '';
-       status = data["data"]["status"] ?? false;
-     }
+    log("ARGS DATA ${data}");
+    if (data != "") {
+      argIndex = data["index"] ?? 0;
+      isEdit = data["isEdit"] ?? false;
+      selectIndex = data["data"]["category"] ?? '';
+      latitudeCtrl.text = data["data"]["latitude"] ?? '';
+      longitudeCtrl.text = data["data"]["longitude"] ?? '';
+      countryCtrl.text = data["data"]["country"] ?? '';
+      stateCtrl.text = data["data"]["state"] ?? '';
+      zipCtrl.text = data["data"]["zip_code"] ?? '';
+      streetCtrl.text = data["data"]["street"] ?? '';
+      cityCtrl.text = data["data"]["city"] ?? '';
+      status = data["data"]["status"] ?? false;
+    }
 
     notifyListeners();
   }
@@ -133,8 +130,33 @@ class NewLocationProvider with ChangeNotifier {
 
   //add Address
   addAddress(context) async {
-    final data = Provider.of<DeleteDialogProvider>(context,listen: false);
+    final data = Provider.of<DeleteDialogProvider>(context, listen: false);
     locationList.add({
+      "category": selectIndex,
+      "street": streetCtrl.text,
+      "latitude": latitudeCtrl.text,
+      "longitude": longitudeCtrl.text,
+      "country": countryCtrl.text,
+      "state": stateCtrl.text,
+      "city": cityCtrl.text,
+      "zip_code": zipCtrl.text,
+      "status": true
+    });
+    notifyListeners();
+    data.onResetPass(
+        context,
+        language(context, appFonts.congLocationSuccessAdded),
+        language(context, appFonts.okay), () {
+      route.pop(context);
+      route.pop(context);
+      route.pop(context);
+    }, title: appFonts.successfullyAdded);
+  }
+
+  //edit Address
+  editAddress(context) async {
+    locationList.setAll(argIndex!, [
+      {
         "category": selectIndex,
         "street": streetCtrl.text,
         "latitude": latitudeCtrl.text,
@@ -143,32 +165,10 @@ class NewLocationProvider with ChangeNotifier {
         "state": stateCtrl.text,
         "city": cityCtrl.text,
         "zip_code": zipCtrl.text,
-        "status": true
-    });
+        "status": status,
+      }
+    ]);
     notifyListeners();
-    data.onResetPass(context, language(context, appFonts.congLocationSuccessAdded),language(context, appFonts.okay),() {
-      route.pop(context);
-      route.pop(context);
-      route.pop(context);
-    },title: appFonts.successfullyAdded);
-  }
-
-  //edit Address
-  editAddress(context) async {
-     locationList.setAll(argIndex!, [
-       {
-         "category": selectIndex,
-         "street": streetCtrl.text,
-         "latitude": latitudeCtrl.text,
-         "longitude": longitudeCtrl.text,
-         "country": countryCtrl.text,
-         "state": stateCtrl.text,
-         "city": cityCtrl.text,
-         "zip_code": zipCtrl.text,
-         "status": status,
-       }
-     ]);
-     notifyListeners();
-     route.pop(context);
+    route.pop(context);
   }
 }

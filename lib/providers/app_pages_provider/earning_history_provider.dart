@@ -1,11 +1,11 @@
 import 'dart:developer';
 
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 import '../../widgets/date_time_picker.dart';
 import '../../widgets/year_dialog.dart';
 
 class EarningHistoryProvider with ChangeNotifier {
-  String? countryValue ;
+  String? countryValue;
 
   DateTime? selectedDay;
   DateTime selectedYear = DateTime.now();
@@ -17,31 +17,25 @@ class EarningHistoryProvider with ChangeNotifier {
   DateTime? rangeStart;
   DateTime? rangeEnd;
   DateTime currentDate = DateTime.now();
-  RangeSelectionMode rangeSelectionMode = RangeSelectionMode
-      .toggledOn;
+  RangeSelectionMode rangeSelectionMode = RangeSelectionMode.toggledOn;
   String showYear = 'Select Year';
 
   selectYear(context) async {
     showDialog(
         context: context,
         builder: (BuildContext context3) {
-          return  YearAlertDialog(
+          return YearAlertDialog(
               selectedDate: selectedYear,
               onChanged: (DateTime dateTime) {
                 selectedYear = dateTime;
                 showYear = "${dateTime.year}";
-                focusedDay.value = DateTime.utc(
-                    selectedYear.year,
-                    chosenValue["index"],
-                    focusedDay.value.day + 0);
-                onDaySelected(
-                    focusedDay.value,
-                    focusedDay.value);
+                focusedDay.value = DateTime.utc(selectedYear.year,
+                    chosenValue["index"], focusedDay.value.day + 0);
+                onDaySelected(focusedDay.value, focusedDay.value);
                 notifyListeners();
                 route.pop(context);
-                log("YEAR CHANGE : ${ focusedDay.value}");
-              }
-          );
+                log("YEAR CHANGE : ${focusedDay.value}");
+              });
         });
   }
 
@@ -54,7 +48,6 @@ class EarningHistoryProvider with ChangeNotifier {
     focusedDay.value =
         DateTime.utc(focusedDay.value.year, index, focusedDay.value.day + 0);
     onDaySelected(focusedDay.value, focusedDay.value);
-
   }
 
   onCalendarCreate(controller) {
@@ -75,7 +68,7 @@ class EarningHistoryProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onTapCalender(context){
+  onTapCalender(context) {
     showModalBottomSheet(
         isScrollControlled: true,
         context: context,
@@ -98,7 +91,8 @@ class EarningHistoryProvider with ChangeNotifier {
   }
 
   onLeftArrow() {
-    if( focusedDay.value.month != DateTime.january || focusedDay.value.year != DateTime.now().year) {
+    if (focusedDay.value.month != DateTime.january ||
+        focusedDay.value.year != DateTime.now().year) {
       pageController.previousPage(
           duration: const Duration(microseconds: 200), curve: Curves.bounceIn);
       final newMonth = focusedDay.value.subtract(const Duration(days: 30));
@@ -133,5 +127,4 @@ class EarningHistoryProvider with ChangeNotifier {
     chosenValue = appArray.monthList[index];
     notifyListeners();
   }
-
 }

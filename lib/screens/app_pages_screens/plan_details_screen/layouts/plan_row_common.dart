@@ -1,5 +1,3 @@
-import 'package:fixit_provider/model/plan_model.dart';
-
 import '../../../../config.dart';
 
 class PlanRowCommon extends StatelessWidget {
@@ -14,12 +12,15 @@ class PlanRowCommon extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisSize: MainAxisSize.min,
         children: [
-          SvgPicture.asset( selectIndex == index ? eSvgAssets.shield : eSvgAssets.shieldFill ),
+          SvgPicture.asset(
+              selectIndex == index ? eSvgAssets.shield : eSvgAssets.shieldFill),
           const HSpace(Sizes.s8),
           Text(language(context, title!),
-                  style: selectIndex == index ? appCss.dmDenseMedium14
-                      .textColor( appColor(context).appTheme.whiteBg) : appCss.dmDenseMedium11
-                      .textColor( appColor(context).appTheme.darkText) )
+                  style: selectIndex == index
+                      ? appCss.dmDenseMedium14
+                          .textColor(appColor(context).appTheme.whiteBg)
+                      : appCss.dmDenseMedium11
+                          .textColor(appColor(context).appTheme.darkText))
               .width(Sizes.s180)
         ]).paddingOnly(bottom: Insets.i15);
   }

@@ -1,6 +1,4 @@
-import 'dart:developer';
-
-import 'package:fixit_provider/config.dart';
+import 'package:salon_provider/config.dart';
 
 class SelectServiceProvider with ChangeNotifier {
   List serviceList = [];
@@ -9,15 +7,15 @@ class SelectServiceProvider with ChangeNotifier {
   TextEditingController searchCtrl = TextEditingController();
   FocusNode searchFocus = FocusNode();
 
-  onImageRemove(id,index,val){
-    if(selectServiceList.contains(val)){
+  onImageRemove(id, index, val) {
+    if (selectServiceList.contains(val)) {
       serviceList.remove(id);
       selectServiceList.removeAt(index);
     }
     notifyListeners();
   }
 
-  onSelectService(context, id,val,index) {
+  onSelectService(context, id, val, index) {
     if (!serviceList.contains(id)) {
       serviceList.add(id);
       selectServiceList.add(val);
@@ -27,5 +25,4 @@ class SelectServiceProvider with ChangeNotifier {
     }
     notifyListeners();
   }
-
 }

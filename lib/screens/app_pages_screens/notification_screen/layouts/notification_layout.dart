@@ -1,4 +1,4 @@
-import 'package:fixit_provider/model/notification_model.dart';
+import 'package:salon_provider/model/notification_model.dart';
 import '../../../../config.dart';
 
 class NotificationLayout extends StatelessWidget {
@@ -15,24 +15,25 @@ class NotificationLayout extends StatelessWidget {
             children: [
           Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Container(
-              height: Sizes.s34,
-              width: Sizes.s34,
-              decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: data!.isRead! == true
-                      ? appColor(context).appTheme.fieldCardBg
-                      : appColor(context).appTheme.whiteBg
-              ),
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(data!.icon!,height: Sizes.s18,width: Sizes.s18,
-                  colorFilter: ColorFilter.mode(data!.isRead! == true
-                      ? appColor(context).appTheme.lightText
-                      : appColor(context).appTheme.darkText, BlendMode.srcIn))
-                ]
-              )
-            ),
+                height: Sizes.s34,
+                width: Sizes.s34,
+                decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: data!.isRead! == true
+                        ? appColor(context).appTheme.fieldCardBg
+                        : appColor(context).appTheme.whiteBg),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SvgPicture.asset(data!.icon!,
+                          height: Sizes.s18,
+                          width: Sizes.s18,
+                          colorFilter: ColorFilter.mode(
+                              data!.isRead! == true
+                                  ? appColor(context).appTheme.lightText
+                                  : appColor(context).appTheme.darkText,
+                              BlendMode.srcIn))
+                    ])),
             const HSpace(Sizes.s12),
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text(data!.title!,
