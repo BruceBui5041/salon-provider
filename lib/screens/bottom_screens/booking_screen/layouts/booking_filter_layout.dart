@@ -268,8 +268,8 @@ class BookingFilterLayout extends StatelessWidget {
                                     .paddingSymmetric(horizontal: Insets.i20)
                               ]))),
                 BottomSheetButtonCommon(
-                        textOne: appFonts.clearAll,
-                        textTwo: appFonts.apply,
+                        textOne: language(context, appFonts.clearAll),
+                        textTwo: language(context, appFonts.apply),
                         applyTap: () => value.onApplyFilter(context),
                         clearTap: () => value.onClearFilter(context))
                     .paddingSymmetric(

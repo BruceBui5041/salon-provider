@@ -48,7 +48,7 @@ class ButtonCommon extends StatelessWidget {
                       cornerRadius: radius!, cornerSmoothing: 1))),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
             if (title != null)
-              Text(title ?? "",
+              Text(language(context, title ?? ""),
                   textAlign: TextAlign.center,
                   overflow: TextOverflow.ellipsis,
                   style: style ??

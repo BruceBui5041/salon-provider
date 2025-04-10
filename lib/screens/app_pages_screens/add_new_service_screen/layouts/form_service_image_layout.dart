@@ -26,9 +26,7 @@ class FormServiceImageLayout extends StatelessWidget {
   /// Builds the service images section with image preview and upload functionality
   Widget _buildServiceImagesSection(
       BuildContext context, AddNewServiceProvider value) {
-    final imageCount = value.image != null && value.image != ""
-        ? "1"
-        : appArray.serviceImageList.length;
+    final imageCount = value.pathImage.length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -53,9 +51,9 @@ class FormServiceImageLayout extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
-              if (value.image != null && value.image != "")
-                _buildImagePreview(value.image!),
-              if (value.image == null) ..._buildServiceImageList(value),
+              // if (value.image != null && value.image != "")
+              //   _buildImagePreview(value.image!),
+              if (value.pathImage.isNotEmpty) ..._buildServiceImageList(value),
               if (appArray.serviceImageList.length <= 4)
                 AddNewBoxLayout(onAdd: () => value.onImagePick(context, false)),
             ],
@@ -69,38 +67,35 @@ class FormServiceImageLayout extends StatelessWidget {
 
   /// Builds a single image preview container
   Widget _buildImagePreview(String imagePath) {
-    return Padding(
-      padding: const EdgeInsets.only(right: Insets.i15),
-      child: ClipRRect(
-          borderRadius: SmoothBorderRadius(
-            cornerRadius: AppRadius.r8,
-            cornerSmoothing: 2,
+    return ClipRRect(
+        borderRadius: SmoothBorderRadius(
+          cornerRadius: AppRadius.r8,
+          cornerSmoothing: 2,
+        ),
+        child: SizedBox(
+          height: Sizes.s75,
+          width: Sizes.s75,
+          // decoration: ShapeDecoration(
+          //   image: DecorationImage(
+          //     image: AssetImage(imagePath),
+          //     fit: BoxFit.cover,
+          //   ),
+          //   shape: RoundedRectangleBorder(
+          //     borderRadius: SmoothBorderRadius(
+          //       cornerRadius: AppRadius.r8,
+          //       cornerSmoothing: 1,
+          //     ),
+          //   ),
+          // ),
+          child: CacheImageWidget(
+            url: imagePath,
           ),
-          child: SizedBox(
-            height: Sizes.s75,
-            width: Sizes.s75,
-            // decoration: ShapeDecoration(
-            //   image: DecorationImage(
-            //     image: AssetImage(imagePath),
-            //     fit: BoxFit.cover,
-            //   ),
-            //   shape: RoundedRectangleBorder(
-            //     borderRadius: SmoothBorderRadius(
-            //       cornerRadius: AppRadius.r8,
-            //       cornerSmoothing: 1,
-            //     ),
-            //   ),
-            // ),
-            child: CacheImageWidget(
-              url: imagePath,
-            ),
-          )),
-    );
+        ));
   }
 
   /// Builds the list of service images with delete functionality
   List<Widget> _buildServiceImageList(AddNewServiceProvider value) {
-    return appArray.serviceImageList
+    return value.pathImage
         .asMap()
         .entries
         .map((e) => AddServiceImageLayout(
@@ -123,50 +118,72 @@ class FormServiceImageLayout extends StatelessWidget {
   /// Builds the thumbnail image section
   Widget _buildMainImageSection(
       BuildContext context, AddNewServiceProvider value) {
-    if (value.serviceSelected?.imageResponse == null) {
-      return const SizedBox();
-    }
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ContainerWithTextLayout(
-          title: language(context, appFonts.mainImage),
+          title: language(context, appFonts.serviceImage),
         ).paddingOnly(top: Insets.i24, bottom: Insets.i12),
-        _buildThumbnailPreview(context, value),
-        const VSpace(Sizes.s8),
-        _buildMaxImageText(context),
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            (value.pathImageService.isNotEmpty)
+                ? _buildThumbnailPreview(context, value)
+                : (value.isDraft == true)
+                    ? AddNewBoxLayout(onAdd: () {
+                        //show Dialog image
+                        showDialog(
+                            context: context,
+                            builder: (context) => Dialog(
+                                  backgroundColor:
+                                      appColor(context).appTheme.whiteColor,
+                                  child: Wrap(
+                                    children: value.listAllImage
+                                        .map((e) => _buildImagePreview(e))
+                                        .toList(),
+                                  ),
+                                ));
+                      })
+                    : Text("No image",
+                            style: appCss.dmDenseMedium14.textColor(
+                                appColor(context).appTheme.lightText))
+                        .paddingOnly(left: Insets.i5),
+            const VSpace(Sizes.s8),
+            _buildMaxImageText(context),
+          ],
+        ).paddingSymmetric(horizontal: Insets.i20),
       ],
-    ).paddingSymmetric(horizontal: Insets.i20);
+    );
   }
 
   /// Builds the thumbnail image preview
   Widget _buildThumbnailPreview(
       BuildContext context, AddNewServiceProvider value) {
     List<Widget> _listImage = [];
-    if (value.serviceSelected?.imageResponse != null) {
-      value.serviceSelected?.imageResponse!.map((e) {
-        _listImage.add(_buildImagePreview(e.url ?? ""));
+    if (value.pathImageService.isNotEmpty) {
+      value.pathImageService.map((e) {
+        _listImage.add(_buildImagePreview(e));
       }).toList();
     }
     // if (value.thumbImage != null && value.thumbImage != "") {
     return Wrap(
-      spacing: Insets.i5,
-      runSpacing: Insets.i5,
+      spacing: Insets.i10,
+      runSpacing: Insets.i10,
       children: _listImage,
     );
     // return _buildImagePreview(value.thumbImage!);
     // }
 
-    if (value.thumbFile != null) {
-      return AddServiceImageLayout(
-        image: value.thumbFile!.path,
-        onDelete: () => value.onRemoveServiceImage(true),
-      );
-    }
+    // if (value.thumbFile != null) {
+    //   return AddServiceImageLayout(
+    //     image: value.thumbFile!.path,
+    //     onDelete: () => value.onRemoveServiceImage(true),
+    //   );
+    // }
 
-    return AddNewBoxLayout(
-      onAdd: () => value.onImagePick(context, true),
-    );
+    // return AddNewBoxLayout(
+    //   onAdd: () => value.onImagePick(context, true),
+    // );
   }
 
   /// Builds the service name input section

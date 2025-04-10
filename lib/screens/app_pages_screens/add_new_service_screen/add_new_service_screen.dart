@@ -1,3 +1,4 @@
+import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:salon_provider/widgets/custom_drop_down_common.dart';
@@ -29,6 +30,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddNewServiceProvider>(builder: (context1, value, child) {
+      print("subCategoryValue: ${value.subCategoryValue}");
       return StatefulWrapper(
           onDispose: () {
             Provider.of<AddNewServiceProvider>(context, listen: false)
@@ -89,13 +91,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   Widget _bodyEdit(AddNewServiceProvider value) {
     return Column(children: [
       // _dropdownDraftService(context, value),
-      if (value.isEdit)
-        Row(
-          children: [
-            Expanded(child: _dropdownDraftServiceCustom(value)),
-          ],
-        ),
-      Divider(),
+
       Expanded(
         child: Stack(children: [
           const FieldsBackground(),
@@ -111,24 +107,49 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
           )
         ]),
       ),
-      if (value.isEdit)
-        Row(
-          children: [
-            if (value.isDraft == true) Expanded(child: _btnSave(value)),
-            if (value.serviceVersionSelected?.status != "active")
-              Expanded(child: _btnPublish(value)),
-          ],
-        ),
-      if (!value.isEdit)
-        ButtonCommon(
-            title: value.isEdit ? appFonts.update : appFonts.addService,
-            onTap: () {
-              value.addService();
-            }).paddingOnly(top: Insets.i10, bottom: Insets.i5),
-
-      const SizedBox(
-        height: 20,
-      ),
+      const SizedBox(height: Insets.i10),
+      Stack(
+        children: [
+          const FieldsBackground(),
+          Column(
+            children: [
+              if (value.isEdit)
+                Padding(
+                  padding: const EdgeInsets.only(
+                      top: Insets.i10, left: Insets.i20, right: Insets.i20),
+                  child: _dropdownDraftServiceCustom(value),
+                ),
+              const SizedBox(height: Insets.i10),
+              if (value.isEdit)
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                    horizontal: Insets.i20,
+                  ),
+                  child: Row(
+                    children: [
+                      if (value.isDraft == true)
+                        Expanded(child: _btnSave(value)),
+                      if (value.isDraft == true)
+                        const SizedBox(width: Insets.i10),
+                      if (value.serviceVersionSelected?.status !=
+                          ServiceVersionStatus.active.name)
+                        Expanded(child: _btnPublish(value)),
+                    ],
+                  ),
+                ),
+              if (!value.isEdit)
+                ButtonCommon(
+                    title: value.isEdit ? appFonts.update : appFonts.addService,
+                    onTap: () {
+                      value.addService();
+                    }).paddingOnly(top: Insets.i10, bottom: Insets.i5),
+              const SizedBox(
+                height: 20,
+              ),
+            ],
+          ),
+        ],
+      )
     ]).paddingSymmetric(horizontal: Insets.i20);
   }
 
@@ -137,6 +158,9 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   }
 
   Widget _dropdownDraftServiceCustom(AddNewServiceProvider value) {
+    if (value.serviceVersionList!.isEmpty) {
+      return const SizedBox();
+    }
     var initServiceVersion = value.serviceVersionList
         ?.firstWhere((e) => e.id == value.serviceVersionSelected?.id);
     bool isDraftExist = value.serviceSelected?.versionsResponse
@@ -144,100 +168,134 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
             .toList()
             .isNotEmpty ??
         false;
-    return Row(
-      children: [
-        Expanded(
-          flex: 3,
-          child: Container(
-            padding: const EdgeInsets.symmetric(horizontal: Insets.i12),
-            decoration: BoxDecoration(
-              border: Border.all(color: Colors.grey),
-              borderRadius: BorderRadius.circular(Insets.i10),
-            ),
-            child: DropdownButtonFormField<ServiceVersion>(
-              value: initServiceVersion ?? null,
-              decoration: InputDecoration(
-                border: InputBorder.none,
-              ),
-              hint: const Text('Select a draft service'),
-              isExpanded: true,
-              items: value.serviceVersionList?.map((ServiceVersion service) {
-                    String draftText = "";
 
-                    if (service.publishedDate == null) {
-                      draftText = "(Draft)";
-                    } else {
-                      draftText = "";
-                    }
-                    return DropdownMenuItem<ServiceVersion>(
-                      key: ValueKey(service.id),
-                      value: service,
-                      child: Row(
-                        children: [
-                          Expanded(
-                            child: Text(
-                              "$draftText ${service.title} (${service.id})",
-                              style: TextStyle(
-                                color: draftText == "(Draft)"
-                                    ? Colors.red
-                                    : Colors.black,
-                              ),
-                              overflow: TextOverflow.ellipsis,
-                              maxLines: 1,
-                              softWrap: true,
-                              textAlign: TextAlign.start,
-                              textWidthBasis: TextWidthBasis.parent,
-                              textHeightBehavior: TextHeightBehavior(
-                                leadingDistribution:
-                                    TextLeadingDistribution.proportional,
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          "Select version",
+          style: appCss.dmDenseMedium14
+              .textColor(appColor(context).appTheme.darkText),
+        ),
+        const SizedBox(height: Insets.i10),
+        Row(
+          children: [
+            Expanded(
+              child: DropdownButtonFormField<ServiceVersion>(
+                value: initServiceVersion ?? null,
+                decoration: InputDecoration(
+                  disabledBorder: const OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(AppRadius.r8)),
+                    borderSide: BorderSide.none,
+                  ),
+                  focusedBorder: const OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(AppRadius.r8)),
+                    borderSide: BorderSide.none,
+                  ),
+                  enabledBorder: const OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(AppRadius.r8)),
+                    borderSide: BorderSide.none,
+                  ),
+                  border: const OutlineInputBorder(
+                    borderRadius:
+                        BorderRadius.all(Radius.circular(AppRadius.r8)),
+                    borderSide: BorderSide.none,
+                    // borderSide: BorderSide.none,
+                  ),
+                ),
+                hint: const Text('Select a draft service'),
+                isExpanded: true,
+                style: appCss.dmDenseMedium14
+                    .textColor(appColor(context).appTheme.lightText),
+                items: value.serviceVersionList?.map((ServiceVersion service) {
+                      String draftText = "";
+
+                      if (service.publishedDate == null) {
+                        draftText = "(Draft)";
+                      } else {
+                        draftText = "";
+                      }
+                      return DropdownMenuItem<ServiceVersion>(
+                        key: ValueKey(service.id),
+                        value: service,
+                        child: Row(
+                          children: [
+                            Expanded(
+                              child: Text(
+                                "$draftText ${service.title} (${service.id})",
+                                style: appCss.dmDenseMedium14.textColor(
+                                    appColor(context).appTheme.darkText),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 1,
+                                softWrap: true,
+                                textAlign: TextAlign.start,
+                                textWidthBasis: TextWidthBasis.parent,
+                                textHeightBehavior: TextHeightBehavior(
+                                  leadingDistribution:
+                                      TextLeadingDistribution.proportional,
+                                ),
                               ),
                             ),
-                          ),
-                          const SizedBox(width: Insets.i10),
-                          if (service.status == "active")
-                            Icon(Icons.check_circle, color: Colors.green),
-                        ],
-                      ),
-                    );
-                  }).toList() ??
-                  [],
-              onChanged: (ServiceVersion? newValue) {
-                if (newValue != null) {
-                  value.onDraftSelected(newValue);
-                  value.setIsDraft(newValue.publishedDate == null);
-                }
-              },
+                            const SizedBox(width: Insets.i10),
+                            if (service.status ==
+                                ServiceVersionStatus.active.name)
+                              Icon(Icons.check_circle, color: Colors.green),
+                          ],
+                        ),
+                      );
+                    }).toList() ??
+                    [],
+                onChanged: (ServiceVersion? newValue) {
+                  if (newValue != null) {
+                    value.onDraftSelected(newValue);
+                    value.setIsDraft(newValue.publishedDate == null);
+                  }
+                },
+              ).decorated(
+                color: appColor(context).appTheme.whiteBg,
+                borderRadius: BorderRadius.circular(AppRadius.r8),
+              ),
             ),
-          ),
+            // GestureDetector(
+            //   onTap: () {
+            //     value.fetchCurrentService();
+            //   },
+            //   child: Icon(Icons.refresh,
+            //       color: appColor(context).appTheme.lightText),
+            // ),
+          ],
         ),
         // const SizedBox(width: Insets.i4),
-        if (value.serviceVersionSelected?.publishedDate != null)
+        if (value.serviceVersionSelected?.publishedDate != null &&
+            value.serviceVersionSelected?.status ==
+                ServiceVersionStatus.active.name)
           if (!isDraftExist) _btnNewDraft(value),
       ],
     );
   }
 
   Widget _btnNewDraft(AddNewServiceProvider value) {
-    return Expanded(
-      child: Padding(
-        padding: const EdgeInsets.symmetric(horizontal: Insets.i5),
-        child: ButtonCommon(
-            // color: Colors.red,
+    return Padding(
+      padding: const EdgeInsets.only(top: Insets.i6),
+      child: ButtonCommon(
+          // color: Colors.red,
 
-            icon: Icon(
-              Icons.edit_document,
-              color: Colors.white,
-            ),
-            title: null,
-            onTap: () {
-              value.createCraft(callBack: () {
-                value.fetchCurrentService();
-              });
-              // value.publishService(callBack: () {
-              //   Navigator.of(context).pop();
-              // });
-            }),
-      ),
+          icon: Icon(
+            Icons.edit_document,
+            color: Colors.white,
+          ),
+          title: null,
+          onTap: () {
+            value.createCraft(callBack: () {
+              value.fetchCurrentService();
+            });
+            // value.publishService(callBack: () {
+            //   Navigator.of(context).pop();
+            // });
+          }),
     );
   }
 
@@ -252,7 +310,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
               Icons.save,
               color: Colors.white,
             ),
-            title: "Save",
+            title: "save",
             onTap: () {
               value.updateServiceCraft(callBack: () {
                 value.fetchCurrentService();
@@ -268,28 +326,25 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
     //   return const SizedBox();
     // }
     // if (value.serviceVersionSelected?.publishedDate != null) {}
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: Insets.i5),
-      child: SizedBox(
-        height: 50,
-        width: double.infinity,
-        child: ButtonCommon(
-            color: Colors.green,
-            icon: Icon(
-              Icons.publish,
-              color: Colors.white,
-            ),
-            title: "Publish",
-            onTap: () {
-              value.publishService(callBack: () {
-                value.fetchCurrentService();
+    return SizedBox(
+      height: 50,
+      width: double.infinity,
+      child: ButtonCommon(
+          color: Colors.green,
+          icon: Icon(
+            Icons.publish,
+            color: Colors.white,
+          ),
+          title: "Publish",
+          onTap: () {
+            value.publishService(callBack: () {
+              value.fetchCurrentService();
 
-                Provider.of<AllServiceProvider>(context, listen: false)
-                    .getAllServices();
-                // Navigator.of(context).popUntil((route) => route.isFirst);
-              });
-            }),
-      ),
+              Provider.of<AllServiceProvider>(context, listen: false)
+                  .getAllServices();
+              // Navigator.of(context).popUntil((route) => route.isFirst);
+            });
+          }),
     );
   }
 }

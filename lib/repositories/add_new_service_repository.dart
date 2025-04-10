@@ -63,6 +63,7 @@ class AddNewServiceRepository extends RepositoryConfig {
     ], fields: [
       FieldItem(field: "service"),
       FieldItem(field: "category"),
+      FieldItem(field: "images"),
     ]).toJson());
     var res = ServiceVersion.fromJson(response);
     return res;

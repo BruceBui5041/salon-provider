@@ -66,8 +66,8 @@ class BookingServicemenListFilter extends StatelessWidget {
                           onTap: () => value.onTapRating(e.key)))
                       .toList(),
                   BottomSheetButtonCommon(
-                          textOne: appFonts.clearAll,
-                          textTwo: appFonts.apply,
+                          textOne: language(context, appFonts.clearAll),
+                          textTwo: language(context, appFonts.apply),
                           applyTap: () => route.pop(context),
                           clearTap: () => value.onClearTap(context))
                       .padding(horizontal: Insets.i20, top: Insets.i10)

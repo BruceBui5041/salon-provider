@@ -1,5 +1,10 @@
 enum EnumColumn { service, booking, category, user }
 
+enum ServiceVersionStatus {
+  active,
+  inactive,
+}
+
 enum Status {
   active,
   inactive,
