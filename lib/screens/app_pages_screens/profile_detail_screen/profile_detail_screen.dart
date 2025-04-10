@@ -39,7 +39,8 @@ class ProfileDetailScreen extends StatelessWidget {
                       Stack(alignment: Alignment.bottomRight, children: [
                         ProfilePicCommon(
                             image: value.imageFile,
-                            imageUrl: value.user?.profilePictureUrl),
+                            imageUrl:
+                                value.user?.userProfile?.profilePictureUrl),
                         SizedBox(
                                 child: SvgPicture.asset(eSvgAssets.edit,
                                         height: Sizes.s14)
@@ -57,9 +58,11 @@ class ProfileDetailScreen extends StatelessWidget {
                   ]).paddingSymmetric(vertical: Insets.i20)
                 ]),
                 const VSpace(Sizes.s40),
-                ButtonCommon(
-                    title: appFonts.update,
-                    onTap: () => value.onUpdate(context))
+                value.isLoading
+                    ? const CircularProgressIndicator()
+                    : ButtonCommon(
+                        title: appFonts.update,
+                        onTap: () => value.updateProfile(context))
               ]).paddingSymmetric(horizontal: Insets.i20))));
     });
   }

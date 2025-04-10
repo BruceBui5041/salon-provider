@@ -1,11 +1,10 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:salon_provider/model/response/base_response.dart';
 
 part 'user_profile_response.g.dart';
 
 @JsonSerializable()
-class UserProfileResponse {
-  final String? id;
-
+class UserProfileResponse extends CommonResponse {
   @JsonKey(name: 'user_id')
   final String? userId;
 
@@ -19,9 +18,13 @@ class UserProfileResponse {
   final String? instagram;
   final String? firstname;
   final String? lastname;
+  @JsonKey(name: 'profile_picture_url')
+  final String? profilePictureUrl;
 
   UserProfileResponse({
-    this.id,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
     this.userId,
     this.phoneNumber,
     this.occupation,
@@ -32,6 +35,7 @@ class UserProfileResponse {
     this.instagram,
     this.firstname,
     this.lastname,
+    this.profilePictureUrl,
   });
 
   factory UserProfileResponse.fromJson(Map<String, dynamic> json) =>

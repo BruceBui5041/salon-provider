@@ -1,8 +1,12 @@
 import 'dart:async';
+import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/screens/app_pages_screens/profile_detail_screen/layouts/selection_option_layout.dart';
 import 'package:flutter/cupertino.dart';
 import '../../config.dart';
 import '../../model/response/user_response.dart';
+import '../../model/request/update_profile.dart';
+import '../../repositories/user_repository.dart';
+import 'package:provider/provider.dart';
 // import '../../screens/app_pages_screens/add_serviceman_screen/layouts/selection_option_layout.dart';
 
 class ProfileDetailProvider with ChangeNotifier {
@@ -18,6 +22,10 @@ class ProfileDetailProvider with ChangeNotifier {
   XFile? imageFile;
   SharedPreferences? preferences;
   UserResponse? user;
+  final UserRepository _userRepository = UserRepository();
+  bool _isLoading = false;
+
+  bool get isLoading => _isLoading;
 
   void initWithUser(UserResponse userResponse) {
     user = userResponse;
@@ -25,10 +33,57 @@ class ProfileDetailProvider with ChangeNotifier {
     txtLastName.text = user?.lastname ?? "";
     txtEmail.text = user?.email ?? "";
     txtPhone.text = user?.phoneNumber ?? "";
+
     notifyListeners();
   }
 
-  onUpdate(context) {
+  Future<void> updateProfile(context) async {
+    try {
+      _isLoading = true;
+      notifyListeners();
+
+      final updateRequest = UpdateProfileRequestModel(
+        firstname: txtFirstName.text,
+        lastname: txtLastName.text,
+        phoneNumber: txtPhone.text,
+      );
+
+      final userId = await AuthConfig.getUserId();
+      if (userId == null) {
+        onUpdateError(context);
+        return;
+      }
+
+      final success = await _userRepository.updateUserProfile(
+        userId,
+        updateRequest,
+        imageFile: imageFile,
+      );
+
+      if (success) {
+        // Reset image file after successful update
+        imageFile = null;
+        // Refresh user data after successful update
+        final updatedUser = await _userRepository.getUser();
+        // Update local state
+        initWithUser(updatedUser);
+        // Update profile screen state
+        final profileProvider =
+            Provider.of<ProfileProvider>(context, listen: false);
+        await profileProvider.refreshProfile();
+        onUpdateSuccess(context);
+      } else {
+        onUpdateError(context);
+      }
+    } catch (e) {
+      onUpdateError(context);
+    } finally {
+      _isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  void onUpdateSuccess(context) {
     showDialog(
         context: context,
         builder: (context) => AlertDialogCommon(
@@ -36,6 +91,18 @@ class ProfileDetailProvider with ChangeNotifier {
             height: Sizes.s140,
             image: eGifAssets.successGif,
             subtext: language(context, appFonts.hurrayUpdateProfile),
+            bText1: language(context, appFonts.okay),
+            b1OnTap: () => route.pop(context)));
+  }
+
+  void onUpdateError(context) {
+    showDialog(
+        context: context,
+        builder: (context) => AlertDialogCommon(
+            title: appFonts.errorOccur,
+            height: Sizes.s140,
+            image: eGifAssets.successGif,
+            subtext: language(context, appFonts.tryAgain),
             bText1: language(context, appFonts.okay),
             b1OnTap: () => route.pop(context)));
   }
@@ -53,10 +120,9 @@ class ProfileDetailProvider with ChangeNotifier {
 // GET IMAGE FROM GALLERY
   Future getImage(context, source) async {
     final ImagePicker picker = ImagePicker();
-    imageFile = (await picker.pickImage(source: source));
+    imageFile = await picker.pickImage(source: source);
     notifyListeners();
     if (imageFile != null) {
-      // updateProfile(context);
       route.pop(context);
     }
   }

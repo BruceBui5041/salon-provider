@@ -20,7 +20,6 @@ UserResponse _$UserResponseFromJson(Map<String, dynamic> json) => UserResponse(
           ?.map((e) => RoleResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
       email: json['email'] as String?,
-      profilePictureUrl: json['profile_picture_url'] as String?,
       userProfile: json['user_profile'] == null
           ? null
           : UserProfileResponse.fromJson(
@@ -37,7 +36,6 @@ Map<String, dynamic> _$UserResponseToJson(UserResponse instance) =>
       'lastname': instance.lastname,
       'roles': instance.roles,
       'email': instance.email,
-      'profile_picture_url': instance.profilePictureUrl,
       'user_profile': instance.userProfile,
       'phone_number': instance.phoneNumber,
     };

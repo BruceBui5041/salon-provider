@@ -59,6 +59,13 @@ abstract class RestClient {
   @POST("/userdevice")
   Future<void> saveUserDevice(@Body() Map<String, dynamic> requestBody);
 
+  @PATCH("/user/{id}")
+  @MultiPart()
+  Future<BaseResponse<bool>> updateUserProfile(
+    @Path("id") String id,
+    @Body() FormData requestBody,
+  );
+
   @GET("/user/provider-earnings")
   Future<BaseResponse<ProviderEarningResponse>> getProviderEarnings(
       {@Query("year") int? year,

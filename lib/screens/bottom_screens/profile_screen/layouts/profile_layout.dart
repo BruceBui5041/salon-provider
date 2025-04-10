@@ -21,7 +21,8 @@ class ProfileLayout extends StatelessWidget {
                       const CircularProgressIndicator()
                     else if (user != null)
                       ProfilePicCommon(
-                          imageUrl: user.profilePictureUrl, isProfile: true),
+                          imageUrl: user.userProfile?.profilePictureUrl,
+                          isProfile: true),
                     const VSpace(Sizes.s5),
                     if (isLoading)
                       const CircularProgressIndicator()

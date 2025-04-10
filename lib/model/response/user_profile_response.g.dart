@@ -9,6 +9,12 @@ part of 'user_profile_response.dart';
 UserProfileResponse _$UserProfileResponseFromJson(Map<String, dynamic> json) =>
     UserProfileResponse(
       id: json['id'] as String?,
+      createdAt: json['created_at'] == null
+          ? null
+          : DateTime.parse(json['created_at'] as String),
+      updatedAt: json['updated_at'] == null
+          ? null
+          : DateTime.parse(json['updated_at'] as String),
       userId: json['user_id'] as String?,
       phoneNumber: json['phone_number'] as String?,
       occupation: json['occupation'] as String?,
@@ -19,12 +25,15 @@ UserProfileResponse _$UserProfileResponseFromJson(Map<String, dynamic> json) =>
       instagram: json['instagram'] as String?,
       firstname: json['firstname'] as String?,
       lastname: json['lastname'] as String?,
+      profilePictureUrl: json['profile_picture_url'] as String?,
     );
 
 Map<String, dynamic> _$UserProfileResponseToJson(
         UserProfileResponse instance) =>
     <String, dynamic>{
       'id': instance.id,
+      'created_at': instance.createdAt?.toIso8601String(),
+      'updated_at': instance.updatedAt?.toIso8601String(),
       'user_id': instance.userId,
       'phone_number': instance.phoneNumber,
       'occupation': instance.occupation,
@@ -35,4 +44,5 @@ Map<String, dynamic> _$UserProfileResponseToJson(
       'instagram': instance.instagram,
       'firstname': instance.firstname,
       'lastname': instance.lastname,
+      'profile_picture_url': instance.profilePictureUrl,
     };

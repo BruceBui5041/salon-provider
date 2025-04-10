@@ -42,6 +42,11 @@ class ProfileProvider with ChangeNotifier {
     }
   }
 
+  Future<void> refreshProfile() async {
+    await fetchUser();
+    notifyListeners();
+  }
+
   onDeleteAccount(context, sync) {
     final value = Provider.of<DeleteDialogProvider>(context, listen: false);
     value.onDeleteAccount(sync, context);

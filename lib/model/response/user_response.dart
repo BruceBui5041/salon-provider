@@ -15,8 +15,6 @@ class UserResponse extends CommonResponse {
   final List<RoleResponse>? roles;
   @JsonKey(name: 'email')
   final String? email;
-  @JsonKey(name: 'profile_picture_url')
-  final String? profilePictureUrl;
   @JsonKey(name: 'user_profile')
   final UserProfileResponse? userProfile;
   @JsonKey(name: 'phone_number')
@@ -30,7 +28,6 @@ class UserResponse extends CommonResponse {
     required this.lastname,
     required this.roles,
     required this.email,
-    this.profilePictureUrl,
     this.userProfile,
     this.phoneNumber,
   });
