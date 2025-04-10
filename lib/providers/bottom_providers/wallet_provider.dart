@@ -1,39 +1,81 @@
 import 'package:salon_provider/config.dart';
-import 'package:salon_provider/model/payment_history_model.dart';
+import 'package:salon_provider/model/response/payment_response.dart';
+import 'package:salon_provider/repositories/payment_repository.dart';
+import 'package:salon_provider/model/request/search_request_model.dart';
+import 'package:salon_provider/common/enum_value.dart';
+import 'package:salon_provider/screens/bottom_screens/wallet_screen/layouts/wallet_filter_layout.dart';
 
 class WalletProvider with ChangeNotifier {
-  List<PaymentHistoryModel> paymentHistoryList = [];
+  final PaymentRepository _paymentRepository = PaymentRepository();
+  List<Payment> paymentList = [];
+  bool isLoading = false;
+  String? error;
 
-  int countryValue = 0;
+  int statusIndex = 0;
+  bool hasActiveFilters = false;
 
-  TextEditingController amountCtrl = TextEditingController();
-  FocusNode amountFocus = FocusNode();
+  Future<void> fetchPayments() async {
+    try {
+      isLoading = true;
+      notifyListeners();
 
-  onTapGateway(val) {
-    countryValue = val;
-    notifyListeners();
+      List<List<Condition>>? conditions;
+
+      // Add status filter condition
+      if (statusIndex > 0 && statusIndex <= PaymentStatus.values.length) {
+        String status = PaymentStatus.values[statusIndex - 1].value;
+        conditions = [
+          [
+            Condition(
+              source: "transaction_status",
+              operator: "=",
+              target: status,
+            ),
+          ]
+        ];
+      }
+
+      paymentList =
+          await _paymentRepository.getPayments(conditions: conditions);
+      error = null;
+    } catch (e) {
+      error = e.toString();
+      paymentList = [];
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
   }
 
   onReady() {
-    paymentHistoryList = [];
-    notifyListeners();
-    appArray.paymentHistoryList.asMap().entries.forEach((element) {
-      if (!paymentHistoryList
-          .contains(PaymentHistoryModel.fromJson(element.value))) {
-        paymentHistoryList.add(PaymentHistoryModel.fromJson(element.value));
-      }
-    });
+    fetchPayments();
+  }
+
+  onTapFilter(context) {
+    showModalBottomSheet(
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return const WalletFilterLayout();
+      },
+    );
+  }
+
+  onStatus(index) {
+    statusIndex = index;
     notifyListeners();
   }
 
-  onTapAdd(context) {
-    showModalBottomSheet(
-      context: context,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      builder: (context2) {
-        return AddMoneyLayout();
-      },
-    );
+  onApplyFilter(context) {
+    hasActiveFilters = statusIndex > 0;
+    route.pop(context);
+    fetchPayments();
+  }
+
+  onClearFilter(context) {
+    statusIndex = 0;
+    hasActiveFilters = false;
+    route.pop(context);
+    fetchPayments();
   }
 }

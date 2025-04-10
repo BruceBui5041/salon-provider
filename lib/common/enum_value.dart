@@ -1,4 +1,4 @@
-enum EnumColumn { service, booking, category, user }
+enum EnumColumn { service, booking, category, user, payment }
 
 enum ServiceVersionStatus {
   active,

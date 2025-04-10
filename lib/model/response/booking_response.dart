@@ -13,33 +13,6 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 part 'booking_response.g.dart';
 
-// BookingResponse bookingResponseFromJson(String str) =>
-//     BookingResponse.fromJson(json.decode(str));
-
-// String bookingResponseToJson(BookingResponse data) =>
-//     json.encode(data.toJson());
-
-// @JsonSerializable()
-// class BookingResponse {
-//   final List<ItemBooking> data;
-
-//   BookingResponse({
-//     required this.data,
-//   });
-
-//   BookingResponse copyWith({
-//     List<ItemBooking>? data,
-//   }) =>
-//       BookingResponse(
-//         data: data ?? this.data,
-//       );
-
-//   factory BookingResponse.fromJson(Map<String, dynamic> json) =>
-//       _$BookingResponseFromJson(json);
-
-//   Map<String, dynamic> toJson() => _$BookingResponseToJson(this);
-// }
-
 @JsonSerializable()
 class ItemBooking {
   @JsonKey(name: 'id')
