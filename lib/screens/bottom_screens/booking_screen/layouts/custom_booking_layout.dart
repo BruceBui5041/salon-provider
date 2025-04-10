@@ -10,7 +10,7 @@ import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/ser
 /// status, and service provider details. It also handles booking actions like
 /// accept and reject.
 class CustomBookingLayout extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
   final GestureTapCallback? onTap;
   final VoidCallback? onAccept;
   final VoidCallback? onReject;
@@ -88,7 +88,7 @@ class _BookingCard extends StatelessWidget {
 }
 
 class _BookingHeader extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
   final dynamic theme;
 
   const _BookingHeader({
@@ -110,7 +110,7 @@ class _BookingHeader extends StatelessWidget {
 }
 
 class _BookingInfo extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
   final dynamic theme;
 
   const _BookingInfo({
@@ -149,7 +149,7 @@ class _BookingInfo extends StatelessWidget {
 }
 
 class _ServiceImage extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
 
   const _ServiceImage({
     required this.data,
@@ -178,7 +178,7 @@ class _ServiceImage extends StatelessWidget {
 }
 
 class _BookingDetails extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
   final dynamic theme;
 
   const _BookingDetails({
@@ -215,7 +215,7 @@ class _BookingDetails extends StatelessWidget {
 }
 
 class _ServiceProviderSection extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
 
   const _ServiceProviderSection({
     required this.data,
@@ -251,7 +251,7 @@ class _ServiceProviderSection extends StatelessWidget {
 }
 
 class _BookingNotes extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
   final dynamic theme;
 
   const _BookingNotes({

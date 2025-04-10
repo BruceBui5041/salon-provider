@@ -2,7 +2,7 @@ import 'package:salon_provider/model/response/booking_response.dart';
 import '../../config.dart';
 
 class CustomPendingBookingProvider with ChangeNotifier {
-  ItemBooking? pendingBookingModel;
+  Booking? pendingBookingModel;
 
   TextEditingController reasonCtrl = TextEditingController();
   TextEditingController amountCtrl = TextEditingController();

@@ -64,7 +64,7 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
 
   // Handler for tapping on a booking in CustomBookingLayout
   void _onTapBooking(
-      ItemBooking booking, BuildContext context, HomeProvider provider) {
+      Booking booking, BuildContext context, HomeProvider provider) {
     final status = booking.bookingStatus?.toLowerCase();
 
     if (status == appFonts.pending.toLowerCase()) {

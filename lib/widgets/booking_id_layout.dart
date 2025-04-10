@@ -28,7 +28,7 @@ class BookingIdLayout extends StatelessWidget {
     return Text("#$id", style: appCss.dmDenseMedium12.textColor(color))
         .paddingSymmetric(vertical: Insets.i6, horizontal: Insets.i10)
         .decorated(
-            color: color.withOpacity(0.15),
+            color: color.withValues(alpha: 0.15),
             borderRadius:
                 const BorderRadius.all(Radius.circular(AppRadius.r16)));
   }

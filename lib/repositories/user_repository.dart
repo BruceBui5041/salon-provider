@@ -1,5 +1,6 @@
 import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/config/auth_config.dart';
+import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/request/update_profile.dart';
@@ -7,8 +8,11 @@ import 'package:salon_provider/model/response/earning_response.dart';
 import 'package:salon_provider/model/response/user_response.dart';
 import 'package:dio/dio.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:salon_provider/network/api.dart';
 
 class UserRepository extends RepositoryConfig {
+  final api = getIt.get<UserApiClient>();
+
   Future<ProviderEarningResponse> getProviderEarnings({
     int? year,
     int? month,

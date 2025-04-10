@@ -37,26 +37,27 @@ class PendingBookingProvider with ChangeNotifier {
 
   onRejectBooking(context) {
     showDialog(
-        context: context,
-        builder: (context1) => AppAlertDialogCommon(
-            isField: true,
-            validator: (value) => validation.commonValidation(context, value),
-            focusNode: reasonFocus,
-            controller: reasonCtrl,
-            title: appFonts.reasonOfRejectBooking,
-            singleText: appFonts.send,
-            globalKey: formKey,
-            singleTap: () {
-              if (formKey.currentState!.validate()) {
-                route.pop(context);
-                final data =
-                    Provider.of<DashboardProvider>(context, listen: false);
-                data.selectIndex = 1;
-                route.pushNamed(context, routeName.dashboard);
-                data.notifyListeners();
-              }
-              notifyListeners();
-            }));
+      context: context,
+      builder: (context1) => AppAlertDialogCommon(
+        isField: true,
+        validator: (value) => validation.commonValidation(context, value),
+        focusNode: reasonFocus,
+        controller: reasonCtrl,
+        title: appFonts.reasonOfRejectBooking,
+        singleText: appFonts.send,
+        globalKey: formKey,
+        singleTap: () {
+          if (formKey.currentState!.validate()) {
+            route.pop(context);
+            final data = Provider.of<DashboardProvider>(context, listen: false);
+            data.selectIndex = 1;
+            route.pushNamed(context, routeName.dashboard);
+            data.notifyListeners();
+          }
+          notifyListeners();
+        },
+      ),
+    );
   }
 
   onAcceptBooking(context) {

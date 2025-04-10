@@ -8,6 +8,8 @@ class WalletRowLayout extends StatelessWidget {
     if (id == null) return appColor(context).appTheme.darkText;
 
     switch (id?.toLowerCase()) {
+      case 'pending':
+        return appColor(context).appTheme.primary;
       case 'success':
       case 'completed':
       case 'paid':

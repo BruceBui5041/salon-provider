@@ -26,7 +26,7 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) => Payment(
           : PaymentQr.fromJson(json['payment_qr'] as Map<String, dynamic>),
       booking: json['booking'] == null
           ? null
-          : ItemBooking.fromJson(json['booking'] as Map<String, dynamic>),
+          : Booking.fromJson(json['booking'] as Map<String, dynamic>),
       user: json['user'] == null
           ? null
           : UserResponse.fromJson(json['user'] as Map<String, dynamic>),

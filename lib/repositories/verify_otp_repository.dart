@@ -5,7 +5,7 @@ import 'package:salon_provider/network/api.dart';
 import 'package:salon_provider/repositories/token_repository.dart';
 
 class VerifyOtpRepository {
-  var restClient = getIt.get<RestClient>();
+  var restClient = getIt.get<OtpApiClient>();
   Future verifyOtp(Map<String, dynamic> requestBody) async {
     await restClient.verifyOtp(requestBody);
   }

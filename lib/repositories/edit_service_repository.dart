@@ -1,7 +1,11 @@
 import 'package:dio/dio.dart';
+import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
+import 'package:salon_provider/network/api.dart';
 
 class EditServiceRepository extends RepositoryConfig {
+  final api = getIt.get<ServiceApiClient>();
+
   Future<void> publisthService(
       String serviceId, String serviceVersionId) async {
     await api.publishService(serviceId, {

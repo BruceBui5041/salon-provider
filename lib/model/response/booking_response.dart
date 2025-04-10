@@ -3,6 +3,7 @@
 //     final bookingResponse = bookingResponseFromJson(jsonString);
 
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/model/response/base_response.dart';
 import 'package:salon_provider/model/response/coupon_response.dart';
 import 'package:salon_provider/model/response/payment_response.dart';
 import 'package:salon_provider/model/response/service_main_response.dart';
@@ -14,15 +15,7 @@ import 'dart:convert';
 part 'booking_response.g.dart';
 
 @JsonSerializable()
-class ItemBooking {
-  @JsonKey(name: 'id')
-  final String? id;
-  @JsonKey(name: 'status')
-  final String? status;
-  @JsonKey(name: 'created_at')
-  final DateTime? createdAt;
-  @JsonKey(name: 'updated_at')
-  final DateTime? updatedAt;
+class Booking extends CommonResponse {
   @JsonKey(name: 'service_versions')
   final List<ServiceVersion>? serviceVersions;
   @JsonKey(name: 'booking_status')
@@ -56,11 +49,11 @@ class ItemBooking {
 
   bool? isPopToHome;
 
-  ItemBooking({
-    required this.id,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+  Booking({
+    required super.id,
+    required super.status,
+    required super.createdAt,
+    required super.updatedAt,
     required this.serviceVersions,
     required this.bookingStatus,
     required this.confirmedDate,
@@ -79,7 +72,7 @@ class ItemBooking {
     this.isPopToHome = false,
   });
 
-  ItemBooking copyWith({
+  Booking copyWith({
     String? id,
     String? status,
     DateTime? createdAt,
@@ -101,7 +94,7 @@ class ItemBooking {
     ItemCoupon? coupon,
     bool? isPopToHome,
   }) =>
-      ItemBooking(
+      Booking(
         id: id ?? this.id,
         status: status ?? this.status,
         createdAt: createdAt ?? this.createdAt,
@@ -140,8 +133,8 @@ class ItemBooking {
     return bookingStatus?.toLowerCase();
   }
 
-  factory ItemBooking.fromJson(Map<String, dynamic> json) =>
-      _$ItemBookingFromJson(json);
+  factory Booking.fromJson(Map<String, dynamic> json) =>
+      _$BookingFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ItemBookingToJson(this);
+  Map<String, dynamic> toJson() => _$BookingToJson(this);
 }

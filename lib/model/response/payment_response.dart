@@ -23,7 +23,7 @@ class Payment extends CommonResponse {
   final PaymentQr? paymentQr;
 
   @JsonKey(name: "booking")
-  final ItemBooking? booking;
+  final Booking? booking;
 
   @JsonKey(name: "user")
   final UserResponse? user;
@@ -56,7 +56,7 @@ class Payment extends CommonResponse {
     String? transactionId,
     String? transactionStatus,
     PaymentQr? paymentQr,
-    ItemBooking? booking,
+    Booking? booking,
     UserResponse? user,
   }) =>
       Payment(

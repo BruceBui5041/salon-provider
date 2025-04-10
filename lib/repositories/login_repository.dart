@@ -9,7 +9,7 @@ import 'package:salon_provider/network/api.dart';
 import 'package:dio/dio.dart';
 
 class LoginScreenRepository extends RepositoryConfig {
-  var restClient = getIt.get<RestClient>();
+  var restClient = getIt.get<AuthApiClient>();
   Future<BaseResponse<LoginItem>> loginUser(String phoneNumber) async {
     return await restClient
         .loginUser({"auth_type": "phone_number", "phone_number": phoneNumber});
@@ -21,7 +21,8 @@ class LoginScreenRepository extends RepositoryConfig {
 
   Future<void> resendOtp(BuildContext context) async {
     try {
-      await restClient.resendOtp();
+      var otpClient = getIt.get<OtpApiClient>();
+      await otpClient.resendOtp();
     } catch (e) {
       print(e);
     }

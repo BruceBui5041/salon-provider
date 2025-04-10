@@ -5,7 +5,7 @@ import '../../widgets/withdraw_amount_bottom_sheet.dart';
 
 class HomeProvider with ChangeNotifier {
   List recentBookingList = [];
-  List<ItemBooking> bookingsApiData = [];
+  List<Booking> bookingsApiData = [];
   bool isSwitch = true;
   int selectedIndex = 0;
   int selectType = 0;
@@ -31,7 +31,7 @@ class HomeProvider with ChangeNotifier {
   int touchedGroupIndex = -1;
 
   // Update recentBookingList from API data
-  void updateRecentBookings(List<ItemBooking> bookings) {
+  void updateRecentBookings(List<Booking> bookings) {
     bookingsApiData = bookings;
     recentBookingList = [];
 

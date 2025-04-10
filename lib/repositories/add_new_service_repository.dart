@@ -1,10 +1,14 @@
 import 'package:dio/dio.dart';
+import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/category_response.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
+import 'package:salon_provider/network/api.dart';
 
 class AddNewServiceRepository extends RepositoryConfig {
+  final api = getIt.get<ServiceApiClient>();
+
   Future<dynamic> createService(FormData formData) async {
     return await api.createService(formData);
   }

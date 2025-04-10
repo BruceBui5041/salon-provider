@@ -3,7 +3,7 @@ import 'package:salon_provider/model/response/booking_response.dart';
 import '../../../../config.dart';
 
 class CustomStatusDetailLayout extends StatelessWidget {
-  final ItemBooking? data;
+  final Booking? data;
   final GestureTapCallback? onChat, onPhone, onMore, onTapStatus, locationTap;
 
   const CustomStatusDetailLayout(

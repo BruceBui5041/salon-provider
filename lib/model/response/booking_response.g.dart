@@ -6,7 +6,7 @@ part of 'booking_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ItemBooking _$ItemBookingFromJson(Map<String, dynamic> json) => ItemBooking(
+Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
       id: json['id'] as String?,
       status: json['status'] as String?,
       createdAt: json['created_at'] == null
@@ -50,12 +50,11 @@ ItemBooking _$ItemBookingFromJson(Map<String, dynamic> json) => ItemBooking(
       isPopToHome: json['isPopToHome'] as bool? ?? false,
     );
 
-Map<String, dynamic> _$ItemBookingToJson(ItemBooking instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
       'id': instance.id,
-      'status': instance.status,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
+      'status': instance.status,
       'service_versions': instance.serviceVersions,
       'booking_status': instance.bookingStatus,
       'confirmed_date': instance.confirmedDate?.toIso8601String(),

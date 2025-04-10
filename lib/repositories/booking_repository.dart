@@ -1,17 +1,17 @@
 import 'package:salon_provider/common/enum_value.dart';
+import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/category_response.dart';
-import 'package:salon_provider/model/response/common_response.dart';
 import 'package:salon_provider/model/response/gen_qr_response.dart';
 import 'package:salon_provider/model/response/payment_qr_transaction.dart';
+import 'package:salon_provider/network/api.dart';
 
 class BookingRepository extends RepositoryConfig {
-  // Future<BookingReso> getBookingDetails(String bookingId) async {
-  //   return await bookingProvider.getBookingDetails(bookingId);
-  // }
-  Future<List<ItemBooking>> getBookingByIdBooking(String bookingId) async {
+  final api = getIt.get<PaymentApiClient>();
+
+  Future<List<Booking>> getBookingByIdBooking(String bookingId) async {
     var body = SearchRequestBody(model: "booking", conditions: [
       [
         Condition(source: "id", operator: "=", target: bookingId),
@@ -19,11 +19,9 @@ class BookingRepository extends RepositoryConfig {
     ], fields: [
       FieldItem(field: "payment.payment_qr"),
     ]);
-    var response =
-        await commonRestClient.search<List<ItemBooking>>(body.toJson());
-    var res = (response as List<dynamic>)
-        .map((e) => ItemBooking.fromJson(e))
-        .toList();
+    var response = await commonRestClient.search<List<Booking>>(body.toJson());
+    var res =
+        (response as List<dynamic>).map((e) => Booking.fromJson(e)).toList();
     return res;
   }
 
@@ -49,7 +47,7 @@ class BookingRepository extends RepositoryConfig {
     return res;
   }
 
-  Future<List<ItemBooking>> getBookings({
+  Future<List<Booking>> getBookings({
     List<List<Condition>>? conditions,
     int? limit,
     int? offset,
@@ -69,10 +67,9 @@ class BookingRepository extends RepositoryConfig {
       offset: offset,
     );
     final response =
-        await commonRestClient.search<List<ItemBooking>>(requestBody.toJson());
-    var res = (response as List<dynamic>)
-        .map((e) => ItemBooking.fromJson(e))
-        .toList();
+        await commonRestClient.search<List<Booking>>(requestBody.toJson());
+    var res =
+        (response as List<dynamic>).map((e) => Booking.fromJson(e)).toList();
     return res;
   }
 

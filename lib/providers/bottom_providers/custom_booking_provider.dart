@@ -174,8 +174,8 @@ class CustomBookingProvider with ChangeNotifier {
   }
 
   String? month;
-  List<ItemBooking> bookingList = [];
-  List<ItemBooking> freelancerBookingList = [];
+  List<Booking> bookingList = [];
+  List<Booking> freelancerBookingList = [];
   List statusList = [];
   List<CategoryItem> categories = [];
   bool isLoadingCategories = false;
@@ -367,7 +367,7 @@ class CustomBookingProvider with ChangeNotifier {
             }));
   }
 
-  onTapBookings(ItemBooking data, context) {
+  onTapBookings(Booking data, context) {
     if (data.bookingStatus == appFonts.pending) {
       // route.pushNamed(context, routeName.packageBookingScreen);
       // if (data.servicemanLists.isNotEmpty) {

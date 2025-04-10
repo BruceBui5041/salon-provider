@@ -18,7 +18,12 @@ final getIt = GetIt.instance;
 Future<void> initInjector() async {
   // Register core
   getIt.registerLazySingleton(() => ApiConfig.createDio());
-  getIt.registerLazySingleton(() => RestClient(getIt()));
+  getIt.registerLazySingleton(() => AuthApiClient(getIt()));
+  getIt.registerLazySingleton(() => OtpApiClient(getIt()));
+  getIt.registerLazySingleton(() => ServiceApiClient(getIt()));
+  getIt.registerLazySingleton(() => PaymentApiClient(getIt()));
+  getIt.registerLazySingleton(() => BookingApiClient(getIt()));
+  getIt.registerLazySingleton(() => UserApiClient(getIt()));
   getIt.registerLazySingleton(() => CommonApi());
 
   // Add other modules here
