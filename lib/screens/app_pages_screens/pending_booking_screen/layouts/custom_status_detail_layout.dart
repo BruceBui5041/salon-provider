@@ -1,4 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:intl/intl.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import '../../../../config.dart';
 
@@ -84,7 +85,8 @@ class CustomStatusDetailLayout extends StatelessWidget {
                         Row(children: [
                           DescriptionLayoutCommon(
                               icon: eSvgAssets.calender,
-                              title: data!.bookingDate?.toString(),
+                              title: DateFormat('dd/MM/yyyy')
+                                  .format(data!.bookingDate!),
                               subtitle: appFonts.date,
                               padding: 0),
                           Container(
@@ -94,7 +96,8 @@ class CustomStatusDetailLayout extends StatelessWidget {
                               .paddingSymmetric(horizontal: Insets.i20),
                           DescriptionLayoutCommon(
                               icon: eSvgAssets.clock,
-                              title: data!.bookingDate?.toString(),
+                              title: DateFormat('HH:mm a')
+                                  .format(data!.bookingDate!),
                               subtitle: appFonts.time)
                         ]).paddingSymmetric(horizontal: Insets.i10),
                         const DottedLines(),

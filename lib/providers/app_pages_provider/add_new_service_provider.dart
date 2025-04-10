@@ -6,6 +6,7 @@ import 'package:salon_provider/common/Utils.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/model/response/image_response.dart';
 import 'package:salon_provider/model/response/service_response.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:salon_provider/network/api_config.dart';
@@ -90,7 +91,8 @@ class AddNewServiceProvider with ChangeNotifier {
   CategoryItem? categoryItem;
   List<String> pathImage = [];
   List<String> pathImageService = [];
-  List<String> listAllImage = [];
+  List<ImageResponse> listAllImage = [];
+  List<ImageResponse> listImageServiceSelected = [];
   // Image Handling Methods
   Future<MultipartFile> convertImageToMultiPart(XFile? file) async {
     MultipartFile multipartFile = await MultipartFile.fromFileSync(
@@ -138,8 +140,7 @@ class AddNewServiceProvider with ChangeNotifier {
     serviceVersionSelected = null;
 
     var serviceInit = await repoService.getServiceById(serviceSelected!.id!);
-    listAllImage =
-        serviceInit.imageResponse?.map((e) => e.url ?? "").toList() ?? [];
+    listAllImage = serviceInit.imageResponse ?? [];
     isLoadingData = false;
     await Future.delayed(const Duration(milliseconds: 500));
 
@@ -150,6 +151,15 @@ class AddNewServiceProvider with ChangeNotifier {
         serviceInit.serviceVersion?.images?.map((e) => e.url ?? "").toList() ??
             [];
     notifyListeners();
+  }
+
+  onApplyImage(List<ImageResponse> imageSelected, {Function()? callBack}) {
+    listImageServiceSelected = imageSelected;
+    pathImageService = imageSelected.map((e) => e.url ?? "").toList();
+    notifyListeners();
+    if (callBack != null) {
+      callBack();
+    }
   }
 
   Future<void> addService() async {
@@ -260,7 +270,9 @@ class AddNewServiceProvider with ChangeNotifier {
         "main_image_id": null,
         "service_men_ids": [],
         "published_date": null,
-        "version_images": []
+        "version_images": listImageServiceSelected
+            .map((e) => {"image_id": e.id, "order": 0})
+            .toList()
       },
     };
 
@@ -509,8 +521,7 @@ class AddNewServiceProvider with ChangeNotifier {
     pathImageService = res.images?.map((e) => e.url ?? "").toList() ?? [];
     if (isDraft! == true) {
       var serviceInit = await repoService.getServiceById(serviceSelected!.id!);
-      listAllImage =
-          serviceInit.imageResponse?.map((e) => e.url ?? "").toList() ?? [];
+      listAllImage = serviceInit.imageResponse ?? [];
     }
     onInit(res, res.categoryResponse);
     notifyListeners();

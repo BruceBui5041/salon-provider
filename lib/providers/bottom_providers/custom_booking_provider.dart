@@ -381,7 +381,7 @@ class CustomBookingProvider with ChangeNotifier {
       //   route.pushNamed(context, routeName.assignBooking);
       // } else {
       //   if (data.assignMe == "Yes") {
-      //     route.pushNamed(context, routeName.acceptedBooking,
+      //     route.pushNamed(contex t, routeName.acceptedBooking,
       //         arg: {"amount": "0", "assign_me": true});
       //   } else {
       //     route.pushNamed(context, routeName.acceptedBooking,

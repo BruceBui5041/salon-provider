@@ -13,7 +13,6 @@ class CustomBookingScreen extends StatelessWidget {
         return StatefulWrapper(
           onInit: () => _initializeBookingScreen(context, bookingProvider),
           child: Scaffold(
-            backgroundColor: Colors.grey.shade300,
             appBar: _buildAppBar(context, bookingProvider),
             body: _buildBody(context, bookingProvider),
           ),

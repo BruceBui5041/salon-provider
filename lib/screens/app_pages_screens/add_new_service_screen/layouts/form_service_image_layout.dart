@@ -1,5 +1,6 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/material.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/image_selection_layout.dart';
 import 'package:salon_provider/widgets/cache_image.dart';
 
 import '../../../../config.dart';
@@ -127,27 +128,26 @@ class FormServiceImageLayout extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (value.pathImageService.isNotEmpty)
-                ? _buildThumbnailPreview(context, value)
-                : (value.isDraft == true)
-                    ? AddNewBoxLayout(onAdd: () {
-                        //show Dialog image
-                        showDialog(
-                            context: context,
-                            builder: (context) => Dialog(
-                                  backgroundColor:
-                                      appColor(context).appTheme.whiteColor,
-                                  child: Wrap(
-                                    children: value.listAllImage
-                                        .map((e) => _buildImagePreview(e))
-                                        .toList(),
-                                  ),
-                                ));
-                      })
-                    : Text("No image",
+            (value.isDraft == true)
+                ? AddNewBoxLayout(onAdd: () {
+                    //show Dialog image
+                    Navigator.of(context).push(MaterialPageRoute(
+                        builder: (context) => ImageSelectionLayout(
+                              isMultiSelect: true,
+                              images: value.listAllImage,
+                              onApply: (List<String> imageSelected) {},
+                            )));
+                  })
+                : (value.pathImageService.isEmpty)
+                    ? Text("No image",
                             style: appCss.dmDenseMedium14.textColor(
                                 appColor(context).appTheme.lightText))
-                        .paddingOnly(left: Insets.i5),
+                        .paddingOnly(left: Insets.i5)
+                    : const SizedBox(),
+            const VSpace(Sizes.s8),
+            (value.pathImageService.isNotEmpty)
+                ? _buildThumbnailPreview(context, value)
+                : const SizedBox(),
             const VSpace(Sizes.s8),
             _buildMaxImageText(context),
           ],
