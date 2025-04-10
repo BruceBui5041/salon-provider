@@ -8,13 +8,13 @@ part of 'payment_response.dart';
 
 Payment _$PaymentFromJson(Map<String, dynamic> json) => Payment(
       id: json['id'] as String?,
-      status: json['status'] as String?,
       createdAt: json['created_at'] == null
           ? null
           : DateTime.parse(json['created_at'] as String),
       updatedAt: json['updated_at'] == null
           ? null
           : DateTime.parse(json['updated_at'] as String),
+      status: json['status'] as String?,
       userId: (json['user_id'] as num?)?.toInt(),
       amount: (json['amount'] as num?)?.toInt(),
       currency: json['currency'] as String?,
@@ -28,9 +28,9 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) => Payment(
 
 Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
       'id': instance.id,
-      'status': instance.status,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
+      'status': instance.status,
       'user_id': instance.userId,
       'amount': instance.amount,
       'currency': instance.currency,

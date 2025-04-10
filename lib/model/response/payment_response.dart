@@ -1,17 +1,10 @@
+import 'package:salon_provider/model/response/base_response.dart';
 import 'package:salon_provider/model/response/payment_qr_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 part 'payment_response.g.dart';
 
 @JsonSerializable()
-class Payment {
-  @JsonKey(name: "id")
-  final String? id;
-  @JsonKey(name: "status")
-  final String? status;
-  @JsonKey(name: "created_at")
-  final DateTime? createdAt;
-  @JsonKey(name: "updated_at")
-  final DateTime? updatedAt;
+class Payment extends CommonResponse {
   @JsonKey(name: "user_id")
   final int? userId;
   @JsonKey(name: "amount")
@@ -28,10 +21,10 @@ class Payment {
   final PaymentQr? paymentQr;
 
   Payment({
-    required this.id,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+    required super.id,
+    required super.createdAt,
+    required super.updatedAt,
+    required super.status,
     required this.userId,
     required this.amount,
     required this.currency,
@@ -56,9 +49,9 @@ class Payment {
   }) =>
       Payment(
         id: id ?? this.id,
-        status: status ?? this.status,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
+        status: status ?? this.status,
         userId: userId ?? this.userId,
         amount: amount ?? this.amount,
         currency: currency ?? this.currency,

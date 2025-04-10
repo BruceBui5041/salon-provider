@@ -25,6 +25,7 @@ class UserProfileResponse extends CommonResponse {
     required super.id,
     required super.createdAt,
     required super.updatedAt,
+    required super.status,
     this.userId,
     this.phoneNumber,
     this.occupation,

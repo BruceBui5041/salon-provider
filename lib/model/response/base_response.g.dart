@@ -15,6 +15,7 @@ CommonResponse _$CommonResponseFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updated_at'] == null
           ? null
           : DateTime.parse(json['updated_at'] as String),
+      status: json['status'] as String?,
     );
 
 Map<String, dynamic> _$CommonResponseToJson(CommonResponse instance) =>
@@ -22,4 +23,5 @@ Map<String, dynamic> _$CommonResponseToJson(CommonResponse instance) =>
       'id': instance.id,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
+      'status': instance.status,
     };

@@ -15,6 +15,7 @@ UserProfileResponse _$UserProfileResponseFromJson(Map<String, dynamic> json) =>
       updatedAt: json['updated_at'] == null
           ? null
           : DateTime.parse(json['updated_at'] as String),
+      status: json['status'] as String?,
       userId: json['user_id'] as String?,
       phoneNumber: json['phone_number'] as String?,
       occupation: json['occupation'] as String?,
@@ -34,6 +35,7 @@ Map<String, dynamic> _$UserProfileResponseToJson(
       'id': instance.id,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
+      'status': instance.status,
       'user_id': instance.userId,
       'phone_number': instance.phoneNumber,
       'occupation': instance.occupation,

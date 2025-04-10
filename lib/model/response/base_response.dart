@@ -12,10 +12,14 @@ class CommonResponse {
   @JsonKey(name: 'updated_at')
   final DateTime? updatedAt;
 
+  @JsonKey(name: 'status')
+  final String? status;
+
   CommonResponse({
     required this.id,
     required this.createdAt,
     required this.updatedAt,
+    required this.status,
   });
 
   factory CommonResponse.fromJson(Map<String, dynamic> json) =>

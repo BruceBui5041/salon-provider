@@ -24,6 +24,7 @@ class UserResponse extends CommonResponse {
     required super.id,
     required super.createdAt,
     required super.updatedAt,
+    required super.status,
     required this.firstname,
     required this.lastname,
     required this.roles,

@@ -14,6 +14,7 @@ RoleResponse _$RoleResponseFromJson(Map<String, dynamic> json) => RoleResponse(
       updatedAt: json['updated_at'] == null
           ? null
           : DateTime.parse(json['updated_at'] as String),
+      status: json['status'] as String?,
       code: $enumDecode(_$UserRoleCodeEnumMap, json['code']),
       name: json['name'] as String,
       userCount: (json['user_count'] as num?)?.toInt(),
@@ -24,6 +25,7 @@ Map<String, dynamic> _$RoleResponseToJson(RoleResponse instance) =>
       'id': instance.id,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
+      'status': instance.status,
       'code': _$UserRoleCodeEnumMap[instance.code]!,
       'name': instance.name,
       'user_count': instance.userCount,

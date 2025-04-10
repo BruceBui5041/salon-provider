@@ -27,6 +27,7 @@ class RoleResponse extends CommonResponse {
     required super.id,
     required super.createdAt,
     required super.updatedAt,
+    required super.status,
     required this.code,
     required this.name,
     this.userCount,
