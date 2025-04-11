@@ -57,6 +57,7 @@ class BookingRepository extends RepositoryConfig {
       conditions: conditions ?? [],
       fields: [
         FieldItem(field: "service_versions"),
+        FieldItem(field: "user"),
         FieldItem(field: "service_versions.main_image"),
         FieldItem(field: "payment.payment_qr"),
         FieldItem(field: "service_man"),

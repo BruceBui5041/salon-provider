@@ -18,7 +18,8 @@ Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
       serviceVersions: (json['service_versions'] as List<dynamic>?)
           ?.map((e) => ServiceVersion.fromJson(e as Map<String, dynamic>))
           .toList(),
-      bookingStatus: json['booking_status'] as String?,
+      bookingStatus:
+          $enumDecodeNullable(_$BookingStatusEnumMap, json['booking_status']),
       confirmedDate: json['confirmed_date'] == null
           ? null
           : DateTime.parse(json['confirmed_date'] as String),
@@ -42,8 +43,10 @@ Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
           : Payment.fromJson(json['payment'] as Map<String, dynamic>),
       serviceMan: json['service_man'] == null
           ? null
-          : ServiceManResponse.fromJson(
-              json['service_man'] as Map<String, dynamic>),
+          : UserResponse.fromJson(json['service_man'] as Map<String, dynamic>),
+      user: json['user'] == null
+          ? null
+          : UserResponse.fromJson(json['user'] as Map<String, dynamic>),
       coupon: json['coupon'] == null
           ? null
           : ItemCoupon.fromJson(json['coupon'] as Map<String, dynamic>),
@@ -56,7 +59,7 @@ Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
       'updated_at': instance.updatedAt?.toIso8601String(),
       'status': instance.status,
       'service_versions': instance.serviceVersions,
-      'booking_status': instance.bookingStatus,
+      'booking_status': _$BookingStatusEnumMap[instance.bookingStatus],
       'confirmed_date': instance.confirmedDate?.toIso8601String(),
       'booking_date': instance.bookingDate?.toIso8601String(),
       'duration': instance.duration,
@@ -69,6 +72,15 @@ Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
       'cancelled_at': instance.cancelledAt?.toIso8601String(),
       'payment': instance.payment,
       'service_man': instance.serviceMan,
+      'user': instance.user,
       'coupon': instance.coupon,
       'isPopToHome': instance.isPopToHome,
     };
+
+const _$BookingStatusEnumMap = {
+  BookingStatus.pending: 'pending',
+  BookingStatus.confirmed: 'confirmed',
+  BookingStatus.inProgress: 'in_progress',
+  BookingStatus.completed: 'completed',
+  BookingStatus.cancelled: 'cancelled',
+};

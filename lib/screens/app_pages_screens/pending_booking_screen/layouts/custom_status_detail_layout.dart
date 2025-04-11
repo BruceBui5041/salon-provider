@@ -2,6 +2,7 @@ import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:intl/intl.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import '../../../../config.dart';
+import '../../../../common/booking_status.dart';
 
 class CustomStatusDetailLayout extends StatelessWidget {
   final Booking? data;
@@ -38,22 +39,22 @@ class CustomStatusDetailLayout extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          Text(data!.id ?? "",
+                          Text("#${data!.id ?? ""}",
                               style: appCss.dmDenseMedium16.textColor(
                                   appColor(context).appTheme.primary)),
-                          if (data!.serviceVersions?.first.categoryResponse !=
-                              null)
-                            ButtonCommon(
-                                    title: appFonts.package,
-                                    width: Sizes.s68,
-                                    height: Sizes.s22,
-                                    color: appColor(context).appTheme.whiteBg,
-                                    radius: AppRadius.r12,
-                                    borderColor:
-                                        appColor(context).appTheme.online,
-                                    style: appCss.dmDenseMedium11.textColor(
-                                        appColor(context).appTheme.online))
-                                .paddingSymmetric(horizontal: Insets.i8)
+                          // if (data!.serviceVersions?.first.categoryResponse !=
+                          //     null)
+                          //   ButtonCommon(
+                          //           title: appFonts.package,
+                          //           width: Sizes.s68,
+                          //           height: Sizes.s22,
+                          //           color: appColor(context).appTheme.whiteBg,
+                          //           radius: AppRadius.r12,
+                          //           borderColor:
+                          //               appColor(context).appTheme.online,
+                          //           style: appCss.dmDenseMedium11.textColor(
+                          //               appColor(context).appTheme.online))
+                          //       .paddingSymmetric(horizontal: Insets.i8)
                         ]),
                         Row(children: [
                           Text(language(context, appFonts.viewStatus),
@@ -83,22 +84,28 @@ class CustomStatusDetailLayout extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(children: [
-                          DescriptionLayoutCommon(
-                              icon: eSvgAssets.calender,
-                              title: DateFormat('dd/MM/yyyy')
-                                  .format(data!.bookingDate!),
-                              subtitle: appFonts.date,
-                              padding: 0),
+                          Expanded(
+                            flex: 1,
+                            child: DescriptionLayoutCommon(
+                                icon: eSvgAssets.calender,
+                                title: DateFormat('dd/MM/yyyy')
+                                    .format(data!.bookingDate!),
+                                subtitle: appFonts.date,
+                                padding: 0),
+                          ),
                           Container(
                                   height: Sizes.s78,
                                   width: 1,
                                   color: appColor(context).appTheme.stroke)
                               .paddingSymmetric(horizontal: Insets.i20),
-                          DescriptionLayoutCommon(
-                              icon: eSvgAssets.clock,
-                              title: DateFormat('HH:mm a')
-                                  .format(data!.bookingDate!),
-                              subtitle: appFonts.time)
+                          Expanded(
+                            flex: 1,
+                            child: DescriptionLayoutCommon(
+                                icon: eSvgAssets.clock,
+                                title: DateFormat('HH:mm a')
+                                    .format(data!.bookingDate!),
+                                subtitle: appFonts.time),
+                          ),
                         ]).paddingSymmetric(horizontal: Insets.i10),
                         const DottedLines(),
                         const VSpace(Sizes.s17),
@@ -120,16 +127,15 @@ class CustomStatusDetailLayout extends StatelessWidget {
                                       color: appColor(context).appTheme.stroke)
                                   .paddingSymmetric(horizontal: Insets.i9),
                               Expanded(
-                                  child: Text(
-                                      data!.serviceMan?.phoneNumber ?? "",
+                                  child: Text(data!.user?.phoneNumber ?? "",
                                       overflow: TextOverflow.fade,
                                       style: appCss.dmDenseRegular12.textColor(
                                           appColor(context).appTheme.darkText)))
                             ])).padding(
                             horizontal: Insets.i10, bottom: Insets.i15),
-                        if (data!.status != "Pending" &&
-                            data!.status != "Completed" &&
-                            data!.status != "Cancelled")
+                        if (data!.bookingStatus != BookingStatus.pending &&
+                            data!.bookingStatus != BookingStatus.completed &&
+                            data!.bookingStatus != BookingStatus.cancelled)
                           ViewLocationCommon(onTapArrow: locationTap)
                       ]).boxBorderExtension(context,
                       bColor: appColor(context).appTheme.stroke),
@@ -142,15 +148,16 @@ class CustomStatusDetailLayout extends StatelessWidget {
                         const VSpace(Sizes.s6),
                         ReadMoreLayout(text: data!.notes ?? "")
                       ]).paddingSymmetric(vertical: Insets.i15),
-                  data!.status == "Completed" || data!.status == "Cancelled"
+                  data!.bookingStatus == BookingStatus.completed ||
+                          data!.bookingStatus == BookingStatus.cancelled
                       ? CustomerLayout(
-                          title: appFonts.customerDetails,
-                          data: data!.serviceMan)
+                          title: appFonts.customerDetails, data: data!.user)
                       : CustomerServiceLayout(
                           title: appFonts.customerDetails,
-                          image: data!.serviceMan?.firstname,
-                          name: data!.serviceMan?.lastname,
-                          status: data!.status,
+                          image: data!.user?.userProfile?.profilePictureUrl,
+                          name:
+                              "${data!.user?.firstname} ${data!.user?.lastname}",
+                          status: data!.bookingStatus?.value,
                           chatTap: onChat,
                           moreTap: onMore,
                           phoneTap: onPhone),
@@ -164,34 +171,36 @@ class CustomStatusDetailLayout extends StatelessWidget {
                           RichText(
                               text: TextSpan(
                                   style: appCss.dmDenseMedium12.textColor(data!
-                                                  .status ==
-                                              "Assigned" ||
-                                          data!.status ==
-                                              language(
-                                                  context, appFonts.ongoing) ||
-                                          data!.status == "Cancelled"
+                                                  .bookingStatus ==
+                                              BookingStatus.confirmed ||
+                                          data!.bookingStatus ==
+                                              BookingStatus.inProgress ||
+                                          data!.bookingStatus ==
+                                              BookingStatus.cancelled
                                       ? appColor(context).appTheme.red
                                       : appColor(context).appTheme.darkText),
                                   text: language(context, appFonts.note),
                                   children: [
                                 TextSpan(
                                     style: appCss.dmDenseRegular12.textColor(
-                                        data!.status == "Assigned" ||
-                                                data!.status ==
-                                                    language(context,
-                                                        appFonts.ongoing) ||
-                                                data!.status == "Cancelled"
+                                        data!.bookingStatus ==
+                                                    BookingStatus.confirmed ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.inProgress ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.cancelled
                                             ? appColor(context).appTheme.red
                                             : appColor(context)
                                                 .appTheme
                                                 .darkText),
                                     text: language(
                                         context,
-                                        data!.status == "Assigned" ||
-                                                data!.status ==
-                                                    language(context,
-                                                        appFonts.ongoing) ||
-                                                data!.status == "Cancelled"
+                                        data!.bookingStatus ==
+                                                    BookingStatus.confirmed ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.inProgress ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.cancelled
                                             ? appFonts.youAssignedService
                                             : appFonts.servicemenIsNotSelected))
                               ]))

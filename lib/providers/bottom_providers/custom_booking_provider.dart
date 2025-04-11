@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:salon_provider/common/booking_status.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
@@ -368,7 +369,7 @@ class CustomBookingProvider with ChangeNotifier {
   }
 
   onTapBookings(Booking data, context) {
-    if (data.bookingStatus == appFonts.pending) {
+    if (data.bookingStatus == BookingStatus.pending) {
       // route.pushNamed(context, routeName.packageBookingScreen);
       // if (data.servicemanLists.isNotEmpty) {
       //   route.pushNamed(context, routeName.pendingBooking, arg: true);
@@ -376,7 +377,7 @@ class CustomBookingProvider with ChangeNotifier {
       //   route.pushNamed(context, routeName.pendingBooking, arg: false);
       // }
       route.pushNamed(context, routeName.customPendingBooking, arg: data);
-    } else if (data.status == appFonts.accepted) {
+    } else if (data.bookingStatus == BookingStatus.confirmed) {
       // if (isFreelancer) {
       //   route.pushNamed(context, routeName.assignBooking);
       // } else {
@@ -390,26 +391,29 @@ class CustomBookingProvider with ChangeNotifier {
       // }
     } else if (data.status == appFonts.pendingApproval) {
       route.pushNamed(context, routeName.pendingApprovalBooking);
-    } else if (data.status == appFonts.ongoing) {
+    } else if (data.bookingStatus == BookingStatus.inProgress) {
       // if (data.servicemanLists.isNotEmpty) {
       //   route
       //       .pushNamed(context, routeName.ongoingBooking, arg: {"bool": false});
       // } else {
       //   route.pushNamed(context, routeName.ongoingBooking, arg: {"bool": true});
       // }
-    } else if (data.status == appFonts.hold) {
-      route.pushNamed(context, routeName.holdBooking);
-    } else if (data.status == appFonts.completed) {
-      route.pushNamed(context, routeName.completedBooking);
-    } else if (data.status == appFonts.cancelled) {
-      route.pushNamed(context, routeName.cancelledBooking);
-    } else if (data.status == appFonts.assigned) {
-      // if (data.servicemanLists.isNotEmpty) {
-      //   route.pushNamed(context, routeName.assignBooking, arg: {"bool": true});
-      // } else {
-      //   route.pushNamed(context, routeName.assignBooking, arg: {"bool": false});
-      // }
     }
+    // else if (data.bookingStatus == BookingStatus.hold) {
+    //   route.pushNamed(context, routeName.holdBooking);
+    // }
+    else if (data.bookingStatus == BookingStatus.completed) {
+      route.pushNamed(context, routeName.completedBooking);
+    } else if (data.bookingStatus == BookingStatus.cancelled) {
+      route.pushNamed(context, routeName.cancelledBooking);
+    }
+    // else if (data.bookingStatus == BookingStatus.confirmed) {
+    //   if (data.servicemanLists.isNotEmpty) {
+    //     route.pushNamed(context, routeName.assignBooking, arg: {"bool": true});
+    //   } else {
+    //     route.pushNamed(context, routeName.assignBooking, arg: {"bool": false});
+    //   }
+    // }
   }
 
   onTapSwitch(val) {

@@ -192,7 +192,7 @@ class _BookingDetails extends StatelessWidget {
       children: [
         StatusRow(
           title: appFonts.status,
-          statusText: data?.bookingStatus ?? '',
+          statusText: data?.bookingStatus?.value ?? '',
         ),
         StatusRow(
           title: appFonts.dateTime,

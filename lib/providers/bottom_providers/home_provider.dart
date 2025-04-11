@@ -48,19 +48,7 @@ class HomeProvider with ChangeNotifier {
         }
       }
 
-      final bookingModel = BookingModel(
-        bookingNumber: booking.id,
-        status: booking.bookingStatus,
-        name: serviceName ?? "Unnamed Service",
-        image: serviceImage,
-        price: booking.price,
-        dateTime: booking.bookingDate?.toString(),
-        payment: booking.payment?.paymentMethod,
-        location: "",
-        servicemanLists: [],
-      );
-
-      recentBookingList.add(bookingModel);
+      recentBookingList.add(booking);
     }
 
     notifyListeners();

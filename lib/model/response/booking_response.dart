@@ -2,16 +2,18 @@
 //
 //     final bookingResponse = bookingResponseFromJson(jsonString);
 
+import 'package:salon_provider/common/booking_status.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/model/response/base_response.dart';
 import 'package:salon_provider/model/response/coupon_response.dart';
 import 'package:salon_provider/model/response/payment_response.dart';
-import 'package:salon_provider/model/response/service_main_response.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
 
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
+
+import 'package:salon_provider/model/response/user_response.dart';
 part 'booking_response.g.dart';
 
 @JsonSerializable()
@@ -19,7 +21,7 @@ class Booking extends CommonResponse {
   @JsonKey(name: 'service_versions')
   final List<ServiceVersion>? serviceVersions;
   @JsonKey(name: 'booking_status')
-  final String? bookingStatus;
+  final BookingStatus? bookingStatus;
   @JsonKey(name: 'confirmed_date')
   final DateTime? confirmedDate;
   @JsonKey(name: 'booking_date')
@@ -43,31 +45,34 @@ class Booking extends CommonResponse {
   @JsonKey(name: 'payment')
   final Payment? payment;
   @JsonKey(name: 'service_man')
-  final ServiceManResponse? serviceMan;
+  final UserResponse? serviceMan;
+  @JsonKey(name: 'user')
+  final UserResponse? user;
   @JsonKey(name: 'coupon')
   final ItemCoupon? coupon;
 
   bool? isPopToHome;
 
   Booking({
-    required super.id,
-    required super.status,
-    required super.createdAt,
-    required super.updatedAt,
-    required this.serviceVersions,
-    required this.bookingStatus,
-    required this.confirmedDate,
-    required this.bookingDate,
-    required this.duration,
-    required this.price,
-    required this.discountedPrice,
-    required this.discountAmount,
-    required this.notes,
-    required this.completedAt,
-    required this.cancellationReason,
-    required this.cancelledAt,
-    required this.payment,
-    required this.serviceMan,
+    super.id,
+    super.status,
+    super.createdAt,
+    super.updatedAt,
+    this.serviceVersions,
+    this.bookingStatus,
+    this.confirmedDate,
+    this.bookingDate,
+    this.duration,
+    this.price,
+    this.discountedPrice,
+    this.discountAmount,
+    this.notes,
+    this.completedAt,
+    this.cancellationReason,
+    this.cancelledAt,
+    this.payment,
+    this.serviceMan,
+    this.user,
     this.coupon,
     this.isPopToHome = false,
   });
@@ -78,7 +83,7 @@ class Booking extends CommonResponse {
     DateTime? createdAt,
     DateTime? updatedAt,
     List<ServiceVersion>? serviceVersions,
-    String? bookingStatus,
+    BookingStatus? bookingStatus,
     DateTime? confirmedDate,
     DateTime? bookingDate,
     int? duration,
@@ -90,7 +95,8 @@ class Booking extends CommonResponse {
     String? cancellationReason,
     DateTime? cancelledAt,
     Payment? payment,
-    ServiceManResponse? serviceMan,
+    UserResponse? serviceMan,
+    UserResponse? user,
     ItemCoupon? coupon,
     bool? isPopToHome,
   }) =>
@@ -113,6 +119,7 @@ class Booking extends CommonResponse {
         cancelledAt: cancelledAt ?? this.cancelledAt,
         payment: payment ?? this.payment,
         serviceMan: serviceMan ?? this.serviceMan,
+        user: user ?? this.user,
         coupon: coupon ?? this.coupon,
         isPopToHome: isPopToHome ?? this.isPopToHome,
       );
@@ -130,7 +137,7 @@ class Booking extends CommonResponse {
   }
 
   getBookingStatus() {
-    return bookingStatus?.toLowerCase();
+    return bookingStatus?.value.toLowerCase();
   }
 
   factory Booking.fromJson(Map<String, dynamic> json) =>
