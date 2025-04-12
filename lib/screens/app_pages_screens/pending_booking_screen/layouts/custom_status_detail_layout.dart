@@ -73,7 +73,7 @@ class CustomStatusDetailLayout extends StatelessWidget {
                                 color: appColor(context)
                                     .appTheme
                                     .primary
-                                    .withOpacity(0.1))
+                                    .withValues(alpha: 0.1))
                             .inkWell(onTap: onTapStatus)
                       ]).paddingSymmetric(vertical: Insets.i15),
                   Text(data!.serviceVersions?.first.title ?? "",
@@ -127,7 +127,7 @@ class CustomStatusDetailLayout extends StatelessWidget {
                                       color: appColor(context).appTheme.stroke)
                                   .paddingSymmetric(horizontal: Insets.i9),
                               Expanded(
-                                  child: Text(data!.user?.phoneNumber ?? "",
+                                  child: Text("user address",
                                       overflow: TextOverflow.fade,
                                       style: appCss.dmDenseRegular12.textColor(
                                           appColor(context).appTheme.darkText)))
@@ -157,6 +157,7 @@ class CustomStatusDetailLayout extends StatelessWidget {
                           image: data!.user?.userProfile?.profilePictureUrl,
                           name:
                               "${data!.user?.firstname} ${data!.user?.lastname}",
+                          phoneNumber: data!.user?.phoneNumber,
                           status: data!.bookingStatus?.value,
                           chatTap: onChat,
                           moreTap: onMore,

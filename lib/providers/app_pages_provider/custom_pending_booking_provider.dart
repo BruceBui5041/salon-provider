@@ -1,8 +1,11 @@
+import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/repositories/booking_repository.dart';
 import '../../config.dart';
 
 class CustomPendingBookingProvider with ChangeNotifier {
-  Booking? pendingBookingModel;
+  Booking? pendingBooking;
+  final BookingRepository bookingRepository = getIt<BookingRepository>();
 
   TextEditingController reasonCtrl = TextEditingController();
   TextEditingController amountCtrl = TextEditingController();
@@ -14,13 +17,11 @@ class CustomPendingBookingProvider with ChangeNotifier {
   bool isServicemen = false, isAmount = false;
 
   onReady(context) {
-    // if (isFreelancer != true) {
-
-    // }
-    dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
-    print(data);
-
-    pendingBookingModel = data;
+    String bookingId = ModalRoute.of(context)!.settings.arguments as String;
+    bookingRepository.getBookingByIdBooking(bookingId).then((value) {
+      pendingBooking = value.first;
+      notifyListeners();
+    });
 
     // pendingBookingModel = ItemBooking.fromJson(isServicemen
     //     ? appArray.pendingBookingDetailWithList
@@ -93,19 +94,21 @@ class CustomPendingBookingProvider with ChangeNotifier {
       isAmount = false;
       notifyListeners();
       showDialog(
-          context: context,
-          builder: (context1) => AppAlertDialogCommon(
-              height: Sizes.s100,
-              title: appFonts.assignBooking,
-              firstBText: appFonts.doItLater,
-              secondBText: appFonts.yes,
-              image: eGifAssets.dateGif,
-              subtext: appFonts.doYouWant,
-              firstBTap: () => route.pop(context),
-              secondBTap: () {
-                route.pop(context);
-                route.pushNamed(context, routeName.acceptedBooking);
-              }));
+        context: context,
+        builder: (context1) => AppAlertDialogCommon(
+          height: Sizes.s100,
+          title: appFonts.assignBooking,
+          firstBText: appFonts.doItLater,
+          secondBText: appFonts.yes,
+          image: eGifAssets.dateGif,
+          subtext: appFonts.doYouWant,
+          firstBTap: () => route.pop(context),
+          secondBTap: () {
+            route.pop(context);
+            route.pushNamed(context, routeName.acceptedBooking);
+          },
+        ),
+      );
     }
   }
 }

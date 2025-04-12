@@ -1,10 +1,10 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 
 import '../../../../config.dart';
-import '../../../../model/booking_model.dart';
+import '../../../../model/response/booking_response.dart';
 
 class BookingLayout extends StatelessWidget {
-  final BookingModel? data;
+  final Booking? data;
   final GestureTapCallback? onTap;
 
   const BookingLayout({super.key, this.data, this.onTap});
@@ -16,24 +16,26 @@ class BookingLayout extends StatelessWidget {
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Row(children: [
-            Text(data!.bookingNumber!,
+            Text(data!.id!,
                 style: appCss.dmDenseMedium14
                     .textColor(appColor(context).appTheme.primary)),
             const HSpace(Sizes.s5),
-            if (data!.packageId != null)
+            if (data!.serviceVersions != null)
               BookingStatusLayout(title: appFonts.package)
           ]),
-          Text(language(context, data!.name!),
+          Text(
+                  language(context,
+                      "${data!.user?.firstname} ${data!.user?.lastname}"),
                   style: appCss.dmDenseMedium16
                       .textColor(appColor(context).appTheme.darkText))
               .paddingOnly(top: Insets.i8, bottom: Insets.i3),
           Row(children: [
-            Text(language(context, " ${data!.price!}"),
+            Text(language(context, " ${data!.getDiscountedPrice()}"),
                 style: appCss.dmDenseBold18
                     .textColor(appColor(context).appTheme.primary)),
             const HSpace(Sizes.s8),
-            if (data!.offer != null)
-              Text(language(context, "(${data!.offer!})"),
+            if (data!.discountAmount != null)
+              Text(language(context, "(${data!.getDiscountAmount()})"),
                   style: appCss.dmDenseMedium14
                       .textColor(appColor(context).appTheme.red))
           ])
@@ -43,109 +45,79 @@ class BookingLayout extends StatelessWidget {
             width: Sizes.s84,
             decoration: ShapeDecoration(
                 image: DecorationImage(
-                    image: AssetImage(data!.image!), fit: BoxFit.cover),
+                    image: AssetImage(
+                        data!.user?.userProfile?.profilePictureUrl ?? ''),
+                    fit: BoxFit.cover),
                 shape: const SmoothRectangleBorder(
                     borderRadius: SmoothBorderRadius.all(SmoothRadius(
                         cornerRadius: AppRadius.r10, cornerSmoothing: 1)))))
       ]),
       Image.asset(eImageAssets.bulletDotted)
           .paddingSymmetric(vertical: Insets.i12),
-      StatusRow(title: appFonts.status, statusText: data!.status!),
-      if (data!.status != appFonts.cancelled)
+      StatusRow(title: appFonts.status, statusText: data!.getBookingStatus()!),
+      if (data!.getBookingStatus() != appFonts.cancelled.toLowerCase())
         StatusRow(
             title: appFonts.requiredServiceman,
             title2:
-                "${data!.requiredServicemen} ${language(context, appFonts.serviceman)}",
+                "${data!.serviceMan?.firstname} ${data!.serviceMan?.lastname} ${language(context, appFonts.serviceman)}",
             style: appCss.dmDenseMedium12
                 .textColor(appColor(context).appTheme.darkText)),
       StatusRow(
           title: appFonts.dateTime,
-          title2: data!.dateTime!,
+          title2: data!.bookingDate?.toString() ?? '',
           style: appCss.dmDenseMedium12
               .textColor(appColor(context).appTheme.darkText)),
-      /* if (data!.status! == appFonts.pending &&
-          data!.status != appFonts.cancelled)*/
       StatusRow(
           title: appFonts.location,
-          title2: data!.location!,
+          title2: data!.user?.userProfile?.phoneNumber ?? '',
           style: appCss.dmDenseMedium12
               .textColor(appColor(context).appTheme.darkText)),
-      if (data!.status != appFonts.cancelled)
+      if (data!.getBookingStatus() != appFonts.cancelled.toLowerCase())
         StatusRow(
             title: appFonts.payment,
-            title2: data!.payment!,
+            title2: data!.payment?.status ?? '',
             style: appCss.dmDenseMedium12
                 .textColor(appColor(context).appTheme.online)),
       const DottedLines().paddingOnly(bottom: Insets.i15),
       Stack(alignment: Alignment.bottomCenter, children: [
         Column(children: [
-          if (data!.customerList != null)
-            ...data!.customerList!
-                .asMap()
-                .entries
-                .map((s) => ServiceProviderLayout(
-                    expand: value.isExpand,
-                    title: appFonts.customer,
-                    image: s.value.image,
-                    name: s.value.title,
-                    rate: s.value.rate,
-                    index: s.key,
-                    list2: data!.servicemanLists,
-                    list: data!.servicemanLists))
-                .toList(),
-          if (data!.servicemanLists!.isNotEmpty)
-            data!.isExpand == true
-                ? Column(
-                    children: data!.servicemanLists!.asMap().entries.map((s) {
-                    return ServiceProviderLayout(
-                        expand: value.isExpand,
-                        title: appFonts.serviceman,
-                        image: s.value.image,
-                        name: s.value.title,
-                        rate: s.value.rate,
-                        index: s.key,
-                        list: data!.servicemanLists);
-                  }).toList())
-                : Column(
-                    children: data!.servicemanLists!
-                        .getRange(0, 1)
-                        .toList()
-                        .asMap()
-                        .entries
-                        .map((s) {
-                    return ServiceProviderLayout(
-                        expand: value.isExpand,
-                        title: appFonts.serviceman,
-                        image: s.value.image,
-                        name: s.value.title,
-                        rate: s.value.rate,
-                        index: s.key,
-                        list: []);
-                  }).toList()),
+          if (data!.user != null)
+            ServiceProviderLayout(
+                expand: value.isExpand,
+                title: appFonts.customer,
+                image: data!.user?.userProfile?.profilePictureUrl,
+                name: "${data!.user?.firstname} ${data!.user?.lastname}",
+                rate: "0",
+                index: 0,
+                list2: [],
+                list: []),
+          if (data!.serviceMan != null)
+            ServiceProviderLayout(
+                expand: value.isExpand,
+                title: appFonts.serviceman,
+                image: data!.serviceMan?.userProfile?.profilePictureUrl,
+                name:
+                    "${data!.serviceMan?.firstname} ${data!.serviceMan?.lastname}",
+                rate: "0",
+                index: 0,
+                list: [])
         ])
             .paddingSymmetric(horizontal: Insets.i15, vertical: Insets.i5)
             .boxShapeExtension(
                 color: appColor(context).appTheme.fieldCardBg,
                 radius: AppRadius.r12)
-            .paddingOnly(
-                bottom: data!.servicemanLists!.length > 1 ? Insets.i15 : 0),
-        if (data!.servicemanLists != null)
-          if (data!.servicemanLists!.length > 1)
-            CommonArrow(
-                arrow: data!.isExpand == true
-                    ? eSvgAssets.upDoubleArrow
-                    : eSvgAssets.downDoubleArrow,
-                isThirteen: true,
-                onTap: () => value.onExpand(data),
-                color: appColor(context).appTheme.whiteBg)
+            .paddingOnly(bottom: 0),
       ]),
-      if (data!.servicemanLists!.isEmpty && data!.status == appFonts.pending)
+      if (data!.serviceMan == null &&
+          data!.getBookingStatus() == appFonts.pending.toLowerCase())
         Text(language(context, appFonts.noteServicemenNotSelectYet),
                 style: appCss.dmDenseRegular12
                     .textColor(appColor(context).appTheme.lightText))
             .paddingOnly(top: Insets.i8),
-      if (data!.servicemanLists!.isEmpty && data!.status == appFonts.assigned ||
-          (data!.servicemanLists!.isEmpty && data!.status == appFonts.accepted))
+      if (data!.serviceMan == null &&
+              data!.getBookingStatus() == appFonts.accepted.toLowerCase() ||
+          (data!.serviceMan == null &&
+              data!.getBookingStatus() == appFonts.assigned.toLowerCase()))
         RichText(
             text: TextSpan(
                 style: appCss.dmDenseMedium12
@@ -157,7 +129,8 @@ class BookingLayout extends StatelessWidget {
                       .textColor(appColor(context).appTheme.red),
                   text: language(context, appFonts.youAssignedService))
             ])).paddingOnly(top: Insets.i8),
-      if (data!.servicemanLists!.isEmpty && data!.status == appFonts.ongoing)
+      if (data!.serviceMan == null &&
+          data!.getBookingStatus() == appFonts.ongoing.toLowerCase())
         if (isFreelancer != true)
           RichText(
               text: TextSpan(
@@ -170,7 +143,8 @@ class BookingLayout extends StatelessWidget {
                         .textColor(appColor(context).appTheme.red),
                     text: language(context, appFonts.youAssignedService))
               ])).paddingOnly(top: Insets.i8),
-      if (data!.status == appFonts.pending && data!.servicemanLists!.isEmpty)
+      if (data!.getBookingStatus() == appFonts.pending.toLowerCase() &&
+          data!.serviceMan == null)
         Row(children: [
           Expanded(
               child: ButtonCommon(
@@ -187,10 +161,7 @@ class BookingLayout extends StatelessWidget {
                   onTap: () => value.onAcceptBooking(context)))
         ]).paddingOnly(top: Insets.i15)
     ])
-        .padding(
-            horizontal: Insets.i15,
-            top: Insets.i15,
-            bottom: data!.servicemanLists!.length > 1 ? 0 : Insets.i15)
+        .padding(horizontal: Insets.i15, top: Insets.i15, bottom: Insets.i15)
         .boxBorderExtension(context,
             isShadow: true, bColor: appColor(context).appTheme.stroke)
         .paddingOnly(bottom: Insets.i15)

@@ -17,7 +17,14 @@ class BookingRepository extends RepositoryConfig {
         Condition(source: "id", operator: "=", target: bookingId),
       ]
     ], fields: [
+      FieldItem(field: "service_versions"),
+      FieldItem(field: "user"),
+      FieldItem(field: "service_versions.main_image"),
       FieldItem(field: "payment.payment_qr"),
+      FieldItem(field: "service_man"),
+      FieldItem(field: "service_versions.category"),
+      FieldItem(field: "coupon"),
+      FieldItem(field: "commission"),
     ]);
     var response = await commonRestClient.search<List<Booking>>(body.toJson());
     var res =

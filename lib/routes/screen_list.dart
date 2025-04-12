@@ -22,7 +22,7 @@ export '../screens/auth_screens/current_location_screen/layouts/bottom_layout.da
 export '../screens/auth_screens/sign_up_company_screen/layouts/sign_up_three.dart';
 export '../screens/bottom_screens/dashboard_screen/dashboard_screen.dart';
 export '../screens/bottom_screens/wallet_screen/wallet_screen.dart';
-export '../screens/bottom_screens/booking_screen/booking_screen.dart';
+export '../screens/bottom_screens/booking_screen/custom_booking_screen.dart';
 export '../screens/bottom_screens/home_screen/home_screen.dart';
 export '../screens/bottom_screens/profile_screen/profile_screen.dart';
 export '../screens/bottom_screens/home_screen/layouts/social_layout.dart';

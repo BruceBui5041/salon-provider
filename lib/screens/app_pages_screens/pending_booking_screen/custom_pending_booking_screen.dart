@@ -26,7 +26,7 @@ class CustomPendingBookingScreen extends StatelessWidget {
                             onMore: () => route.pushNamed(
                                 context, routeName.servicemanDetail,
                                 arg: false),
-                            data: value.pendingBookingModel,
+                            data: value.pendingBooking,
                             onTapStatus: () =>
                                 value.showBookingStatus(context)),
                         if (value.isAmount)
@@ -37,32 +37,34 @@ class CustomPendingBookingScreen extends StatelessWidget {
                                     appColor(context).appTheme.darkText))
                             .paddingOnly(top: Insets.i25, bottom: Insets.i10),
                         CancelledBillSummary(
-                            booking: value.pendingBookingModel),
-                        const VSpace(Sizes.s20),
-                        HeadingRowCommon(
-                                title: appFonts.review,
-                                onTap: () => route.pushNamed(
-                                    context, routeName.serviceReview))
-                            .paddingOnly(bottom: Insets.i12),
-                        ...appArray.reviewList
-                            .asMap()
-                            .entries
-                            .map((e) => ServiceReviewLayout(
-                                data: e.value,
-                                index: e.key,
-                                list: appArray.reviewList))
-                            .toList()
+                          booking: value.pendingBooking,
+                        ),
+                        // const VSpace(Sizes.s20),
+                        // HeadingRowCommon(
+                        //         title: appFonts.review,
+                        //         onTap: () => route.pushNamed(
+                        //             context, routeName.serviceReview))
+                        //     .paddingOnly(bottom: Insets.i12),
+                        // ...appArray.reviewList
+                        //     .asMap()
+                        //     .entries
+                        //     .map((e) => ServiceReviewLayout(
+                        //         data: e.value,
+                        //         index: e.key,
+                        //         list: appArray.reviewList))
+                        //     .toList()
                       ]).paddingAll(Insets.i20))
                       .paddingOnly(bottom: Insets.i100),
                   Material(
-                      elevation: 20,
-                      child: BottomSheetButtonCommon(
-                              textOne: appFonts.reject,
-                              textTwo: appFonts.accept,
-                              clearTap: () => value.onRejectBooking(context),
-                              applyTap: () => value.onAcceptBooking(context))
-                          .paddingAll(Insets.i20)
-                          .decorated(color: appColor(context).appTheme.whiteBg))
+                    elevation: 20,
+                    child: BottomSheetButtonCommon(
+                            textOne: appFonts.reject,
+                            textTwo: appFonts.accept,
+                            clearTap: () => value.onRejectBooking(context),
+                            applyTap: () => value.onAcceptBooking(context))
+                        .paddingAll(Insets.i20)
+                        .decorated(color: appColor(context).appTheme.whiteBg),
+                  ),
                 ],
               )));
     });

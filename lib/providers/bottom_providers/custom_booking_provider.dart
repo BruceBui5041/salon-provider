@@ -160,8 +160,8 @@ class CustomBookingProvider with ChangeNotifier {
       }
 
       var res = await repo.getBookings(conditions: conditions);
-      bookingList = res ?? [];
-      freelancerBookingList = res ?? [];
+      bookingList = res;
+      freelancerBookingList = res;
       notifyListeners();
     } catch (e) {
       // Handle error if needed
@@ -300,8 +300,8 @@ class CustomBookingProvider with ChangeNotifier {
       }
 
       var res = await repo.getBookings(conditions: conditions);
-      bookingList = res ?? [];
-      freelancerBookingList = res ?? [];
+      bookingList = res;
+      freelancerBookingList = res;
       onInit();
 
       // Fetch categories
@@ -376,7 +376,7 @@ class CustomBookingProvider with ChangeNotifier {
       // } else {
       //   route.pushNamed(context, routeName.pendingBooking, arg: false);
       // }
-      route.pushNamed(context, routeName.customPendingBooking, arg: data);
+      route.pushNamed(context, routeName.customPendingBooking, arg: data.id);
     } else if (data.bookingStatus == BookingStatus.confirmed) {
       // if (isFreelancer) {
       //   route.pushNamed(context, routeName.assignBooking);

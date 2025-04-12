@@ -206,7 +206,7 @@ class _BookingDetails extends StatelessWidget {
         ),
         StatusRow(
           title: appFonts.payment,
-          title2: data?.price?.toCurrencyVnd() ?? '',
+          title2: data?.discountedPrice?.toCurrencyVnd() ?? '',
           style: appCss.dmDenseMedium12.textColor(theme.online),
         ),
       ],
