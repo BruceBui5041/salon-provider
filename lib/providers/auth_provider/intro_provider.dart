@@ -65,9 +65,15 @@ class IntroProvider with ChangeNotifier {
         });
   }
 
-  Future<void> checkCookie(BuildContext context) async {
+  Future<void> checkCookie(BuildContext context,
+      {Function()? onSuccess}) async {
     await CookieConfig.setCookieToApi(Uri.parse(ConstantApiConfig().getUrl));
-    Provider.of<LoginAsProvider>(context, listen: false).checkAuth(context);
+    Provider.of<LoginAsProvider>(context, listen: false).checkAuth(
+        onSuccess: () {
+      if (onSuccess != null) {
+        onSuccess();
+      }
+    });
     notifyListeners();
   }
 }

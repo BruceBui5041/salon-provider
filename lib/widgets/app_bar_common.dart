@@ -3,7 +3,8 @@ import '../config.dart';
 class AppBarCommon extends StatelessWidget implements PreferredSizeWidget {
   final String? title;
   final GestureTapCallback? onTap;
-  const AppBarCommon({super.key,this.title,this.onTap});
+  final List<Widget>? actions;
+  const AppBarCommon({super.key, this.title, this.onTap, this.actions});
 
   @override
   Widget build(BuildContext context) {
@@ -13,8 +14,12 @@ class AppBarCommon extends StatelessWidget implements PreferredSizeWidget {
             style: appCss.dmDenseBold18
                 .textColor(appColor(context).appTheme.darkText)),
         centerTitle: true,
-        leading: CommonArrow(arrow: rtl(context) ? eSvgAssets.arrowRight : eSvgAssets.arrowLeft,onTap: onTap ?? ()=> route.pop(context))
-            .padding(vertical: Insets.i8));
+        leading: CommonArrow(
+                arrow:
+                    rtl(context) ? eSvgAssets.arrowRight : eSvgAssets.arrowLeft,
+                onTap: onTap ?? () => route.pop(context))
+            .padding(vertical: Insets.i8),
+        actions: actions);
   }
 
   @override

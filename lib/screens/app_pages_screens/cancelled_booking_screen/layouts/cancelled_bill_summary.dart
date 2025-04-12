@@ -73,9 +73,9 @@ class CancelledBillSummary extends StatelessWidget {
                   price: hasDiscount
                       ? discountedPrice.toString().toCurrencyVnd()
                       : originalPrice.toString().toCurrencyVnd(),
-                  priceOriginal: hasDiscount
-                      ? originalPrice.toString().toCurrencyVnd()
-                      : null,
+                  // priceOriginal: hasDiscount
+                  //     ? originalPrice.toString().toCurrencyVnd()
+                  //     : null,
                   style: appCss.dmDenseMedium14
                       .textColor(appColor(context).appTheme.primary),
                 ).paddingOnly(bottom: Insets.i10),

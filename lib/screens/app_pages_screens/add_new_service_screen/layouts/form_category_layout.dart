@@ -136,10 +136,7 @@ class FormCategoryLayout extends StatelessWidget {
         // ).paddingSymmetric(horizontal: Insets.i20),
         CustomDropDownLayout<CategoryItem>(
           icon: eSvgAssets.subCategory,
-          value: (value.subCategoryResponse?.isNotEmpty ?? false) &&
-                  (value.subCategoryValue == null)
-              ? null
-              : value.subCategoryValue,
+          value: value.subCategoryValue,
           items: value.subCategoryResponse,
           hintText: "-- Select sub category --",
           onChanged: (CategoryItem? val) => value.onChangeSubCategory(val!),

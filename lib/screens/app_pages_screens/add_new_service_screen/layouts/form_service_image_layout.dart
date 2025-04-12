@@ -1,3 +1,4 @@
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/material.dart';
 import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/image_selection_layout.dart';
@@ -27,7 +28,7 @@ class FormServiceImageLayout extends StatelessWidget {
   /// Builds the service images section with image preview and upload functionality
   Widget _buildServiceImagesSection(
       BuildContext context, AddNewServiceProvider value) {
-    final imageCount = value.pathImage.length;
+    final imageCount = value.pathMainImageSystem.length;
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,11 +53,26 @@ class FormServiceImageLayout extends StatelessWidget {
           scrollDirection: Axis.horizontal,
           child: Row(
             children: [
+              if (value.pathMainImageUrl.isNotEmpty)
+                _buildImagePreview(context, value.pathMainImageUrl)
+                    .paddingOnly(right: Insets.i10),
               // if (value.image != null && value.image != "")
               //   _buildImagePreview(value.image!),
-              if (value.pathImage.isNotEmpty) ..._buildServiceImageList(value),
-              if (appArray.serviceImageList.length <= 4)
+              if (value.pathMainImageSystem.isNotEmpty)
+                ..._buildServiceImageList(value),
+              if (appArray.serviceImageList.length <= 10 &&
+                  value.isEdit == false)
                 AddNewBoxLayout(onAdd: () => value.onImagePick(context, false)),
+
+              if (value.isEdit == true && value.isDraft == true)
+                AddNewBoxLayout(onAdd: () {
+                  Navigator.of(context).push(MaterialPageRoute(
+                      builder: (context) => ImageSelectionLayout(
+                            serviceId: value.serviceSelected!.id!,
+                            isMultiSelect: false,
+                            onApply: (List<String> imageSelected) {},
+                          )));
+                }),
             ],
           ),
         ),
@@ -67,36 +83,49 @@ class FormServiceImageLayout extends StatelessWidget {
   }
 
   /// Builds a single image preview container
-  Widget _buildImagePreview(String imagePath) {
-    return ClipRRect(
-        borderRadius: SmoothBorderRadius(
-          cornerRadius: AppRadius.r8,
-          cornerSmoothing: 2,
-        ),
-        child: SizedBox(
-          height: Sizes.s75,
-          width: Sizes.s75,
-          // decoration: ShapeDecoration(
-          //   image: DecorationImage(
-          //     image: AssetImage(imagePath),
-          //     fit: BoxFit.cover,
-          //   ),
-          //   shape: RoundedRectangleBorder(
-          //     borderRadius: SmoothBorderRadius(
-          //       cornerRadius: AppRadius.r8,
-          //       cornerSmoothing: 1,
-          //     ),
-          //   ),
-          // ),
-          child: CacheImageWidget(
-            url: imagePath,
+  Widget _buildImagePreview(BuildContext context, String imagePath) {
+    return GestureDetector(
+      onTap: () async {
+        await showImageViewer(
+          context,
+          NetworkImage(imagePath),
+          // useSafeArea: true,
+          doubleTapZoomable: true,
+          // barrierColor: appColor(context).appTheme.primary,
+          backgroundColor: Colors.black.withOpacity(0.5),
+          swipeDismissible: true,
+        );
+      },
+      child: ClipRRect(
+          borderRadius: SmoothBorderRadius(
+            cornerRadius: AppRadius.r8,
+            cornerSmoothing: 2,
           ),
-        ));
+          child: SizedBox(
+            height: Sizes.s75,
+            width: Sizes.s75,
+            // decoration: ShapeDecoration(
+            //   image: DecorationImage(
+            //     image: AssetImage(imagePath),
+            //     fit: BoxFit.cover,
+            //   ),
+            //   shape: RoundedRectangleBorder(
+            //     borderRadius: SmoothBorderRadius(
+            //       cornerRadius: AppRadius.r8,
+            //       cornerSmoothing: 1,
+            //     ),
+            //   ),
+            // ),
+            child: CacheImageWidget(
+              url: imagePath,
+            ),
+          )),
+    );
   }
 
   /// Builds the list of service images with delete functionality
   List<Widget> _buildServiceImageList(AddNewServiceProvider value) {
-    return value.pathImage
+    return value.pathMainImageSystem
         .asMap()
         .entries
         .map((e) => AddServiceImageLayout(
@@ -128,26 +157,8 @@ class FormServiceImageLayout extends StatelessWidget {
         Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            (value.isDraft == true)
-                ? AddNewBoxLayout(onAdd: () {
-                    //show Dialog image
-                    Navigator.of(context).push(MaterialPageRoute(
-                        builder: (context) => ImageSelectionLayout(
-                              isMultiSelect: true,
-                              images: value.listAllImage,
-                              onApply: (List<String> imageSelected) {},
-                            )));
-                  })
-                : (value.pathImageService.isEmpty)
-                    ? Text("No image",
-                            style: appCss.dmDenseMedium14.textColor(
-                                appColor(context).appTheme.lightText))
-                        .paddingOnly(left: Insets.i5)
-                    : const SizedBox(),
             const VSpace(Sizes.s8),
-            (value.pathImageService.isNotEmpty)
-                ? _buildThumbnailPreview(context, value)
-                : const SizedBox(),
+            _buildThumbnailPreview(context, value),
             const VSpace(Sizes.s8),
             _buildMaxImageText(context),
           ],
@@ -160,9 +171,28 @@ class FormServiceImageLayout extends StatelessWidget {
   Widget _buildThumbnailPreview(
       BuildContext context, AddNewServiceProvider value) {
     List<Widget> _listImage = [];
+
+    _listImage.add(
+      (value.isDraft == true)
+          ? AddNewBoxLayout(onAdd: () {
+              //show Dialog image
+              Navigator.of(context).push(MaterialPageRoute(
+                  builder: (context) => ImageSelectionLayout(
+                        serviceId: value.serviceSelected!.id!,
+                        isMultiSelect: true,
+                        onApply: (List<String> imageSelected) {},
+                      )));
+            })
+          : (value.pathImageService.isEmpty)
+              ? Text("No image",
+                      style: appCss.dmDenseMedium14
+                          .textColor(appColor(context).appTheme.lightText))
+                  .paddingOnly(left: Insets.i5)
+              : const SizedBox(),
+    );
     if (value.pathImageService.isNotEmpty) {
       value.pathImageService.map((e) {
-        _listImage.add(_buildImagePreview(e));
+        _listImage.add(_buildImagePreview(context, e));
       }).toList();
     }
     // if (value.thumbImage != null && value.thumbImage != "") {

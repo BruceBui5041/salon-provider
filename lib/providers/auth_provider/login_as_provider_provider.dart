@@ -24,6 +24,7 @@ class LoginAsProvider with ChangeNotifier {
   void onLogin(BuildContext context, {Function()? onSuccess}) async {
     if (formKey.currentState!.validate()) {
       formKey.currentState!.save();
+
       final response = await repo.loginUser(phoneController.text);
       if (response != null) {
         if (response.data?.challenge == "otp") {
@@ -68,7 +69,7 @@ class LoginAsProvider with ChangeNotifier {
     }
   }
 
-  Future<void> checkAuth(BuildContext context) async {
+  Future<void> checkAuth({Function()? onSuccess}) async {
     var res = await repo.checkAuth();
     List<String> cookiesList = await StorageConfig.readList();
     if (cookiesList.isEmpty) {
@@ -78,7 +79,9 @@ class LoginAsProvider with ChangeNotifier {
 
     if (res != null) {
       await AuthConfig.setUserId(res.data.id);
-      route.pushNamed(context, routeName.dashboard);
+      if (onSuccess != null) {
+        onSuccess();
+      }
     }
   }
 }

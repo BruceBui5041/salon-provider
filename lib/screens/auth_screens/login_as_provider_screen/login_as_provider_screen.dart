@@ -13,7 +13,11 @@ class _LoginAsProviderScreenState extends State<LoginAsProviderScreen> {
   @override
   initState() {
     super.initState();
-    Provider.of<LoginAsProvider>(context, listen: false).checkAuth(context);
+    Provider.of<LoginAsProvider>(context, listen: false).checkAuth(
+      onSuccess: () {
+        route.pushNamed(context, routeName.dashboard);
+      },
+    );
   }
 
   @override

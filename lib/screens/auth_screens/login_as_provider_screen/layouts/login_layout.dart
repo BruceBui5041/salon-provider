@@ -77,6 +77,8 @@ class LoginLayout extends StatelessWidget {
                   title: appFonts.loginNow,
                   onTap: () {
                     if (isProvider == true) {
+                      Provider.of<VerifyOtpProvider>(context, listen: false)
+                          .setPhone(value.phoneController.text);
                       value.onLogin(context);
                     } else {
                       value2.onLogin(context);

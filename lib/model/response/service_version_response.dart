@@ -111,4 +111,15 @@ class ServiceVersion {
       _$ServiceVersionFromJson(json);
 
   Map<String, dynamic> toJson() => _$ServiceVersionToJson(this);
+
+  bool isDraft() {
+    return publishedDate == null;
+  }
+
+  String getPublishStatus() {
+    if (isDraft()) {
+      return "Draft";
+    }
+    return status ?? "";
+  }
 }

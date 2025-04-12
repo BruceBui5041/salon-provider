@@ -96,6 +96,8 @@ dependencies:
   diacritic: ^0.1.6
   flutter_image_compress: ^2.4.0
   path_provider: ^2.1.5
+  top_snackbar_flutter: ^3.2.0
+  easy_image_viewer: ^1.5.1
   # quill_html_editor: ^2.2.8
   # html_editor_enhanced: ^1.8.0
 

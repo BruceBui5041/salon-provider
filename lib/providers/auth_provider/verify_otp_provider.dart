@@ -8,6 +8,7 @@ import '../../config.dart';
 
 class VerifyOtpProvider with ChangeNotifier {
   var repo = getIt<VerifyOtpRepository>();
+
   TextEditingController otpController = TextEditingController();
   GlobalKey<FormState> otpKey = GlobalKey<FormState>();
 
@@ -31,6 +32,12 @@ class VerifyOtpProvider with ChangeNotifier {
     } catch (e) {
       print(e);
     }
+  }
+
+  //setPhone
+  setPhone(String phone) {
+    this.phone = phone;
+    notifyListeners();
   }
 
   defaultTheme(context) {

@@ -20,84 +20,80 @@ class AppTheme {
   Color green;
   Color online;
   Color red;
+  Color yellow;
   Color whiteColor;
-  Color pending,accepted,ongoing,pendingApproval,hold,assign;
+  Color pending, accepted, ongoing, pendingApproval, hold, assign;
 
   /// Default constructor
-  AppTheme(
-      {required this.isDark,
-        required this.primary,
-        required this.darkText,
-        required this.lightText,
-        required this.whiteBg,
-        required this.stroke,
-        required this.fieldCardBg,
-        required this.trans,
-        required this.online,
-        required this.red,
-        required this.green,
-        required this.whiteColor,
-        required this.pending,
-        required this.accepted,
-        required this.ongoing,
-        required this.pendingApproval,
-        required this.hold,
-        required this.assign,
-
-      });
-
-
-
+  AppTheme({
+    required this.isDark,
+    required this.primary,
+    required this.darkText,
+    required this.lightText,
+    required this.whiteBg,
+    required this.stroke,
+    required this.fieldCardBg,
+    required this.trans,
+    required this.online,
+    required this.red,
+    required this.green,
+    required this.whiteColor,
+    required this.pending,
+    required this.accepted,
+    required this.ongoing,
+    required this.pendingApproval,
+    required this.hold,
+    required this.assign,
+    required this.yellow,
+  });
 
   /// fromType factory constructor
   factory AppTheme.fromType(ThemeType t) {
     switch (t) {
       case ThemeType.light:
         return AppTheme(
-            isDark: false,
-            primary: const Color(0xff5465FF),
-            darkText: const Color(0xff00162E),
-            lightText: const Color(0xff808B97),
-            whiteBg: const Color(0xffFFFFFF),
-            stroke: const Color(0xffE5E8EA),
-            fieldCardBg: const Color(0xffF5F6F7),
-            whiteColor: const Color(0xffFFFFFF),
-            trans: Colors.transparent,
-            green: Colors.green,
-            online: Colors.green,
-            red: const Color(0xffFF4B4B),
-            pending: const Color(0xffFDB448),
-            accepted: const Color(0xff48BFFD),
-            ongoing: const Color(0xffFF7456),
-            pendingApproval: const Color(0xff5498FF),
-            hold: const Color(0xffFF1D53),
-            assign: const Color(0xffAD46FF),
-
-        );
-
-
-
-
-      case ThemeType.dark:
-        return AppTheme(
-            isDark: true,
-            primary: const Color(0xff5465FF),
-            darkText: const Color(0xffF1F1F1),
-            lightText: const Color(0xff808B97),
-            whiteBg: const Color(0xff1A1C28),
-            stroke: const Color(0xff3A3D48),
-            fieldCardBg: const Color(0xff262935),
-            whiteColor: const Color(0xffFFFFFF),
-            trans: Colors.transparent,
-            green: Colors.green,
-            online: Colors.green,
-            red: const Color(0xffFF4B4B),
+          isDark: false,
+          primary: const Color(0xff5465FF),
+          darkText: const Color(0xff00162E),
+          lightText: const Color(0xff808B97),
+          whiteBg: const Color(0xffFFFFFF),
+          stroke: const Color(0xffE5E8EA),
+          fieldCardBg: const Color(0xffF5F6F7),
+          whiteColor: const Color(0xffFFFFFF),
+          trans: Colors.transparent,
+          green: Colors.green,
+          online: Colors.green,
+          red: const Color(0xffFF4B4B),
           pending: const Color(0xffFDB448),
           accepted: const Color(0xff48BFFD),
           ongoing: const Color(0xffFF7456),
           pendingApproval: const Color(0xff5498FF),
           hold: const Color(0xffFF1D53),
           assign: const Color(0xffAD46FF),
+          yellow: const Color(0xffFFD700),
+        );
+
+      case ThemeType.dark:
+        return AppTheme(
+          isDark: true,
+          primary: const Color(0xff5465FF),
+          darkText: const Color(0xffF1F1F1),
+          lightText: const Color(0xff808B97),
+          whiteBg: const Color(0xff1A1C28),
+          stroke: const Color(0xff3A3D48),
+          fieldCardBg: const Color(0xff262935),
+          whiteColor: const Color(0xffFFFFFF),
+          trans: Colors.transparent,
+          green: Colors.green,
+          online: Colors.green,
+          red: const Color(0xffFF4B4B),
+          pending: const Color(0xffFDB448),
+          accepted: const Color(0xff48BFFD),
+          ongoing: const Color(0xffFF7456),
+          pendingApproval: const Color(0xff5498FF),
+          hold: const Color(0xffFF1D53),
+          assign: const Color(0xffAD46FF),
+          yellow: Colors.yellow,
         );
     }
   }
@@ -123,8 +119,6 @@ class AppTheme {
         surfaceVariant: whiteBg,
         onSecondary: primary,
         error: Colors.red,
-
-
       ),
     );
     return t.copyWith(

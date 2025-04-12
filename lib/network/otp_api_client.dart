@@ -4,13 +4,13 @@ import 'base_api_client.dart';
 
 part 'otp_api_client.g.dart';
 
-@RestApi(baseUrl: '/otp')
+@RestApi(baseUrl: '')
 abstract class OtpApiClient extends BaseApiClient {
   factory OtpApiClient(Dio dio, {String? baseUrl}) = _OtpApiClient;
 
-  @POST("/verify")
+  @POST("otp/verify")
   Future<dynamic> verifyOtp(@Body() Map<String, dynamic> requestBody);
 
-  @POST("/resend")
+  @POST("otp/resend")
   Future<dynamic> resendOtp();
 }

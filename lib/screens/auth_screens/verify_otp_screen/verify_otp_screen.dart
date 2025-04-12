@@ -20,7 +20,7 @@ class VerifyOtpScreen extends StatelessWidget {
                             title: appFonts.verifyOtp,
                             subTitle: appFonts.enterTheCode,
                             isNumber: true,
-                            number: "0936967064"),
+                            number: model.phone),
                         Stack(children: [
                           const FieldsBackground(),
                           Form(
@@ -40,8 +40,13 @@ class VerifyOtpScreen extends StatelessWidget {
                                         margin: Insets.i20,
                                         onTap: () {
                                           model.verifyOtp(onSucess: () {
-                                            route.pushReplacementNamed(
-                                                context, routeName.dashboard);
+                                            Provider.of<IntroProvider>(context,
+                                                    listen: false)
+                                                .checkCookie(context,
+                                                    onSuccess: () {
+                                              route.pushReplacementNamed(
+                                                  context, routeName.dashboard);
+                                            });
                                           });
                                           // route.pushNamed(
                                           //     context, routeName.resetPass);

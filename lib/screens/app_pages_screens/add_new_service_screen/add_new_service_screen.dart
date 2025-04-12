@@ -27,6 +27,19 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
     super.dispose();
   }
 
+  String getPublishStatus(AddNewServiceProvider value) {
+    if (value.serviceVersionSelected?.isDraft() == true) {
+      return "Draft";
+    }
+    if (value.serviceVersionSelected?.status ==
+            ServiceVersionStatus.inactive.name &&
+        value.serviceVersionSelected?.publishedDate != null) {
+      return "Published";
+    }
+
+    return "Publishing";
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AddNewServiceProvider>(builder: (context1, value, child) {
@@ -43,10 +56,21 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
             onPopInvoked: (bool? didPop) => value.onBack(),
             child: Scaffold(
               appBar: AppBarCommon(
-                  title: value.isEdit
-                      ? appFonts.editService
-                      : appFonts.addNewService,
-                  onTap: () => value.onBackButton(context)),
+                actions: [
+                  if (value.isEdit)
+                    Padding(
+                      padding: const EdgeInsets.only(right: Insets.i20),
+                      child: CommonArrow(
+                        arrow: eSvgAssets.filter,
+                        onTap: () => _buildModalBottomSheet(value),
+                      ),
+                    )
+                ],
+                title: value.isEdit
+                    ? appFonts.editService
+                    : appFonts.addNewService,
+                onTap: () => value.onBackButton(context),
+              ),
               body: value.isLoadingData == true
                   ? const Center(child: CircularProgressIndicator())
                   : value.isEdit
@@ -89,8 +113,26 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   }
 
   Widget _bodyEdit(AddNewServiceProvider value) {
-    return Column(children: [
+    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
       // _dropdownDraftService(context, value),
+      Padding(
+        padding: const EdgeInsets.only(bottom: Insets.i20),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            BookingStatusLayout(
+                title: getPublishStatus(value),
+                color: colorCondition(
+                    getPublishStatus(value).toLowerCase(), context)),
+            const SizedBox(width: Insets.i10),
+
+            Text(value.serviceSelected?.serviceVersion!.title ?? "",
+                style: appCss.dmDenseMedium16
+                    .textColor(appColor(context).appTheme.darkText)),
+            // if (value.serviceVersionSelected?.isDraft() == true)
+          ],
+        ),
+      ),
 
       Expanded(
         child: Stack(children: [
@@ -113,12 +155,12 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
           const FieldsBackground(),
           Column(
             children: [
-              if (value.isEdit)
-                Padding(
-                  padding: const EdgeInsets.only(
-                      top: Insets.i10, left: Insets.i20, right: Insets.i20),
-                  child: _dropdownDraftServiceCustom(value),
-                ),
+              // if (value.isEdit)
+              //   Padding(
+              //     padding: const EdgeInsets.only(
+              //         top: Insets.i10, left: Insets.i20, right: Insets.i20),
+              //     child: _dropdownDraftServiceCustom(value),
+              //   ),
               const SizedBox(height: Insets.i10),
               if (value.isEdit)
                 Padding(
@@ -157,6 +199,28 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
     return _btnNewDraft(value);
   }
 
+  void _buildModalBottomSheet(AddNewServiceProvider value) {
+    showModalBottomSheet(
+        context: context,
+        builder: (context) => Container(
+            padding: const EdgeInsets.only(
+                left: Insets.i20, right: Insets.i20, top: AppRadius.r10),
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: appColor(context).appTheme.fieldCardBg,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(AppRadius.r8),
+                topRight: Radius.circular(AppRadius.r8),
+              ),
+            ),
+            height: 300,
+            child: Column(
+              children: [
+                _dropdownDraftServiceCustom(value),
+              ],
+            )));
+  }
+
   Widget _dropdownDraftServiceCustom(AddNewServiceProvider value) {
     if (value.serviceVersionList!.isEmpty) {
       return const SizedBox();
@@ -169,111 +233,134 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
             .isNotEmpty ??
         false;
 
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          "Select version",
-          style: appCss.dmDenseMedium14
-              .textColor(appColor(context).appTheme.darkText),
-        ),
-        const SizedBox(height: Insets.i10),
-        Row(
-          children: [
-            Expanded(
-              child: DropdownButtonFormField<ServiceVersion>(
-                value: initServiceVersion ?? null,
-                decoration: InputDecoration(
-                  disabledBorder: const OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(AppRadius.r8)),
-                    borderSide: BorderSide.none,
-                  ),
-                  focusedBorder: const OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(AppRadius.r8)),
-                    borderSide: BorderSide.none,
-                  ),
-                  enabledBorder: const OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(AppRadius.r8)),
-                    borderSide: BorderSide.none,
-                  ),
-                  border: const OutlineInputBorder(
-                    borderRadius:
-                        BorderRadius.all(Radius.circular(AppRadius.r8)),
-                    borderSide: BorderSide.none,
-                    // borderSide: BorderSide.none,
+    return GestureDetector(
+      onTap: () {
+        showModalBottomSheet(
+            context: context,
+            builder: (context) => Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: appColor(context).appTheme.whiteBg,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(AppRadius.r8),
+                    topRight: Radius.circular(AppRadius.r8),
                   ),
                 ),
-                hint: const Text('Select a draft service'),
-                isExpanded: true,
-                style: appCss.dmDenseMedium14
-                    .textColor(appColor(context).appTheme.lightText),
-                items: value.serviceVersionList?.map((ServiceVersion service) {
-                      String draftText = "";
+                height: 300,
+                child: Column(
+                  children: [
+                    Text("Select version"),
+                  ],
+                )));
+      },
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            "Select version",
+            style: appCss.dmDenseMedium14
+                .textColor(appColor(context).appTheme.darkText),
+          ),
+          const SizedBox(height: Insets.i10),
+          Row(
+            children: [
+              Expanded(
+                child: DropdownButtonFormField<ServiceVersion>(
+                  value: initServiceVersion ?? null,
+                  decoration: InputDecoration(
+                    disabledBorder: const OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(AppRadius.r8)),
+                      borderSide: BorderSide.none,
+                    ),
+                    focusedBorder: const OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(AppRadius.r8)),
+                      borderSide: BorderSide.none,
+                    ),
+                    enabledBorder: const OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(AppRadius.r8)),
+                      borderSide: BorderSide.none,
+                    ),
+                    border: const OutlineInputBorder(
+                      borderRadius:
+                          BorderRadius.all(Radius.circular(AppRadius.r8)),
+                      borderSide: BorderSide.none,
+                      // borderSide: BorderSide.none,
+                    ),
+                  ),
+                  hint: const Text('Select a draft service'),
+                  isExpanded: true,
+                  style: appCss.dmDenseMedium14
+                      .textColor(appColor(context).appTheme.lightText),
+                  items: value.serviceVersionList
+                          ?.map((ServiceVersion service) {
+                        String draftText = "";
 
-                      if (service.publishedDate == null) {
-                        draftText = "(Draft)";
-                      } else {
-                        draftText = "";
-                      }
-                      return DropdownMenuItem<ServiceVersion>(
-                        key: ValueKey(service.id),
-                        value: service,
-                        child: Row(
-                          children: [
-                            Expanded(
-                              child: Text(
-                                "$draftText ${service.title} (${service.id})",
-                                style: appCss.dmDenseMedium14.textColor(
-                                    appColor(context).appTheme.darkText),
-                                overflow: TextOverflow.ellipsis,
-                                maxLines: 1,
-                                softWrap: true,
-                                textAlign: TextAlign.start,
-                                textWidthBasis: TextWidthBasis.parent,
-                                textHeightBehavior: TextHeightBehavior(
-                                  leadingDistribution:
-                                      TextLeadingDistribution.proportional,
+                        if (service.isDraft()) {
+                          draftText = "(Draft)";
+                        } else {
+                          draftText = "";
+                        }
+                        return DropdownMenuItem<ServiceVersion>(
+                          key: ValueKey(service.id),
+                          value: service,
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
+                                  "$draftText ${service.title} (${service.id})",
+                                  style: appCss.dmDenseMedium14.textColor(
+                                      appColor(context).appTheme.darkText),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 1,
+                                  softWrap: true,
+                                  textAlign: TextAlign.start,
+                                  textWidthBasis: TextWidthBasis.parent,
+                                  textHeightBehavior: TextHeightBehavior(
+                                    leadingDistribution:
+                                        TextLeadingDistribution.proportional,
+                                  ),
                                 ),
                               ),
-                            ),
-                            const SizedBox(width: Insets.i10),
-                            if (service.status ==
-                                ServiceVersionStatus.active.name)
-                              Icon(Icons.check_circle, color: Colors.green),
-                          ],
-                        ),
-                      );
-                    }).toList() ??
-                    [],
-                onChanged: (ServiceVersion? newValue) {
-                  if (newValue != null) {
-                    value.onDraftSelected(newValue);
-                    value.setIsDraft(newValue.publishedDate == null);
-                  }
-                },
-              ).decorated(
-                color: appColor(context).appTheme.whiteBg,
-                borderRadius: BorderRadius.circular(AppRadius.r8),
+                              const SizedBox(width: Insets.i10),
+                              if (service.status ==
+                                  ServiceVersionStatus.active.name)
+                                Icon(Icons.check_circle, color: Colors.green),
+                            ],
+                          ),
+                        );
+                      }).toList() ??
+                      [],
+                  onChanged: (ServiceVersion? newValue) {
+                    if (newValue != null) {
+                      value.onDraftSelected(newValue);
+                      value.setIsDraft(newValue.publishedDate == null);
+                      Navigator.of(context).pop();
+                    }
+                  },
+                ).decorated(
+                  color: appColor(context).appTheme.whiteBg,
+                  borderRadius: BorderRadius.circular(AppRadius.r8),
+                ),
               ),
-            ),
-            // GestureDetector(
-            //   onTap: () {
-            //     value.fetchCurrentService();
-            //   },
-            //   child: Icon(Icons.refresh,
-            //       color: appColor(context).appTheme.lightText),
-            // ),
-          ],
-        ),
-        // const SizedBox(width: Insets.i4),
-        if (value.serviceVersionSelected?.publishedDate != null &&
-            value.serviceVersionSelected?.status ==
-                ServiceVersionStatus.active.name)
-          if (!isDraftExist) _btnNewDraft(value),
-      ],
+              // GestureDetector(
+              //   onTap: () {
+              //     value.fetchCurrentService();
+              //   },
+              //   child: Icon(Icons.refresh,
+              //       color: appColor(context).appTheme.lightText),
+              // ),
+            ],
+          ),
+          // const SizedBox(width: Insets.i4),
+          if (value.serviceVersionSelected?.publishedDate != null &&
+              value.serviceVersionSelected?.status ==
+                  ServiceVersionStatus.active.name)
+            if (!isDraftExist) _btnNewDraft(value),
+        ],
+      ),
     );
   }
 

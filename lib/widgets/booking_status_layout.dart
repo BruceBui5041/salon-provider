@@ -10,15 +10,20 @@ class BookingStatusLayout extends StatelessWidget {
 
     switch (title?.toLowerCase()) {
       case 'pending':
+      case 'published':
         return appColor(context).appTheme.primary;
+
       case 'success':
       case 'completed':
       case 'paid':
+      case 'publishing':
         return appColor(context).appTheme.green;
       case 'failed':
       case 'cancelled':
       case 'declined':
         return appColor(context).appTheme.red;
+      case 'draft':
+        return appColor(context).appTheme.yellow;
       default:
         return color ?? appColor(context).appTheme.online;
     }

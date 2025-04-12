@@ -87,10 +87,13 @@ class AddNewServiceProvider with ChangeNotifier {
 
   // Category Related
   List<CategoryItem>? categoryResponse = [];
-  List<CategoryItem>? subCategoryResponse;
+  List<CategoryItem>? subCategoryResponse = [];
   CategoryItem? categoryItem;
-  List<String> pathImage = [];
+  List<String> pathMainImageSystem = [];
+  String pathMainImageUrl = "";
   List<String> pathImageService = [];
+  String? pathMainImageId;
+
   List<ImageResponse> listAllImage = [];
   List<ImageResponse> listImageServiceSelected = [];
   // Image Handling Methods
@@ -115,10 +118,13 @@ class AddNewServiceProvider with ChangeNotifier {
     featuredPoints.clear();
     categoryValue = null;
     subCategoryValue = null;
+    pathMainImageUrl = "";
+    pathMainImageSystem = [];
+    pathImageService = [];
 
     subCategoryResponse = [];
     categoryResponse = [];
-    pathImage = [];
+    pathMainImageSystem = [];
     notifyListeners();
   }
 
@@ -153,9 +159,16 @@ class AddNewServiceProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onApplyImage(List<ImageResponse> imageSelected, {Function()? callBack}) {
-    listImageServiceSelected = imageSelected;
-    pathImageService = imageSelected.map((e) => e.url ?? "").toList();
+  onApplyImage(List<ImageResponse> imageSelected,
+      {bool isMainImage = false, Function()? callBack}) {
+    if (isMainImage) {
+      pathMainImageId = imageSelected.first.id;
+      pathMainImageUrl = imageSelected.first.url ?? "";
+    } else {
+      listImageServiceSelected = imageSelected;
+
+      pathImageService = imageSelected.map((e) => e.url ?? "").toList();
+    }
     notifyListeners();
     if (callBack != null) {
       callBack();
@@ -163,19 +176,6 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   Future<void> addService() async {
-    MultipartFile? image;
-    if (thumbFile != null) {
-      image = await MultipartFile.fromFile(
-        thumbFile!.path,
-        filename: thumbFile!.path.split('/').last,
-      );
-    }
-
-    var mainImage = await MultipartFile.fromFile(
-      imageFile!.path,
-      filename: imageFile!.path.split('/').last,
-    );
-
     try {
       FormData formData = FormData.fromMap({
         "json": json.encode({
@@ -187,12 +187,12 @@ class AddNewServiceProvider with ChangeNotifier {
             "sub_category_id": subCategoryValue!.id,
             "price": amount.text,
             "discounted_price": discount.text,
-            "duration": int.parse(duration.text),
-            "main_image_id": "0"
+            "duration": int.tryParse(durationValue ?? "0") ?? 0,
+            // "main_image_id": null
           }
         }),
-        if (pathImage.isNotEmpty)
-          "images": pathImage
+        if (pathMainImageSystem.isNotEmpty)
+          "images": pathMainImageSystem
               .map((e) =>
                   MultipartFile.fromFileSync(e, filename: e.split('/').last))
               .toList(),
@@ -235,6 +235,14 @@ class AddNewServiceProvider with ChangeNotifier {
     }
   }
 
+  void uploadMainImage(XFile image, {Function()? callBack}) {
+    pathMainImageSystem = [image.path];
+    notifyListeners();
+    if (callBack != null) {
+      callBack();
+    }
+  }
+
   Future<void> updateServiceCraft({Function()? callBack}) async {
     MultipartFile? image;
     if (thumbFile != null) {
@@ -267,7 +275,7 @@ class AddNewServiceProvider with ChangeNotifier {
         "price": int.parse(priceText),
         "discounted_price": int.parse(discountText),
         "duration": int.parse(duration.text),
-        "main_image_id": null,
+        "main_image_id": pathMainImageId,
         "service_men_ids": [],
         "published_date": null,
         "version_images": listImageServiceSelected
@@ -280,22 +288,23 @@ class AddNewServiceProvider with ChangeNotifier {
     FormData formData = FormData.fromMap({
       "json": json.encode(jsonBody),
       // if (image != null) "images": [image],
-      if (pathImage.isNotEmpty)
-        "images": pathImage
+      if (pathMainImageSystem.isNotEmpty)
+        "images": pathMainImageSystem
             .map((e) =>
                 MultipartFile.fromFileSync(e, filename: e.split('/').last))
             .toList(),
     });
 
     try {
-      var res = await ApiConfig().dio.put(
+      await ApiConfig().dio.put(
             "/service/${serviceSelected!.id}",
             data: formData,
             options: Options(
               contentType: "multipart/form-data",
             ),
           );
-      print(res.data);
+      // update xong phải clear file hình
+      pathMainImageSystem = [];
       if (callBack != null) {
         callBack();
       }
@@ -350,7 +359,7 @@ class AddNewServiceProvider with ChangeNotifier {
   // Initialization Methods
   onReady(context) async {
     isLoadingData = true;
-    pathImage = [];
+    pathMainImageSystem = [];
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
     if (data != "") {
       currentService = data;
@@ -388,6 +397,9 @@ class AddNewServiceProvider with ChangeNotifier {
             .where(
                 (element) => element.name == currentServiceTmp["sub_category"])
             .toList();
+        // subCategoryValue = subCategory.isNotEmpty
+        //     ? subCategory.first
+        //     : subCategoryResponse?.first;
       }
 
       showDraft = currentServiceTmp["showDraft"] ?? false;
@@ -397,7 +409,11 @@ class AddNewServiceProvider with ChangeNotifier {
       serviceName.text = serviceInit.serviceVersion?.title ?? "";
       categoryValue =
           (category != null && category.isNotEmpty) ? category.first : null;
-      subCategoryValue = (subCategory.isNotEmpty) ? subCategory.first : null;
+      subCategoryValue = (subCategory.isNotEmpty)
+          ? subCategory.first
+          : (subCategoryResponse != null && subCategoryResponse!.isNotEmpty)
+              ? subCategoryResponse!.first
+              : null;
       featuredPoints.text = serviceInit.serviceVersion?.description ?? "";
       duration.text = (serviceInit.serviceVersion?.duration ?? "15").toString();
       amount.text =
@@ -410,6 +426,14 @@ class AddNewServiceProvider with ChangeNotifier {
 
       serviceVersionSelected = serviceSelected?.serviceVersion;
       isDraft = serviceVersionSelected?.publishedDate == null;
+
+      pathImageService = serviceInit.serviceVersion?.images
+              ?.map((e) => e.url ?? "")
+              .toList() ??
+          [];
+
+      pathMainImageUrl =
+          serviceInit.serviceVersion?.mainImageResponse?.url ?? "";
 
       await Future.delayed(const Duration(milliseconds: 500));
     }
@@ -452,6 +476,9 @@ class AddNewServiceProvider with ChangeNotifier {
     amount.text = (serviceVersion.price ?? "0").toString().toCurrencyVnd();
     featuredPoints.text = serviceVersion.description ?? "";
     isSwitch = serviceVersion.status == "active";
+    pathMainImageId = serviceVersion.mainImageResponse?.id ?? "";
+    pathMainImageUrl = serviceVersion.mainImageResponse?.url ?? "";
+    listImageServiceSelected = serviceVersion.images ?? [];
     notifyListeners();
   }
 
@@ -495,6 +522,12 @@ class AddNewServiceProvider with ChangeNotifier {
     taxIndex = null;
     featuredPoints.text = "";
     isSwitch = false;
+    pathMainImageUrl = "";
+    pathMainImageSystem = [];
+    pathImageService = [];
+    listAllImage = [];
+    listImageServiceSelected = [];
+    serviceVersionList = [];
     notifyListeners();
   }
 
@@ -562,7 +595,7 @@ class AddNewServiceProvider with ChangeNotifier {
           getImage(context, ImageSource.gallery, isThumbnail);
         } else {
           getImage(context, ImageSource.gallery, isThumbnail)
-              .then((value) => pathImage.add(imageFile!.path));
+              .then((value) => pathMainImageSystem.add(imageFile!.path));
         }
         notifyListeners();
       } else {
@@ -570,7 +603,7 @@ class AddNewServiceProvider with ChangeNotifier {
           getImage(context, ImageSource.camera, isThumbnail);
         } else {
           getImage(context, ImageSource.camera, isThumbnail)
-              .then((value) => pathImage.add(imageFile!.path));
+              .then((value) => pathMainImageSystem.add(imageFile!.path));
         }
         notifyListeners();
       }
