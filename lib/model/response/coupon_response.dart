@@ -6,84 +6,51 @@ import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
+import 'package:salon_provider/model/response/base_response.dart';
+
 part 'coupon_response.g.dart';
 
-CouponResponse couponResponseFromJson(String str) =>
-    CouponResponse.fromJson(json.decode(str));
-
-String couponResponseToJson(CouponResponse data) => json.encode(data.toJson());
-
 @JsonSerializable()
-class CouponResponse {
-  @JsonKey(name: "data")
-  final List<ItemCoupon> data;
-
-  CouponResponse({
-    required this.data,
-  });
-
-  CouponResponse copyWith({
-    List<ItemCoupon>? data,
-  }) =>
-      CouponResponse(
-        data: data ?? this.data,
-      );
-
-  factory CouponResponse.fromJson(Map<String, dynamic> json) =>
-      _$CouponResponseFromJson(json);
-
-  Map<String, dynamic> toJson() => _$CouponResponseToJson(this);
-}
-
-@JsonSerializable()
-class ItemCoupon {
-  @JsonKey(name: "id")
-  final String id;
-  @JsonKey(name: "status")
-  final String status;
-  @JsonKey(name: "created_at")
-  final DateTime createdAt;
-  @JsonKey(name: "updated_at")
-  final DateTime updatedAt;
+class Coupon extends CommonResponse {
   @JsonKey(name: "code")
-  final String code;
+  final String? code;
   @JsonKey(name: "description")
-  final String description;
+  final String? description;
   @JsonKey(name: "discount_type")
-  final String discountType;
+  final String? discountType;
   @JsonKey(name: "discount_value")
-  final String discountValue;
+  final String? discountValue;
   @JsonKey(name: "min_spend")
-  final String minSpend;
+  final String? minSpend;
   @JsonKey(name: "max_discount")
-  final String maxDiscount;
+  final String? maxDiscount;
   @JsonKey(name: "start_date")
-  final DateTime startDate;
+  final DateTime? startDate;
   @JsonKey(name: "end_date")
-  final DateTime endDate;
+  final DateTime? endDate;
   @JsonKey(name: "usage_limit")
-  final int usageLimit;
+  final int? usageLimit;
   @JsonKey(name: "usage_count")
-  final int usageCount;
+  final int? usageCount;
 
-  ItemCoupon({
-    required this.id,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.code,
-    required this.description,
-    required this.discountType,
-    required this.discountValue,
-    required this.minSpend,
-    required this.maxDiscount,
-    required this.startDate,
-    required this.endDate,
-    required this.usageLimit,
-    required this.usageCount,
+  Coupon({
+    super.id,
+    super.status,
+    super.createdAt,
+    super.updatedAt,
+    this.code,
+    this.description,
+    this.discountType,
+    this.discountValue,
+    this.minSpend,
+    this.maxDiscount,
+    this.startDate,
+    this.endDate,
+    this.usageLimit,
+    this.usageCount,
   });
 
-  ItemCoupon copyWith({
+  Coupon copyWith({
     String? id,
     String? status,
     DateTime? createdAt,
@@ -99,7 +66,7 @@ class ItemCoupon {
     int? usageLimit,
     int? usageCount,
   }) =>
-      ItemCoupon(
+      Coupon(
         id: id ?? this.id,
         status: status ?? this.status,
         createdAt: createdAt ?? this.createdAt,
@@ -116,8 +83,7 @@ class ItemCoupon {
         usageCount: usageCount ?? this.usageCount,
       );
 
-  factory ItemCoupon.fromJson(Map<String, dynamic> json) =>
-      _$ItemCouponFromJson(json);
+  factory Coupon.fromJson(Map<String, dynamic> json) => _$CouponFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ItemCouponToJson(this);
+  Map<String, dynamic> toJson() => _$CouponToJson(this);
 }

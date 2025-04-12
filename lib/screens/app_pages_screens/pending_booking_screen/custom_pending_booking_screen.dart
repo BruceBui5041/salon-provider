@@ -36,7 +36,8 @@ class CustomPendingBookingScreen extends StatelessWidget {
                                 style: appCss.dmDenseMedium14.textColor(
                                     appColor(context).appTheme.darkText))
                             .paddingOnly(top: Insets.i25, bottom: Insets.i10),
-                        const CancelledBillSummary(),
+                        CancelledBillSummary(
+                            booking: value.pendingBookingModel),
                         const VSpace(Sizes.s20),
                         HeadingRowCommon(
                                 title: appFonts.review,

@@ -1,12 +1,12 @@
 import 'package:salon_provider/config.dart';
-import '../../model/pending_booking_model.dart';
+import '../../model/response/booking_response.dart';
 
 class CancelledBookingProvider with ChangeNotifier {
-  PendingBookingModel? cancelledBookingModel;
+  Booking? cancelledBookingModel;
 
   onReady(context) {
-    cancelledBookingModel =
-        PendingBookingModel.fromJson(appArray.cancelledBookingList);
+    // TODO: Update this to use proper booking data
+    cancelledBookingModel = Booking.fromJson(appArray.cancelledBookingList);
     notifyListeners();
   }
 

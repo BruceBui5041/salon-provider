@@ -50,7 +50,7 @@ class AppRoute {
     routeName.providerReview: (p0) => ProviderReviewScreen(),
     routeName.planDetails: (p0) => PlanDetailsScreen(),
     routeName.subscriptionPlan: (p0) => SubscriptionPlanScreen(),
-    routeName.pendingBooking: (p0) => PendingBookingScreen(),
+    routeName.pendingBooking: (p0) => CustomPendingBookingScreen(),
     routeName.acceptedBooking: (p0) => AcceptBookingScreen(),
     routeName.bookingServicemenList: (p0) => BookingServicemenListScreen(),
     routeName.chat: (p0) => ChatScreen(),

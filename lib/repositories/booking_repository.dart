@@ -62,6 +62,8 @@ class BookingRepository extends RepositoryConfig {
         FieldItem(field: "payment.payment_qr"),
         FieldItem(field: "service_man"),
         FieldItem(field: "service_versions.category"),
+        FieldItem(field: "coupon"),
+        FieldItem(field: "commission"),
       ],
       orderBy: "id desc",
       limit: limit,

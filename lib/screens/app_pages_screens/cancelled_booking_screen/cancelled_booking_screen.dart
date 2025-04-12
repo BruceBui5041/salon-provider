@@ -1,5 +1,5 @@
-
 import '../../../config.dart';
+import '../../app_pages_screens/pending_booking_screen/layouts/custom_status_detail_layout.dart';
 
 class CancelledBookingScreen extends StatelessWidget {
   const CancelledBookingScreen({super.key});
@@ -19,21 +19,32 @@ class CancelledBookingScreen extends StatelessWidget {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            StatusDetailLayout(
-                                onChat: () => route.pushNamed(context, routeName.chat),
-                                data: value.cancelledBookingModel,
-                                onMore: ()=> route.pushNamed(context, routeName.servicemanDetail),
-                                onTapStatus: () => value.showBookingStatus(context)),
-                            Text(language(context, appFonts.billSummary),
-                                style: appCss.dmDenseMedium14
-                                    .textColor(appColor(context).appTheme.darkText))
-                                .paddingOnly(top: Insets.i25, bottom: Insets.i10),
-                            const CancelledBillSummary(),
-                            const VSpace(Sizes.s20),
-                          ]).padding(horizontal: Insets.i20,top: Insets.i20,bottom: Insets.i100)),
+                        CustomStatusDetailLayout(
+                            onChat: () =>
+                                route.pushNamed(context, routeName.chat),
+                            data: value.cancelledBookingModel,
+                            onMore: () => route.pushNamed(
+                                context, routeName.servicemanDetail),
+                            onTapStatus: () =>
+                                value.showBookingStatus(context)),
+                        Text(language(context, appFonts.billSummary),
+                                style: appCss.dmDenseMedium14.textColor(
+                                    appColor(context).appTheme.darkText))
+                            .paddingOnly(top: Insets.i25, bottom: Insets.i10),
+                        CancelledBillSummary(
+                            booking: value.cancelledBookingModel),
+                        const VSpace(Sizes.s20),
+                      ]).padding(
+                          horizontal: Insets.i20,
+                          top: Insets.i20,
+                          bottom: Insets.i100)),
                   Material(
                       elevation: 20,
-                      child: AssignStatusLayout(status: appFonts.reason, title: isFreelancer ? appFonts.youChangedTimeSlot : appFonts.servicemenIsNotAvailable))
+                      child: AssignStatusLayout(
+                          status: appFonts.reason,
+                          title: isFreelancer
+                              ? appFonts.youChangedTimeSlot
+                              : appFonts.servicemenIsNotAvailable))
                 ],
               )));
     });

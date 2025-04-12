@@ -149,7 +149,7 @@ export '../screens/bottom_screens/booking_screen/layouts/booking_status_layout.d
 export '../screens/app_pages_screens/pending_booking_screen/layouts/status_steps_layout.dart';
 export '../screens/app_pages_screens/pending_booking_screen/layouts/bill_row_common.dart';
 export '../screens/app_pages_screens/pending_booking_screen/layouts/status_detail_layout.dart';
-export '../screens/app_pages_screens/pending_booking_screen/pending_booking_screen.dart';
+export '../screens/app_pages_screens/pending_booking_screen/custom_pending_booking_screen.dart';
 export '../screens/app_pages_screens/accept_booking_screen/accept_booking.dart';
 export '../screens/app_pages_screens/pending_booking_screen/layouts/booking_status_dialog.dart';
 export '../screens/app_pages_screens/accept_booking_screen/layouts/select_servicemen_sheet.dart';
