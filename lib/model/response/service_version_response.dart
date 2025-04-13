@@ -47,7 +47,7 @@ class ServiceVersion {
   @JsonKey(name: "category")
   final CategoryItem? categoryResponse;
   @JsonKey(name: "main_image")
-  final MainImageResponse? mainImageResponse;
+  final ImageResponse? mainImageResponse;
   @JsonKey(name: "service")
   final ItemService? service;
   @JsonKey(name: "images")
@@ -85,7 +85,7 @@ class ServiceVersion {
     DateTime? publishedDate,
     CategoryItem? categoryResponse,
     ImageResponse? imageResponse,
-    MainImageResponse? mainImageResponse,
+    ImageResponse? mainImageResponse,
     ItemService? service,
     List<ImageResponse>? images,
   }) =>

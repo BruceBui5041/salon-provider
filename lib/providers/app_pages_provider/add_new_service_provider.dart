@@ -334,7 +334,8 @@ class AddNewServiceProvider with ChangeNotifier {
         "price": int.parse(priceText),
         "discounted_price": int.parse(discountText),
         "duration": int.parse(duration.text),
-        "main_image_id": pathMainImageId,
+        "main_image_id":
+            pathMainImageId?.isEmpty ?? true ? null : pathMainImageId,
         "service_men_ids": [],
         "published_date": null,
         "version_images": listImageServiceSelected

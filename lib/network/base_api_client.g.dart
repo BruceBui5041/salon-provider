@@ -9,9 +9,7 @@ part of 'base_api_client.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
 class _BaseApiClient implements BaseApiClient {
-  _BaseApiClient(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= '/backend';
-  }
+  _BaseApiClient(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 

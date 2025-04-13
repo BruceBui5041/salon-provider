@@ -17,20 +17,21 @@ import '../../../../config.dart';
 /// includes an apply button to confirm the selection.
 class ImageSelectionLayout extends StatefulWidget {
   final bool isMultiSelect;
-  final List<int>? selectedIndices;
   final Function(int)? onImageSelected;
   final Function(List<String>)? onApply;
   final List<String>? imageSelected;
   final String? imageId;
   final String serviceId;
+  final String idServiceVersionSelected;
   const ImageSelectionLayout({
     super.key,
     this.isMultiSelect = false,
-    this.selectedIndices,
+    // this.selectedIndices,
     this.onImageSelected,
     this.onApply,
     this.imageSelected,
     this.imageId,
+    required this.idServiceVersionSelected,
     required this.serviceId,
   });
 
@@ -39,18 +40,16 @@ class ImageSelectionLayout extends StatefulWidget {
 }
 
 class _ImageSelectionLayoutState extends State<ImageSelectionLayout> {
-  List<ImageResponse> imageSelected = [];
   ImageResponse? groupValueImage;
   @override
   void initState() {
-    imageSelected = [];
     initData();
     super.initState();
   }
 
   Future<void> initData() async {
     Provider.of<ImageServiceProvider>(context, listen: false)
-        .fetchServiceById(widget.serviceId);
+        .fetchServiceById(widget.serviceId, widget.idServiceVersionSelected);
   }
 
   @override
@@ -79,6 +78,13 @@ class _ImageSelectionLayoutState extends State<ImageSelectionLayout> {
     List<Widget> listImage = [];
     listImage.add(_buildAddNewImage(context));
     for (int index = 0; index < value.imageService.length; index++) {
+      var listSelectedMultiple = value.imageServiceSelected
+          .where((element) => element.id == value.imageService[index].id)
+          .toList();
+      var listSelectedSingle = value.imageServiceSelectedVersionSingle
+          .where((element) => element.id == value.imageService[index].id)
+          .toList();
+
       listImage.add(SizedBox(
         width: itemWidth,
         height: itemHeight,
@@ -86,39 +92,31 @@ class _ImageSelectionLayoutState extends State<ImageSelectionLayout> {
             ? SelectableImageItemMultiSelected(
                 idImage: value.imageService[index].id ?? '',
                 image: value.imageService[index],
-                isSelected: widget.selectedIndices?.contains(index) ?? false,
+                // isSelected: widget.selectedIndices?.contains(index) ?? false,
+                isSelected: listSelectedMultiple.isNotEmpty,
                 isMultiSelect: widget.isMultiSelect,
-                selectedValue: widget.selectedIndices?.isNotEmpty == true
-                    ? widget.selectedIndices!.first
-                    : -1,
+
                 index: index,
                 onSelected: (ImageResponse image) {
-                  setState(() {
-                    imageSelected.add(image);
-                  });
-                  log(imageSelected.length.toString());
+                  Provider.of<ImageServiceProvider>(context, listen: false)
+                      .setImageServiceSelectedVersionMultiple(
+                    image,
+                  );
                 },
                 onRemove: (ImageResponse image) {
-                  setState(() {
-                    imageSelected.remove(image);
-                  });
-                  log(imageSelected.length.toString());
+                  Provider.of<ImageServiceProvider>(context, listen: false)
+                      .removeImageServiceSelectedVersionMultiple(image);
                 },
               )
             : SelectableImageItemSingleSelected(
                 groupValue: value.groupValueImage,
                 idImage: value.imageService[index].id ?? '',
                 image: value.imageService[index],
-                isSelected: widget.selectedIndices?.contains(index) ?? false,
-                selectedValue: widget.selectedIndices?.isNotEmpty == true
-                    ? widget.selectedIndices!.first
-                    : -1,
+                isSelected: listSelectedSingle.isNotEmpty,
                 index: index,
                 onSelected: (ImageResponse image) {
-                  // log("imageSelected: ${image.id}");
-                  // imageSelected.clear();
-
-                  // imageSelected.add(image);
+                  Provider.of<ImageServiceProvider>(context, listen: false)
+                      .setGroupValueImage(image);
                 },
               ),
       ));
@@ -152,7 +150,8 @@ class _ImageSelectionLayoutState extends State<ImageSelectionLayout> {
             Provider.of<AddNewServiceProvider>(context, listen: false)
                 .updateServiceCraft(callBack: () {
               Provider.of<ImageServiceProvider>(context, listen: false)
-                  .fetchServiceById(widget.serviceId);
+                  .fetchServiceById(
+                      widget.serviceId, widget.idServiceVersionSelected);
             });
           });
         });
@@ -217,6 +216,9 @@ class _ImageSelectionLayoutState extends State<ImageSelectionLayout> {
             title: language(context, appFonts.apply),
             onTap: () {
               if (widget.isMultiSelect) {
+                var imageSelected =
+                    Provider.of<ImageServiceProvider>(context, listen: false)
+                        .imageServiceSelectedVersionMultiple;
                 Provider.of<AddNewServiceProvider>(context, listen: false)
                     .onApplyImage(imageSelected, isMainImage: false,
                         callBack: () {
@@ -256,7 +258,6 @@ class SelectableImageItemMultiSelected extends StatefulWidget {
   final ImageResponse image;
   final bool isSelected;
   final bool isMultiSelect;
-  final int selectedValue;
   final int index;
   final String idImage;
   final Function(ImageResponse image) onSelected;
@@ -266,7 +267,6 @@ class SelectableImageItemMultiSelected extends StatefulWidget {
     required this.image,
     required this.isSelected,
     required this.isMultiSelect,
-    required this.selectedValue,
     required this.index,
     required this.idImage,
     required this.onSelected,
@@ -281,6 +281,13 @@ class SelectableImageItemMultiSelected extends StatefulWidget {
 class SelectableImageItemMultiSelectedState
     extends State<SelectableImageItemMultiSelected> {
   bool isSelected = false;
+
+  @override
+  void initState() {
+    isSelected = widget.isSelected;
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = appColor(context).appTheme;
@@ -364,7 +371,6 @@ class SelectableImageItemSingleSelected extends StatefulWidget {
   final ImageResponse image;
   final ImageResponse? groupValue;
   final bool isSelected;
-  final int selectedValue;
   final int index;
   final String idImage;
   final Function(ImageResponse image)? onSelected;
@@ -374,7 +380,6 @@ class SelectableImageItemSingleSelected extends StatefulWidget {
     super.key,
     required this.image,
     required this.isSelected,
-    required this.selectedValue,
     required this.index,
     required this.idImage,
     this.onSelected,
@@ -390,6 +395,12 @@ class SelectableImageItemSingleSelected extends StatefulWidget {
 class SelectableImageItemSingleSelectedState
     extends State<SelectableImageItemSingleSelected> {
   bool isSelected = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
   @override
   Widget build(BuildContext context) {
     final theme = appColor(context).appTheme;
@@ -443,9 +454,7 @@ class SelectableImageItemSingleSelectedState
           value: widget.image,
           groupValue: widget.groupValue,
           onChanged: (val) {
-            // widget.onSelected?.call(val!);
-            Provider.of<ImageServiceProvider>(context, listen: false)
-                .setGroupValueImage(val);
+            widget.onSelected?.call(val!);
           }),
     );
   }

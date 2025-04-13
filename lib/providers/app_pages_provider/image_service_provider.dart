@@ -13,12 +13,52 @@ class ImageServiceProvider extends ChangeNotifier {
   final repoService = getIt<AllServiceRepository>();
   ItemService? _itemService;
   List<ImageResponse> _imageService = [];
+  List<ImageResponse> _imageServiceSelected = [];
+  List<ImageResponse> _imageServiceSelectedVersionMultiple = [];
+  List<ImageResponse> _imageServiceSelectedVersionSingle = [];
   ImageResponse? _groupValueImage;
   ItemService? get itemService => _itemService;
   XFile? imageFile;
 
   List<ImageResponse> get imageService => _imageService;
+  List<ImageResponse> get imageServiceSelected => _imageServiceSelected;
+  List<ImageResponse> get imageServiceSelectedVersionSingle =>
+      _imageServiceSelectedVersionSingle;
   ImageResponse? get groupValueImage => _groupValueImage;
+  List<ImageResponse> get imageServiceSelectedVersionMultiple =>
+      _imageServiceSelectedVersionMultiple;
+
+  void setImageServiceSelectedVersionMultiple(ImageResponse value) {
+    _imageServiceSelectedVersionMultiple.add(value);
+    notifyListeners();
+  }
+
+  void setImageServiceSelectedVersionSingle(ImageResponse value) {
+    _imageServiceSelectedVersionSingle.add(value);
+    notifyListeners();
+  }
+
+  void removeImageServiceSelectedVersionSingle(ImageResponse value) {
+    _imageServiceSelectedVersionSingle
+        .removeWhere((element) => element.id == value.id);
+    notifyListeners();
+  }
+
+  void removeAllImageServiceSelectedVersionMultiple() {
+    _imageServiceSelectedVersionMultiple.clear();
+    _imageServiceSelectedVersionSingle.clear();
+    _imageServiceSelected.clear();
+    _groupValueImage = null;
+    _imageService.clear();
+    _itemService = null;
+    notifyListeners();
+  }
+
+  void removeImageServiceSelectedVersionMultiple(ImageResponse value) {
+    _imageServiceSelectedVersionMultiple
+        .removeWhere((element) => element.id == value.id);
+    notifyListeners();
+  }
 
   void setGroupValueImage(ImageResponse? value) {
     _groupValueImage = value;
@@ -30,11 +70,36 @@ class ImageServiceProvider extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> fetchServiceById(String id) async {
+  void setImageVersionSelected(List<ImageResponse> value) {
+    _imageServiceSelected = value;
+    notifyListeners();
+  }
+
+  Future<void> fetchServiceById(String id, String serviceVersionId) async {
     _groupValueImage = null;
+    _imageServiceSelectedVersionMultiple = [];
     try {
       await repoService.getServiceById(id).then((value) {
         setImageService(value.imageResponse ?? []);
+        if (serviceVersionId != null) {
+          var serviceVersionSelected = value.versionsResponse
+              ?.where((element) => element.id == serviceVersionId)
+              .toList();
+          if (serviceVersionSelected != null &&
+              serviceVersionSelected.isNotEmpty) {
+            _imageServiceSelectedVersionMultiple
+                .addAll(serviceVersionSelected.first.images ?? []);
+            if (serviceVersionSelected.first.mainImageResponse != null) {
+              // _groupValueImage = serviceVersionSelected.first.mainImageResponse;
+              setGroupValueImage(
+                  serviceVersionSelected.first.mainImageResponse);
+              _imageServiceSelectedVersionSingle
+                  .add(serviceVersionSelected.first.mainImageResponse!);
+            }
+
+            setImageVersionSelected(serviceVersionSelected!.first.images ?? []);
+          }
+        }
         notifyListeners();
       });
     } catch (e) {
@@ -42,6 +107,7 @@ class ImageServiceProvider extends ChangeNotifier {
         Utils.error(e);
       }
     }
+    notifyListeners();
   }
 
   // GET IMAGE FROM GALLERY

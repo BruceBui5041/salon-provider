@@ -30,8 +30,7 @@ ServiceVersion _$ServiceVersionFromJson(Map<String, dynamic> json) =>
           : CategoryItem.fromJson(json['category'] as Map<String, dynamic>),
       mainImageResponse: json['main_image'] == null
           ? null
-          : MainImageResponse.fromJson(
-              json['main_image'] as Map<String, dynamic>),
+          : ImageResponse.fromJson(json['main_image'] as Map<String, dynamic>),
       service: json['service'] == null
           ? null
           : ItemService.fromJson(json['service'] as Map<String, dynamic>),

@@ -1,6 +1,6 @@
+import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:salon_provider/providers/app_pages_provider/custom_service_details_provider.dart';
 import 'package:salon_provider/screens/app_pages_screens/services_details_screen/layouts/new_service_description%20copy.dart';
-import 'package:salon_provider/screens/app_pages_screens/services_details_screen/layouts/new_service_review_layout.dart';
 
 import '../../../config.dart';
 
@@ -62,16 +62,39 @@ class _CustomServicesDetailsScreenState
             image: value.itemService?.imageResponse?[0].url ?? '',
             rating: "3.0"),
         const VSpace(Sizes.s12),
-        Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: value.itemService?.imageResponse
-                    ?.map((e) => ServicesImageLayout(
-                        data: e.url,
-                        index: e.hashCode,
-                        selectIndex: value.selectedIndex,
-                        onTap: () => value.onImageChange(e.id, e.url)))
-                    .toList() ??
-                []),
+        SizedBox(
+          height: 100,
+          width: MediaQuery.of(context).size.width,
+          child: ListView.builder(
+            shrinkWrap: true,
+            physics: const AlwaysScrollableScrollPhysics(),
+            scrollDirection: Axis.horizontal,
+            itemCount: value.itemService?.imageResponse?.length ?? 0,
+            itemBuilder: (context, index) => GestureDetector(
+              onLongPress: () async {
+                await showImageViewer(
+                  context,
+                  NetworkImage(
+                      value.itemService?.imageResponse?[index].url ?? ''),
+                  doubleTapZoomable: true,
+                  backgroundColor: Colors.black.withOpacity(0.5),
+                  swipeDismissible: true,
+                );
+              },
+              child: SizedBox(
+                width: 100,
+                child: ServicesImageLayout(
+                    data: value.itemService?.imageResponse?[index].url ?? '',
+                    index: index,
+                    selectIndex: value.selectedIndex,
+                    onTap: () => value.onImageChange(
+                        value.itemService?.imageResponse?[index].id ?? '',
+                        value.itemService?.imageResponse?[index].url ?? '')),
+              ),
+            ),
+          ),
+        ),
+
         Column(children: [
           Stack(alignment: Alignment.center, children: [
             Image.asset(eImageAssets.servicesBg,

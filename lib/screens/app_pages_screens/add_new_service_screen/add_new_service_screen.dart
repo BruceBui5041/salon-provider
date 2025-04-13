@@ -1,6 +1,8 @@
+import 'package:flutter_html/flutter_html.dart';
 import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
+import 'package:salon_provider/providers/app_pages_provider/image_service_provider.dart';
 import 'package:salon_provider/widgets/custom_drop_down_common.dart';
 
 import '../../../config.dart';
@@ -60,11 +62,30 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                   if (value.isEdit)
                     Padding(
                       padding: const EdgeInsets.only(right: Insets.i20),
-                      child: CommonArrow(
-                        arrow: eSvgAssets.filter,
-                        onTap: () => _buildModalBottomSheet(value),
+                      child: Row(
+                        children: [
+                          CommonArrow(
+                            arrow: eSvgAssets.filter,
+                            onTap: () => _buildModalBottomSheet(value),
+                          ),
+                          const SizedBox(width: Insets.i10),
+                          GestureDetector(
+                            onTap: () {
+                              //
+                            },
+                            child: CommonArrow(
+                              color: appColor(context)
+                                  .appTheme
+                                  .red
+                                  .withOpacity(0.3),
+                              arrow: eSvgAssets.delete,
+                              svgColor: Colors.red,
+                              onTap: () => _buildModalBottomSheet(value),
+                            ),
+                          )
+                        ],
                       ),
-                    )
+                    ),
                 ],
                 title: value.isEdit
                     ? appFonts.editService
@@ -421,6 +442,8 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
             title: "save",
             onTap: () {
               value.updateServiceCraft(callBack: () {
+                Provider.of<ImageServiceProvider>(context, listen: false)
+                    .removeAllImageServiceSelectedVersionMultiple();
                 showDialog(
                     context: context,
                     builder: (context) => AppAlertDialogCommon(
@@ -447,10 +470,6 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   }
 
   Widget _btnPublish(AddNewServiceProvider value) {
-    // if (value.serviceVersionSelected?.status == "active") {
-    //   return const SizedBox();
-    // }
-    // if (value.serviceVersionSelected?.publishedDate != null) {}
     return SizedBox(
       height: 50,
       width: double.infinity,

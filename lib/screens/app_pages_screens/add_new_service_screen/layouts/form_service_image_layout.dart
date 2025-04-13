@@ -69,6 +69,8 @@ class FormServiceImageLayout extends StatelessWidget {
                 AddNewBoxLayout(onAdd: () {
                   Navigator.of(context).push(MaterialPageRoute(
                       builder: (context) => ImageSelectionLayout(
+                            idServiceVersionSelected:
+                                value.serviceVersionSelected!.id ?? '',
                             serviceId: value.serviceSelected!.id!,
                             isMultiSelect: false,
                             onApply: (List<String> imageSelected) {},
@@ -178,6 +180,8 @@ class FormServiceImageLayout extends StatelessWidget {
               //show Dialog image
               Navigator.of(context).push(MaterialPageRoute(
                   builder: (context) => ImageSelectionLayout(
+                        idServiceVersionSelected:
+                            value.serviceVersionSelected!.id ?? '',
                         serviceId: value.serviceSelected!.id!,
                         isMultiSelect: true,
                         onApply: (List<String> imageSelected) {},
