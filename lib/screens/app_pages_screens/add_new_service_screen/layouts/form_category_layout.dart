@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:salon_provider/model/response/category_response.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/error_text_layout.dart';
 import 'package:salon_provider/widgets/cache_image.dart';
 import 'package:salon_provider/widgets/custom_drop_down_common.dart';
 import 'package:salon_provider/widgets/dropdown_common.dart';
@@ -65,6 +66,12 @@ class FormCategoryLayout extends StatelessWidget {
           //         categoryList: ["minutes"],
           //         onChanged: null))
         ]).paddingSymmetric(horizontal: Insets.i20),
+        if (value.durationValue == null)
+          Padding(
+            padding: const EdgeInsets.only(left: Insets.i20, top: Insets.i5),
+            child: errorTextLayout(
+                context, value.errorDuration ?? '', value.durationValue ?? ''),
+          ),
       ],
     );
   }
@@ -73,6 +80,7 @@ class FormCategoryLayout extends StatelessWidget {
   Widget _buildCategorySection(
       BuildContext context, AddNewServiceProvider value) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ContainerWithTextLayout(
           title: language(context, appFonts.category),
@@ -115,6 +123,12 @@ class FormCategoryLayout extends StatelessWidget {
             );
           },
         ).paddingSymmetric(horizontal: Insets.i20),
+        if (value.categoryValue == null)
+          Padding(
+            padding: const EdgeInsets.only(left: Insets.i20, top: Insets.i5),
+            child: errorTextLayout(context, value.errorCategory ?? '',
+                value.categoryValue?.name ?? ''),
+          ),
       ],
     );
   }
@@ -123,6 +137,7 @@ class FormCategoryLayout extends StatelessWidget {
   Widget _buildSubCategorySection(
       BuildContext context, AddNewServiceProvider value) {
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         ContainerWithTextLayout(
           title: language(context, appFonts.subCategory),
@@ -166,6 +181,11 @@ class FormCategoryLayout extends StatelessWidget {
             );
           },
         ).paddingSymmetric(horizontal: Insets.i20),
+        Padding(
+          padding: const EdgeInsets.only(left: Insets.i20, top: Insets.i5),
+          child: errorTextLayout(context, value.errorSubCategory ?? '',
+              value.subCategoryValue?.name ?? ''),
+        ),
       ],
     );
   }

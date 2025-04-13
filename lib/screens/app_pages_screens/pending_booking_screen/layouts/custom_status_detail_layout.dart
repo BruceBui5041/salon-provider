@@ -157,7 +157,7 @@ class CustomStatusDetailLayout extends StatelessWidget {
                           image: data!.user?.userProfile?.profilePictureUrl,
                           name:
                               "${data!.user?.firstname} ${data!.user?.lastname}",
-                          phoneNumber: data!.user?.phoneNumber,
+                          // phoneNumber: data!.user?.phoneNumber,
                           status: data!.bookingStatus?.value,
                           chatTap: onChat,
                           moreTap: onMore,

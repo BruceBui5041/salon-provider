@@ -18,15 +18,11 @@ class ProfilePicCommon extends StatelessWidget {
           width: Sizes.s88,
           decoration: BoxDecoration(
               shape: BoxShape.circle,
-              image: image != null
+              image: imageUrl != null && imageUrl!.isNotEmpty
                   ? DecorationImage(
-                      image: FileImage(File(image!.path)), fit: BoxFit.cover)
-                  : imageUrl != null && imageUrl!.isNotEmpty
-                      ? DecorationImage(
-                          image: NetworkImage(imageUrl!), fit: BoxFit.cover)
-                      : DecorationImage(
-                          image: AssetImage(eImageAssets.as2),
-                          fit: BoxFit.cover),
+                      image: NetworkImage(imageUrl!), fit: BoxFit.cover)
+                  : DecorationImage(
+                      image: AssetImage(eImageAssets.as2), fit: BoxFit.cover),
               border: Border.all(
                   color: isProfile == true
                       ? appColor(context).appTheme.whiteBg.withOpacity(0.75)

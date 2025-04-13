@@ -18,6 +18,7 @@ class AddNewServiceProvider with ChangeNotifier {
   // Repositories
   final repo = getIt<AddNewServiceRepository>();
   final repoService = getIt<AllServiceRepository>();
+  final formKey = GlobalKey<FormState>();
 
   // Service Data
   CategoryItem? categoryValue;
@@ -76,6 +77,14 @@ class AddNewServiceProvider with ChangeNotifier {
   final FocusNode priceFocus = FocusNode();
   final FocusNode discountedPriceFocus = FocusNode();
 
+  //error text
+  String? errorServiceName;
+  String? errorAmount;
+  String? errorDiscount;
+  String? errorDuration;
+  String? errorCategory;
+  String? errorSubCategory;
+
   // Image Related
   XFile? imageFile;
   XFile? thumbFile;
@@ -105,8 +114,19 @@ class AddNewServiceProvider with ChangeNotifier {
     return multipartFile;
   }
 
+  clearError() {
+    errorServiceName = null;
+    errorAmount = null;
+    errorDiscount = null;
+    errorDuration = null;
+    errorCategory = null;
+    errorSubCategory = null;
+    notifyListeners();
+  }
+
   // Input Management Methods
   void clearInput() {
+    clearError();
     serviceName.clear();
     description.clear();
     duration.clear();
@@ -175,18 +195,54 @@ class AddNewServiceProvider with ChangeNotifier {
     }
   }
 
-  Future<void> addService() async {
+  bool checkError(BuildContext context) {
+    clearError();
+    if (serviceName.text.isEmpty) {
+      errorServiceName = language(context, appFonts.pleaseEnterName);
+    }
+    if (amount.text.isEmpty) {
+      errorAmount = language(context, appFonts.pleaseEnterNumber);
+    }
+    if (discount.text.isEmpty) {
+      errorDiscount = language(context, appFonts.pleaseEnterNumber);
+    }
+    if (durationValue == null) {
+      errorDuration = language(context, appFonts.pleaseEnterNumber);
+    }
+    if (categoryValue == null) {
+      errorCategory = language(context, "Please select category");
+    }
+    if (subCategoryValue == null) {
+      errorSubCategory = language(context, "Please select sub category");
+    }
+    notifyListeners();
+    if (errorServiceName != null ||
+        errorAmount != null ||
+        errorDiscount != null ||
+        errorDuration != null ||
+        errorCategory != null ||
+        errorSubCategory != null) {
+      return true;
+    }
+    return false;
+  }
+
+  Future<void> addService(BuildContext context, {Function()? callBack}) async {
+    if (checkError(context)) {
+      return;
+    }
+
     try {
       FormData formData = FormData.fromMap({
         "json": json.encode({
           "slug": serviceName.text.toSlug(),
           "service_version": {
-            "title": serviceName.text,
-            "description": featuredPoints.text,
+            "title": serviceName.text.trim(),
+            "description": featuredPoints.text.trim(),
             "category_id": categoryValue!.id,
             "sub_category_id": subCategoryValue!.id,
-            "price": amount.text,
-            "discounted_price": discount.text,
+            "price": amount.text.trim(),
+            "discounted_price": discount.text.trim(),
             "duration": int.tryParse(durationValue ?? "0") ?? 0,
             // "main_image_id": null
           }
@@ -208,6 +264,9 @@ class AddNewServiceProvider with ChangeNotifier {
 
       if (res.statusCode == 200) {
         log("Service added successfully: ${res.data}");
+        if (callBack != null) {
+          callBack();
+        }
       } else {
         log("Failed to add service: ${res.statusMessage}");
       }
@@ -358,6 +417,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
   // Initialization Methods
   onReady(context) async {
+    clearError();
     isLoadingData = true;
     pathMainImageSystem = [];
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";

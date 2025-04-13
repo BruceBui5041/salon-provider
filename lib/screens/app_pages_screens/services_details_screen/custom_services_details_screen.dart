@@ -54,8 +54,8 @@ class _CustomServicesDetailsScreenState
                   "featured_points": "What ever",
                   "status": false,
                   "itemServiceSelected": value.itemService,
-                  "discount":
-                      value.itemService?.serviceVersion?.discountedPrice ?? '0',
+                  // "discount":
+                  //     value.itemService?.serviceVersion?.discountedPrice ?? '0',
                 }),
             deleteTap: () => value.onServiceDelete(context, this),
             title: value.itemService?.serviceVersion?.title ?? '',

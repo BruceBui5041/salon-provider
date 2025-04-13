@@ -1,6 +1,7 @@
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:flutter/material.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/error_text_layout.dart';
 import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/image_selection_layout.dart';
 import 'package:salon_provider/widgets/cache_image.dart';
 
@@ -19,7 +20,7 @@ class FormServiceImageLayout extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         _buildServiceImagesSection(context, value),
-        _buildMainImageSection(context, value),
+        if (value.isEdit) _buildMainImageSection(context, value),
         _buildServiceNameSection(context, value),
       ],
     );
@@ -171,7 +172,6 @@ class FormServiceImageLayout extends StatelessWidget {
   Widget _buildThumbnailPreview(
       BuildContext context, AddNewServiceProvider value) {
     List<Widget> _listImage = [];
-
     _listImage.add(
       (value.isDraft == true)
           ? AddNewBoxLayout(onAdd: () {
@@ -190,6 +190,13 @@ class FormServiceImageLayout extends StatelessWidget {
                   .paddingOnly(left: Insets.i5)
               : const SizedBox(),
     );
+
+    // else {
+    //   _listImage.add(AddNewBoxLayout(onAdd: () {
+    //     //show Dialog image
+    //     value.onImagePick(context, true);
+    //   }));
+    // }
     if (value.pathImageService.isNotEmpty) {
       value.pathImageService.map((e) {
         _listImage.add(_buildImagePreview(context, e));
@@ -230,7 +237,19 @@ class FormServiceImageLayout extends StatelessWidget {
           controller: value.serviceName,
           hintText: appFonts.enterName,
           prefixIcon: eSvgAssets.serviceName,
+          validator: (val) {
+            if (val == null || val.isEmpty) {
+              return language(context, appFonts.pleaseEnterEmail);
+            }
+            return null;
+          },
         ).paddingSymmetric(horizontal: Insets.i20),
+        if (value.serviceName.text.isEmpty)
+          Padding(
+            padding: const EdgeInsets.only(top: Insets.i5, left: Insets.i20),
+            child: errorTextLayout(
+                context, value.errorServiceName ?? '', value.serviceName.text),
+          ),
       ],
     );
   }

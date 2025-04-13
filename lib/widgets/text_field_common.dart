@@ -18,6 +18,7 @@ class TextFieldCommon extends StatefulWidget {
   final TextStyle? hintStyle;
   final bool? isNumber, isEnable;
   final GestureTapCallback? onTap;
+  final String? errorText;
 
   const TextFieldCommon(
       {super.key,
@@ -44,7 +45,8 @@ class TextFieldCommon extends StatefulWidget {
       this.hPadding,
       this.isMaxLine = false,
       this.onTap,
-      this.isEnable = true});
+      this.isEnable = true,
+      this.errorText});
 
   @override
   State<TextFieldCommon> createState() => _TextFieldCommonState();
@@ -82,6 +84,7 @@ class _TextFieldCommonState extends State<TextFieldCommon> {
         cursorColor: appColor(context).appTheme.darkText,
         maxLength: widget.maxLength,
         decoration: InputDecoration(
+            errorText: widget.errorText,
             counterText: widget.counterText,
             fillColor: widget.fillColor ?? appColor(context).appTheme.whiteBg,
             filled: true,

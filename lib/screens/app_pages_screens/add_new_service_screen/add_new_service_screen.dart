@@ -103,7 +103,27 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
       ButtonCommon(
           title: value.isEdit ? appFonts.update : appFonts.addService,
           onTap: () {
-            value.addService();
+            value.addService(context, callBack: () {
+              // use theme of this project to show dialog
+              showDialog(
+                  context: context,
+                  builder: (context) => AppAlertDialogCommon(
+                        image: eSvgAssets.service,
+                        title: "Success",
+                        subtext: "Service added successfully",
+                        singleText: "OK",
+                        firstBText: "Cancel",
+                        secondBText: "OK",
+                        focusNode: FocusNode(),
+                        firstBTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        secondBTap: () {
+                          Navigator.of(context).pop();
+                          value.clearInput();
+                        },
+                      ));
+            });
           }).paddingOnly(top: Insets.i10, bottom: Insets.i5),
 
       const SizedBox(
@@ -149,6 +169,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
           )
         ]),
       ),
+
       const SizedBox(height: Insets.i10),
       Stack(
         children: [
@@ -183,7 +204,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                 ButtonCommon(
                     title: value.isEdit ? appFonts.update : appFonts.addService,
                     onTap: () {
-                      value.addService();
+                      value.addService(context);
                     }).paddingOnly(top: Insets.i10, bottom: Insets.i5),
               const SizedBox(
                 height: 20,
@@ -400,6 +421,23 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
             title: "save",
             onTap: () {
               value.updateServiceCraft(callBack: () {
+                showDialog(
+                    context: context,
+                    builder: (context) => AppAlertDialogCommon(
+                          image: eSvgAssets.service,
+                          title: "Success",
+                          subtext: "Service updated successfully",
+                          singleText: "OK",
+                          firstBText: "Cancel",
+                          secondBText: "OK",
+                          focusNode: FocusNode(),
+                          firstBTap: () {
+                            Navigator.of(context).pop();
+                          },
+                          secondBTap: () {
+                            Navigator.of(context).pop();
+                          },
+                        ));
                 value.fetchCurrentService();
               });
             }),
@@ -426,7 +464,23 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
           onTap: () {
             value.publishService(callBack: () {
               value.fetchCurrentService();
-
+              showDialog(
+                  context: context,
+                  builder: (context) => AppAlertDialogCommon(
+                        image: eSvgAssets.service,
+                        title: "Success",
+                        subtext: "Service published successfully",
+                        singleText: "OK",
+                        firstBText: "Cancel",
+                        secondBText: "OK",
+                        focusNode: FocusNode(),
+                        firstBTap: () {
+                          Navigator.of(context).pop();
+                        },
+                        secondBTap: () {
+                          Navigator.of(context).pop();
+                        },
+                      ));
               Provider.of<AllServiceProvider>(context, listen: false)
                   .getAllServices();
               // Navigator.of(context).popUntil((route) => route.isFirst);

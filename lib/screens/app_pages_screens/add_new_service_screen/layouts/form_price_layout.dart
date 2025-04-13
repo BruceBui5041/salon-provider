@@ -1,4 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/error_text_layout.dart';
 
 import '../../../../config.dart';
 
@@ -95,6 +96,12 @@ class FormPriceLayout extends StatelessWidget {
           controller: value.amount,
           hintText: appFonts.enterAmt,
           prefixIcon: eSvgAssets.dollar,
+          validator: (val) {
+            if (val == null || val.isEmpty) {
+              return language(context, appFonts.pleaseEnterNumber);
+            }
+            return null;
+          },
         ),
       ],
     ).padding(horizontal: Insets.i20, top: Insets.i24);
@@ -121,6 +128,20 @@ class FormPriceLayout extends StatelessWidget {
                 controller: value.amount,
                 hintText: appFonts.enterAmt,
                 prefixIcon: eSvgAssets.dollar,
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return language(context, appFonts.pleaseEnterNumber);
+                  }
+                  return null;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: Insets.i5),
+                child: errorTextLayout(
+                  context,
+                  value.errorAmount ?? '',
+                  value.amount.text,
+                ),
               ),
             ],
           ),
@@ -142,6 +163,23 @@ class FormPriceLayout extends StatelessWidget {
                 controller: value.discount,
                 hintText: appFonts.addDic,
                 prefixIcon: eSvgAssets.discount,
+                onFieldSubmitted: (val) {
+                  print("onFieldSubmitted: $val");
+                },
+                validator: (val) {
+                  if (val == null || val.isEmpty) {
+                    return language(context, appFonts.pleaseEnterNumber);
+                  }
+                  return null;
+                },
+              ),
+              Padding(
+                padding: const EdgeInsets.only(top: Insets.i5),
+                child: errorTextLayout(
+                  context,
+                  value.errorDiscount ?? '',
+                  value.discount.text,
+                ),
               ),
             ],
           ),
