@@ -1,10 +1,11 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
-
+import 'package:intl/intl.dart';
+import 'package:salon_provider/screens/app_pages_screens/booking_details_screen/layouts/customer_layout.dart';
 import '../../../../config.dart';
-import '../../../../model/booking_details_model.dart';
+import '../../../../model/response/booking_response.dart';
 
 class BookingDetailsLayout extends StatelessWidget {
-  final BookingDetailsModel? data;
+  final Booking? data;
 
   const BookingDetailsLayout({super.key, this.data});
 
@@ -17,11 +18,13 @@ class BookingDetailsLayout extends StatelessWidget {
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
                 Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
                   Container(
-                      height: Sizes.s84,
+                      height: Sizes.s140,
                       width: Sizes.s84,
                       decoration: ShapeDecoration(
                           image: DecorationImage(
-                              image: AssetImage(eImageAssets.as3),
+                              image: NetworkImage(data!.serviceVersions?.first
+                                      .mainImageResponse?.url ??
+                                  ""),
                               fit: BoxFit.cover),
                           shape: const SmoothRectangleBorder(
                               borderRadius: SmoothBorderRadius.all(SmoothRadius(
@@ -32,11 +35,11 @@ class BookingDetailsLayout extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Text("#${data!.bookingId!}",
+                        Text("#${data!.id ?? ""}",
                             style: appCss.dmDenseMedium16
                                 .textColor(appColor(context).appTheme.primary)),
                         const VSpace(Sizes.s10),
-                        Text(data!.package!,
+                        Text(data!.serviceVersions?.first.title ?? "",
                                 style: appCss.dmDenseMedium16.textColor(
                                     appColor(context).appTheme.darkText))
                             .width(Sizes.s150)
@@ -47,7 +50,10 @@ class BookingDetailsLayout extends StatelessWidget {
                   Row(children: [
                     DescriptionLayoutCommon(
                         icon: eSvgAssets.calender,
-                        title: data!.date,
+                        title: data!.bookingDate != null
+                            ? DateFormat('dd/MM/yyyy')
+                                .format(data!.bookingDate!)
+                            : "",
                         subtitle: appFonts.date),
                     Container(
                             height: Sizes.s70,
@@ -56,7 +62,9 @@ class BookingDetailsLayout extends StatelessWidget {
                         .paddingOnly(left: Insets.i27, right: Insets.i20),
                     DescriptionLayoutCommon(
                         icon: eSvgAssets.clockOut,
-                        title: data!.time,
+                        title: data!.bookingDate != null
+                            ? DateFormat('HH:mm a').format(data!.bookingDate!)
+                            : "",
                         subtitle: appFonts.time)
                   ]).paddingSymmetric(horizontal: Insets.i10),
                   const DividerCommon(),
@@ -71,7 +79,7 @@ class BookingDetailsLayout extends StatelessWidget {
                             color: appColor(context).appTheme.stroke)
                         .paddingSymmetric(horizontal: Insets.i9),
                     Expanded(
-                        child: Text(language(context, data!.address),
+                        child: Text("",
                             style: appCss.dmDenseMedium12.textColor(
                                 appColor(context).appTheme.darkText)))
                   ]).paddingSymmetric(
@@ -82,26 +90,22 @@ class BookingDetailsLayout extends StatelessWidget {
                         style: appCss.dmDenseRegular12
                             .textColor(appColor(context).appTheme.lightText))
                     .paddingOnly(top: Insets.i15, bottom: Insets.i5),
-                Text(data!.description!,
+                Text(data!.notes ?? "",
                     style: appCss.dmDenseRegular14
                         .textColor(appColor(context).appTheme.darkText)),
                 const VSpace(Sizes.s15),
                 CustomerLayout(
-                    title: appFonts.customerDetails,
-                    data: data!.customerDetails),
+                    title: appFonts.customerDetails, user: data!.user),
                 const VSpace(Sizes.s15),
-                ...data!.serviceMenDetails!.asMap().entries.map((e) =>
-                    CustomerDetailsLayout(
-                        onTapMore: () => route.pushNamed(
-                            context, routeName.servicemanDetail),
-                        onTapPhone: () => value.onTapPhone(),
-                        title: appFonts.servicemanDetail,
-                        data: e.value,
-                        onTapChat: () =>
-                            route.pushNamed(context, routeName.chat),
-                        isMore: true,
-                        index: e.key,
-                        list: data!.serviceMenDetails))
+                if (data!.serviceMan != null)
+                  CustomerDetailsLayout(
+                      onTapMore: () =>
+                          route.pushNamed(context, routeName.servicemanDetail),
+                      onTapPhone: () => value.onTapPhone(),
+                      title: appFonts.servicemanDetail,
+                      data: data!.serviceMan,
+                      onTapChat: () => route.pushNamed(context, routeName.chat),
+                      isMore: true)
               ]).paddingAll(Insets.i15).boxBorderExtension(context,
                   isShadow: true, radius: AppRadius.r12),
               Text(language(context, appFonts.commissionHistory),
@@ -119,26 +123,26 @@ class BookingDetailsLayout extends StatelessWidget {
                   child: Column(children: [
                     CommissionRowLayout(
                         isCommission: true,
-                        data: data!.commissionHistory!.totalReceivedAmount,
+                        data: "0",
                         title: appFonts.totalReceivedCommission,
                         style: appCss.dmDenseblack14
                             .textColor(appColor(context).appTheme.darkText)),
                     CommissionRowLayout(
                         isCommission: true,
                         title: appFonts.adminCommission,
-                        data: data!.commissionHistory!.adminCommission),
+                        data: "0"),
                     CommissionRowLayout(
                         isCommission: true,
                         title: appFonts.servicemenCommission,
-                        data: data!.commissionHistory!.servicemenCommission),
+                        data: "0"),
                     CommissionRowLayout(
                         isCommission: true,
                         title: appFonts.platformFees,
-                        data: data!.commissionHistory!.platformFees),
+                        data: "0"),
                     CommissionRowLayout(
                         title: appFonts.yourCommission,
                         color: appColor(context).appTheme.primary,
-                        data: data!.commissionHistory!.yourCommission)
+                        data: "0")
                   ]).paddingSymmetric(
                       horizontal: Insets.i15, vertical: Insets.i20))
             ]);

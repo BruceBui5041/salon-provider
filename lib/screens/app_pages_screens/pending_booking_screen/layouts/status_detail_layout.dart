@@ -137,7 +137,7 @@ class StatusDetailLayout extends StatelessWidget {
                         ReadMoreLayout(text: data!.description!)
                       ]).paddingSymmetric(vertical: Insets.i15),
                   data!.status == "Completed" || data!.status == "Cancelled"
-                      ? CustomerLayout(
+                      ? CustomerLayoutOld(
                           title: appFonts.customerDetails, data: data!.customer)
                       : CustomerServiceLayout(
                           title: appFonts.customerDetails,

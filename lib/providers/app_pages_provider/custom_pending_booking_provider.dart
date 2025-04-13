@@ -22,11 +22,6 @@ class CustomPendingBookingProvider with ChangeNotifier {
       pendingBooking = value.first;
       notifyListeners();
     });
-
-    // pendingBookingModel = ItemBooking.fromJson(isServicemen
-    //     ? appArray.pendingBookingDetailWithList
-    //     : appArray.pendingBookingDetailList);
-    notifyListeners();
   }
 
   showBookingStatus(context) {

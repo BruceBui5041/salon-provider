@@ -151,13 +151,13 @@ class CustomStatusDetailLayout extends StatelessWidget {
                   data!.bookingStatus == BookingStatus.completed ||
                           data!.bookingStatus == BookingStatus.cancelled
                       ? CustomerLayout(
-                          title: appFonts.customerDetails, data: data!.user)
+                          title: appFonts.customerDetails, user: data!.user)
                       : CustomerServiceLayout(
                           title: appFonts.customerDetails,
                           image: data!.user?.userProfile?.profilePictureUrl,
                           name:
                               "${data!.user?.firstname} ${data!.user?.lastname}",
-                          // phoneNumber: data!.user?.phoneNumber,
+                          phoneNumber: data!.user?.phoneNumber,
                           status: data!.bookingStatus?.value,
                           chatTap: onChat,
                           moreTap: onMore,

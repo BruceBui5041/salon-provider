@@ -1,14 +1,19 @@
 import 'package:salon_provider/config.dart';
 import 'package:url_launcher/url_launcher.dart';
-
-import '../../model/booking_details_model.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/repositories/booking_repository.dart';
 
 class BookingDetailsProvider with ChangeNotifier {
-  BookingDetailsModel? bookingModel;
+  Booking? bookingModel;
+  final BookingRepository bookingRepository = getIt<BookingRepository>();
 
-  onReady() {
-    bookingModel = BookingDetailsModel.fromJson(appArray.bookingDetailsList);
-    notifyListeners();
+  onReady(BuildContext context) async {
+    String bookingId = ModalRoute.of(context)!.settings.arguments as String;
+    await bookingRepository.getBookingByIdBooking(bookingId).then((value) {
+      bookingModel = value.first;
+      notifyListeners();
+    });
   }
 
   Future<void> makePhoneCall(Uri url) async {
@@ -20,7 +25,9 @@ class BookingDetailsProvider with ChangeNotifier {
   }
 
   onTapPhone() {
-    makePhoneCall(Uri.parse('tel:+91 8200798552'));
+    if (bookingModel?.user?.phoneNumber != null) {
+      makePhoneCall(Uri.parse('tel:${bookingModel!.user!.phoneNumber}'));
+    }
     notifyListeners();
   }
 }

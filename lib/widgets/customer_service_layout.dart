@@ -6,7 +6,7 @@ import 'package:url_launcher/url_launcher.dart';
 import '../config.dart';
 
 class CustomerServiceLayout extends StatelessWidget {
-  final String? title, status, name, image;
+  final String? title, status, name, image, phoneNumber;
   final double? rate;
   final GestureTapCallback? chatTap, phoneTap, moreTap;
 
@@ -19,6 +19,7 @@ class CustomerServiceLayout extends StatelessWidget {
       this.moreTap,
       this.name,
       this.image,
+      this.phoneNumber,
       this.rate});
 
   @override
@@ -46,11 +47,12 @@ class CustomerServiceLayout extends StatelessWidget {
           .paddingSymmetric(vertical: Insets.i15),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
         Row(children: [
-          Container(
-            height: Sizes.s40,
-            width: Sizes.s40,
-            child: CacheImageWidget(
-              url: image,
+          ClipRRect(
+            borderRadius: BorderRadius.circular(25),
+            child: SizedBox(
+              height: Sizes.s50,
+              width: Sizes.s50,
+              child: CacheImageWidget(url: image),
             ),
           ),
           const HSpace(Sizes.s12),
@@ -58,6 +60,10 @@ class CustomerServiceLayout extends StatelessWidget {
             Text(name ?? "",
                 style: appCss.dmDenseMedium14
                     .textColor(appColor(context).appTheme.darkText)),
+            if (phoneNumber != null)
+              Text(phoneNumber!,
+                  style: appCss.dmDenseMedium12
+                      .textColor(appColor(context).appTheme.lightText)),
             if (language(context, title) !=
                 language(context, appFonts.customerDetails))
               Row(children: [
@@ -89,7 +95,9 @@ class CustomerServiceLayout extends StatelessWidget {
           Row(children: [
             SocialIconCommon(icon: eSvgAssets.chatOut, onTap: chatTap),
             const HSpace(Sizes.s12),
-            SocialIconCommon(icon: eSvgAssets.phone, onTap: () => onTapPhone())
+            SocialIconCommon(
+                icon: eSvgAssets.phone,
+                onTap: () => onTapPhone(phoneNumber ?? ""))
           ])
       ])
     ]))
@@ -105,7 +113,7 @@ class CustomerServiceLayout extends StatelessWidget {
     }
   }
 
-  onTapPhone() {
-    makePhoneCall(Uri.parse('tel:+91 8200798552'));
+  onTapPhone(String phoneNumber) {
+    makePhoneCall(Uri.parse('tel:$phoneNumber'));
   }
 }

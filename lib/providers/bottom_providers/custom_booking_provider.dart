@@ -405,7 +405,7 @@ class CustomBookingProvider with ChangeNotifier {
     else if (data.bookingStatus == BookingStatus.completed) {
       route.pushNamed(context, routeName.completedBooking);
     } else if (data.bookingStatus == BookingStatus.cancelled) {
-      route.pushNamed(context, routeName.cancelledBooking);
+      route.pushNamed(context, routeName.cancelledBooking, arg: data.id);
     }
     // else if (data.bookingStatus == BookingStatus.confirmed) {
     //   if (data.servicemanLists.isNotEmpty) {

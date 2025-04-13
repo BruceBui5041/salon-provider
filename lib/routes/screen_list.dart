@@ -188,6 +188,7 @@ export '../screens/app_pages_screens/plan_details_screen/layouts/plan_card_layou
 export '../screens/auth_screens/sign_up_company_screen/layouts/slider_layout.dart';
 export '../screens/app_pages_screens/add_new_location/add_new_location.dart';
 export '../screens/app_pages_screens/chat_history_screen/chat_history_screen.dart';
+export '../screens/app_pages_screens/booking_details_screen/layouts/customer_layout_old.dart';
 export '../screens/app_pages_screens/booking_details_screen/layouts/customer_layout.dart';
 export '../screens/auth_screens/sign_up_freelancer_screen/sign_up_freelancer_screen.dart';
 export '../screens/app_pages_screens/search_screen/search_screen.dart';

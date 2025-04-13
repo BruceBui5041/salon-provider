@@ -41,6 +41,11 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
             operator: "=",
             target: userId ?? "",
           ),
+          Condition(
+            source: "booking_status",
+            operator: "=",
+            target: "pending",
+          ),
         ]
       ];
       final bookingResponse = await _bookingRepository.getBookings(
@@ -84,7 +89,7 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
     } else if (status == appFonts.completed.toLowerCase()) {
       route.pushNamed(context, routeName.completedBooking);
     } else if (status == appFonts.cancelled.toLowerCase()) {
-      route.pushNamed(context, routeName.cancelledBooking);
+      route.pushNamed(context, routeName.cancelledBooking, arg: booking.id);
     } else if (status == appFonts.assigned.toLowerCase()) {
       route.pushNamed(context, routeName.assignBooking, arg: {"bool": false});
     }

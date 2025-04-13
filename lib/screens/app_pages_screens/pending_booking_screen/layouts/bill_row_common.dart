@@ -18,12 +18,13 @@ class BillRowCommon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      crossAxisAlignment: CrossAxisAlignment.end,
       children: [
         Text(language(context, title!),
             style: styleTitle ??
                 appCss.dmDenseMedium14
                     .textColor(appColor(context).appTheme.lightText)),
-        Row(
+        Column(
           children: [
             if (priceOriginal != null)
               Text(

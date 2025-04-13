@@ -18,7 +18,7 @@ class BookingRepository extends RepositoryConfig {
       ]
     ], fields: [
       FieldItem(field: "service_versions"),
-      FieldItem(field: "user"),
+      FieldItem(field: "user.user_profile"),
       FieldItem(field: "service_versions.main_image"),
       FieldItem(field: "payment.payment_qr"),
       FieldItem(field: "service_man"),

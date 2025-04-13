@@ -22,7 +22,7 @@ class CancelledBookingScreen extends StatelessWidget {
                         CustomStatusDetailLayout(
                             onChat: () =>
                                 route.pushNamed(context, routeName.chat),
-                            data: value.cancelledBookingModel,
+                            data: value.cancelledBooking,
                             onMore: () => route.pushNamed(
                                 context, routeName.servicemanDetail),
                             onTapStatus: () =>
@@ -31,8 +31,7 @@ class CancelledBookingScreen extends StatelessWidget {
                                 style: appCss.dmDenseMedium14.textColor(
                                     appColor(context).appTheme.darkText))
                             .paddingOnly(top: Insets.i25, bottom: Insets.i10),
-                        CancelledBillSummary(
-                            booking: value.cancelledBookingModel),
+                        CancelledBillSummary(booking: value.cancelledBooking),
                         const VSpace(Sizes.s20),
                       ]).padding(
                           horizontal: Insets.i20,
@@ -42,9 +41,8 @@ class CancelledBookingScreen extends StatelessWidget {
                       elevation: 20,
                       child: AssignStatusLayout(
                           status: appFonts.reason,
-                          title: isFreelancer
-                              ? appFonts.youChangedTimeSlot
-                              : appFonts.servicemenIsNotAvailable))
+                          title: value.cancelledBooking?.cancellationReason ??
+                              appFonts.reason))
                 ],
               )));
     });
