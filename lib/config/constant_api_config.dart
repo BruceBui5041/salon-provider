@@ -23,6 +23,6 @@ class ConstantApiConfig {
     print(env);
   }
 
-  // Getter để truy cập URL
+  // Getter để truy cập ooURL
   String get getUrl => _url;
 }

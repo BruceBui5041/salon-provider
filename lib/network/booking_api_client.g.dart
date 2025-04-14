@@ -20,16 +20,14 @@ class _BookingApiClient implements BookingApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<void> cancelBooking(
-    String id,
-    Map<String, dynamic> requestBody,
-  ) async {
+  Future<BaseResponse<bool>> cancelBooking(
+      String id, CancelReq requestBody) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(requestBody);
-    final _options = _setStreamType<void>(
+    _data.addAll(requestBody.toJson());
+    final _options = _setStreamType<BaseResponse<bool>>(
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -39,7 +37,18 @@ class _BookingApiClient implements BookingApiClient {
           )
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
-    await _dio.fetch<void>(_options);
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponse<bool> _value;
+    try {
+      _value = BaseResponse<bool>.fromJson(
+        _result.data!,
+        (json) => json as bool,
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
   }
 
   @override

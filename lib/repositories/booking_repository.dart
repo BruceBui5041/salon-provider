@@ -1,6 +1,7 @@
 import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
+import 'package:salon_provider/model/request/cancel_req.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/category_response.dart';
@@ -9,7 +10,8 @@ import 'package:salon_provider/model/response/payment_qr_transaction.dart';
 import 'package:salon_provider/network/api.dart';
 
 class BookingRepository extends RepositoryConfig {
-  final api = getIt.get<PaymentApiClient>();
+  final paymentClient = getIt.get<PaymentApiClient>();
+  final bookingClient = getIt.get<BookingApiClient>();
 
   Future<List<Booking>> getBookingByIdBooking(String bookingId) async {
     var body = SearchRequestBody(model: "booking", conditions: [
@@ -33,7 +35,7 @@ class BookingRepository extends RepositoryConfig {
   }
 
   Future<GenQrResponse> getGenQrCode(Map<String, dynamic> requestBody) async {
-    var res = await api.getGenQrCode(requestBody);
+    var res = await paymentClient.getGenQrCode(requestBody);
     return res;
   }
 
@@ -100,6 +102,18 @@ class BookingRepository extends RepositoryConfig {
         .map((e) => CategoryItem.fromJson(e))
         .toList();
     return res;
+  }
+
+  Future<bool> cancelBooking(String bookingId, String reason) async {
+    var body = CancelReq(cancellationReason: reason);
+
+    var response = await bookingClient.cancelBooking(bookingId, body);
+    return response.data ?? false;
+  }
+
+  Future<bool> acceptBooking(String bookingId) async {
+    var response = await bookingClient.acceptBooking(bookingId);
+    return response.data ?? false;
   }
 
   // Future<void> updateBooking(Booking booking) async {}

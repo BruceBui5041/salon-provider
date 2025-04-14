@@ -1,4 +1,4 @@
-import 'package:salon_provider/providers/app_pages_provider/custom_pending_booking_provider.dart';
+import 'package:salon_provider/providers/app_pages_provider/pending_booking_provider.dart';
 import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/layouts/status_detail_layout.dart';
 
 import '../../../config.dart';
@@ -8,8 +8,7 @@ class PendingBookingScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CustomPendingBookingProvider>(
-        builder: (context, value, child) {
+    return Consumer<PendingBookingProvider>(builder: (context, value, child) {
       return StatefulWrapper(
           onInit: () => Future.delayed(
               const Duration(milliseconds: 100), () => value.onReady(context)),
@@ -60,7 +59,7 @@ class PendingBookingScreen extends StatelessWidget {
                     child: BottomSheetButtonCommon(
                             textOne: appFonts.reject,
                             textTwo: appFonts.accept,
-                            clearTap: () => value.onRejectBooking(context),
+                            clearTap: () => value.onCancelBooking(context),
                             applyTap: () => value.onAcceptBooking(context))
                         .paddingAll(Insets.i20)
                         .decorated(color: appColor(context).appTheme.whiteBg),

@@ -1,5 +1,6 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
+import 'package:salon_provider/model/request/cancel_req.dart';
 import 'package:salon_provider/model/response/common_response.dart';
 import 'base_api_client.dart';
 
@@ -10,8 +11,8 @@ abstract class BookingApiClient extends BaseApiClient {
   factory BookingApiClient(Dio dio, {String? baseUrl}) = _BookingApiClient;
 
   @PATCH("/cancel/{id}")
-  Future<void> cancelBooking(
-      @Path("id") String id, @Body() Map<String, dynamic> requestBody);
+  Future<BaseResponse<bool>> cancelBooking(
+      @Path("id") String id, @Body() CancelReq requestBody);
 
   @PATCH("/accept/{id}")
   Future<BaseResponse<bool>> acceptBooking(@Path("id") String id);
