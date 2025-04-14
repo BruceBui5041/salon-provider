@@ -4,11 +4,10 @@ import 'package:salon_provider/config/storage_config.dart';
 import 'package:salon_provider/helper/notification_helper.dart';
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/custom_pending_booking_provider.dart';
-import 'package:salon_provider/providers/app_pages_provider/custom_service_details_provider.dart';
+import 'package:salon_provider/providers/app_pages_provider/service_details_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/edit_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/image_service_provider.dart';
 import 'package:salon_provider/providers/auth_provider/register_provider.dart';
-import 'package:salon_provider/providers/bottom_providers/custom_booking_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -73,7 +72,7 @@ class MyApp extends StatelessWidget {
                   ChangeNotifierProvider(
                       create: (_) => AddNewServiceProvider()),
                   ChangeNotifierProvider(
-                      create: (_) => ServiceDetailsProvider()),
+                      create: (_) => ServiceDetailsProviderOld()),
                   ChangeNotifierProvider(
                       create: (_) => ServiceReviewProvider()),
                   ChangeNotifierProvider(
@@ -109,7 +108,6 @@ class MyApp extends StatelessWidget {
                   ChangeNotifierProvider(
                       create: (_) => SubscriptionPlanProvider()),
                   ChangeNotifierProvider(create: (_) => WalletProvider()),
-                  ChangeNotifierProvider(create: (_) => BookingProvider()),
                   ChangeNotifierProvider(create: (_) => NoInternetProvider()),
                   ChangeNotifierProvider(
                       create: (_) => PendingBookingProvider()),
@@ -148,12 +146,11 @@ class MyApp extends StatelessWidget {
                   ChangeNotifierProvider(create: (_) => RegisterProvider()),
                   ChangeNotifierProvider(create: (_) => AllServiceProvider()),
                   ChangeNotifierProvider(create: (_) => EditServiceProvider()),
-                  ChangeNotifierProvider(
-                      create: (_) => CustomBookingProvider()),
+                  ChangeNotifierProvider(create: (_) => BookingProvider()),
                   ChangeNotifierProvider(
                       create: (_) => CustomPendingBookingProvider()),
                   ChangeNotifierProvider(
-                      create: (_) => CustomServiceDetailsProvider()),
+                      create: (_) => ServiceDetailsProvider()),
                   ChangeNotifierProvider(create: (_) => ImageServiceProvider()),
                 ],
                 child: Consumer<ThemeService>(builder: (context, theme, child) {

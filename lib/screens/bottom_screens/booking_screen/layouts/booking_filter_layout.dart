@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 import '../../../../config.dart';
-import '../../../../providers/bottom_providers/custom_booking_provider.dart';
+import '../../../../providers/bottom_providers/booking_provider.dart';
 
 class BookingFilterLayout extends StatelessWidget {
   const BookingFilterLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final value = Provider.of<CustomBookingProvider>(context);
+    final value = Provider.of<BookingProvider>(context);
     return SizedBox(
             height: Sizes.s600,
             child:

@@ -16,7 +16,7 @@ export '../providers/app_pages_provider/notification_provider.dart';
 export '../providers/auth_provider/intro_provider.dart';
 export '../providers/app_pages_provider/service_list_provider.dart';
 export '../providers/app_pages_provider/add_new_service_provider.dart';
-export '../providers/app_pages_provider/service_details_provider.dart';
+export 'app_pages_provider/service_details_provider_old.dart';
 export '../providers/app_pages_provider/service_review_provider.dart';
 export '../providers/app_pages_provider/categories_list_provider.dart';
 export '../providers/app_pages_provider/serviceman_list_provider.dart';
@@ -61,7 +61,3 @@ export '../providers/app_pages_provider/id_verification_provider.dart';
 export '../providers/app_pages_provider/commission_history_provider.dart';
 export '../providers/app_pages_provider/search_provider.dart';
 export '../providers/app_pages_provider/view_location_provider.dart';
-
-
-
-

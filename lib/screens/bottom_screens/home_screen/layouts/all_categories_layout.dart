@@ -3,7 +3,7 @@ import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/screens/bottom_screens/home_screen/layouts/all_service_layout.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
-import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/custom_booking_layout.dart';
+import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/booking_layout.dart';
 import 'package:salon_provider/model/booking_model.dart';
 import 'package:provider/provider.dart';
 
@@ -54,7 +54,7 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
       );
 
       // Update the HomeProvider's recentBookingList with the API results
-      homeProvider.updateRecentBookings(bookingResponse ?? []);
+      homeProvider.updateRecentBookings(bookingResponse);
 
       setState(() {
         isLoading = false;
@@ -111,7 +111,6 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
       return Column(
         children: [
           if (isFreelancer != true)
-            // if (isFreelancer != true)
             //   GridView.builder(
             //           shrinkWrap: true,
             //           physics: const NeverScrollableScrollPhysics(),
@@ -140,45 +139,42 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
             //         })
             //     .padding(
             //         horizontal: Insets.i20, top: Insets.i25, bottom: Insets.i15),
-            if (value.recentBookingList.isNotEmpty ||
-                isLoading ||
-                value.bookingsApiData.isNotEmpty)
-              Column(children: [
-                HeadingRowCommon(
-                    title: appFonts.recentBooking,
-                    onTap: () => value.onTapIndexOne(dashCtrl)),
-                const VSpace(Sizes.s15),
-                if (isLoading)
-                  const Center(child: CircularProgressIndicator())
-                else
-                  ...value.bookingsApiData.isNotEmpty
-                      ? value.bookingsApiData
-                          .getRange(
-                              0,
-                              value.bookingsApiData.length < 5
-                                  ? value.bookingsApiData.length
-                                  : 5)
-                          .map((booking) => CustomBookingLayout(
-                                data: booking,
-                                onTap: () =>
-                                    _onTapBooking(booking, context, value),
-                              ))
-                          .toList()
-                      : value.recentBookingList
-                          .getRange(
-                              0,
-                              value.recentBookingList.length < 5
-                                  ? value.recentBookingList.length
-                                  : 5)
-                          .map((booking) => _buildLegacyBookingLayout(
-                              booking as Booking, context, value))
-                          .toList()
-              ])
-                  .padding(
-                      horizontal: Insets.i20,
-                      top: Insets.i25,
-                      bottom: Insets.i10)
-                  .decorated(color: appColor(context).appTheme.fieldCardBg),
+            const VSpace(Sizes.s25),
+          if (value.recentBookingList.isNotEmpty || isLoading)
+            Column(children: [
+              HeadingRowCommon(
+                  title: appFonts.recentBooking,
+                  onTap: () => value.onTapIndexOne(dashCtrl)),
+              const VSpace(Sizes.s15),
+              if (isLoading)
+                const Center(child: CircularProgressIndicator())
+              else
+                ...value.recentBookingList.isNotEmpty
+                    ? value.recentBookingList
+                        .getRange(
+                            0,
+                            value.recentBookingList.length < 5
+                                ? value.recentBookingList.length
+                                : 5)
+                        .map((booking) => BookingLayout(
+                              data: booking,
+                              onTap: () =>
+                                  _onTapBooking(booking, context, value),
+                            ))
+                        .toList()
+                    : value.recentBookingList
+                        .getRange(
+                            0,
+                            value.recentBookingList.length < 5
+                                ? value.recentBookingList.length
+                                : 5)
+                        .map((booking) => _buildLegacyBookingLayout(
+                            booking as Booking, context, value))
+                        .toList()
+            ])
+                .padding(
+                    horizontal: Insets.i20, top: Insets.i25, bottom: Insets.i10)
+                .decorated(color: appColor(context).appTheme.fieldCardBg),
           const VSpace(Sizes.s25),
           HeadingRowCommon(
               title: appFonts.serviceAvailable,

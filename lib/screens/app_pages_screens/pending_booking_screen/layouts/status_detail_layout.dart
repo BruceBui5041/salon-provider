@@ -1,9 +1,11 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
-import 'package:salon_provider/model/pending_booking_model.dart';
+import 'package:intl/intl.dart';
+import 'package:salon_provider/model/response/booking_response.dart';
 import '../../../../config.dart';
+import '../../../../common/booking_status.dart';
 
 class StatusDetailLayout extends StatelessWidget {
-  final PendingBookingModel? data;
+  final Booking? data;
   final GestureTapCallback? onChat, onPhone, onMore, onTapStatus, locationTap;
 
   const StatusDetailLayout(
@@ -25,7 +27,9 @@ class StatusDetailLayout extends StatelessWidget {
                       height: Sizes.s140,
                       decoration: ShapeDecoration(
                           image: DecorationImage(
-                              image: AssetImage(data!.image!),
+                              image: NetworkImage(data!.serviceVersions?.first
+                                      ?.mainImageResponse?.url ??
+                                  ""),
                               fit: BoxFit.cover),
                           shape: const SmoothRectangleBorder(
                               borderRadius: SmoothBorderRadius.all(SmoothRadius(
@@ -35,21 +39,22 @@ class StatusDetailLayout extends StatelessWidget {
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Row(children: [
-                          Text(data!.bookingId!,
+                          Text("#${data!.id ?? ""}",
                               style: appCss.dmDenseMedium16.textColor(
                                   appColor(context).appTheme.primary)),
-                          if (data!.packageId != null)
-                            ButtonCommon(
-                                    title: appFonts.package,
-                                    width: Sizes.s68,
-                                    height: Sizes.s22,
-                                    color: appColor(context).appTheme.whiteBg,
-                                    radius: AppRadius.r12,
-                                    borderColor:
-                                        appColor(context).appTheme.online,
-                                    style: appCss.dmDenseMedium11.textColor(
-                                        appColor(context).appTheme.online))
-                                .paddingSymmetric(horizontal: Insets.i8)
+                          // if (data!.serviceVersions?.first.categoryResponse !=
+                          //     null)
+                          //   ButtonCommon(
+                          //           title: appFonts.package,
+                          //           width: Sizes.s68,
+                          //           height: Sizes.s22,
+                          //           color: appColor(context).appTheme.whiteBg,
+                          //           radius: AppRadius.r12,
+                          //           borderColor:
+                          //               appColor(context).appTheme.online,
+                          //           style: appCss.dmDenseMedium11.textColor(
+                          //               appColor(context).appTheme.online))
+                          //       .paddingSymmetric(horizontal: Insets.i8)
                         ]),
                         Row(children: [
                           Text(language(context, appFonts.viewStatus),
@@ -68,10 +73,10 @@ class StatusDetailLayout extends StatelessWidget {
                                 color: appColor(context)
                                     .appTheme
                                     .primary
-                                    .withOpacity(0.1))
+                                    .withValues(alpha: 0.1))
                             .inkWell(onTap: onTapStatus)
                       ]).paddingSymmetric(vertical: Insets.i15),
-                  Text(data!.title!,
+                  Text(data!.serviceVersions?.first.title ?? "",
                       style: appCss.dmDenseMedium16
                           .textColor(appColor(context).appTheme.darkText)),
                   const VSpace(Sizes.s15),
@@ -79,20 +84,28 @@ class StatusDetailLayout extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Row(children: [
-                          DescriptionLayoutCommon(
-                              icon: eSvgAssets.calender,
-                              title: data!.date!,
-                              subtitle: appFonts.date,
-                              padding: 0),
+                          Expanded(
+                            flex: 1,
+                            child: DescriptionLayoutCommon(
+                                icon: eSvgAssets.calender,
+                                title: DateFormat('dd/MM/yyyy')
+                                    .format(data!.bookingDate!),
+                                subtitle: appFonts.date,
+                                padding: 0),
+                          ),
                           Container(
                                   height: Sizes.s78,
                                   width: 1,
                                   color: appColor(context).appTheme.stroke)
                               .paddingSymmetric(horizontal: Insets.i20),
-                          DescriptionLayoutCommon(
-                              icon: eSvgAssets.clock,
-                              title: data!.time!,
-                              subtitle: appFonts.time)
+                          Expanded(
+                            flex: 1,
+                            child: DescriptionLayoutCommon(
+                                icon: eSvgAssets.clock,
+                                title: DateFormat('HH:mm a')
+                                    .format(data!.bookingDate!),
+                                subtitle: appFonts.time),
+                          ),
                         ]).paddingSymmetric(horizontal: Insets.i10),
                         const DottedLines(),
                         const VSpace(Sizes.s17),
@@ -114,16 +127,15 @@ class StatusDetailLayout extends StatelessWidget {
                                       color: appColor(context).appTheme.stroke)
                                   .paddingSymmetric(horizontal: Insets.i9),
                               Expanded(
-                                  child: Text(
-                                      language(context, data!.location!),
+                                  child: Text("user address",
                                       overflow: TextOverflow.fade,
                                       style: appCss.dmDenseRegular12.textColor(
                                           appColor(context).appTheme.darkText)))
                             ])).padding(
                             horizontal: Insets.i10, bottom: Insets.i15),
-                        if (data!.status != "Pending" &&
-                            data!.status != "Completed" &&
-                            data!.status != "Cancelled")
+                        if (data!.bookingStatus != BookingStatus.pending &&
+                            data!.bookingStatus != BookingStatus.completed &&
+                            data!.bookingStatus != BookingStatus.cancelled)
                           ViewLocationCommon(onTapArrow: locationTap)
                       ]).boxBorderExtension(context,
                       bColor: appColor(context).appTheme.stroke),
@@ -134,92 +146,66 @@ class StatusDetailLayout extends StatelessWidget {
                             style: appCss.dmDenseMedium12.textColor(
                                 appColor(context).appTheme.lightText)),
                         const VSpace(Sizes.s6),
-                        ReadMoreLayout(text: data!.description!)
+                        ReadMoreLayout(text: data!.notes ?? "")
                       ]).paddingSymmetric(vertical: Insets.i15),
-                  data!.status == "Completed" || data!.status == "Cancelled"
-                      ? CustomerLayoutOld(
-                          title: appFonts.customerDetails, data: data!.customer)
+                  data!.bookingStatus == BookingStatus.completed ||
+                          data!.bookingStatus == BookingStatus.cancelled
+                      ? CustomerLayout(
+                          title: appFonts.customerDetails, user: data!.user)
                       : CustomerServiceLayout(
                           title: appFonts.customerDetails,
-                          image: data!.customer!.image,
-                          name: data!.customer!.title,
-                          status: data!.status,
+                          image: data!.user?.userProfile?.profilePictureUrl,
+                          name:
+                              "${data!.user?.firstname} ${data!.user?.lastname}",
+                          phoneNumber: data!.user?.phoneNumber,
+                          status: data!.bookingStatus?.value,
                           chatTap: onChat,
                           moreTap: onMore,
                           phoneTap: onPhone),
                   if (isFreelancer != true) const VSpace(Sizes.s15),
                   if (isFreelancer != true)
-                    data!.servicemanList!.isEmpty
-                        /*? data!.status == "Accepted"
-                  ? const SizedBox()
-                  :*/
-                        ? Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                                const DottedLines(),
-                                const VSpace(Sizes.s10),
-                                RichText(
-                                    text: TextSpan(
-                                        style: appCss.dmDenseMedium12.textColor(
-                                            data!.status == "Assigned" ||
-                                                    data!.status ==
-                                                        language(context,
-                                                            appFonts.ongoing) ||
-                                                    data!.status ==
-                                                        "Cancelled" ||
-                                                    (data!.status ==
-                                                            "Accepted" &&
-                                                        data!.assignMe != "Yes")
-                                                ? appColor(context).appTheme.red
-                                                : appColor(context)
-                                                    .appTheme
-                                                    .darkText),
-                                        text: language(context, appFonts.note),
-                                        children: [
-                                      TextSpan(
-                                          style: appCss.dmDenseRegular12.textColor(data!
-                                                          .status ==
-                                                      "Assigned" ||
-                                                  data!.status ==
-                                                      language(context,
-                                                          appFonts.ongoing) ||
-                                                  data!.status == "Cancelled" ||
-                                                  (data!.status == "Accepted" &&
-                                                      data!.assignMe != "Yes")
-                                              ? appColor(context).appTheme.red
-                                              : appColor(context)
-                                                  .appTheme
-                                                  .darkText),
-                                          text: language(
-                                              context,
-                                              data!.status == "Assigned" ||
-                                                      data!.status ==
-                                                          language(
-                                                              context,
-                                                              appFonts
-                                                                  .ongoing) ||
-                                                      data!.status ==
-                                                          "Cancelled" ||
-                                                      (data!.status ==
-                                                              "Accepted" &&
-                                                          data!.assignMe != "Yes")
-                                                  ? appFonts.youAssignedService
-                                                  : appFonts.servicemenIsNotSelected))
-                                    ]))
-                              ])
-                        : Column(
-                            children: data!.servicemanList!
-                                .asMap()
-                                .entries
-                                .map((s) => CustomerServiceLayout(
-                                    title: appFonts.servicemanDetail,
-                                    name: s.value.title,
-                                    rate: s.value.rate,
-                                    moreTap: onMore,
-                                    chatTap: onChat,
-                                    image: s.value.image,
-                                    status: data!.status))
-                                .toList())
+                    Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const DottedLines(),
+                          const VSpace(Sizes.s10),
+                          RichText(
+                              text: TextSpan(
+                                  style: appCss.dmDenseMedium12.textColor(data!
+                                                  .bookingStatus ==
+                                              BookingStatus.confirmed ||
+                                          data!.bookingStatus ==
+                                              BookingStatus.inProgress ||
+                                          data!.bookingStatus ==
+                                              BookingStatus.cancelled
+                                      ? appColor(context).appTheme.red
+                                      : appColor(context).appTheme.darkText),
+                                  text: language(context, appFonts.note),
+                                  children: [
+                                TextSpan(
+                                    style: appCss.dmDenseRegular12.textColor(
+                                        data!.bookingStatus ==
+                                                    BookingStatus.confirmed ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.inProgress ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.cancelled
+                                            ? appColor(context).appTheme.red
+                                            : appColor(context)
+                                                .appTheme
+                                                .darkText),
+                                    text: language(
+                                        context,
+                                        data!.bookingStatus ==
+                                                    BookingStatus.confirmed ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.inProgress ||
+                                                data!.bookingStatus ==
+                                                    BookingStatus.cancelled
+                                            ? appFonts.youAssignedService
+                                            : appFonts.servicemenIsNotSelected))
+                              ]))
+                        ])
                 ]).paddingAll(Insets.i15).boxBorderExtension(context,
                     bColor: appColor(context).appTheme.stroke,
                     color: appColor(context).appTheme.whiteBg,

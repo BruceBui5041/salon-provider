@@ -22,7 +22,7 @@ export '../screens/auth_screens/current_location_screen/layouts/bottom_layout.da
 export '../screens/auth_screens/sign_up_company_screen/layouts/sign_up_three.dart';
 export '../screens/bottom_screens/dashboard_screen/dashboard_screen.dart';
 export '../screens/bottom_screens/wallet_screen/wallet_screen.dart';
-export '../screens/bottom_screens/booking_screen/custom_booking_screen.dart';
+export '../screens/bottom_screens/booking_screen/booking_screen.dart';
 export '../screens/bottom_screens/home_screen/home_screen.dart';
 export '../screens/bottom_screens/profile_screen/profile_screen.dart';
 export '../screens/bottom_screens/home_screen/layouts/social_layout.dart';
@@ -44,7 +44,7 @@ export '../screens/app_pages_screens/services_details_screen/layouts/service_rev
 export '../screens/app_pages_screens/services_details_screen/layouts/service_description.dart';
 export '../screens/app_pages_screens/services_details_screen/layouts/service_image_layout.dart';
 export '../screens/app_pages_screens/services_details_screen/layouts/services_image_layout.dart';
-export '../screens/app_pages_screens/services_details_screen/services_details_screen.dart';
+export '../screens/app_pages_screens/services_details_screen/services_details_screen_old.dart';
 export '../screens/app_pages_screens/service_review_screen/layouts/progress_bar_layout.dart';
 export '../screens/app_pages_screens/service_review_screen/layouts/rating_layout.dart';
 export '../screens/app_pages_screens/service_review_screen/service_review_screen.dart';
@@ -148,8 +148,8 @@ export '../screens/bottom_screens/booking_screen/layouts/status_row.dart';
 export '../screens/bottom_screens/booking_screen/layouts/booking_status_layout.dart';
 export '../screens/app_pages_screens/pending_booking_screen/layouts/status_steps_layout.dart';
 export '../screens/app_pages_screens/pending_booking_screen/layouts/bill_row_common.dart';
-export '../screens/app_pages_screens/pending_booking_screen/layouts/status_detail_layout.dart';
-export '../screens/app_pages_screens/pending_booking_screen/custom_pending_booking_screen.dart';
+export '../screens/app_pages_screens/pending_booking_screen/layouts/status_detail_layout_old.dart';
+export '../screens/app_pages_screens/pending_booking_screen/pending_booking_screen.dart';
 export '../screens/app_pages_screens/accept_booking_screen/accept_booking.dart';
 export '../screens/app_pages_screens/pending_booking_screen/layouts/booking_status_dialog.dart';
 export '../screens/app_pages_screens/accept_booking_screen/layouts/select_servicemen_sheet.dart';

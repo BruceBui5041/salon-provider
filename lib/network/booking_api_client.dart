@@ -16,9 +16,6 @@ abstract class BookingApiClient extends BaseApiClient {
   @PATCH("/accept/{id}")
   Future<BaseResponse<bool>> acceptBooking(@Path("id") String id);
 
-  @PATCH("/reject/{id}")
-  Future<BaseResponse<bool>> rejectBooking(@Path("id") String id);
-
   @PATCH("/complete/{id}")
   Future<BaseResponse<bool>> completeBooking(@Path("id") String id);
 

@@ -1,31 +1,10 @@
-import 'package:dio/dio.dart';
-import 'package:salon_provider/common/Utils.dart';
 import 'package:salon_provider/config.dart';
-import 'package:salon_provider/config/injection_config.dart';
-import 'package:salon_provider/model/response/service_response.dart';
-import 'package:salon_provider/repositories/all_service_repository.dart';
 
-class CustomServiceDetailsProvider with ChangeNotifier {
+class ServiceDetailsProviderOld with ChangeNotifier {
   int selectedIndex = 0;
   String? selectedImage;
-  ItemService? itemService;
-  List locationList = [];
-  var repo = getIt.get<AllServiceRepository>();
 
-  onInit(context) async {
-    var arg = ModalRoute.of(context)?.settings.arguments;
-    print(arg);
-    var service = arg as ItemService;
-    try {
-      var res = await repo.getServiceById(service.id ?? "");
-      itemService = res;
-    } catch (e) {
-      if (e is DioException) {
-        Utils.error(e);
-      }
-    }
-    notifyListeners();
-  }
+  List locationList = [];
 
   onImageChange(index, value) {
     selectedIndex = index;

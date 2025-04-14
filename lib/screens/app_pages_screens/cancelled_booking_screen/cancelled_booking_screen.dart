@@ -1,5 +1,5 @@
 import '../../../config.dart';
-import '../../app_pages_screens/pending_booking_screen/layouts/custom_status_detail_layout.dart';
+import '../pending_booking_screen/layouts/status_detail_layout.dart';
 
 class CancelledBookingScreen extends StatelessWidget {
   const CancelledBookingScreen({super.key});
@@ -19,7 +19,7 @@ class CancelledBookingScreen extends StatelessWidget {
                       child: Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                        CustomStatusDetailLayout(
+                        StatusDetailLayout(
                             onChat: () =>
                                 route.pushNamed(context, routeName.chat),
                             data: value.cancelledBooking,

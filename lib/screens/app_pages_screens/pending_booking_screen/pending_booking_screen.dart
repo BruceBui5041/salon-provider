@@ -1,10 +1,10 @@
 import 'package:salon_provider/providers/app_pages_provider/custom_pending_booking_provider.dart';
-import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/layouts/custom_status_detail_layout.dart';
+import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/layouts/status_detail_layout.dart';
 
 import '../../../config.dart';
 
-class CustomPendingBookingScreen extends StatelessWidget {
-  const CustomPendingBookingScreen({super.key});
+class PendingBookingScreen extends StatelessWidget {
+  const PendingBookingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -22,7 +22,7 @@ class CustomPendingBookingScreen extends StatelessWidget {
                           child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                        CustomStatusDetailLayout(
+                        StatusDetailLayout(
                             onMore: () => route.pushNamed(
                                 context, routeName.servicemanDetail,
                                 arg: false),

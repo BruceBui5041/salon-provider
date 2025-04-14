@@ -1,14 +1,14 @@
-import 'package:salon_provider/providers/bottom_providers/custom_booking_provider.dart';
-import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/custom_booking_layout.dart';
+import 'package:salon_provider/providers/bottom_providers/booking_provider.dart';
+import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/booking_layout.dart';
 
 import '../../../config.dart';
 
-class CustomBookingScreen extends StatelessWidget {
-  const CustomBookingScreen({super.key});
+class BookingScreen extends StatelessWidget {
+  const BookingScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<CustomBookingProvider>(
+    return Consumer<BookingProvider>(
       builder: (context, bookingProvider, _) {
         return StatefulWrapper(
           onInit: () => _initializeBookingScreen(context, bookingProvider),
@@ -22,7 +22,7 @@ class CustomBookingScreen extends StatelessWidget {
   }
 
   Future<void> _initializeBookingScreen(
-      BuildContext context, CustomBookingProvider provider) async {
+      BuildContext context, BookingProvider provider) async {
     await Future.delayed(
       const Duration(milliseconds: 50),
       () => provider.onReady(context),
@@ -30,7 +30,7 @@ class CustomBookingScreen extends StatelessWidget {
   }
 
   PreferredSizeWidget _buildAppBar(
-      BuildContext context, CustomBookingProvider provider) {
+      BuildContext context, BookingProvider provider) {
     return AppBar(
       leadingWidth: 0,
       centerTitle: false,
@@ -94,7 +94,7 @@ class CustomBookingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildBody(BuildContext context, CustomBookingProvider provider) {
+  Widget _buildBody(BuildContext context, BookingProvider provider) {
     return SingleChildScrollView(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -120,7 +120,7 @@ class CustomBookingScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildSearchField(CustomBookingProvider provider) {
+  Widget _buildSearchField(BookingProvider provider) {
     return SearchTextFieldCommon(
       focusNode: provider.searchFocus,
       controller: provider.searchCtrl,
@@ -136,8 +136,7 @@ class CustomBookingScreen extends StatelessWidget {
     ).paddingOnly(top: Insets.i25, bottom: Insets.i15);
   }
 
-  Widget _buildAssignMeSwitch(
-      BuildContext context, CustomBookingProvider provider) {
+  Widget _buildAssignMeSwitch(BuildContext context, BookingProvider provider) {
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
@@ -168,8 +167,7 @@ class CustomBookingScreen extends StatelessWidget {
         .paddingOnly(bottom: Insets.i20);
   }
 
-  Widget _buildBookingList(
-      BuildContext context, CustomBookingProvider provider) {
+  Widget _buildBookingList(BuildContext context, BookingProvider provider) {
     final bookings =
         isFreelancer ? provider.freelancerBookingList : provider.bookingList;
 
@@ -178,7 +176,7 @@ class CustomBookingScreen extends StatelessWidget {
           .asMap()
           .entries
           .map(
-            (e) => CustomBookingLayout(
+            (e) => BookingLayout(
               data: e.value,
               onTap: () {
                 provider.onTapBookings(e.value, context);

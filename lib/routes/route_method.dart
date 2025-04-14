@@ -1,6 +1,6 @@
 import 'package:salon_provider/screens/app_pages_screens/edit_service_screen/edit_service_screen.dart';
-import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/custom_pending_booking_screen.dart';
-import 'package:salon_provider/screens/app_pages_screens/services_details_screen/custom_services_details_screen.dart';
+import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/pending_booking_screen.dart';
+import 'package:salon_provider/screens/app_pages_screens/services_details_screen/services_details_screen.dart';
 import 'package:salon_provider/screens/auth_screens/register_screen/register_screen.dart';
 
 import '../config.dart';
@@ -21,7 +21,7 @@ class AppRoute {
     routeName.notification: (p0) => NotificationScreen(),
     routeName.serviceList: (p0) => ServiceListScreen(),
     routeName.addNewService: (p0) => AddNewServiceScreen(),
-    routeName.serviceDetails: (p0) => ServicesDetailsScreen(),
+    routeName.serviceDetails: (p0) => ServicesDetailsScreenOld(),
     routeName.serviceReview: (p0) => ServiceReviewScreen(),
     routeName.locationList: (p0) => LocationListScreen(),
     routeName.categories: (p0) => CategoriesListScreen(),
@@ -50,7 +50,7 @@ class AppRoute {
     routeName.providerReview: (p0) => ProviderReviewScreen(),
     routeName.planDetails: (p0) => PlanDetailsScreen(),
     routeName.subscriptionPlan: (p0) => SubscriptionPlanScreen(),
-    routeName.pendingBooking: (p0) => CustomPendingBookingScreen(),
+    routeName.pendingBooking: (p0) => PendingBookingScreen(),
     routeName.acceptedBooking: (p0) => AcceptBookingScreen(),
     routeName.bookingServicemenList: (p0) => BookingServicemenListScreen(),
     routeName.chat: (p0) => ChatScreen(),
@@ -71,7 +71,7 @@ class AppRoute {
     routeName.registerScreen: (p0) => RegisterScreen(),
     routeName.addNewService: (p0) => AddNewServiceScreen(),
     // routeName.editService: (p0) => EditServiceScreen(),
-    routeName.customPendingBooking: (p0) => CustomPendingBookingScreen(),
-    routeName.customServiceDetails: (p0) => CustomServicesDetailsScreen(),
+    routeName.customPendingBooking: (p0) => PendingBookingScreen(),
+    routeName.customServiceDetails: (p0) => ServicesDetailsScreen(),
   };
 }
