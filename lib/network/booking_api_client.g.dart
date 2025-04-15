@@ -21,7 +21,9 @@ class _BookingApiClient implements BookingApiClient {
 
   @override
   Future<BaseResponse<bool>> cancelBooking(
-      String id, CancelReq requestBody) async {
+    String id,
+    CancelReq requestBody,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

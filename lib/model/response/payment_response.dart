@@ -3,6 +3,8 @@ import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/payment_qr_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'package:salon_provider/model/response/user_response.dart';
+import 'package:salon_provider/common/payment_method.dart';
+import 'package:salon_provider/common/transaction_status.dart';
 part 'payment_response.g.dart';
 
 @JsonSerializable()
@@ -14,11 +16,11 @@ class Payment extends CommonResponse {
   @JsonKey(name: "currency")
   final String? currency;
   @JsonKey(name: "payment_method")
-  final String? paymentMethod;
+  final PaymentMethod? paymentMethod;
   @JsonKey(name: "transaction_id")
   final String? transactionId;
   @JsonKey(name: "transaction_status")
-  final String? transactionStatus;
+  final TransactionStatus? transactionStatus;
   @JsonKey(name: "payment_qr")
   final PaymentQr? paymentQr;
 
@@ -52,9 +54,9 @@ class Payment extends CommonResponse {
     int? userId,
     double? amount,
     String? currency,
-    String? paymentMethod,
+    PaymentMethod? paymentMethod,
     String? transactionId,
-    String? transactionStatus,
+    TransactionStatus? transactionStatus,
     PaymentQr? paymentQr,
     Booking? booking,
     UserResponse? user,
@@ -74,6 +76,14 @@ class Payment extends CommonResponse {
         transactionStatus: transactionStatus ?? this.transactionStatus,
         paymentQr: paymentQr ?? this.paymentQr,
       );
+
+  getPaymentMethod() {
+    return paymentMethod?.value.toLowerCase();
+  }
+
+  getTransactionStatus() {
+    return transactionStatus?.value.toLowerCase();
+  }
 
   factory Payment.fromJson(Map<String, dynamic> json) =>
       _$PaymentFromJson(json);

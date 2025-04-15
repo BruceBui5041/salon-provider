@@ -39,6 +39,123 @@ class BookingProvider with ChangeNotifier {
     super.dispose();
   }
 
+  Future<void> refreshBookings(BuildContext context) async {
+    _context = context;
+    isProcessing = true;
+    notifyListeners();
+
+    try {
+      List<List<Condition>>? conditions;
+
+      var userId = await AuthConfig.getUserId();
+      conditions = [
+        [
+          Condition(
+            source: "service_man_id",
+            operator: "=",
+            target: userId ?? "",
+          ),
+        ]
+      ];
+
+      // Add search condition if search text exists
+      if (searchCtrl.text.isNotEmpty) {
+        conditions[0].add(Condition(
+          source: "service_versions.title",
+          operator: "like",
+          target: searchCtrl.text,
+        ));
+      }
+
+      // Add status filter condition
+      if (statusIndex > 0 && statusIndex < appArray.bookingStatusList.length) {
+        String status;
+        switch (statusIndex) {
+          case 1:
+            status = bookingStatusPending;
+            break;
+          case 2:
+            status = bookingStatusConfirmed;
+            break;
+          case 3:
+            status = bookingStatusInProgress;
+            break;
+          case 4:
+            status = bookingStatusCompleted;
+            break;
+          case 5:
+            status = bookingStatusCancelled;
+            break;
+          default:
+            status = bookingStatusPending;
+        }
+        conditions[0].add(
+          Condition(
+            source: "booking_status",
+            operator: "=",
+            target: status,
+          ),
+        );
+      }
+
+      // Add date range filter condition
+      if (rangeStart != null && rangeEnd != null) {
+        final startDate =
+            DateTime(rangeStart!.year, rangeStart!.month, rangeStart!.day);
+        final endDate = DateTime(
+            rangeEnd!.year, rangeEnd!.month, rangeEnd!.day, 23, 59, 59);
+
+        conditions[0].addAll([
+          Condition(
+            source: "booking_date",
+            operator: ">=",
+            target: startDate.toIso8601String(),
+          ),
+          Condition(
+            source: "booking_date",
+            operator: "<=",
+            target: endDate.toIso8601String(),
+          ),
+        ]);
+      }
+
+      // Add category filter conditions
+      if (statusList.isNotEmpty) {
+        List<String> categoryIds = statusList
+            .map((index) {
+              if (index is int && index >= 0 && index < categories.length) {
+                return categories[index].id.toString();
+              }
+              return null;
+            })
+            .where((id) => id != null)
+            .cast<String>()
+            .toList();
+
+        if (categoryIds.isNotEmpty) {
+          conditions[0].add(
+            Condition(
+              source: "service_versions.category.id",
+              operator: "in",
+              target: categoryIds,
+            ),
+          );
+        }
+      }
+
+      var res = await repo.getBookings(conditions: conditions);
+      bookingList = res;
+      freelancerBookingList = res;
+    } catch (e) {
+      // Handle error if needed
+      bookingList = [];
+      freelancerBookingList = [];
+    } finally {
+      isProcessing = false;
+      notifyListeners();
+    }
+  }
+
   void _onSearchChanged() {
     if (_context != null) {
       // Skip if both previous and current search texts are empty
@@ -378,6 +495,7 @@ class BookingProvider with ChangeNotifier {
       // }
       route.pushNamed(context, routeName.customPendingBooking, arg: data.id);
     } else if (data.bookingStatus == BookingStatus.confirmed) {
+      route.pushNamed(context, routeName.assignBooking, arg: data.id);
       // if (isFreelancer) {
       //   route.pushNamed(context, routeName.assignBooking);
       // } else {
@@ -392,6 +510,7 @@ class BookingProvider with ChangeNotifier {
     } else if (data.status == appFonts.pendingApproval) {
       route.pushNamed(context, routeName.pendingApprovalBooking);
     } else if (data.bookingStatus == BookingStatus.inProgress) {
+      route.pushNamed(context, routeName.ongoingBooking, arg: data.id);
       // if (data.servicemanLists.isNotEmpty) {
       //   route
       //       .pushNamed(context, routeName.ongoingBooking, arg: {"bool": false});

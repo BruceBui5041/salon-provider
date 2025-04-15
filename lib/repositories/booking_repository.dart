@@ -6,7 +6,6 @@ import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/category_response.dart';
 import 'package:salon_provider/model/response/gen_qr_response.dart';
-import 'package:salon_provider/model/response/payment_qr_transaction.dart';
 import 'package:salon_provider/network/api.dart';
 
 class BookingRepository extends RepositoryConfig {
@@ -36,23 +35,6 @@ class BookingRepository extends RepositoryConfig {
 
   Future<GenQrResponse> getGenQrCode(Map<String, dynamic> requestBody) async {
     var res = await paymentClient.getGenQrCode(requestBody);
-    return res;
-  }
-
-  Future<List<ItemPaymentQrTransaction>> getPaymentByIdPayment(
-      String paymentId) async {
-    var body = SearchRequestBody(model: "payment", conditions: [
-      [
-        Condition(source: "id", operator: "=", target: paymentId),
-      ]
-    ], fields: [
-      FieldItem(field: "payment_qr"),
-    ]);
-    var response = await commonRestClient
-        .search<List<ItemPaymentQrTransaction>>(body.toJson());
-    var res = (response as List<dynamic>)
-        .map((e) => ItemPaymentQrTransaction.fromJson(e))
-        .toList();
     return res;
   }
 
@@ -113,6 +95,11 @@ class BookingRepository extends RepositoryConfig {
 
   Future<bool> acceptBooking(String bookingId) async {
     var response = await bookingClient.acceptBooking(bookingId);
+    return response.data ?? false;
+  }
+
+  Future<bool> inProgressBooking(String bookingId) async {
+    var response = await bookingClient.inProgressBooking(bookingId);
     return response.data ?? false;
   }
 

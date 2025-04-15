@@ -8,7 +8,9 @@ class OngoingBillSummary extends StatelessWidget {
     return Container(
         decoration: BoxDecoration(
             image: DecorationImage(
-                image: AssetImage( appColor(context).appTheme.isDark ? eImageAssets.completedBillBg : eImageAssets.ongoingBg),
+                image: AssetImage(appColor(context).appTheme.isDark
+                    ? eImageAssets.completedBillBg
+                    : eImageAssets.ongoingBg),
                 fit: BoxFit.fill)),
         child: Column(children: [
           BillRowCommon(title: appFonts.perServiceCharge, price: "\$12.00"),

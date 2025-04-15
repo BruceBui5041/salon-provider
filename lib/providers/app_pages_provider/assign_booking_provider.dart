@@ -1,30 +1,37 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
+import 'package:salon_provider/common/booking_status.dart';
 import 'package:salon_provider/config.dart';
-import '../../model/pending_booking_model.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/repositories/booking_repository.dart';
+import 'package:salon_provider/widgets/alert_dialog_common.dart';
+import 'package:salon_provider/widgets/app_alert_dialog_common.dart';
 
 class AssignBookingProvider with ChangeNotifier {
-  PendingBookingModel? assignBookingModel;
+  Booking? booking;
   bool isServicemen = false;
   String? amount;
+  final BookingRepository bookingRepository = getIt<BookingRepository>();
 
   TextEditingController reasonCtrl = TextEditingController();
   FocusNode reasonFocus = FocusNode();
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  onReady(context) {
-    if (isFreelancer != true) {
-      dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
-      log("AMOUNT DSAT $data");
-      if (data != "") {
-        isServicemen = data["bool"];
-        amount = data["amount"];
-      }
-    }
 
-    assignBookingModel = PendingBookingModel.fromJson(isServicemen
-        ? appArray.assignBookingDetailWithList
-        : appArray.assignBookingDetailList);
-    notifyListeners();
+  onReady(context) {
+    // Get booking from route parameters or use default ID for testing
+    String bookingId = ModalRoute.of(context)?.settings.arguments as String;
+
+    // Fetch booking data from repository
+    bookingRepository.getBookingByIdBooking(bookingId).then((value) {
+      if (value.isNotEmpty) {
+        booking = value.first;
+        notifyListeners();
+      }
+    }).catchError((error) {
+      log("Error fetching booking: $error");
+    });
   }
 
   showBookingStatus(context) {
@@ -37,28 +44,26 @@ class AssignBookingProvider with ChangeNotifier {
   }
 
   onStartServicePass(context) {
-    showDialog(
-        context: context,
-        builder: (context1) {
-          return AlertDialogCommon(
-              title: appFonts.startService,
-              image: eGifAssets.rocket,
-              subtext: appFonts.areYouSureStartService,
-              height: Sizes.s145,
-              isTwoButton: true,
-              firstBText: appFonts.cancel,
-              secondBText: appFonts.yes,
-              firstBTap: () => route.pop(context),
-              secondBTap: () {
-                route.pop(context);
-                if (isFreelancer) {
-                  route.pushNamed(context, routeName.ongoingBooking);
-                } else {
-                  route.pushNamed(context, routeName.ongoingBooking,
-                      arg: {"amount": amount});
-                }
-              });
-        });
+    if (booking != null) {
+      bookingRepository.inProgressBooking(booking!.id!).then((value) {
+        if (value) {
+          route.pushNamed(context, routeName.ongoingBooking, arg: booking!.id);
+        }
+      }).catchError((error) {
+        log("Error updating booking to in-progress: $error");
+        showDialog(
+          context: context,
+          builder: (context1) => AlertDialogCommon(
+            title: appFonts.errorOccur,
+            image: eGifAssets.error,
+            subtext: appFonts.doYouWant,
+            height: Sizes.s145,
+            bText1: appFonts.okay,
+            b1OnTap: () => route.pop(context),
+          ),
+        );
+      });
+    }
   }
 
   onCancel(context) {
@@ -86,11 +91,17 @@ class AssignBookingProvider with ChangeNotifier {
                           title: appFonts.reasonOfCancelBooking,
                           singleText: appFonts.send,
                           singleTap: () {
-                            if (formKey.currentState!.validate()) {
-                              route.pop(context);
-                              route.pop(context);
-                              route.pushNamed(
-                                  context, routeName.cancelledBooking);
+                            if (formKey.currentState!.validate() &&
+                                booking != null) {
+                              bookingRepository
+                                  .cancelBooking(booking!.id!, reasonCtrl.text)
+                                  .then((value) {
+                                if (value) {
+                                  route.pop(context);
+                                  route.pop(context);
+                                  route.pushNamed(context, routeName.dashboard);
+                                }
+                              });
                             }
                           },
                         ));

@@ -1,2 +1,2 @@
-bool isFreelancer = false;
+bool isFreelancer = true;
 bool isLogin = false;

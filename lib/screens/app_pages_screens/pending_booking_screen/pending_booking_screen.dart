@@ -57,8 +57,9 @@ class PendingBookingScreen extends StatelessWidget {
                   Material(
                     elevation: 20,
                     child: BottomSheetButtonCommon(
-                            textOne: appFonts.reject,
+                            textOne: appFonts.cancel,
                             textTwo: appFonts.accept,
+                            buttonOneColor: appColor(context).appTheme.red,
                             clearTap: () => value.onCancelBooking(context),
                             applyTap: () => value.onAcceptBooking(context))
                         .paddingAll(Insets.i20)

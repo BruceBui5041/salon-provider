@@ -66,4 +66,5 @@ class RouteName {
   final String addSingleService = 'addSingleService';
   final String editService = 'editService';
   final String customPendingBooking = 'customPendingBooking';
+  final String paymentQr = 'paymentQr';
 }

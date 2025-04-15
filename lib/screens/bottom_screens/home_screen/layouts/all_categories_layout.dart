@@ -43,8 +43,8 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
           ),
           Condition(
             source: "booking_status",
-            operator: "=",
-            target: "pending",
+            operator: "not in",
+            target: ["completed", "cancelled"],
           ),
         ]
       ];

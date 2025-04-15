@@ -95,27 +95,31 @@ class BookingScreen extends StatelessWidget {
   }
 
   Widget _buildBody(BuildContext context, BookingProvider provider) {
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          _buildSearchField(provider),
-          _buildAllBookingsHeader(context),
-          if (isFreelancer != true) _buildAssignMeSwitch(context, provider),
-          if (provider.isProcessing)
-            const Center(
-              child: CircularProgressIndicator(),
-            ).paddingSymmetric(vertical: Insets.i50)
-          else if (provider.bookingList.isNotEmpty ||
-              provider.freelancerBookingList.isNotEmpty)
-            _buildBookingList(context, provider)
-          else
-            _buildEmptyState(context),
-        ],
-      ).padding(
-        horizontal: Insets.i20,
-        top: Insets.i15,
-        bottom: Insets.i100,
+    return RefreshIndicator(
+      onRefresh: () => provider.refreshBookings(context),
+      child: SingleChildScrollView(
+        physics: const AlwaysScrollableScrollPhysics(),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            _buildSearchField(provider),
+            _buildAllBookingsHeader(context),
+            if (isFreelancer != true) _buildAssignMeSwitch(context, provider),
+            if (provider.isProcessing)
+              const Center(
+                child: CircularProgressIndicator(),
+              ).paddingSymmetric(vertical: Insets.i50)
+            else if (provider.bookingList.isNotEmpty ||
+                provider.freelancerBookingList.isNotEmpty)
+              _buildBookingList(context, provider)
+            else
+              _buildEmptyState(context),
+          ],
+        ).padding(
+          horizontal: Insets.i20,
+          top: Insets.i15,
+          bottom: Insets.i100,
+        ),
       ),
     );
   }

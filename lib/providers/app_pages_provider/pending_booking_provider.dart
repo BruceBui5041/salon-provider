@@ -66,67 +66,26 @@ class PendingBookingProvider with ChangeNotifier {
   }
 
   onAcceptBooking(context) {
-    if (isFreelancer) {
-      bookingRepository.acceptBooking(pendingBooking!.id!).then((value) {
-        if (value) {
-          route.pushNamed(context, routeName.acceptedBooking);
-        }
-      });
-    } else if (isServicemen == false) {
-      amountCtrl.text = "";
-      isAmount = false;
-      notifyListeners();
-      showModalBottomSheet(
-          isScrollControlled: true,
-          context: context,
-          builder: (context) => StatefulBuilder(builder: (context, setState) {
-                return Consumer<PendingBookingProvider>(
-                    builder: (context, value, child) {
-                  return ServicemenChargesSheet(
-                      formKey: amountFormKey,
-                      controller: amountCtrl,
-                      focusNode: amountFocus,
-                      onTap: () {
-                        if (amountFormKey.currentState!.validate()) {
-                          isAmount = true;
-                          route.pop(context);
-                          bookingRepository
-                              .acceptBooking(pendingBooking!.id!)
-                              .then((value) {
-                            if (value) {
-                              route.pushNamed(
-                                  context, routeName.acceptedBooking,
-                                  arg: {"amount": amountCtrl.text});
-                            }
-                          });
-                          notifyListeners();
-                        }
-                      });
-                });
-              }));
-    } else {
-      isAmount = false;
-      notifyListeners();
-      showDialog(
-        context: context,
-        builder: (context1) => AppAlertDialogCommon(
-          height: Sizes.s100,
-          title: appFonts.assignBooking,
-          firstBText: appFonts.doItLater,
-          secondBText: appFonts.yes,
-          image: eGifAssets.dateGif,
-          subtext: appFonts.doYouWant,
-          firstBTap: () => route.pop(context),
-          secondBTap: () {
-            route.pop(context);
-            bookingRepository.acceptBooking(pendingBooking!.id!).then((value) {
-              if (value) {
-                route.pushNamed(context, routeName.acceptedBooking);
-              }
-            });
-          },
-        ),
-      );
-    }
+    notifyListeners();
+    showDialog(
+      context: context,
+      builder: (context1) => AppAlertDialogCommon(
+        height: Sizes.s100,
+        title: appFonts.assignBooking,
+        firstBText: appFonts.doItLater,
+        secondBText: appFonts.yes,
+        image: eGifAssets.dateGif,
+        subtext: appFonts.doYouWant,
+        firstBTap: () => route.pop(context),
+        secondBTap: () {
+          route.pop(context);
+          bookingRepository.acceptBooking(pendingBooking!.id!).then((value) {
+            if (value) {
+              route.pushNamed(context, routeName.dashboard);
+            }
+          });
+        },
+      ),
+    );
   }
 }

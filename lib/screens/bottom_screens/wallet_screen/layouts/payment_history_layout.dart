@@ -42,7 +42,7 @@ class PaymentHistoryLayout extends StatelessWidget {
             if (data.booking?.id != null)
               BookingIdLayout(
                 id: data.booking!.id!,
-                transactionStatus: data.transactionStatus,
+                transactionStatus: data.transactionStatus?.name ?? 'N/A',
               )
           ]),
       const VSpace(Sizes.s12),
@@ -56,10 +56,10 @@ class PaymentHistoryLayout extends StatelessWidget {
           child: Column(children: [
             WalletRowLayout(id: "#${data.id ?? ''}", title: appFonts.paymentId),
             WalletRowLayout(
-                id: data.paymentMethod?.capitalizeFirst() ?? 'N/A',
+                id: data.paymentMethod?.name.capitalizeFirst() ?? 'N/A',
                 title: appFonts.methodType),
             WalletRowLayout(
-                id: data.transactionStatus?.capitalizeFirst() ?? 'N/A',
+                id: data.transactionStatus?.name.capitalizeFirst() ?? 'N/A',
                 title: appFonts.status)
           ]).padding(horizontal: Insets.i15, top: Insets.i15)),
       const VSpace(Sizes.s10),

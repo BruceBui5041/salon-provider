@@ -18,9 +18,11 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) => Payment(
       userId: (json['user_id'] as num?)?.toInt(),
       amount: (json['amount'] as num?)?.toDouble(),
       currency: json['currency'] as String?,
-      paymentMethod: json['payment_method'] as String?,
+      paymentMethod:
+          $enumDecodeNullable(_$PaymentMethodEnumMap, json['payment_method']),
       transactionId: json['transaction_id'] as String?,
-      transactionStatus: json['transaction_status'] as String?,
+      transactionStatus: $enumDecodeNullable(
+          _$TransactionStatusEnumMap, json['transaction_status']),
       paymentQr: json['payment_qr'] == null
           ? null
           : PaymentQr.fromJson(json['payment_qr'] as Map<String, dynamic>),
@@ -40,10 +42,22 @@ Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
       'user_id': instance.userId,
       'amount': instance.amount,
       'currency': instance.currency,
-      'payment_method': instance.paymentMethod,
+      'payment_method': _$PaymentMethodEnumMap[instance.paymentMethod],
       'transaction_id': instance.transactionId,
-      'transaction_status': instance.transactionStatus,
+      'transaction_status':
+          _$TransactionStatusEnumMap[instance.transactionStatus],
       'payment_qr': instance.paymentQr,
       'booking': instance.booking,
       'user': instance.user,
     };
+
+const _$PaymentMethodEnumMap = {
+  PaymentMethod.cash: 'cash',
+  PaymentMethod.transfer: 'transfer',
+};
+
+const _$TransactionStatusEnumMap = {
+  TransactionStatus.pending: 'pending',
+  TransactionStatus.completed: 'completed',
+  TransactionStatus.failed: 'cancelled',
+};

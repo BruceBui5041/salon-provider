@@ -117,14 +117,20 @@ class CancelledBillSummary extends StatelessWidget {
                       .textColor(appColor(context).appTheme.darkText),
                   style: appCss.dmDenseBold16
                       .textColor(appColor(context).appTheme.red))
-              .paddingOnly(bottom: Insets.i10),
-
+              .paddingOnly(bottom: Insets.i16),
+          Divider(
+                  color: appColor(context).appTheme.stroke,
+                  thickness: 1,
+                  height: 1,
+                  endIndent: 6,
+                  indent: 6)
+              .paddingOnly(bottom: Insets.i10, top: Insets.i16),
           // Total earned
           BillRowCommon(
                   title: appFonts.earnings,
                   price: "+${earnings.toString().toCurrencyVnd()}",
                   styleTitle: appCss.dmDenseMedium14
-                      .textColor(appColor(context).appTheme.darkText),
+                      .textColor(appColor(context).appTheme.primary),
                   style: appCss.dmDenseBold16
                       .textColor(appColor(context).appTheme.online))
               .paddingOnly(bottom: Insets.i10),
