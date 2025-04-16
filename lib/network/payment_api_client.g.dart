@@ -18,13 +18,15 @@ class _PaymentApiClient implements PaymentApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<GenQrResponse> getGenQrCode(Map<String, dynamic> requestBody) async {
+  Future<BaseResponse<CommonResponse>> genPaymentQrCode(
+    GenerateQRReq requestBody,
+  ) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(requestBody);
-    final _options = _setStreamType<GenQrResponse>(
+    _data.addAll(requestBody.toJson());
+    final _options = _setStreamType<BaseResponse<CommonResponse>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -35,9 +37,46 @@ class _PaymentApiClient implements PaymentApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late GenQrResponse _value;
+    late BaseResponse<CommonResponse> _value;
     try {
-      _value = GenQrResponse.fromJson(_result.data!);
+      _value = BaseResponse<CommonResponse>.fromJson(
+        _result.data!,
+        (json) => CommonResponse.fromJson(json as Map<String, dynamic>),
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
+  @override
+  Future<BaseResponse<List<Bank>>> getBanks() async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    const Map<String, dynamic>? _data = null;
+    final _options = _setStreamType<BaseResponse<List<Bank>>>(
+      Options(method: 'GET', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/payment/banks',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponse<List<Bank>> _value;
+    try {
+      _value = BaseResponse<List<Bank>>.fromJson(
+        _result.data!,
+        (json) => json is List<dynamic>
+            ? json
+                .map<Bank>((i) => Bank.fromJson(i as Map<String, dynamic>))
+                .toList()
+            : List.empty(),
+      );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

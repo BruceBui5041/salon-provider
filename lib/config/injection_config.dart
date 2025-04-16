@@ -3,6 +3,7 @@ import 'package:salon_provider/network/api_config.dart';
 import 'package:salon_provider/network/common_api.dart';
 import 'package:salon_provider/repositories/add_new_service_repository.dart';
 import 'package:salon_provider/repositories/edit_service_repository.dart';
+import 'package:salon_provider/repositories/payment_repository.dart';
 import 'package:salon_provider/repositories/popular_service_repository.dart';
 import 'package:salon_provider/repositories/login_repository.dart';
 import 'package:salon_provider/repositories/register_repository.dart';
@@ -32,6 +33,7 @@ Future<void> initInjector() async {
   getIt.registerLazySingleton(() => AddNewServiceRepository());
   getIt.registerLazySingleton(() => VerifyOtpRepository());
   getIt.registerLazySingleton(() => BookingRepository());
+  getIt.registerLazySingleton(() => PaymentRepository());
   getIt.registerLazySingleton(() => PopularServiceRepository());
   getIt.registerLazySingleton(() => AllServiceRepository());
   getIt.registerLazySingleton(() => EditServiceRepository());

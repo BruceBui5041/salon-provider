@@ -5,7 +5,6 @@ import 'package:salon_provider/model/request/cancel_req.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/category_response.dart';
-import 'package:salon_provider/model/response/gen_qr_response.dart';
 import 'package:salon_provider/network/api.dart';
 
 class BookingRepository extends RepositoryConfig {
@@ -30,11 +29,6 @@ class BookingRepository extends RepositoryConfig {
     var response = await commonRestClient.search<List<Booking>>(body.toJson());
     var res =
         (response as List<dynamic>).map((e) => Booking.fromJson(e)).toList();
-    return res;
-  }
-
-  Future<GenQrResponse> getGenQrCode(Map<String, dynamic> requestBody) async {
-    var res = await paymentClient.getGenQrCode(requestBody);
     return res;
   }
 

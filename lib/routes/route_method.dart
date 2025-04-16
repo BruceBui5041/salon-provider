@@ -1,4 +1,5 @@
 import 'package:salon_provider/screens/app_pages_screens/edit_service_screen/edit_service_screen.dart';
+import 'package:salon_provider/screens/app_pages_screens/payment_qr_screen/payment_qr_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/pending_booking_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/services_details_screen/services_details_screen.dart';
 import 'package:salon_provider/screens/auth_screens/register_screen/register_screen.dart';
@@ -62,6 +63,7 @@ class AppRoute {
     routeName.completedBooking: (p0) => CompletedBookingScreen(),
     routeName.addServiceProof: (p0) => AddServiceProofScreen(),
     routeName.cancelledBooking: (p0) => CancelledBookingScreen(),
+    routeName.paymentQr: (p0) => PaymentQrScreen(),
     routeName.earnings: (p0) => EarningScreen(),
     routeName.chatHistory: (p0) => ChatHistoryScreen(),
     routeName.addNewLocation: (p0) => AddNewLocation(),

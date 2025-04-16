@@ -111,7 +111,7 @@ class OngoingBookingScreen extends StatelessWidget {
         return ButtonCommon(
           title: "Payment QR", // When QR needs to be generated
           onTap: () => route.pushNamed(
-              context, routeName.addExtraCharges), // Using chat as fallback
+              context, routeName.paymentQr), // Using chat as fallback
         );
       }
     }

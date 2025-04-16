@@ -5,7 +5,10 @@ class CacheImageWidget extends StatefulWidget {
   final String? url;
   final double? width;
   final double? height;
-  const CacheImageWidget({super.key, this.url, this.width, this.height});
+  final BoxFit? fit;
+
+  const CacheImageWidget(
+      {super.key, this.url, this.width, this.height, this.fit = BoxFit.cover});
 
   @override
   State<CacheImageWidget> createState() => _CacheImageWidgetState();
@@ -14,8 +17,6 @@ class CacheImageWidget extends StatefulWidget {
 class _CacheImageWidgetState extends State<CacheImageWidget> {
   @override
   void initState() {
-    CookieConfig.setCookieToApi(
-        Uri.parse("https://d3i048dqjftjb3.cloudfront.net"));
     super.initState();
   }
 
@@ -25,7 +26,7 @@ class _CacheImageWidgetState extends State<CacheImageWidget> {
       width: widget.width,
       height: widget.height,
       child: CachedNetworkImage(
-        fit: BoxFit.cover,
+        fit: widget.fit ?? BoxFit.cover,
         imageUrl: widget.url ?? '',
         progressIndicatorBuilder: (context, url, downloadProgress) => Center(
             child: CircularProgressIndicator(value: downloadProgress.progress)),

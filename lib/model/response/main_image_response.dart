@@ -1,28 +1,26 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:salon_provider/model/response/base_response.dart';
 part 'main_image_response.g.dart';
 
 @JsonSerializable()
-class MainImageResponse {
-  String? id;
-  String? status;
-  String? createdAt;
-  String? updatedAt;
+class MainImageResponse extends CommonResponse {
   String? type;
   String? url;
 
-  MainImageResponse(
-      {this.id,
-      this.status,
-      this.createdAt,
-      this.updatedAt,
-      this.type,
-      this.url});
+  MainImageResponse({
+    super.id,
+    super.createdAt,
+    super.updatedAt,
+    super.status,
+    this.type,
+    this.url,
+  });
 
   MainImageResponse copyWith({
     String? id,
     String? status,
-    String? createdAt,
-    String? updatedAt,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? type,
     String? url,
   }) =>

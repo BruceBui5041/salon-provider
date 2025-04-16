@@ -576,4 +576,5 @@ dynamic en = {
       "Start searching your personalized service to make your home more better.",
   "addSelectLocation": "Add Select location",
   "mainImage": "Main image",
+  "generateQr": "Generate QR",
 };
