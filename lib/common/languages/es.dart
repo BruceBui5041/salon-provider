@@ -587,4 +587,5 @@ final dynamic es = {
       "Comienza a buscar tu servicio personalizado para hacer de tu hogar un lugar mejor.",
   "addSelectLocation": "Agregar Seleccionar ubicación",
   "mainImage": "Imagen principal",
+  "generateQr": "Generar QR",
 };

@@ -1,77 +1,180 @@
+import 'dart:convert';
 import 'package:salon_provider/model/response/bank_account_res.dart';
 import 'package:salon_provider/providers/app_pages_provider/payment_qr_provider.dart';
 import 'package:salon_provider/widgets/cache_image.dart';
 import '../../../config.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 
 class PaymentQrScreen extends StatelessWidget {
   const PaymentQrScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<PaymentQrProvider>(builder: (context, provider, child) {
-      return StatefulWrapper(
-        onInit: () => Future.delayed(
-            const Duration(milliseconds: 100), () => provider.onReady(context)),
-        child: Scaffold(
-          appBar: AppBarCommon(
-            title: 'Payment QR',
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.refresh),
-                onPressed: () => provider.refreshBanks(context),
-                tooltip: appFonts.refresh,
-              ),
-            ],
-          ),
-          body: Stack(
-            alignment: Alignment.bottomCenter,
+    // Get payment ID from route arguments with proper validation
+    final args = ModalRoute.of(context)?.settings.arguments;
+    String? paymentId;
+    if (args != null) {
+      if (args is String) {
+        paymentId = args;
+      }
+    }
+
+    if (paymentId == null || paymentId.isEmpty) {
+      // Return error screen
+      return Scaffold(
+        appBar: AppBarCommon(title: language(context, appFonts.payment)),
+        body: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.all(Insets.i20),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      ContainerWithTextLayout(
-                        title: appFonts.selectBank,
-                      ).paddingOnly(bottom: Insets.i12),
-                      _buildBankSelector(context, provider),
-                      const SizedBox(height: 24),
-                      if (provider.selectedBank != null)
-                        _buildSelectedBankCard(context, provider),
-                      if (provider.selectedBank == null)
-                        Padding(
-                          padding: const EdgeInsets.only(
-                              left: Insets.i20, top: Insets.i5),
-                          child: Text(
-                            provider.errorMessage ??
-                                'Please select a bank to generate QR code',
-                            style: appCss.dmDenseMedium12.textColor(
-                              appColor(context).appTheme.red,
-                            ),
-                          ),
-                        ),
-                    ],
-                  ),
-                ).paddingOnly(bottom: Insets.i100),
+              Icon(
+                Icons.error_outline,
+                size: 48,
+                color: appColor(context).appTheme.red,
               ),
-              Material(
-                elevation: 20,
-                child: BottomSheetButtonCommon(
-                  textOne: language(context, appFonts.cancel),
-                  textTwo: language(context, appFonts.generateQr),
-                  clearTap: () => route.pop(context),
-                  applyTap: () => provider.generateQrCode(context),
-                ).paddingAll(Insets.i20).decorated(
-                      color: appColor(context).appTheme.whiteBg,
-                    ),
+              const SizedBox(height: Insets.i20),
+              Text(
+                language(context, appFonts.errorOccur),
+                style: appCss.dmDenseMedium14.textColor(
+                  appColor(context).appTheme.red,
+                ),
               ),
             ],
           ),
         ),
       );
-    });
+    }
+
+    return ChangeNotifierProvider(
+      create: (_) => PaymentQrProvider(),
+      child: Consumer<PaymentQrProvider>(
+        builder: (context, provider, child) {
+          return StatefulWrapper(
+            onInit: () {
+              Future.delayed(
+                const Duration(milliseconds: 100),
+                () => provider.onReady(context, paymentId: paymentId),
+              );
+            },
+            child: Scaffold(
+              appBar: AppBarCommon(
+                title: language(context, appFonts.payment),
+                actions: [
+                  IconButton(
+                    icon: const Icon(Icons.refresh),
+                    onPressed: () => provider.refreshBanks(context),
+                    tooltip: language(context, appFonts.refresh),
+                  ),
+                ],
+              ),
+              body: Stack(
+                alignment: Alignment.bottomCenter,
+                children: [
+                  SingleChildScrollView(
+                    child: Padding(
+                      padding: const EdgeInsets.all(Insets.i20),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          if (provider.payment?.paymentQr == null) ...[
+                            ContainerWithTextLayout(
+                              title: appFonts.selectBank,
+                            ).paddingOnly(bottom: Insets.i12),
+                            _buildBankSelector(context, provider),
+                            const SizedBox(height: 24),
+                            if (provider.selectedBank != null)
+                              _buildSelectedBankCard(context, provider),
+                            if (provider.selectedBank == null)
+                              Padding(
+                                padding: const EdgeInsets.only(
+                                    left: Insets.i20, top: Insets.i5),
+                                child: Text(
+                                  provider.errorMessage ??
+                                      'Please select a bank to generate QR code',
+                                  style: appCss.dmDenseMedium12.textColor(
+                                    appColor(context).appTheme.red,
+                                  ),
+                                ),
+                              ),
+                          ],
+                          if (provider.payment?.paymentQr?.qrDataUrl !=
+                              null) ...[
+                            Container(
+                              height: Sizes.s200,
+                              width: Sizes.s200,
+                              padding: const EdgeInsets.all(Insets.i8),
+                              margin: const EdgeInsets.only(bottom: Insets.i16),
+                              decoration: BoxDecoration(
+                                color: appColor(context).appTheme.whiteBg,
+                                borderRadius:
+                                    BorderRadius.circular(AppRadius.r8),
+                              ),
+                              child: Image.memory(
+                                base64Decode(
+                                    provider.payment!.paymentQr!.qrDataUrl!),
+                                fit: BoxFit.contain,
+                              ),
+                            ),
+                            if (provider.payment?.paymentQr?.accountName !=
+                                null)
+                              Text(
+                                "${language(context, appFonts.holderName)}: ${provider.payment!.paymentQr!.accountName}",
+                                style: appCss.dmDenseMedium16.textColor(
+                                  appColor(context).appTheme.darkText,
+                                ),
+                                textAlign: TextAlign.center,
+                              ),
+                            if (provider.payment?.paymentQr?.accountNumber !=
+                                null)
+                              Padding(
+                                padding: const EdgeInsets.only(top: Insets.i8),
+                                child: Text(
+                                  "${language(context, appFonts.accountNo)}: ${provider.payment!.paymentQr!.accountNumber}",
+                                  style: appCss.dmDenseRegular14.textColor(
+                                    appColor(context).appTheme.lightText,
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ),
+                          ]
+                        ],
+                      ),
+                    ).paddingOnly(bottom: Insets.i100),
+                  ),
+                  if (provider.payment?.paymentQr != null)
+                    Material(
+                      elevation: 20,
+                      child: BottomSheetButtonCommon(
+                        textOne: language(context, appFonts.cancel),
+                        buttonOneColor: appColor(context).appTheme.red,
+                        textTwo: language(context, appFonts.generateQr),
+                        clearTap: () => route.pop(context),
+                        applyTap: () => provider.generateQrCode(context),
+                      ).paddingAll(Insets.i20).decorated(
+                            color: appColor(context).appTheme.whiteBg,
+                          ),
+                    )
+                  else
+                    Material(
+                      elevation: 20,
+                      child: BottomSheetButtonCommon(
+                        textOne: language(context, appFonts.cancel),
+                        buttonOneColor: appColor(context).appTheme.red,
+                        textTwo: language(context, appFonts.generateQr),
+                        clearTap: () => route.pop(context),
+                        applyTap: () => provider.generateQrCode(context),
+                      ).paddingAll(Insets.i20).decorated(
+                            color: appColor(context).appTheme.whiteBg,
+                          ),
+                    ),
+                ],
+              ),
+            ),
+          );
+        },
+      ),
+    );
   }
 
   Widget _buildBankSelector(BuildContext context, PaymentQrProvider provider) {
@@ -83,13 +186,13 @@ class PaymentQrScreen extends StatelessWidget {
         child: Column(
           children: [
             Text(
-              'No banks available',
+              language(context, appFonts.nothingHere),
               style: appCss.dmDenseMedium14,
             ),
             const SizedBox(height: 8),
             TextButton.icon(
               icon: const Icon(Icons.refresh),
-              label: Text(appFonts.refresh),
+              label: Text(language(context, appFonts.refresh)),
               onPressed: () => provider.refreshBanks(context),
             ),
           ],
@@ -122,7 +225,7 @@ class PaymentQrScreen extends StatelessWidget {
             ),
           ),
           hint: Text(
-            "-- ${appFonts.selectBank} --",
+            "-- ${language(context, appFonts.selectBank)} --",
             style: appCss.dmDenseMedium14.textColor(
               appColor(context).appTheme.lightText,
             ),
@@ -133,8 +236,9 @@ class PaymentQrScreen extends StatelessWidget {
               child: Row(
                 children: [
                   Container(
-                    height: Sizes.s40,
-                    width: Sizes.s40,
+                    height: Sizes.s50,
+                    width: Sizes.s50,
+                    padding: const EdgeInsets.all(4),
                     decoration: BoxDecoration(
                       color: appColor(context).appTheme.fieldCardBg,
                       borderRadius: BorderRadius.circular(AppRadius.r8),
@@ -142,8 +246,7 @@ class PaymentQrScreen extends StatelessWidget {
                     child: bank.logo != null && bank.logo!.isNotEmpty
                         ? CacheImageWidget(
                             url: bank.logo,
-                            width: Sizes.s40,
-                            height: Sizes.s40,
+                            fit: BoxFit.contain,
                           )
                         : Icon(
                             Icons.account_balance,
@@ -154,7 +257,7 @@ class PaymentQrScreen extends StatelessWidget {
                   const SizedBox(width: 12),
                   Expanded(
                     child: Text(
-                      bank.name ?? appFonts.bankName,
+                      bank.name ?? language(context, appFonts.bankName),
                       style: appCss.dmDenseMedium14.textColor(
                         appColor(context).appTheme.darkText,
                       ),
@@ -178,6 +281,7 @@ class PaymentQrScreen extends StatelessWidget {
           ),
           isExpanded: true,
           dropdownColor: appColor(context).appTheme.whiteBg,
+          menuMaxHeight: 300,
         ),
       );
     }

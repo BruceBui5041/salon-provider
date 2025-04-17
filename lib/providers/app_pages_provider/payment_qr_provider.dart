@@ -1,7 +1,11 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/model/request/generate_qr_req.dart';
 import 'package:salon_provider/model/response/bank_account_res.dart';
+import 'package:salon_provider/model/response/payment_response.dart';
 import 'package:salon_provider/repositories/payment_repository.dart';
+import 'package:salon_provider/screens/app_pages_screens/payment_qr_screen/layouts/qr_generate_dialog.dart';
 import '../../config.dart';
 
 class PaymentQrProvider with ChangeNotifier {
@@ -11,10 +15,26 @@ class PaymentQrProvider with ChangeNotifier {
   bool isLoading = false;
   String? errorMessage;
   BuildContext? _context;
+  String? paymentId;
+  Payment? payment;
+  bool isGeneratingQr = false;
 
-  onReady(BuildContext context) {
+  onReady(BuildContext context, {String? paymentId}) {
     _context = context;
+    this.paymentId = paymentId;
+    if (paymentId != null) {
+      _loadPayment();
+    }
     fetchBanks();
+  }
+
+  Future<void> _loadPayment() async {
+    try {
+      payment = await paymentRepository.getPaymentById(paymentId!);
+      notifyListeners();
+    } catch (e) {
+      // Handle error silently
+    }
   }
 
   Future<void> fetchBanks() async {
@@ -24,19 +44,11 @@ class PaymentQrProvider with ChangeNotifier {
 
     try {
       bankAccounts = await paymentRepository.getBankAccounts();
-
-      if (bankAccounts.isNotEmpty) {
-        debugPrint(
-            "Banks loaded successfully: ${bankAccounts.length} banks found");
-      } else {
-        debugPrint("No banks found from repository");
-      }
       isLoading = false;
       notifyListeners();
     } catch (e) {
       isLoading = false;
       errorMessage = "Failed to load banks: ${e.toString()}";
-      debugPrint(errorMessage);
       notifyListeners();
 
       // Show error to user if context is available
@@ -50,7 +62,6 @@ class PaymentQrProvider with ChangeNotifier {
 
   void selectBank(BankAccountRes? bank) {
     selectedBank = bank;
-    debugPrint("Selected bank: ${bank?.name ?? 'None'} with ID: ${bank?.id}");
     notifyListeners();
   }
 
@@ -58,39 +69,53 @@ class PaymentQrProvider with ChangeNotifier {
     _context = context;
     fetchBanks();
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Refreshing banks list...')),
+      SnackBar(content: Text(language(context, appFonts.refresh))),
     );
   }
 
-  void generateQrCode(BuildContext context) {
-    if (selectedBank == null) {
-      showDialog(
-        context: context,
-        builder: (context1) => AppAlertDialogCommon(
-          height: Sizes.s100,
-          title: 'Select Bank',
-          singleText: 'OK',
-          image: eGifAssets.error,
-          subtext: 'Please select a bank first',
-          singleTap: () => route.pop(context),
-        ),
-      );
-      return;
-    }
-
-    debugPrint("Generating QR code for bank: ${selectedBank!.name}");
-
-    // Here you would typically generate or fetch a QR code
-    // For now we'll just show a success dialog
+  Future<void> generateQrCode(BuildContext context) async {
     showDialog(
       context: context,
-      builder: (context1) => AppAlertDialogCommon(
-        height: Sizes.s100,
-        title: 'QR Generated',
-        singleText: 'OK',
-        image: eGifAssets.successGif,
-        subtext: 'QR code generated successfully for ${selectedBank!.name}',
-        singleTap: () => route.pop(context),
+      barrierDismissible: true,
+      builder: (context1) => QrGenerateDialog(
+        selectedBank: selectedBank,
+        payment: payment,
+        paymentId: paymentId,
+        isGeneratingQr: isGeneratingQr,
+        onGenerateQr: () async {
+          if (paymentId == null || selectedBank == null) return;
+
+          isGeneratingQr = true;
+          notifyListeners();
+
+          try {
+            final request = GenerateQRReq(
+              paymentId: paymentId!,
+              bankAccountId: selectedBank!.id!,
+            );
+
+            await paymentRepository.genPaymentQrCode(request);
+            await _loadPayment(); // Reload payment to get the new QR
+
+            isGeneratingQr = false;
+            notifyListeners();
+
+            // Close the current QR generation dialog
+            route.pop(context);
+
+            // Show the QR display dialog again
+            generateQrCode(context);
+          } catch (e) {
+            isGeneratingQr = false;
+            notifyListeners();
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(
+                content: Text('Failed to generate QR: ${e.toString()}'),
+              ),
+            );
+          }
+        },
       ),
     );
   }

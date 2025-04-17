@@ -577,4 +577,5 @@ dynamic en = {
   "addSelectLocation": "Add Select location",
   "mainImage": "Main image",
   "generateQr": "Generate QR",
+  "showQr": "Show QR",
 };

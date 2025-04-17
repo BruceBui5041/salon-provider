@@ -1,10 +1,10 @@
+import 'package:salon_provider/common/booking_status.dart';
 import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/screens/bottom_screens/home_screen/layouts/all_service_layout.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/booking_layout.dart';
-import 'package:salon_provider/model/booking_model.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../config.dart';
@@ -69,29 +69,24 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
 
   // Handler for tapping on a booking in CustomBookingLayout
   void _onTapBooking(
-      Booking booking, BuildContext context, HomeProvider provider) {
-    final status = booking.bookingStatus?.toLowerCase();
+    Booking booking,
+    BuildContext context,
+    HomeProvider provider,
+  ) {
+    final status = booking.bookingStatus;
 
-    if (status == appFonts.pending.toLowerCase()) {
-      route.pushNamed(context, routeName.pendingBooking, arg: booking.id);
-    } else if (status == appFonts.accepted.toLowerCase()) {
-      if (isFreelancer) {
-        route.pushNamed(context, routeName.assignBooking);
-      } else {
-        route.pushNamed(context, routeName.acceptedBooking);
-      }
-    } else if (status == "pending_approval") {
+    if (status == BookingStatus.pending) {
+      route.pushNamed(context, routeName.customPendingBooking, arg: booking.id);
+    } else if (status == BookingStatus.confirmed) {
+      route.pushNamed(context, routeName.assignBooking, arg: booking.id);
+    } else if (status == appFonts.pendingApproval) {
       route.pushNamed(context, routeName.pendingApprovalBooking);
-    } else if (status == appFonts.ongoing.toLowerCase()) {
-      route.pushNamed(context, routeName.ongoingBooking, arg: {"bool": true});
-    } else if (status == appFonts.hold.toLowerCase()) {
-      route.pushNamed(context, routeName.holdBooking);
-    } else if (status == appFonts.completed.toLowerCase()) {
+    } else if (status == BookingStatus.inProgress) {
+      route.pushNamed(context, routeName.ongoingBooking, arg: booking.id);
+    } else if (status == BookingStatus.completed) {
       route.pushNamed(context, routeName.completedBooking);
-    } else if (status == appFonts.cancelled.toLowerCase()) {
+    } else if (status == BookingStatus.cancelled) {
       route.pushNamed(context, routeName.cancelledBooking, arg: booking.id);
-    } else if (status == appFonts.assigned.toLowerCase()) {
-      route.pushNamed(context, routeName.assignBooking, arg: {"bool": false});
     }
   }
 

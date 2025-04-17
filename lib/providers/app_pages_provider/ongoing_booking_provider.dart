@@ -1,11 +1,14 @@
+import 'dart:convert';
 import 'dart:developer';
 
+import 'package:provider/provider.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
 import 'package:salon_provider/common/payment_method.dart';
 import 'package:salon_provider/common/transaction_status.dart';
+import 'package:salon_provider/screens/app_pages_screens/ongoing_booking_screen/layouts/show_qr_dialog.dart';
 
 class OngoingBookingProvider with ChangeNotifier {
   Booking? ongoingBookingModel;
@@ -100,6 +103,40 @@ class OngoingBookingProvider with ChangeNotifier {
                 ?.copyWith(transactionStatus: TransactionStatus.completed));
         notifyListeners();
       }
+    }
+  }
+
+  void navigateToPaymentQr(BuildContext context) {
+    // First check if we have a valid booking model
+    if (ongoingBookingModel == null) {
+      return;
+    }
+
+    // Then check if we have a payment
+    if (ongoingBookingModel?.payment == null) {
+      return;
+    }
+
+    // Finally check if we have a payment ID
+    final paymentId = ongoingBookingModel?.payment?.id;
+    if (paymentId == null || paymentId.isEmpty) {
+      return;
+    }
+
+    if (ongoingBookingModel?.payment?.paymentQr != null) {
+      // If QR exists, show QR dialog directly
+      showDialog(
+        context: context,
+        barrierDismissible: true,
+        builder: (context1) => ShowQrDialog(booking: ongoingBookingModel!),
+      );
+    } else {
+      // If no QR exists, navigate to QR screen
+      route.pushNamed(
+        context,
+        routeName.paymentQr,
+        arg: paymentId,
+      );
     }
   }
 }

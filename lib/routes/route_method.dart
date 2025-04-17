@@ -63,7 +63,7 @@ class AppRoute {
     routeName.completedBooking: (p0) => CompletedBookingScreen(),
     routeName.addServiceProof: (p0) => AddServiceProofScreen(),
     routeName.cancelledBooking: (p0) => CancelledBookingScreen(),
-    routeName.paymentQr: (p0) => PaymentQrScreen(),
+    routeName.paymentQr: (p0) => const PaymentQrScreen(),
     routeName.earnings: (p0) => EarningScreen(),
     routeName.chatHistory: (p0) => ChatHistoryScreen(),
     routeName.addNewLocation: (p0) => AddNewLocation(),

@@ -103,15 +103,13 @@ class OngoingBookingScreen extends StatelessWidget {
       // Check if payment QR exists
       if (value.hasPaymentQr) {
         return ButtonCommon(
-          title: "Show QR", // When QR is already generated
-          onTap: () => route.pushNamed(
-              context, routeName.addExtraCharges), // Using chat as fallback
+          title: language(context, appFonts.showQr),
+          onTap: () => value.navigateToPaymentQr(context),
         );
       } else {
         return ButtonCommon(
-          title: "Payment QR", // When QR needs to be generated
-          onTap: () => route.pushNamed(
-              context, routeName.paymentQr), // Using chat as fallback
+          title: language(context, appFonts.generateQr),
+          onTap: () => value.navigateToPaymentQr(context),
         );
       }
     }
@@ -119,7 +117,7 @@ class OngoingBookingScreen extends StatelessWidget {
     // Case 2: Payment method is cash and status is pending
     else if (value.isCashPayment && value.isPaymentPending) {
       return ButtonCommon(
-        title: "Paid", // Fixed string instead of appFonts
+        title: language(context, appFonts.payment),
         onTap: () => value.markPaymentCompleted(context),
         color: appColor(context).appTheme.online,
       );
@@ -128,7 +126,7 @@ class OngoingBookingScreen extends StatelessWidget {
     // Case 3: Payment status is completed (disabled button)
     else if (value.isPaymentCompleted) {
       return ButtonCommon(
-        title: "Paid", // Fixed string instead of appFonts
+        title: language(context, appFonts.payment),
         onTap: null, // Disabled button
         color: appColor(context)
             .appTheme
@@ -139,7 +137,7 @@ class OngoingBookingScreen extends StatelessWidget {
     // Default case: Add extra charges
     else {
       return ButtonCommon(
-        title: appFonts.addCharges,
+        title: language(context, appFonts.addCharges),
         onTap: () => route.pushNamed(context, routeName.addExtraCharges),
       );
     }

@@ -588,9 +588,10 @@ final dynamic fr = {
   "attemptYourSearch":
       "Retentez votre recherche avec des mots plus universels.",
   "searchAgain": "Chercher à nouveau",
-  "youHaveNotSearch": "Vous n’avez encore rien recherché !",
+  "youHaveNotSearch": "Vous n'avez encore rien recherché !",
   "startSearching":
       "Commencez à rechercher votre service personnalisé pour améliorer votre maison.",
   "addSelectLocation": "Ajouter Sélectionner un emplacement",
   "mainImage": "Image principale",
+  "generateQr": "Générer QR",
 };

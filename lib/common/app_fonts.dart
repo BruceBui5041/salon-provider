@@ -559,4 +559,5 @@ class AppFonts {
   final selectLocationFirst = "Select location first...";
   final areYouSure = "Are you sure want to Logout ?";
   final generateQr = "generateQr";
+  final showQr = "showQr";
 }
