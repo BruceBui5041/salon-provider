@@ -84,7 +84,7 @@ class _AllCategoriesLayoutState extends State<AllCategoriesLayout> {
     } else if (status == BookingStatus.inProgress) {
       route.pushNamed(context, routeName.ongoingBooking, arg: booking.id);
     } else if (status == BookingStatus.completed) {
-      route.pushNamed(context, routeName.completedBooking);
+      route.pushNamed(context, routeName.completedBooking, arg: booking.id);
     } else if (status == BookingStatus.cancelled) {
       route.pushNamed(context, routeName.cancelledBooking, arg: booking.id);
     }

@@ -16,6 +16,8 @@ class OngoingBookingProvider with ChangeNotifier {
   bool isServicemen = false;
   TextEditingController reasonCtrl = TextEditingController();
   final BookingRepository bookingRepository = getIt<BookingRepository>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  final FocusNode reasonFocus = FocusNode();
 
   // Updated payment status properties to use enum values directly
   bool get isPaymentPending =>
@@ -138,5 +140,32 @@ class OngoingBookingProvider with ChangeNotifier {
         arg: paymentId,
       );
     }
+  }
+
+  onCancelBooking(context) {
+    showDialog(
+        context: context,
+        builder: (context1) => AppAlertDialogCommon(
+            isField: true,
+            validator: (value) => validation.commonValidation(context, value),
+            focusNode: reasonFocus,
+            controller: reasonCtrl,
+            title: appFonts.reasonOfRejectBooking,
+            singleText: appFonts.send,
+            globalKey: formKey,
+            singleTap: () {
+              if (formKey.currentState!.validate()) {
+                route.pop(context);
+                bookingRepository
+                    .cancelBooking(ongoingBookingModel!.id!, reasonCtrl.text)
+                    .then((value) {
+                  if (value) {
+                    route.pop(context);
+                    route.pushNamed(context, routeName.dashboard);
+                  }
+                });
+              }
+              notifyListeners();
+            }));
   }
 }

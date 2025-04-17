@@ -14,7 +14,21 @@ class OngoingBookingScreen extends StatelessWidget {
         onInit: () => Future.delayed(
             const Duration(milliseconds: 50), () => value.onReady(context)),
         child: Scaffold(
-          appBar: AppBarCommon(title: appFonts.ongoingBooking),
+          appBar: AppBarCommon(
+            title: appFonts.ongoingBooking,
+            actions: [
+              TextButton(
+                onPressed: () => route.pushNamed(
+                    context, routeName.completedBooking,
+                    arg: value.ongoingBookingModel?.id),
+                child: Text(
+                  language(context, appFonts.paid).toUpperCase(),
+                  style: appCss.dmDenseBold16
+                      .textColor(appColor(context).appTheme.online),
+                ),
+              ).paddingOnly(right: Insets.i10),
+            ],
+          ),
           body: value.ongoingBookingModel == null
               ? Center(child: CircularProgressIndicator())
               : Stack(
@@ -71,10 +85,9 @@ class OngoingBookingScreen extends StatelessWidget {
                         child: Row(children: [
                           Expanded(
                               child: ButtonCommon(
-                                  onTap: () => route.pushNamed(
-                                      context, routeName.completedBooking),
-                                  title: appFonts.complete,
-                                  color: appColor(context).appTheme.green)),
+                                  onTap: () => value.onCancelBooking(context),
+                                  title: appFonts.cancel,
+                                  color: appColor(context).appTheme.red)),
                           const HSpace(Sizes.s15),
                           Expanded(
                             child: _buildSecondaryButton(context, value),

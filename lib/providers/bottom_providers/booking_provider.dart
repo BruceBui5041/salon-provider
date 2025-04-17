@@ -511,18 +511,8 @@ class BookingProvider with ChangeNotifier {
       route.pushNamed(context, routeName.pendingApprovalBooking);
     } else if (data.bookingStatus == BookingStatus.inProgress) {
       route.pushNamed(context, routeName.ongoingBooking, arg: data.id);
-      // if (data.servicemanLists.isNotEmpty) {
-      //   route
-      //       .pushNamed(context, routeName.ongoingBooking, arg: {"bool": false});
-      // } else {
-      //   route.pushNamed(context, routeName.ongoingBooking, arg: {"bool": true});
-      // }
-    }
-    // else if (data.bookingStatus == BookingStatus.hold) {
-    //   route.pushNamed(context, routeName.holdBooking);
-    // }
-    else if (data.bookingStatus == BookingStatus.completed) {
-      route.pushNamed(context, routeName.completedBooking);
+    } else if (data.bookingStatus == BookingStatus.completed) {
+      route.pushNamed(context, routeName.completedBooking, arg: data.id);
     } else if (data.bookingStatus == BookingStatus.cancelled) {
       route.pushNamed(context, routeName.cancelledBooking, arg: data.id);
     }

@@ -1,5 +1,4 @@
 import 'package:salon_provider/config.dart';
-import 'package:salon_provider/config/cookie_config.dart';
 
 class CacheImageWidget extends StatefulWidget {
   final String? url;

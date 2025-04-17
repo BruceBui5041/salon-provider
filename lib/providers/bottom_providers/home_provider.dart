@@ -1,5 +1,5 @@
 import 'package:salon_provider/config.dart';
-import '../../model/booking_model.dart';
+import 'package:salon_provider/common/booking_status.dart';
 import '../../model/response/booking_response.dart';
 import '../../widgets/withdraw_amount_bottom_sheet.dart';
 
@@ -135,7 +135,7 @@ class HomeProvider with ChangeNotifier {
     } else if (data.status == appFonts.hold) {
       route.pushNamed(context, routeName.holdBooking);
     } else if (data.status == appFonts.completed) {
-      route.pushNamed(context, routeName.completedBooking);
+      route.pushNamed(context, routeName.completedBooking, arg: data.id);
     } else if (data.status == appFonts.cancelled) {
       route.pushNamed(context, routeName.cancelledBooking);
     } else if (data.status == appFonts.assigned) {
@@ -144,6 +144,12 @@ class HomeProvider with ChangeNotifier {
       } else {
         route.pushNamed(context, routeName.assignBooking, arg: {"bool": false});
       }
+    } else if (data.bookingStatus == BookingStatus.inProgress) {
+      route.pushNamed(context, routeName.ongoingBooking, arg: data.id);
+    } else if (data.bookingStatus == BookingStatus.completed) {
+      route.pushNamed(context, routeName.completedBooking, arg: data.id);
+    } else if (data.bookingStatus == BookingStatus.cancelled) {
+      route.pushNamed(context, routeName.cancelledBooking, arg: data.id);
     }
   }
 

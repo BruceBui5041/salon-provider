@@ -578,4 +578,5 @@ dynamic en = {
   "mainImage": "Main image",
   "generateQr": "Generate QR",
   "showQr": "Show QR",
+  "paid": "Paid",
 };

@@ -471,6 +471,7 @@ class AppFonts {
   final addServiceDetails = "addServiceDetails";
   final ongoingBooking = "ongoingBooking";
   final advancePaid = "advancePaid";
+  final paid = "paid";
   final payableAmount = "payableAmount";
   final takeABreak = "takeABreak";
   final holdBooking = "holdBooking";

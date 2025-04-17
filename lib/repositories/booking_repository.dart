@@ -97,6 +97,11 @@ class BookingRepository extends RepositoryConfig {
     return response.data ?? false;
   }
 
+  Future<bool> completeBooking(String id) async {
+    final response = await bookingClient.completeBooking(id);
+    return response.data ?? false;
+  }
+
   // Future<void> updateBooking(Booking booking) async {}
 
   // Future<void> deleteBooking(String bookingId) async {}
