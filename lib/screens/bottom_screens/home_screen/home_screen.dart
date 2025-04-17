@@ -1,5 +1,6 @@
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/home_screen_provider.dart';
+import 'package:salon_provider/screens/bottom_screens/home_screen/layouts/all_categories_layout.dart';
 
 import '../../../config.dart';
 
@@ -19,7 +20,6 @@ class _HomeScreenState extends State<HomeScreen>
   @override
   void dispose() {
     controller.dispose();
-    // TODO: implement dispose
     super.dispose();
   }
 
@@ -27,39 +27,45 @@ class _HomeScreenState extends State<HomeScreen>
   void initState() {
     controller =
         AnimationController(vsync: this, duration: const Duration(seconds: 4));
-    animation = Tween(end: 1.0, begin: 0.0).animate(controller)
-      ..addListener(() {
-        setState(() {});
-        controller.repeat();
-      })
-      ..addStatusListener((status) {
-        status = status;
-      });
-
+    animation = Tween(end: 1.0, begin: 0.0).animate(controller);
     controller.repeat();
     initData();
-    // TODO: implement initState
     super.initState();
   }
 
   Future<void> initData() async {
     Provider.of<AllServiceProvider>(context, listen: false).getAllServices();
-    // Fetch earnings data
     Provider.of<HomeScreenProvider>(context, listen: false)
         .getProviderEarnings();
+    // Also get recent bookings here
+    Provider.of<HomeProvider>(context, listen: false).getRecentBookings();
   }
 
   Future<void> _onRefresh() async {
-    // Reload data from providers
     await Provider.of<AllServiceProvider>(context, listen: false)
         .getAllServices();
     await Provider.of<HomeScreenProvider>(context, listen: false)
         .getProviderEarnings();
+    await Provider.of<HomeProvider>(context, listen: false).getRecentBookings();
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<HomeProvider>(builder: (context, value, child) {
+      // Show error Snackbar if there is one
+      if (value.error != null) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text(value.error!),
+              backgroundColor: appColor(context).appTheme.red,
+            ),
+          );
+          // Clear error after showing
+          value.error = null;
+        });
+      }
+
       return StatefulWrapper(
           onInit: () => Future.delayed(const Duration(milliseconds: 100),
               () => value.onReady(context, this)),
@@ -78,10 +84,7 @@ class _HomeScreenState extends State<HomeScreen>
                       const VSpace(Sizes.s16),
                       Consumer<HomeScreenProvider>(
                           builder: (context, homeScreenProvider, _) {
-                        // Generate earning data tiles based on the api response
                         final earningData = homeScreenProvider.earningData;
-
-                        // Define our earnings grid data
                         final List<Map<String, dynamic>> earningGridItems = [
                           {
                             "title": appFonts.totalEarning,
@@ -125,8 +128,6 @@ class _HomeScreenState extends State<HomeScreen>
                                     .toList())
                             .paddingSymmetric(horizontal: Insets.i20);
                       }),
-                      // // const VSpace(Sizes.s25),
-                      // const StaticDetailChart(),
                       const AllCategoriesLayout(),
                     ]).paddingOnly(bottom: Insets.i110))),
           ));

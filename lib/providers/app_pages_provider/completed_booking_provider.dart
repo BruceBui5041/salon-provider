@@ -57,7 +57,7 @@ class CompletedBookingProvider with ChangeNotifier {
         firstBText: appFonts.cancel,
         secondBText: appFonts.yes,
         image: eGifAssets.dateGif,
-        subtext: appFonts.doYouWant,
+        subtext: appFonts.areYouSureYourself,
         firstBTap: () => route.pop(context),
         secondBTap: () {
           route.pop(context);

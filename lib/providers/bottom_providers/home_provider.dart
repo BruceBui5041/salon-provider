@@ -1,13 +1,18 @@
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/common/booking_status.dart';
+import 'package:salon_provider/config/auth_config.dart';
+import 'package:salon_provider/model/request/search_request_model.dart';
 import '../../model/response/booking_response.dart';
 import '../../widgets/withdraw_amount_bottom_sheet.dart';
+import '../../repositories/booking_repository.dart';
 
 class HomeProvider with ChangeNotifier {
-  List recentBookingList = [];
+  List<Booking> recentBookingList = [];
   bool isSwitch = true;
   int selectedIndex = 0;
   int selectType = 0;
+  final BookingRepository _bookingRepository = BookingRepository();
+  String? error;
 
   AnimationStatus status = AnimationStatus.dismissed;
   TextEditingController amountCtrl = TextEditingController();
@@ -29,26 +34,38 @@ class HomeProvider with ChangeNotifier {
 
   int touchedGroupIndex = -1;
 
+  Future<void> getRecentBookings() async {
+    try {
+      var userId = await AuthConfig.getUserId();
+      var conditions = [
+        [
+          Condition(
+            source: "service_man_id",
+            operator: "=",
+            target: userId ?? "",
+          ),
+          Condition(
+            source: "booking_status",
+            operator: "not in",
+            target: ["completed", "cancelled"],
+          ),
+        ]
+      ];
+      final bookingResponse = await _bookingRepository.getBookings(
+        conditions: conditions,
+        limit: 5,
+      );
+
+      updateRecentBookings(bookingResponse);
+    } catch (e) {
+      error = "Failed to load bookings";
+      notifyListeners();
+    }
+  }
+
   // Update recentBookingList from API data
   void updateRecentBookings(List<Booking> bookings) {
-    recentBookingList = [];
-
-    // Convert API bookings to Booking
-    for (var booking in bookings) {
-      String? serviceName;
-      String? serviceImage;
-
-      if (booking.serviceVersions != null &&
-          booking.serviceVersions!.isNotEmpty) {
-        serviceName = booking.serviceVersions![0].title;
-        if (booking.serviceVersions![0].mainImageResponse != null) {
-          serviceImage = booking.serviceVersions![0].mainImageResponse!.url;
-        }
-      }
-
-      recentBookingList.add(booking);
-    }
-
+    recentBookingList = bookings;
     notifyListeners();
   }
 
@@ -109,47 +126,31 @@ class HomeProvider with ChangeNotifier {
     value.notifyListeners();
   }
 
-  onTapBookings(data, context) {
-    if (data.status == appFonts.pending) {
-      //route.pushNamed(context, routeName.packageBookingScreen);
-      if (data.servicemanLists.isNotEmpty) {
-        route.pushNamed(context, routeName.pendingBooking, arg: true);
-      } else {
-        route.pushNamed(context, routeName.pendingBooking, arg: false);
-      }
-    } else if (data.status == appFonts.accepted) {
-      if (isFreelancer) {
-        route.pushNamed(context, routeName.assignBooking);
-      } else {
-        route.pushNamed(context, routeName.acceptedBooking);
-      }
-    } else if (data.status == appFonts.pendingApproval) {
-      route.pushNamed(context, routeName.pendingApprovalBooking);
-    } else if (data.status == appFonts.ongoing) {
-      if (data.servicemanLists.isNotEmpty) {
-        route
-            .pushNamed(context, routeName.ongoingBooking, arg: {"bool": false});
-      } else {
-        route.pushNamed(context, routeName.ongoingBooking, arg: {"bool": true});
-      }
-    } else if (data.status == appFonts.hold) {
-      route.pushNamed(context, routeName.holdBooking);
-    } else if (data.status == appFonts.completed) {
-      route.pushNamed(context, routeName.completedBooking, arg: data.id);
-    } else if (data.status == appFonts.cancelled) {
-      route.pushNamed(context, routeName.cancelledBooking);
-    } else if (data.status == appFonts.assigned) {
-      if (data.servicemanLists.isNotEmpty) {
-        route.pushNamed(context, routeName.assignBooking, arg: {"bool": true});
-      } else {
-        route.pushNamed(context, routeName.assignBooking, arg: {"bool": false});
-      }
-    } else if (data.bookingStatus == BookingStatus.inProgress) {
-      route.pushNamed(context, routeName.ongoingBooking, arg: data.id);
-    } else if (data.bookingStatus == BookingStatus.completed) {
-      route.pushNamed(context, routeName.completedBooking, arg: data.id);
-    } else if (data.bookingStatus == BookingStatus.cancelled) {
-      route.pushNamed(context, routeName.cancelledBooking, arg: data.id);
+  void onTapBookings(Booking booking, BuildContext context) {
+    final status = booking.bookingStatus;
+    switch (status) {
+      case BookingStatus.pending:
+        route.pushNamed(context, routeName.pendingBooking, arg: booking.id);
+        break;
+      case BookingStatus.confirmed:
+        if (isFreelancer) {
+          route.pushNamed(context, routeName.assignBooking, arg: booking.id);
+        } else {
+          route.pushNamed(context, routeName.acceptedBooking, arg: booking.id);
+        }
+        break;
+      case BookingStatus.inProgress:
+        route.pushNamed(context, routeName.ongoingBooking, arg: booking.id);
+        break;
+      case BookingStatus.completed:
+        route.pushNamed(context, routeName.completedBooking, arg: booking.id);
+        break;
+      case BookingStatus.cancelled:
+        route.pushNamed(context, routeName.cancelledBooking, arg: booking.id);
+        break;
+      default:
+        // For any other status, do nothing
+        break;
     }
   }
 
