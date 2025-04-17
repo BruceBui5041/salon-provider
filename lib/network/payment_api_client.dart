@@ -14,7 +14,7 @@ abstract class PaymentApiClient extends BaseApiClient {
   factory PaymentApiClient(Dio dio, {String? baseUrl}) = _PaymentApiClient;
 
   @POST("/payment/generateqr")
-  Future<BaseResponse<CommonResponse>> genPaymentQrCode(
+  Future<BaseResponse> genPaymentQrCode(
     @Body() GenerateQRReq requestBody,
   );
 

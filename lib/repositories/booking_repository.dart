@@ -102,6 +102,15 @@ class BookingRepository extends RepositoryConfig {
     return response.data ?? false;
   }
 
+  Future<bool> paidBooking(String id) async {
+    try {
+      final response = await bookingClient.paidBooking(id);
+      return response.data ?? false;
+    } catch (e) {
+      rethrow;
+    }
+  }
+
   // Future<void> updateBooking(Booking booking) async {}
 
   // Future<void> deleteBooking(String bookingId) async {}

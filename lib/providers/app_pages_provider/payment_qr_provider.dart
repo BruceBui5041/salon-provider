@@ -77,7 +77,7 @@ class PaymentQrProvider with ChangeNotifier {
     showDialog(
       context: context,
       barrierDismissible: true,
-      builder: (context1) => QrGenerateDialog(
+      builder: (dialogContext) => QrGenerateDialog(
         selectedBank: selectedBank,
         payment: payment,
         paymentId: paymentId,
@@ -95,16 +95,20 @@ class PaymentQrProvider with ChangeNotifier {
             );
 
             await paymentRepository.genPaymentQrCode(request);
-            await _loadPayment(); // Reload payment to get the new QR
 
             isGeneratingQr = false;
             notifyListeners();
 
-            // Close the current QR generation dialog
-            route.pop(context);
+            // Close the generate dialog
+            if (dialogContext.mounted) {
+              Navigator.of(dialogContext).pop();
+              await _loadPayment();
+            }
 
-            // Show the QR display dialog again
-            generateQrCode(context);
+            // Return to ongoing screen which will show the QR
+            if (context.mounted) {
+              route.pop(context);
+            }
           } catch (e) {
             isGeneratingQr = false;
             notifyListeners();

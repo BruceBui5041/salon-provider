@@ -55,7 +55,7 @@ class PaymentRepository extends RepositoryConfig {
     return res;
   }
 
-  Future<CommonResponse> genPaymentQrCode(GenerateQRReq requestBody) async {
+  Future<String> genPaymentQrCode(GenerateQRReq requestBody) async {
     var res = await paymentClient.genPaymentQrCode(requestBody);
     if (res.errorKey != null) {
       throw Exception(res.errorKey);

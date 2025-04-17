@@ -74,7 +74,8 @@ class QrGenerateDialog extends StatelessWidget {
                       borderRadius: BorderRadius.circular(AppRadius.r8),
                     ),
                     child: Image.memory(
-                      base64Decode(payment!.paymentQr!.qrDataUrl!),
+                      base64Decode(payment!.paymentQr!.qrDataUrl!.replaceFirst(
+                          RegExp(r'data:image/[^;]+;base64,'), '')),
                       fit: BoxFit.contain,
                     ),
                   ),
@@ -132,6 +133,17 @@ class QrGenerateDialog extends StatelessWidget {
                         textAlign: TextAlign.center,
                       ),
                     ),
+                  if (selectedBank?.accountName != null)
+                    Padding(
+                      padding: const EdgeInsets.only(top: Insets.i8),
+                      child: Text(
+                        "${language(context, appFonts.holderName)}: ${selectedBank!.accountName}",
+                        style: appCss.dmDenseRegular14.textColor(
+                          appColor(context).appTheme.lightText,
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
                 ],
               ],
             ),
@@ -146,7 +158,7 @@ class QrGenerateDialog extends StatelessWidget {
                 : isGeneratingQr
                     ? const Center(child: CircularProgressIndicator())
                     : ButtonCommon(
-                        title: language(context, appFonts.generateQr),
+                        title: language(context, appFonts.continues),
                         onTap: onGenerateQr,
                       ),
           ),

@@ -18,7 +18,7 @@ class _PaymentApiClient implements PaymentApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<BaseResponse<CommonResponse>> genPaymentQrCode(
+  Future<BaseResponse<dynamic>> genPaymentQrCode(
     GenerateQRReq requestBody,
   ) async {
     final _extra = <String, dynamic>{};
@@ -26,7 +26,7 @@ class _PaymentApiClient implements PaymentApiClient {
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(requestBody.toJson());
-    final _options = _setStreamType<BaseResponse<CommonResponse>>(
+    final _options = _setStreamType<BaseResponse<dynamic>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -37,11 +37,11 @@ class _PaymentApiClient implements PaymentApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponse<CommonResponse> _value;
+    late BaseResponse<dynamic> _value;
     try {
-      _value = BaseResponse<CommonResponse>.fromJson(
+      _value = BaseResponse<dynamic>.fromJson(
         _result.data!,
-        (json) => CommonResponse.fromJson(json as Map<String, dynamic>),
+        (json) => json as dynamic,
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

@@ -144,7 +144,7 @@ class _BookingApiClient implements BookingApiClient {
   }
 
   @override
-  Future<BaseResponse<bool>> paindBooking(String id) async {
+  Future<BaseResponse<bool>> paidBooking(String id) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};

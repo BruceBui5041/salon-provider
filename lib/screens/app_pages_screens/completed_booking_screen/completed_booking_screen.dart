@@ -1,6 +1,7 @@
 import 'dart:io';
 
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:salon_provider/common/booking_status.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/screens/app_pages_screens/completed_booking_screen/layouts/completed_bill_summary.dart';
 import 'package:salon_provider/screens/app_pages_screens/completed_booking_screen/layouts/completed_payment_summary.dart';
@@ -116,14 +117,18 @@ class CompletedBookingScreen extends StatelessWidget {
                       Material(
                           elevation: 20,
                           child: Row(children: [
-                            Expanded(
-                              child: ButtonCommon(
-                                onTap: () => value.onCompleteBooking(context),
-                                title: appFonts.complete,
-                                color: appColor(context).appTheme.green,
+                            if (value.completedBookingModel?.bookingStatus !=
+                                BookingStatus.completed)
+                              Expanded(
+                                child: ButtonCommon(
+                                  onTap: () => value.onCompleteBooking(context),
+                                  title: appFonts.complete,
+                                  color: appColor(context).appTheme.green,
+                                ),
                               ),
-                            ),
-                            const HSpace(Sizes.s15),
+                            if (value.completedBookingModel?.bookingStatus !=
+                                BookingStatus.completed)
+                              const HSpace(Sizes.s15),
                             Expanded(
                               child: ButtonCommon(
                                 onTap: () => route.pushNamed(

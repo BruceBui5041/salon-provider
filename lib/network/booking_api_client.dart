@@ -24,5 +24,5 @@ abstract class BookingApiClient extends BaseApiClient {
   Future<BaseResponse<bool>> inProgressBooking(@Path("id") String id);
 
   @PATCH("/paid/{id}")
-  Future<BaseResponse<bool>> paindBooking(@Path("id") String id);
+  Future<BaseResponse<bool>> paidBooking(@Path("id") String id);
 }

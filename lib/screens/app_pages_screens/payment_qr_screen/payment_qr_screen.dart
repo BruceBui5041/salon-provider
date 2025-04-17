@@ -111,8 +111,11 @@ class PaymentQrScreen extends StatelessWidget {
                                     BorderRadius.circular(AppRadius.r8),
                               ),
                               child: Image.memory(
-                                base64Decode(
-                                    provider.payment!.paymentQr!.qrDataUrl!),
+                                base64Decode(provider
+                                    .payment!.paymentQr!.qrDataUrl!
+                                    .replaceFirst(
+                                        RegExp(r'data:image/[^;]+;base64,'),
+                                        '')),
                                 fit: BoxFit.contain,
                               ),
                             ),
@@ -142,32 +145,17 @@ class PaymentQrScreen extends StatelessWidget {
                       ),
                     ).paddingOnly(bottom: Insets.i100),
                   ),
-                  if (provider.payment?.paymentQr != null)
-                    Material(
-                      elevation: 20,
-                      child: BottomSheetButtonCommon(
-                        textOne: language(context, appFonts.cancel),
-                        buttonOneColor: appColor(context).appTheme.red,
-                        textTwo: language(context, appFonts.generateQr),
-                        clearTap: () => route.pop(context),
-                        applyTap: () => provider.generateQrCode(context),
-                      ).paddingAll(Insets.i20).decorated(
-                            color: appColor(context).appTheme.whiteBg,
-                          ),
-                    )
-                  else
-                    Material(
-                      elevation: 20,
-                      child: BottomSheetButtonCommon(
-                        textOne: language(context, appFonts.cancel),
-                        buttonOneColor: appColor(context).appTheme.red,
-                        textTwo: language(context, appFonts.generateQr),
-                        clearTap: () => route.pop(context),
-                        applyTap: () => provider.generateQrCode(context),
-                      ).paddingAll(Insets.i20).decorated(
-                            color: appColor(context).appTheme.whiteBg,
-                          ),
-                    ),
+                  ButtonCommon(
+                    title: provider.payment?.paymentQr != null
+                        ? language(context, appFonts.done)
+                        : language(context, appFonts.generateQr),
+                    onTap: () => provider.payment?.paymentQr != null
+                        ? route.pop(context)
+                        : provider.generateQrCode(context),
+                    color: appColor(context).appTheme.primary,
+                  ).paddingAll(Insets.i20).decorated(
+                        color: appColor(context).appTheme.whiteBg,
+                      ),
                 ],
               ),
             ),

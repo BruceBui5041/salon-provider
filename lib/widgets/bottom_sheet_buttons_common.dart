@@ -20,20 +20,28 @@ class BottomSheetButtonCommon extends StatelessWidget {
   Widget build(BuildContext context) {
     return Row(children: [
       Expanded(
-          child: ButtonCommon(
-              title: textOne!,
-              onTap: clearTap,
-              style: appCss.dmDenseRegular16.textColor(
-                  buttonOneColor ?? appColor(context).appTheme.primary),
-              color: appColor(context).appTheme.trans,
-              borderColor:
-                  buttonOneColor ?? appColor(context).appTheme.primary)),
+        child: textOne != null
+            ? ButtonCommon(
+                title: textOne,
+                onTap: clearTap,
+                style: appCss.dmDenseRegular16.textColor(
+                  buttonOneColor ?? appColor(context).appTheme.primary,
+                ),
+                color: appColor(context).appTheme.trans,
+                borderColor:
+                    buttonOneColor ?? appColor(context).appTheme.primary,
+              )
+            : const SizedBox(),
+      ),
       const HSpace(Sizes.s15),
       Expanded(
-          child: ButtonCommon(
-              title: textTwo!,
-              onTap: applyTap,
-              color: buttonTwoColor ?? appColor(context).appTheme.primary))
+        child: textTwo != null
+            ? ButtonCommon(
+                title: textTwo,
+                onTap: applyTap,
+                color: buttonTwoColor ?? appColor(context).appTheme.primary)
+            : const SizedBox(),
+      )
     ]);
   }
 }

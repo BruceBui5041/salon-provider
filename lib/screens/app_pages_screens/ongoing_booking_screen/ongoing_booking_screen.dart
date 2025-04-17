@@ -22,7 +22,7 @@ class OngoingBookingScreen extends StatelessWidget {
                     context, routeName.completedBooking,
                     arg: value.ongoingBookingModel?.id),
                 child: Text(
-                  language(context, appFonts.paid).toUpperCase(),
+                  language(context, appFonts.complete).toUpperCase(),
                   style: appCss.dmDenseBold16
                       .textColor(appColor(context).appTheme.online),
                 ),
@@ -84,10 +84,15 @@ class OngoingBookingScreen extends StatelessWidget {
                         elevation: 20,
                         child: Row(children: [
                           Expanded(
-                              child: ButtonCommon(
-                                  onTap: () => value.onCancelBooking(context),
-                                  title: appFonts.cancel,
-                                  color: appColor(context).appTheme.red)),
+                            child: ButtonCommon(
+                                onTap: () => value.onCancelBooking(context),
+                                title: appFonts.cancel,
+                                style: appCss.dmDenseRegular16.textColor(
+                                  appColor(context).appTheme.red,
+                                ),
+                                color: appColor(context).appTheme.trans,
+                                borderColor: appColor(context).appTheme.red),
+                          ),
                           const HSpace(Sizes.s15),
                           Expanded(
                             child: _buildSecondaryButton(context, value),
@@ -130,8 +135,8 @@ class OngoingBookingScreen extends StatelessWidget {
     // Case 2: Payment method is cash and status is pending
     else if (value.isCashPayment && value.isPaymentPending) {
       return ButtonCommon(
-        title: language(context, appFonts.payment),
-        onTap: () => value.markPaymentCompleted(context),
+        title: language(context, appFonts.paid),
+        onTap: () => value.markPaymentPaid(context),
         color: appColor(context).appTheme.online,
       );
     }

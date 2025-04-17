@@ -94,17 +94,62 @@ class OngoingBookingProvider with ChangeNotifier {
   }
 
   // Method to mark payment as completed
-  markPaymentCompleted(context) {
+  markPaymentPaid(context) async {
     String? bookingId = ongoingBookingModel?.id;
     if (bookingId != null) {
-      // Implementation of payment completion API call would go here
-      // For now, just updating the local model and navigating
-      if (ongoingBookingModel?.payment != null) {
-        ongoingBookingModel = ongoingBookingModel?.copyWith(
-            payment: ongoingBookingModel?.payment
-                ?.copyWith(transactionStatus: TransactionStatus.completed));
-        notifyListeners();
-      }
+      // Show confirmation dialog first
+      showDialog(
+        context: context,
+        builder: (context1) => AppAlertDialogCommon(
+          title: appFonts.payment,
+          subtext: language(context, appFonts.areYouSureYourself),
+          firstBText: appFonts.no,
+          secondBText: appFonts.yes,
+          image: eGifAssets.dateGif,
+          height: Sizes.s145,
+          firstBTap: () => route.pop(context),
+          secondBTap: () async {
+            route.pop(context); // Close dialog
+            try {
+              final result = await bookingRepository.paidBooking(bookingId);
+              if (result) {
+                // Update local model state
+                if (ongoingBookingModel?.payment != null) {
+                  ongoingBookingModel = ongoingBookingModel?.copyWith(
+                      payment: ongoingBookingModel?.payment?.copyWith(
+                          transactionStatus: TransactionStatus.completed));
+                  notifyListeners();
+                }
+                // Show success message
+                showDialog(
+                  context: context,
+                  builder: (context1) => AlertDialogCommon(
+                    title: appFonts.payment,
+                    image: eGifAssets.success,
+                    subtext: language(context, appFonts.updateSuccessfully),
+                    height: Sizes.s145,
+                    bText1: appFonts.okay,
+                    b1OnTap: () => route.pop(context),
+                  ),
+                );
+              }
+            } catch (error) {
+              log("Error marking payment as completed: $error");
+              showDialog(
+                context: context,
+                builder: (context1) => AlertDialogCommon(
+                  title: appFonts.errorOccur,
+                  image: eGifAssets.error,
+                  subtext: language(context, appFonts.oppsThereHas),
+                  height: Sizes.s145,
+                  bText1: appFonts.okay,
+                  b1OnTap: () => route.pop(context),
+                ),
+              );
+            }
+          },
+        ),
+      );
     }
   }
 
