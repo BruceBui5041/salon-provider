@@ -73,36 +73,41 @@ class StatusStepsLayout extends StatelessWidget {
           child:
               Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         IntrinsicHeight(
-            child: Row(children: [
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(formattedDate,
-                style: appCss.dmDenseMedium12.textColor(selectIndex == index
-                    ? appColor(context).appTheme.darkText
-                    : appColor(context).appTheme.lightText)),
-            Text(formattedTime,
-                style: appCss.dmDenseMedium12.textColor(selectIndex == index
-                    ? appColor(context).appTheme.darkText
-                    : appColor(context).appTheme.lightText))
-          ]),
-          VerticalDivider(
-                  width: 1,
-                  thickness: 1,
-                  endIndent: 2,
-                  indent: 2,
-                  color: appColor(context).appTheme.stroke)
-              .paddingSymmetric(horizontal: Insets.i9),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(eventTitle,
-                style: appCss.dmDenseMedium12
-                    .textColor(appColor(context).appTheme.darkText)),
-            SizedBox(
-                width: Sizes.s160,
-                child: Text(eventDescription,
-                    overflow: TextOverflow.ellipsis,
-                    style: appCss.dmDenseMedium12
-                        .textColor(appColor(context).appTheme.lightText)))
-          ])
-        ])),
+            child: Row(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(formattedDate,
+                  style: appCss.dmDenseMedium12.textColor(selectIndex == index
+                      ? appColor(context).appTheme.darkText
+                      : appColor(context).appTheme.lightText)),
+              Text(formattedTime,
+                  style: appCss.dmDenseMedium12.textColor(selectIndex == index
+                      ? appColor(context).appTheme.darkText
+                      : appColor(context).appTheme.lightText))
+            ]),
+            VerticalDivider(
+                    width: 1,
+                    thickness: 1,
+                    endIndent: 2,
+                    indent: 2,
+                    color: appColor(context).appTheme.stroke)
+                .paddingSymmetric(horizontal: Insets.i9),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(eventTitle,
+                      style: appCss.dmDenseMedium12
+                          .textColor(appColor(context).appTheme.darkText)),
+                  Text(eventDescription,
+                      style: appCss.dmDenseMedium12
+                          .textColor(appColor(context).appTheme.lightText))
+                ],
+              ),
+            )
+          ],
+        )),
         const VSpace(Sizes.s15),
         if (index != list!.length - 1)
           const DottedLines().paddingOnly(bottom: Insets.i15)
