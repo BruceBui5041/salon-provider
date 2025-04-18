@@ -26,11 +26,12 @@ class PendingBookingProvider with ChangeNotifier {
 
   showBookingStatus(context) {
     showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (context) {
-          return BookingStatusDialog();
-        });
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return BookingStatusDialog(bookingId: pendingBooking?.id);
+      },
+    );
   }
 
   onCancelBooking(context) {
@@ -47,11 +48,6 @@ class PendingBookingProvider with ChangeNotifier {
             singleTap: () {
               if (formKey.currentState!.validate()) {
                 route.pop(context);
-                // final data =
-                //     Provider.of<DashboardProvider>(context, listen: false);
-                // data.selectIndex = 1;
-                // route.pushNamed(context, routeName.dashboard);
-                // data.notifyListeners();
                 bookingRepository
                     .cancelBooking(pendingBooking!.id!, reasonCtrl.text)
                     .then((value) {

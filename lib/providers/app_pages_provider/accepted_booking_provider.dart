@@ -39,11 +39,12 @@ class AcceptedBookingProvider with ChangeNotifier {
 
   showBookingStatus(context) {
     showModalBottomSheet(
-        isScrollControlled: true,
-        context: context,
-        builder: (context) {
-          return BookingStatusDialog();
-        });
+      isScrollControlled: true,
+      context: context,
+      builder: (context) {
+        return BookingStatusDialog(bookingId: acceptedBookingModel?.bookingId);
+      },
+    );
   }
 
   onAssignTap(context) {

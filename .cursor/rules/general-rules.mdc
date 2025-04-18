@@ -4,10 +4,11 @@ globs:
 alwaysApply: true
 ---
 # Main focus
+- KEEP EXEACT THE ORIGINAL UI JUST UPDATE THE DATA ONLY
+- DONNOT UPDATE THING THAT NOT RELEVANT TO YOU TASK
 - Check all relevant files in the conversation for type issue
 - Remove unused code and DONNOT add comment when the code already easy to understand
 - Clean up that you added previously if it's not used anymore
-- DONNOT UPDATE THING THAT NOT RELEVANT TO YOU TASK
 - Keep the clear, simple, and readable code
 
 # Languages

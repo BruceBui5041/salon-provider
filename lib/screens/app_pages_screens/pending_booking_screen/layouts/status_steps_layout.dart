@@ -1,15 +1,35 @@
+import 'package:salon_provider/model/response/notification_res.dart';
+import 'package:salon_provider/providers/app_pages_provider/booking_status_provider.dart';
 import '../../../../config.dart';
+import 'package:intl/intl.dart';
 
 class StatusStepsLayout extends StatelessWidget {
-  final dynamic data;
+  final NotificationRes data;
   final int? index, selectIndex;
-  final List? list;
+  final List<NotificationRes>? list;
+  final BookingStatusProvider provider;
 
-  const StatusStepsLayout(
-      {super.key, this.data, this.index, this.selectIndex, this.list});
+  const StatusStepsLayout({
+    super.key,
+    required this.data,
+    required this.provider,
+    this.index,
+    this.selectIndex,
+    this.list,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final eventTitle = provider.getEventTitle(data.metadata?['event']);
+    final eventDescription = provider.getEventDescription(data);
+    final statusColor =
+        provider.getStatusColor(context, data.metadata?['event']);
+    final createdAt = data.createdAt;
+    final formattedDate =
+        createdAt != null ? DateFormat('dd MMM, yyyy').format(createdAt) : '';
+    final formattedTime =
+        createdAt != null ? DateFormat('hh:mm a').format(createdAt) : '';
+
     return Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
       Row(children: [
         selectIndex == index
@@ -21,8 +41,7 @@ class StatusStepsLayout extends StatelessWidget {
                         height: 10,
                         width: 10,
                         decoration: BoxDecoration(
-                            color: colorCondition(data["status"], context),
-                            shape: BoxShape.circle))
+                            color: statusColor, shape: BoxShape.circle))
                     .paddingAll(Insets.i1))
             : Container(
                 height: 16,
@@ -37,7 +56,9 @@ class StatusStepsLayout extends StatelessWidget {
                             border: Border.all(
                                 color: appColor(context).appTheme.whiteColor,
                                 width: 2),
-                            color: selectIndex == index  ? appColor(context).appTheme.primary :  appColor(context).appTheme.lightText,
+                            color: selectIndex == index
+                                ? appColor(context).appTheme.primary
+                                : appColor(context).appTheme.lightText,
                             shape: BoxShape.circle))
                     .paddingAll(Insets.i1)),
         SvgPicture.asset(eSvgAssets.anchorStatusArrow,
@@ -54,14 +75,14 @@ class StatusStepsLayout extends StatelessWidget {
         IntrinsicHeight(
             child: Row(children: [
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(data["date"],
-                style: appCss.dmDenseMedium12
-                    .textColor(selectIndex == index
-                    ?  appColor(context).appTheme.darkText : appColor(context).appTheme.lightText )  ),
-            Text(data["time"],
-                style:appCss.dmDenseMedium12
-                    .textColor(selectIndex == index
-                    ?  appColor(context).appTheme.darkText : appColor(context).appTheme.lightText ) )
+            Text(formattedDate,
+                style: appCss.dmDenseMedium12.textColor(selectIndex == index
+                    ? appColor(context).appTheme.darkText
+                    : appColor(context).appTheme.lightText)),
+            Text(formattedTime,
+                style: appCss.dmDenseMedium12.textColor(selectIndex == index
+                    ? appColor(context).appTheme.darkText
+                    : appColor(context).appTheme.lightText))
           ]),
           VerticalDivider(
                   width: 1,
@@ -71,12 +92,12 @@ class StatusStepsLayout extends StatelessWidget {
                   color: appColor(context).appTheme.stroke)
               .paddingSymmetric(horizontal: Insets.i9),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(data["title"],
+            Text(eventTitle,
                 style: appCss.dmDenseMedium12
                     .textColor(appColor(context).appTheme.darkText)),
             SizedBox(
                 width: Sizes.s160,
-                child: Text(data["subtext"],
+                child: Text(eventDescription,
                     overflow: TextOverflow.ellipsis,
                     style: appCss.dmDenseMedium12
                         .textColor(appColor(context).appTheme.lightText)))
