@@ -40,7 +40,7 @@ class AppArray {
     {
       "title": appFonts.vietnamese,
       "locale": const Locale("vi", 'VN'),
-      "icon": eImageAssets.es,
+      "icon": eImageAssets.vi,
       "code": "vi"
     },
   ];

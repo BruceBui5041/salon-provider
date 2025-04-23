@@ -100,6 +100,8 @@ class LanguageProvider with ChangeNotifier {
       currentLanguage = "spanish";
     } else if (value == "ar") {
       currentLanguage = "arabic";
+    } else if (value == "vi") {
+      currentLanguage = "vietnamese";
     } else {
       currentLanguage = "english";
     }

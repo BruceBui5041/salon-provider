@@ -5,6 +5,7 @@ class ImageAssets {
   final en = "assets/images/en.png";
   final fr = "assets/images/fr.png";
   final ar = "assets/images/ar.png";
+  final vi = "assets/images/vietnamese_flag.png";
   final appLogo = "assets/images/appLogo.png";
   final forget = "assets/images/forget.png";
   final mailVerify = "assets/images/mailVerify.png";
@@ -115,15 +116,8 @@ class ImageAssets {
   final line = "assets/images/line.png";
   final base = "assets/images/base.png";
 
-
-
 // Freelancer images
 
   final noListFree = "assets/images/noListFree.png";
   final noInternetFree = "assets/images/noInternetFree.png";
-
-
-
-
-
 }
