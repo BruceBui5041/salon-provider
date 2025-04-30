@@ -22,6 +22,8 @@ class AppTheme {
   Color red;
   Color yellow;
   Color whiteColor;
+  Color bluePrimary;
+
   Color pending, accepted, ongoing, pendingApproval, hold, assign;
 
   /// Default constructor
@@ -45,6 +47,7 @@ class AppTheme {
     required this.hold,
     required this.assign,
     required this.yellow,
+    required this.bluePrimary,
   });
 
   /// fromType factory constructor
@@ -53,7 +56,7 @@ class AppTheme {
       case ThemeType.light:
         return AppTheme(
           isDark: false,
-          primary: const Color(0xff5465FF),
+          primary: const Color.fromARGB(255, 231, 62, 104),
           darkText: const Color(0xff00162E),
           lightText: const Color(0xff808B97),
           whiteBg: const Color(0xffFFFFFF),
@@ -71,6 +74,7 @@ class AppTheme {
           hold: const Color(0xffFF1D53),
           assign: const Color(0xffAD46FF),
           yellow: const Color(0xffFFD700),
+          bluePrimary: const Color.fromRGBO(136, 214, 218, 1),
         );
 
       case ThemeType.dark:
@@ -94,6 +98,7 @@ class AppTheme {
           hold: const Color(0xffFF1D53),
           assign: const Color(0xffAD46FF),
           yellow: Colors.yellow,
+          bluePrimary: const Color.fromRGBO(136, 214, 218, 1),
         );
     }
   }

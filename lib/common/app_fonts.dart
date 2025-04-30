@@ -1,5 +1,5 @@
 class AppFonts {
-  final fixit = "fixit";
+  final fixit = "MeoMeo";
   final login = "login";
 
   final firstName = "First name";

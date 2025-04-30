@@ -1,8 +1,10 @@
 import 'dart:developer';
 
 import 'package:dio/dio.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_image_compress/flutter_image_compress.dart';
 import 'package:logger/logger.dart';
+import 'package:salon_provider/config.dart';
 
 class Utils {
   static final Logger _logger = Logger(
@@ -69,5 +71,19 @@ class Utils {
         error: e.response?.data,
       );
     }
+  }
+
+  static void copyToClipboard(BuildContext context, String text) {
+    Clipboard.setData(ClipboardData(text: text));
+    //show snackbar
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(
+        content: Text(
+          'Copied to clipboard',
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.black87,
+      ),
+    );
   }
 }

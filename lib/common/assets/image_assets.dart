@@ -1,12 +1,15 @@
 class ImageAssets {
   final splashBg = "assets/images/splashBg.png";
   final introImage = "assets/images/introImage.png";
+  final appLogo = "assets/images/meomeo_icon.png";
+  final appLogoMeoMeoTransparent = "assets/images/meomeo_logo_trans.png";
+  final appTextMeoMeoTransparent = "assets/images/meomeo_text_trans.png";
+  final appLogoMeoMeo = "assets/images/logo_meomeo.png";
   final es = "assets/images/es.png";
   final en = "assets/images/en.png";
   final fr = "assets/images/fr.png";
   final ar = "assets/images/ar.png";
   final vi = "assets/images/vietnamese_flag.png";
-  final appLogo = "assets/images/appLogo.png";
   final forget = "assets/images/forget.png";
   final mailVerify = "assets/images/mailVerify.png";
   final freelancer = "assets/images/freelancer.png";

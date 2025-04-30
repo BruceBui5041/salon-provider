@@ -4,7 +4,6 @@ import 'package:salon_provider/config/storage_config.dart';
 import 'package:salon_provider/helper/notification_helper.dart';
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/payment_qr_provider.dart';
-import 'package:salon_provider/providers/app_pages_provider/pending_booking_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/service_details_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/edit_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/image_service_provider.dart';
@@ -159,7 +158,7 @@ class MyApp extends StatelessWidget {
                     return Consumer<CurrencyProvider>(
                         builder: (context, currency, child) {
                       return MaterialApp(
-                          title: 'Fixit Provider',
+                          title: 'MeoMeo Provider',
                           debugShowCheckedModeBanner: false,
                           theme: AppTheme.fromType(ThemeType.light).themeData,
                           darkTheme:
