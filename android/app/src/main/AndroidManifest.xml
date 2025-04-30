@@ -19,7 +19,7 @@
         </intent>
     </queries>
     <application
-        android:label="Fixit provider uikit"
+        android:label="MeoMeo Provider"
         android:name="${applicationName}"
         android:enableOnBackInvokedCallback="true"
         android:icon="@mipmap/ic_launcher">

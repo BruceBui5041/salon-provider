@@ -2,7 +2,7 @@ name: salon_provider
 description: A new Flutter project.
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
-publish_to: 'none' # Remove this line if you wish to publish to pub.dev
+publish_to: "none" # Remove this line if you wish to publish to pub.dev
 
 # The following defines the version and build number for your application.
 # A version number is three numbers separated by dots, like 1.2.43
@@ -19,7 +19,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: '>=3.0.5 <4.0.0'
+  sdk: ">=3.0.5 <4.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -31,12 +31,10 @@ dependencies:
   flutter:
     sdk: flutter
 
-
   firebase_core: ^3.12.1
   firebase_messaging: ^15.0.1
   firebase_in_app_messaging: ^0.8.1+4
   flutter_local_notifications: ^18.0.1
-
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
@@ -101,8 +99,8 @@ dependencies:
   # quill_html_editor: ^2.2.8
   # html_editor_enhanced: ^1.8.0
 
-
 dev_dependencies:
+  flutter_launcher_icons: ^0.13.1
   retrofit_generator: ">=8.0.0 <10.0.0" # for Dart 3.3 use ^9.0.0
   build_runner: ^2.3.3
   json_serializable: ^6.8.0
@@ -121,7 +119,6 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
@@ -146,9 +143,9 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-  - family: downIcon
-    fonts:
-      - asset: assets/fonts/downIcon.ttf
+    - family: downIcon
+      fonts:
+        - asset: assets/fonts/downIcon.ttf
   #       - asset: fonts/Schyler-Italic.ttf
   #         style: italic
   #   - family: Trajan Pro
@@ -159,3 +156,16 @@ flutter:
   #
   # For details regarding fonts from package dependencies,
   # see https://flutter.dev/custom-fonts/#from-packages
+
+flutter_launcher_icons:
+  android: true
+  ios: true
+  image_path: "assets/images/meomeo_icon.png"
+  min_sdk_android: 21 # Android min sdk min:16, default 21
+  remove_alpha_ios: true
+  web:
+    generate: false
+  windows:
+    generate: false
+  macos:
+    generate: false
