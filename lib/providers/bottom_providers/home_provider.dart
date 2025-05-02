@@ -134,9 +134,9 @@ class HomeProvider with ChangeNotifier {
         break;
       case BookingStatus.confirmed:
         if (isFreelancer) {
-          route.pushNamed(context, routeName.assignBooking, arg: booking.id);
-        } else {
           route.pushNamed(context, routeName.acceptedBooking, arg: booking.id);
+        } else {
+          route.pushNamed(context, routeName.assignBooking, arg: booking.id);
         }
         break;
       case BookingStatus.inProgress:

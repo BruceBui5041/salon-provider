@@ -5,9 +5,9 @@ import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/service_response.dart';
 
 class PopularServiceRepository extends RepositoryConfig {
-  Future<List<ItemService>> getPopularService() async {
+  Future<List<Service>> getPopularService() async {
     var user = await AuthConfig.getUserId();
-    var response = await commonRestClient.search<List<ItemService>>(
+    var response = await commonRestClient.search<List<Service>>(
         SearchRequestBody(model: EnumColumn.service.name, conditions: [
       [
         Condition(source: "creator_id", operator: "=", target: user ?? ''),
@@ -19,9 +19,8 @@ class PopularServiceRepository extends RepositoryConfig {
       FieldItem(field: "service_version.category"),
       FieldItem(field: "images"),
     ]).toJson());
-    var res = (response as List<dynamic>)
-        .map((e) => ItemService.fromJson(e))
-        .toList();
+    var res =
+        (response as List<dynamic>).map((e) => Service.fromJson(e)).toList();
     return res;
   }
 }

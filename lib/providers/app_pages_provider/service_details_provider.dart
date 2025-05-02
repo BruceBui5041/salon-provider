@@ -8,13 +8,13 @@ import 'package:salon_provider/repositories/all_service_repository.dart';
 class ServiceDetailsProvider with ChangeNotifier {
   int selectedIndex = 0;
   String? selectedImage;
-  ItemService? itemService;
+  Service? itemService;
   List locationList = [];
   var repo = getIt.get<AllServiceRepository>();
 
   onInit(context) async {
     var arg = ModalRoute.of(context)?.settings.arguments;
-    var service = arg as ItemService;
+    var service = arg as Service;
     try {
       var res = await repo.getServiceById(service.id ?? "");
       itemService = res;

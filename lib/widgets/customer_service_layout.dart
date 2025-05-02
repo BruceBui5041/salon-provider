@@ -46,51 +46,55 @@ class CustomerServiceLayout extends StatelessWidget {
       Divider(height: 1, color: appColor(context).appTheme.stroke)
           .paddingSymmetric(vertical: Insets.i15),
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Row(children: [
-          ClipRRect(
-            borderRadius: BorderRadius.circular(25),
-            child: SizedBox(
-              height: Sizes.s50,
-              width: Sizes.s50,
-              child: CacheImageWidget(url: image),
+        Row(
+          children: [
+            ClipRRect(
+              borderRadius: BorderRadius.circular(25),
+              child: SizedBox(
+                height: Sizes.s50,
+                width: Sizes.s50,
+                child: CacheImageWidget(url: image),
+              ),
             ),
-          ),
-          const HSpace(Sizes.s12),
-          Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            Text(name ?? "",
-                style: appCss.dmDenseMedium14
-                    .textColor(appColor(context).appTheme.darkText)),
-            if (phoneNumber != null)
-              Text(phoneNumber!,
+            const HSpace(Sizes.s12),
+            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+              Text(name ?? "",
+                  overflow: TextOverflow.ellipsis,
+                  maxLines: 1,
                   style: appCss.dmDenseMedium12
-                      .textColor(appColor(context).appTheme.lightText)),
-            if (language(context, title) !=
-                language(context, appFonts.customerDetails))
-              Row(children: [
-                RatingBar(
-                    initialRating: rate ?? 3.5,
-                    direction: Axis.horizontal,
-                    allowHalfRating: false,
-                    itemCount: 5,
-                    maxRating: 5,
-                    itemSize: Sizes.s13,
-                    ignoreGestures: true,
-                    ratingWidget: RatingWidget(
-                        full: SvgPicture.asset(eSvgAssets.star),
-                        empty: SvgPicture.asset(eSvgAssets.starOut,
-                            colorFilter: ColorFilter.mode(
-                                appColor(context).appTheme.lightText,
-                                BlendMode.srcIn)),
-                        half: SvgPicture.asset(eSvgAssets.star)),
-                    onRatingUpdate: (double value) {}),
-                /*SvgPicture.asset(starCondition(rate!)),*/
-                const HSpace(Sizes.s4),
-                Text(rate!.toString(),
+                      .textColor(appColor(context).appTheme.darkText)),
+              if (phoneNumber != null)
+                Text(phoneNumber!,
                     style: appCss.dmDenseMedium12
-                        .textColor(appColor(context).appTheme.darkText))
-              ])
-          ])
-        ]),
+                        .textColor(appColor(context).appTheme.lightText)),
+              if (language(context, title) !=
+                  language(context, appFonts.customerDetails))
+                Row(children: [
+                  RatingBar(
+                      initialRating: rate ?? 3.5,
+                      direction: Axis.horizontal,
+                      allowHalfRating: false,
+                      itemCount: 5,
+                      maxRating: 5,
+                      itemSize: Sizes.s13,
+                      ignoreGestures: true,
+                      ratingWidget: RatingWidget(
+                          full: SvgPicture.asset(eSvgAssets.star),
+                          empty: SvgPicture.asset(eSvgAssets.starOut,
+                              colorFilter: ColorFilter.mode(
+                                  appColor(context).appTheme.lightText,
+                                  BlendMode.srcIn)),
+                          half: SvgPicture.asset(eSvgAssets.star)),
+                      onRatingUpdate: (double value) {}),
+                  /*SvgPicture.asset(starCondition(rate!)),*/
+                  const HSpace(Sizes.s4),
+                  Text(rate!.toString(),
+                      style: appCss.dmDenseMedium12
+                          .textColor(appColor(context).appTheme.darkText))
+                ])
+            ])
+          ],
+        ),
         if (status != "Pending")
           Row(children: [
             SocialIconCommon(icon: eSvgAssets.chatOut, onTap: chatTap),

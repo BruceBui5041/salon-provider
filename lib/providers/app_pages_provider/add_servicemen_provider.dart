@@ -10,7 +10,7 @@ class AddServicemenProvider with ChangeNotifier {
   XFile? imageFile, profileFile;
   final List<Color> colorCollection = <Color>[];
   String languageSelect = "[]";
-  ItemService? itemService;
+  Service? itemService;
 
   TextEditingController userName = TextEditingController();
   TextEditingController phoneName = TextEditingController();

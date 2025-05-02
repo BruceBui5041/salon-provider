@@ -1,6 +1,7 @@
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/home_screen_provider.dart';
 import 'package:salon_provider/screens/bottom_screens/home_screen/layouts/all_categories_layout.dart';
+import 'package:salon_provider/model/request/search_request_model.dart';
 
 import '../../../config.dart';
 
@@ -34,7 +35,6 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> initData() async {
-    Provider.of<AllServiceProvider>(context, listen: false).getAllServices();
     Provider.of<HomeScreenProvider>(context, listen: false)
         .getProviderEarnings();
     // Also get recent bookings here
@@ -42,8 +42,6 @@ class _HomeScreenState extends State<HomeScreen>
   }
 
   Future<void> _onRefresh() async {
-    await Provider.of<AllServiceProvider>(context, listen: false)
-        .getAllServices();
     await Provider.of<HomeScreenProvider>(context, listen: false)
         .getProviderEarnings();
     await Provider.of<HomeProvider>(context, listen: false).getRecentBookings();

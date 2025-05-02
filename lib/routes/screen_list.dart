@@ -41,7 +41,7 @@ export '../screens/app_pages_screens/services_details_screen/layouts/description
 export '../screens/app_pages_screens/services_details_screen/layouts/read_more_layout.dart';
 export '../screens/app_pages_screens/services_details_screen/layouts/service_area_layout.dart';
 export '../screens/app_pages_screens/services_details_screen/layouts/service_review_layout.dart';
-export '../screens/app_pages_screens/services_details_screen/layouts/service_description.dart';
+export '../screens/app_pages_screens/services_details_screen/layouts/service_description_old.dart';
 export '../screens/app_pages_screens/services_details_screen/layouts/service_image_layout.dart';
 export '../screens/app_pages_screens/services_details_screen/layouts/services_image_layout.dart';
 export '../screens/app_pages_screens/services_details_screen/services_details_screen_old.dart';

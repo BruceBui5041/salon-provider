@@ -3,7 +3,7 @@ import 'package:salon_provider/model/response/service_response.dart';
 import '../../../../config.dart';
 
 class NewServiceReviewLayout extends StatelessWidget {
-  final ItemService? data;
+  final Service? data;
   final List? list;
   final int? index;
   final bool? isSetting;

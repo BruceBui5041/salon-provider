@@ -64,7 +64,7 @@ class _ServicesDetailsScreenOldState extends State<ServicesDetailsScreenOld>
                       .textColor(appColor(context).appTheme.primary))
             ]).paddingSymmetric(horizontal: Insets.i20)
           ]).paddingSymmetric(vertical: Insets.i15),
-          const ServiceDescription(),
+          const ServiceDescriptionOld(),
         ]).paddingSymmetric(horizontal: Insets.i20),
         Column(children: [
           HeadingRowCommon(

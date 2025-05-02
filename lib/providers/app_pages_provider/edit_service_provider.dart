@@ -74,9 +74,9 @@ class EditServiceProvider extends ChangeNotifier {
 
   XFile? imageThumbnail;
   List<MultipartFile> listMultipartServiceImage = [];
-  ItemService? itemService;
+  Service? itemService;
 
-  void passData(ItemService item, {Function? callback}) {
+  void passData(Service item, {Function? callback}) {
     itemService = item;
     // if(categoryResponse == null) {
     //  categoryValue = categoryResponse!.data!

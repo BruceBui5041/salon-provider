@@ -1,10 +1,7 @@
-import 'package:salon_provider/model/response/service_response.dart';
-
 import '../../../../config.dart';
 
-class NewServiceDescription extends StatelessWidget {
-  final ItemService? data;
-  const NewServiceDescription({super.key, this.data});
+class ServiceDescriptionOld extends StatelessWidget {
+  const ServiceDescriptionOld({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +11,7 @@ class NewServiceDescription extends StatelessWidget {
             child: DescriptionLayoutCommon(
                 icon: eSvgAssets.clock,
                 title: appFonts.duration,
-                subtitle: data?.serviceVersion?.duration.toString() ?? '')),
+                subtitle: "45 minute")),
         Container(
                 height: Sizes.s78,
                 width: 1,
@@ -24,7 +21,7 @@ class NewServiceDescription extends StatelessWidget {
             child: DescriptionLayoutCommon(
                 icon: eSvgAssets.category,
                 title: appFonts.category,
-                subtitle: data?.serviceVersion?.categoryResponse?.name ?? ''))
+                subtitle: "Ac repairing"))
       ]).paddingSymmetric(horizontal: Insets.i25),
       Container(
           width: MediaQuery.of(context).size.width,
@@ -35,10 +32,7 @@ class NewServiceDescription extends StatelessWidget {
             child: DescriptionLayoutCommon(
                 icon: eSvgAssets.commission,
                 title: appFonts.commission,
-                subtitle: data?.serviceVersion?.discountedPrice
-                        .toString()
-                        .toCurrencyVnd() ??
-                    '')),
+                subtitle: "30%")),
         Container(
                 height: Sizes.s78,
                 width: 1,
@@ -48,7 +42,7 @@ class NewServiceDescription extends StatelessWidget {
             child: DescriptionLayoutCommon(
                 icon: eSvgAssets.receiptDiscount,
                 title: appFonts.tax,
-                subtitle: "0%"))
+                subtitle: "2%"))
       ]).paddingSymmetric(horizontal: Insets.i25),
       Container(
           width: MediaQuery.of(context).size.width,

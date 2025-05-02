@@ -11,13 +11,13 @@ import 'package:salon_provider/repositories/all_service_repository.dart';
 class ImageServiceProvider extends ChangeNotifier {
   final repo = getIt<AddNewServiceRepository>();
   final repoService = getIt<AllServiceRepository>();
-  ItemService? _itemService;
+  Service? _itemService;
   List<ImageResponse> _imageService = [];
   List<ImageResponse> _imageServiceSelected = [];
   List<ImageResponse> _imageServiceSelectedVersionMultiple = [];
   List<ImageResponse> _imageServiceSelectedVersionSingle = [];
   ImageResponse? _groupValueImage;
-  ItemService? get itemService => _itemService;
+  Service? get itemService => _itemService;
   XFile? imageFile;
 
   List<ImageResponse> get imageService => _imageService;

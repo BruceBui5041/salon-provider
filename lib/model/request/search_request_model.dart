@@ -31,6 +31,24 @@ class SearchRequestBody {
     this.offset,
   });
 
+  SearchRequestBody copyWith({
+    String? model,
+    List<List<Condition>>? conditions,
+    String? orderBy,
+    int? limit,
+    int? offset,
+    List<FieldItem>? fields,
+  }) {
+    return SearchRequestBody(
+      model: model ?? this.model,
+      conditions: conditions ?? this.conditions,
+      orderBy: orderBy ?? this.orderBy,
+      limit: limit ?? this.limit,
+      offset: offset ?? this.offset,
+      fields: fields ?? this.fields,
+    );
+  }
+
   factory SearchRequestBody.fromJson(Map<String, dynamic> json) =>
       _$SearchRequestBodyFromJson(json);
 

@@ -11,7 +11,7 @@ class DashboardProvider with ChangeNotifier {
   List<BlogModel> blogList = [];
   TextEditingController searchCtrl = TextEditingController();
   FocusNode searchFocus = FocusNode();
-  List<ItemService> serviceList = [];
+  List<Service> serviceList = [];
 
   onReady() async {
     blogList = [];
@@ -21,18 +21,7 @@ class DashboardProvider with ChangeNotifier {
         blogList.add(BlogModel.fromJson(element.value));
       }
     });
-    await getService();
     notifyListeners();
-  }
-
-  getService() async {
-    serviceList = [];
-    notifyListeners();
-    var res = await repo.getPopularService();
-    if (res != null) {
-      serviceList = res ?? [];
-      notifyListeners();
-    }
   }
 
   onTap(index) {

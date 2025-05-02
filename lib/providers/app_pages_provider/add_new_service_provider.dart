@@ -33,7 +33,7 @@ class AddNewServiceProvider with ChangeNotifier {
   String? thumbNailImage;
   String? mainImage;
   bool? showDraft = false;
-  ItemService? serviceSelected;
+  Service? serviceSelected;
   List<ServiceVersion>? serviceVersionList;
   ServiceVersion? serviceVersionSelected;
   String? mainImageId;

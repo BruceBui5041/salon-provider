@@ -2,6 +2,7 @@
 //
 //     final serviceResponse = serviceResponseFromJson(jsonString);
 
+import 'package:salon_provider/model/response/base_response.dart';
 import 'package:salon_provider/model/response/image_response.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:json_annotation/json_annotation.dart';
@@ -10,15 +11,7 @@ import 'dart:convert';
 part 'service_response.g.dart';
 
 @JsonSerializable()
-class ItemService {
-  @JsonKey(name: 'id')
-  final String? id;
-  @JsonKey(name: 'status')
-  final String? status;
-  @JsonKey(name: 'created_at')
-  final DateTime? createdAt;
-  @JsonKey(name: 'updated_at')
-  final DateTime? updatedAt;
+class Service extends CommonResponse {
   @JsonKey(name: 'slug')
   final String? slug;
   @JsonKey(name: 'rating_count')
@@ -34,11 +27,11 @@ class ItemService {
   @JsonKey(name: "images")
   final List<ImageResponse>? imageResponse;
 
-  ItemService({
-    this.id,
-    this.status,
-    this.createdAt,
-    this.updatedAt,
+  Service({
+    super.id,
+    super.status,
+    super.createdAt,
+    super.updatedAt,
     this.slug,
     this.ratingCount,
     this.reviewInfo,
@@ -48,11 +41,7 @@ class ItemService {
     this.imageResponse,
   });
 
-  ItemService copyWith({
-    String? id,
-    String? status,
-    DateTime? createdAt,
-    DateTime? updatedAt,
+  Service copyWith({
     String? slug,
     int? ratingCount,
     dynamic reviewInfo,
@@ -61,7 +50,7 @@ class ItemService {
     List<ServiceVersion>? versionsResponse,
     List<ImageResponse>? imageResponse,
   }) =>
-      ItemService(
+      Service(
         id: id ?? this.id,
         status: status ?? this.status,
         createdAt: createdAt ?? this.createdAt,
@@ -75,8 +64,8 @@ class ItemService {
         imageResponse: imageResponse ?? this.imageResponse,
       );
 
-  factory ItemService.fromJson(Map<String, dynamic> json) =>
-      _$ItemServiceFromJson(json);
+  factory Service.fromJson(Map<String, dynamic> json) =>
+      _$ServiceFromJson(json);
 
-  Map<String, dynamic> toJson() => _$ItemServiceToJson(this);
+  Map<String, dynamic> toJson() => _$ServiceToJson(this);
 }

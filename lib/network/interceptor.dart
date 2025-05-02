@@ -21,18 +21,14 @@ class AuthTokenInterceptor extends Interceptor {
     log("================================================================================");
     log(options.method);
     log(options.uri.toString());
-    log(options.data.toString());
     log("QueryParameters: ${options.queryParameters}");
+    log("Body: ${options.data}");
     log("Headers: ${options.headers}");
     // options.headers['access_token'] = accessToken;
     // options.headers['cookie'] = accessToken;
     // options.headers['Content-Type'] = 'application/json';
     log(options.headers.toString());
     log("================================================================================");
-
-    try {
-      log("data: ${json.encode(options.data)}");
-    } catch (e) {}
     return super.onRequest(options, handler);
   }
 

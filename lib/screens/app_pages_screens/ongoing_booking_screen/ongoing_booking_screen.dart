@@ -22,8 +22,8 @@ class OngoingBookingScreen extends StatelessWidget {
                     context, routeName.completedBooking,
                     arg: value.ongoingBookingModel?.id),
                 child: Text(
-                  language(context, appFonts.complete).toUpperCase(),
-                  style: appCss.dmDenseBold16
+                  language(context, appFonts.done).toUpperCase(),
+                  style: appCss.dmDenseBold14
                       .textColor(appColor(context).appTheme.online),
                 ),
               ).paddingOnly(right: Insets.i10),

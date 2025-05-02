@@ -1,6 +1,6 @@
 import 'package:easy_image_viewer/easy_image_viewer.dart';
 import 'package:salon_provider/providers/app_pages_provider/service_details_provider.dart';
-import 'package:salon_provider/screens/app_pages_screens/services_details_screen/layouts/new_service_description%20copy.dart';
+import 'package:salon_provider/screens/app_pages_screens/services_details_screen/layouts/service_description.dart';
 
 import '../../../config.dart';
 
@@ -30,36 +30,16 @@ class _ServicesDetailsScreenState extends State<ServicesDetailsScreen>
           body: SingleChildScrollView(
               child: Column(children: [
         ServiceImageLayout(
-            editTap: () =>
-                route.pushNamed(context, routeName.addNewService, arg: {
-                  "isEdit": true,
-                  "image": value.itemService?.imageResponse?[0].url ?? '',
-                  "thumb_image": value.itemService?.imageResponse?[0].url ?? '',
-                  "service_name":
-                      value.itemService?.serviceVersion?.title ?? '',
-                  "category": value.itemService?.serviceVersion
-                          ?.categoryResponse?.name ??
-                      '',
-                  "sub_category": value.itemService?.serviceVersion
-                          ?.categoryResponse?.name ??
-                      '',
-                  "description":
-                      value.itemService?.serviceVersion?.description ?? '',
-                  "duration": value.itemService?.serviceVersion?.duration ?? '',
-                  "area": "Howthorne - Los angels",
-                  "req_servicemen": "2",
-                  "price": value.itemService?.serviceVersion?.price ?? '0',
-                  "tax": "VAT(20%)",
-                  "featured_points": "What ever",
-                  "status": false,
-                  "itemServiceSelected": value.itemService,
-                  // "discount":
-                  //     value.itemService?.serviceVersion?.discountedPrice ?? '0',
-                }),
-            deleteTap: () => value.onServiceDelete(context, this),
-            title: value.itemService?.serviceVersion?.title ?? '',
-            image: value.itemService?.imageResponse?[0].url ?? '',
-            rating: "3.0"),
+          editTap: () =>
+              route.pushNamed(context, routeName.addNewService, arg: {
+            "isEdit": true,
+            "itemServiceSelected": value.itemService,
+          }),
+          deleteTap: () => value.onServiceDelete(context, this),
+          title: value.itemService?.serviceVersion?.title ?? '',
+          image: value.itemService?.imageResponse?[0].url ?? '',
+          rating: "3.0",
+        ),
         const VSpace(Sizes.s12),
         SizedBox(
           height: 100,
@@ -103,12 +83,14 @@ class _ServicesDetailsScreenState extends State<ServicesDetailsScreen>
                   style: appCss.dmDenseMedium12
                       .textColor(appColor(context).appTheme.primary)),
               Text(
-                  "\$${value.itemService?.serviceVersion?.discountedPrice?.toCurrencyVnd() ?? ''}",
+                  value.itemService?.serviceVersion?.discountedPrice
+                          ?.toCurrencyVnd() ??
+                      '',
                   style: appCss.dmDenseBold18
                       .textColor(appColor(context).appTheme.primary))
             ]).paddingSymmetric(horizontal: Insets.i20)
           ]).paddingSymmetric(vertical: Insets.i15),
-          NewServiceDescription(data: value.itemService),
+          ServiceDescription(data: value.itemService),
         ]).paddingSymmetric(horizontal: Insets.i20),
 
         //review

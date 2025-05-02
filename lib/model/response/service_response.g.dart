@@ -6,7 +6,7 @@ part of 'service_response.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-ItemService _$ItemServiceFromJson(Map<String, dynamic> json) => ItemService(
+Service _$ServiceFromJson(Map<String, dynamic> json) => Service(
       id: json['id'] as String?,
       status: json['status'] as String?,
       createdAt: json['created_at'] == null
@@ -31,12 +31,11 @@ ItemService _$ItemServiceFromJson(Map<String, dynamic> json) => ItemService(
           .toList(),
     );
 
-Map<String, dynamic> _$ItemServiceToJson(ItemService instance) =>
-    <String, dynamic>{
+Map<String, dynamic> _$ServiceToJson(Service instance) => <String, dynamic>{
       'id': instance.id,
-      'status': instance.status,
       'created_at': instance.createdAt?.toIso8601String(),
       'updated_at': instance.updatedAt?.toIso8601String(),
+      'status': instance.status,
       'slug': instance.slug,
       'rating_count': instance.ratingCount,
       'review_info': instance.reviewInfo,

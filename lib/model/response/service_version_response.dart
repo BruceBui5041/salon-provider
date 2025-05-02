@@ -1,3 +1,4 @@
+import 'package:salon_provider/model/response/base_response.dart';
 import 'package:salon_provider/model/response/category_response.dart';
 import 'package:salon_provider/model/response/image_response.dart';
 import 'package:salon_provider/model/response/main_image_response.dart';
@@ -21,15 +22,7 @@ enum ServiceVersionEnum {
 }
 
 @JsonSerializable()
-class ServiceVersion {
-  @JsonKey(name: 'id')
-  final String? id;
-  @JsonKey(name: 'status')
-  final String? status;
-  @JsonKey(name: 'created_at')
-  final DateTime? createdAt;
-  @JsonKey(name: 'updated_at')
-  final DateTime? updatedAt;
+class ServiceVersion extends CommonResponse {
   @JsonKey(name: 'title')
   final String? title;
   @JsonKey(name: 'description')
@@ -49,15 +42,15 @@ class ServiceVersion {
   @JsonKey(name: "main_image")
   final ImageResponse? mainImageResponse;
   @JsonKey(name: "service")
-  final ItemService? service;
+  final Service? service;
   @JsonKey(name: "images")
   final List<ImageResponse>? images;
 
   ServiceVersion({
-    required this.id,
-    required this.status,
-    required this.createdAt,
-    required this.updatedAt,
+    super.id,
+    super.status,
+    super.createdAt,
+    super.updatedAt,
     required this.title,
     required this.description,
     required this.thumbnail,
@@ -86,7 +79,7 @@ class ServiceVersion {
     CategoryItem? categoryResponse,
     ImageResponse? imageResponse,
     ImageResponse? mainImageResponse,
-    ItemService? service,
+    Service? service,
     List<ImageResponse>? images,
   }) =>
       ServiceVersion(
