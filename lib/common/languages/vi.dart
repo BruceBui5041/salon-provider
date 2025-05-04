@@ -67,6 +67,7 @@ dynamic vi = {
   "nowManageAll":
       "Giờ đây quản lý tất cả dịch vụ và cửa hàng của bạn chỉ với một cú click.",
   "loginAsProvider": "Đăng nhập với tư cách nhà cung cấp",
+  "notProvider": "Bạn không phải là nhà cung cấp",
   "loginAsServiceman": "Đăng nhập với tư cách nhân viên dịch vụ",
   "donHaveAccount": "Chưa có tài khoản?",
   "signUp": "Đăng ký",
@@ -114,6 +115,7 @@ dynamic vi = {
   "country": "Quốc gia",
   "add": "Thêm",
   "selectService": "Chọn vị trí dịch vụ",
+  "myService": "Dịch vụ của tôi",
   "edit": "Chỉnh sửa",
   "confirmLocation": "Xác nhận vị trí",
   "editServiceArea": "Khu vực dịch vụ",

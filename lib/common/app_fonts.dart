@@ -263,6 +263,7 @@ class AppFonts {
   final expertiseIn = "expertiseIn";
   final servicesDelivered = "servicesDelivered";
   final service = "service";
+  final myService = "myService";
   final servicemanDetail = "servicemanDetail";
   final chines = "chines";
   final addServicemen = "addServicemen";
@@ -413,6 +414,7 @@ class AppFonts {
   final rateNow = "rateNow";
   final downloadBill = "downloadBill";
   final theProviderHas = "theProviderHas";
+  final notProvider = "notProvider";
   final servicemanSelected = "servicemanSelected";
   final iAccomplished = "iAccomplished";
   final viewStatus = "viewStatus";

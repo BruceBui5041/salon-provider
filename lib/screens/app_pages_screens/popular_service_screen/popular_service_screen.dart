@@ -18,7 +18,7 @@ class _PopularServiceScreenState extends State<PopularServiceScreen> {
   Widget build(BuildContext context) {
     return Consumer<DashboardProvider>(builder: (context, value, _) {
       return Scaffold(
-          appBar: AppBarCommon(title: appFonts.popularService),
+          appBar: AppBarCommon(title: appFonts.myService),
           body: SingleChildScrollView(
               child: Column(children: [
             SearchTextFieldCommon(

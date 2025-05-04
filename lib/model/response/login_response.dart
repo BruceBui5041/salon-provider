@@ -5,6 +5,8 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:meta/meta.dart';
 import 'dart:convert';
+
+import 'package:salon_provider/model/response/role_response.dart';
 part 'login_response.g.dart';
 
 @JsonSerializable()
@@ -80,7 +82,7 @@ class User {
   final String firstname;
   final String email;
   final String profilePictureUrl;
-  final List<Role> roles;
+  final List<RoleResponse> roles;
 
   User({
     required this.id,
@@ -103,7 +105,7 @@ class User {
     String? firstname,
     String? email,
     String? profilePictureUrl,
-    List<Role>? roles,
+    List<RoleResponse>? roles,
   }) =>
       User(
         id: id ?? this.id,
@@ -126,7 +128,8 @@ class User {
         firstname: json["firstname"],
         email: json["email"],
         profilePictureUrl: json["profile_picture_url"],
-        roles: List<Role>.from(json["roles"].map((x) => Role.fromJson(x))),
+        roles: List<RoleResponse>.from(
+            json["roles"].map((x) => RoleResponse.fromJson(x))),
       );
 
   Map<String, dynamic> toJson() => {
@@ -139,46 +142,5 @@ class User {
         "email": email,
         "profile_picture_url": profilePictureUrl,
         "roles": List<dynamic>.from(roles.map((x) => x.toJson())),
-      };
-}
-
-class Role {
-  final String id;
-  final String status;
-  final String name;
-  final String description;
-
-  Role({
-    required this.id,
-    required this.status,
-    required this.name,
-    required this.description,
-  });
-
-  Role copyWith({
-    String? id,
-    String? status,
-    String? name,
-    String? description,
-  }) =>
-      Role(
-        id: id ?? this.id,
-        status: status ?? this.status,
-        name: name ?? this.name,
-        description: description ?? this.description,
-      );
-
-  factory Role.fromJson(Map<String, dynamic> json) => Role(
-        id: json["id"],
-        status: json["status"],
-        name: json["name"],
-        description: json["Description"],
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "status": status,
-        "name": name,
-        "Description": description,
       };
 }

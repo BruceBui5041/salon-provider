@@ -5,6 +5,7 @@ import 'package:salon_provider/config/cookie_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/storage_config.dart';
 import 'package:salon_provider/helper/notification_helper.dart';
+import 'package:salon_provider/model/response/role_response.dart';
 import 'package:salon_provider/repositories/login_repository.dart';
 
 class LoginAsProvider with ChangeNotifier {
@@ -26,38 +27,41 @@ class LoginAsProvider with ChangeNotifier {
       formKey.currentState!.save();
 
       final response = await repo.loginUser(phoneController.text);
-      if (response != null) {
-        if (response.data?.challenge == "otp") {
-          await repo.resendOtp(context);
-          route.pushNamed(context, routeName.verifyOtp);
-        } else {
-          var userId = response.data?.user.id;
+      if (response.errorKey != null) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              response.message!,
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.black87,
+          ),
+        );
+        return;
+      }
 
-          await AuthConfig.setUserId(userId ?? "");
+      if (!response.data!.user.roles
+          .any((element) => element.code == UserRoleCode.provider)) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              language(context, appFonts.notProvider),
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.black87,
+          ),
+        );
+        return;
+      }
 
-          // pref!.setString("token", response.data!.token!);
-          // pref!.setString("user_id", response.data!.id!);
-          // pref!.setString("user_name", response.data!.name!);
-          // pref!.setString("user_email", response.data!.email!);
-          // pref!.setString("user_phone", response.data!.phone!);
-          // pref!.setString("user_image", response.data!.image!);
-          // pref!.setString("user_address", response.data!.address!);
-          // pref!.setString("user_lat", response.data!.lat!);
-          // pref!.setString("user_lng", response.data!.lng!);
-          // pref!.setString("user_city", response.data!.city!);
-          // pref!.setString("user_country", response.data!.country!);
-          // pref!.setString("user_zip", response.data!.zip!);
-          // pref!.setString("user_status", response.data!.status!);
-          // pref!.setString("user_type", response.data!.type!);
-          // pref!.setString("user_created_at", response.data!.createdAt!);
-          // pref!.setString("user_updated_at", response.data!.updatedAt!);
-          // pref!.setString("user_deleted_at", response.data!.deletedAt!);
-          route.pushNamed(context, routeName.dashboard);
-        }
+      if (response.data?.challenge == "otp") {
+        await repo.resendOtp(context);
+        route.pushNamed(context, routeName.verifyOtp);
       } else {
-        // ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        //     content: Text(response.message!),
-        //     backgroundColor: appColor(context).appTheme.error));
+        var userId = response.data?.user.id;
+
+        await AuthConfig.setUserId(userId ?? "");
+        route.pushNamed(context, routeName.dashboard);
       }
     }
   }
