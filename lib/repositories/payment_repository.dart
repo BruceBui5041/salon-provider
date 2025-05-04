@@ -35,9 +35,7 @@ class PaymentRepository extends RepositoryConfig {
       conditions: conditions ?? [],
       fields: [
         FieldItem(field: "user.user_profile.profile_picture_url"),
-        FieldItem(field: "payment_qr"),
         FieldItem(field: "booking.service_versions"),
-        FieldItem(field: "user_id"),
         FieldItem(field: "amount"),
         FieldItem(field: "currency"),
         FieldItem(field: "payment_method"),

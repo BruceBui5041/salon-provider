@@ -41,10 +41,8 @@ class BookingRepository extends RepositoryConfig {
       model: EnumColumn.booking.name,
       conditions: conditions ?? [],
       fields: [
-        FieldItem(field: "service_versions"),
-        FieldItem(field: "user"),
         FieldItem(field: "service_versions.main_image"),
-        FieldItem(field: "payment.payment_qr"),
+        FieldItem(field: "payment"),
         FieldItem(field: "service_man"),
         FieldItem(field: "service_versions.category"),
         FieldItem(field: "coupon"),
