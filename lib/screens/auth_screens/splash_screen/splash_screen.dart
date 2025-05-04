@@ -39,7 +39,7 @@ class _SplashScreenState extends State<SplashScreen>
                         maxRadius: 600,
                         child: Container(
                             color: splash.animation2!.isCompleted
-                                ? appColor(context).appTheme.bluePrimary
+                                ? appColor(context).appTheme.primary
                                 : appColor(context).appTheme.whiteBg,
                             width: MediaQuery.of(context).size.width,
                             height: MediaQuery.of(context).size.height,
