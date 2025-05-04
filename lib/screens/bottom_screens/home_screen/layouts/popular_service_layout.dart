@@ -28,13 +28,10 @@ class _FeaturedServicesLayoutState extends State<FeaturedServicesLayout> {
   Widget build(BuildContext context) {
     return Consumer<AllServiceProvider>(builder: (context, value, _) {
       return SizedBox(
-              width: MediaQuery.of(context).size.width,
-              child: Column(children: [
-                _listService(value),
-              ]))
-          .paddingAll(Insets.i15)
-          .boxBorderExtension(context,
-              isShadow: true, bColor: appColor(context).appTheme.stroke);
+          width: MediaQuery.of(context).size.width,
+          child: Column(children: [
+            _listService(value),
+          ]));
     });
   }
 
