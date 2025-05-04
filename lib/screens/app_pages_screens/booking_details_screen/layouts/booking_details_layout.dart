@@ -1,6 +1,5 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:intl/intl.dart';
-import 'package:salon_provider/screens/app_pages_screens/booking_details_screen/layouts/customer_layout.dart';
 import '../../../../config.dart';
 import '../../../../model/response/booking_response.dart';
 
@@ -103,7 +102,7 @@ class BookingDetailsLayout extends StatelessWidget {
                           route.pushNamed(context, routeName.servicemanDetail),
                       onTapPhone: () => value.onTapPhone(),
                       title: appFonts.servicemanDetail,
-                      data: data!.serviceMan,
+                      data: data!.serviceMan!,
                       onTapChat: () => route.pushNamed(context, routeName.chat),
                       isMore: true)
               ]).paddingAll(Insets.i15).boxBorderExtension(context,
@@ -112,39 +111,7 @@ class BookingDetailsLayout extends StatelessWidget {
                       style: appCss.dmDenseMedium14
                           .textColor(appColor(context).appTheme.darkText))
                   .paddingOnly(top: Insets.i20, bottom: Insets.i10),
-              Container(
-                  height: Sizes.s245,
-                  decoration: BoxDecoration(
-                      image: DecorationImage(
-                          image: AssetImage(appColor(context).appTheme.isDark
-                              ? eImageAssets.bookingDetailBg
-                              : eImageAssets.commissionBg),
-                          fit: BoxFit.fill)),
-                  child: Column(children: [
-                    CommissionRowLayout(
-                        isCommission: true,
-                        data: "0",
-                        title: appFonts.totalReceivedCommission,
-                        style: appCss.dmDenseblack14
-                            .textColor(appColor(context).appTheme.darkText)),
-                    CommissionRowLayout(
-                        isCommission: true,
-                        title: appFonts.adminCommission,
-                        data: "0"),
-                    CommissionRowLayout(
-                        isCommission: true,
-                        title: appFonts.servicemenCommission,
-                        data: "0"),
-                    CommissionRowLayout(
-                        isCommission: true,
-                        title: appFonts.platformFees,
-                        data: "0"),
-                    CommissionRowLayout(
-                        title: appFonts.yourCommission,
-                        color: appColor(context).appTheme.primary,
-                        data: "0")
-                  ]).paddingSymmetric(
-                      horizontal: Insets.i15, vertical: Insets.i20))
+              CancelledBillSummary(booking: data)
             ]);
     });
   }

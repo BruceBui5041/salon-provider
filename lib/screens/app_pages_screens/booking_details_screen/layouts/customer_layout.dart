@@ -46,8 +46,8 @@ class CustomerLayout extends StatelessWidget {
           ClipRRect(
             borderRadius: BorderRadius.circular(25),
             child: SizedBox(
-              height: Sizes.s50,
-              width: Sizes.s50,
+              height: Sizes.s38,
+              width: Sizes.s38,
               child: CacheImageWidget(
                 url: user?.userProfile?.profilePictureUrl,
               ),
@@ -56,13 +56,14 @@ class CustomerLayout extends StatelessWidget {
           const HSpace(Sizes.s12),
           Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
             Text("${user?.firstname ?? ""} ${user?.lastname ?? ""}",
+                overflow: TextOverflow.ellipsis,
                 style: appCss.dmDenseMedium14
                     .textColor(appColor(context).appTheme.darkText)),
             if (user?.phoneNumber != null)
               Text(user?.phoneNumber ?? "",
                   style: appCss.dmDenseMedium12
                       .textColor(appColor(context).appTheme.lightText))
-          ])
+          ]).width(Sizes.s150)
         ]),
         if (status != BookingStatus.pending.name)
           Row(children: [

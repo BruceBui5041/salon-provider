@@ -40,8 +40,10 @@ class LoginAsProvider with ChangeNotifier {
         return;
       }
 
-      if (!response.data!.user.roles
-          .any((element) => element.code == UserRoleCode.provider)) {
+      final hasProviderRole = response.data!.user.roles
+              ?.any((element) => element.code == UserRoleCode.provider) ??
+          false;
+      if (!hasProviderRole) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(
@@ -61,6 +63,9 @@ class LoginAsProvider with ChangeNotifier {
         var userId = response.data?.user.id;
 
         await AuthConfig.setUserId(userId ?? "");
+        if (response.data?.user != null) {
+          await AuthConfig.setUser(response.data!.user);
+        }
         route.pushNamed(context, routeName.dashboard);
       }
     }
@@ -75,17 +80,17 @@ class LoginAsProvider with ChangeNotifier {
 
   Future<void> checkAuth({Function()? onSuccess}) async {
     var res = await repo.checkAuth();
-    List<String> cookiesList = await StorageConfig.readList();
+    List<String> cookiesList = StorageConfig.readList();
     if (cookiesList.isEmpty) {
       await StorageConfig.deleteAll();
       return;
     }
 
-    if (res != null) {
-      await AuthConfig.setUserId(res.data.id);
-      if (onSuccess != null) {
-        onSuccess();
-      }
+    if (res?.id == null) throw Exception("User not found");
+
+    await AuthConfig.setUserId(res!.id!);
+    if (onSuccess != null) {
+      onSuccess();
     }
   }
 }

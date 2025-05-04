@@ -9,9 +9,7 @@ part of 'booking_api_client.dart';
 // ignore_for_file: unnecessary_brace_in_string_interps,no_leading_underscores_for_local_identifiers,unused_element,unnecessary_string_interpolations
 
 class _BookingApiClient implements BookingApiClient {
-  _BookingApiClient(this._dio, {this.baseUrl, this.errorLogger}) {
-    baseUrl ??= '/booking';
-  }
+  _BookingApiClient(this._dio, {this.baseUrl, this.errorLogger});
 
   final Dio _dio;
 
@@ -33,7 +31,7 @@ class _BookingApiClient implements BookingApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/cancel/${id}',
+            '/booking/cancel/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -63,7 +61,7 @@ class _BookingApiClient implements BookingApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/accept/${id}',
+            '/booking/accept/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -93,7 +91,7 @@ class _BookingApiClient implements BookingApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/complete/${id}',
+            '/booking/complete/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -123,7 +121,7 @@ class _BookingApiClient implements BookingApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/inprogress/${id}',
+            '/booking/inprogress/${id}',
             queryParameters: queryParameters,
             data: _data,
           )
@@ -153,7 +151,7 @@ class _BookingApiClient implements BookingApiClient {
       Options(method: 'PATCH', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
-            '/paid/${id}',
+            '/booking/paid/${id}',
             queryParameters: queryParameters,
             data: _data,
           )

@@ -70,7 +70,7 @@ class _HomeScreenState extends State<HomeScreen>
           child: Scaffold(
             appBar: AppBar(
                 leadingWidth: MediaQuery.of(context).size.width,
-                leading: const HomeAppBar()),
+                leading: HomeAppBar()),
             body: RefreshIndicator(
                 onRefresh: _onRefresh,
                 child: SingleChildScrollView(

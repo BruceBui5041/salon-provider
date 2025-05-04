@@ -7,6 +7,7 @@ class StorageConfig {
   static const keyAccessToken = 'access_token';
   static const keyCookies = 'cookies';
   static const keyUserId = 'user_id';
+  static const keyUser = 'user';
 
   // Private instance
   static SharedPreferences? _prefs;

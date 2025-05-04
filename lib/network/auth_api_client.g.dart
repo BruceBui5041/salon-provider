@@ -103,12 +103,12 @@ class _AuthApiClient implements AuthApiClient {
   }
 
   @override
-  Future<CheckAuthResponse> checkAuth() async {
+  Future<BaseResponse<UserResponse>> checkAuth() async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     const Map<String, dynamic>? _data = null;
-    final _options = _setStreamType<CheckAuthResponse>(
+    final _options = _setStreamType<BaseResponse<UserResponse>>(
       Options(method: 'GET', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -119,9 +119,12 @@ class _AuthApiClient implements AuthApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late CheckAuthResponse _value;
+    late BaseResponse<UserResponse> _value;
     try {
-      _value = CheckAuthResponse.fromJson(_result.data!);
+      _value = BaseResponse<UserResponse>.fromJson(
+        _result.data!,
+        (json) => UserResponse.fromJson(json as Map<String, dynamic>),
+      );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);
       rethrow;

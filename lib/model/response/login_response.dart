@@ -7,12 +7,13 @@ import 'package:meta/meta.dart';
 import 'dart:convert';
 
 import 'package:salon_provider/model/response/role_response.dart';
+import 'package:salon_provider/model/response/user_response.dart';
 part 'login_response.g.dart';
 
 @JsonSerializable()
 class LoginItem {
   final Token token;
-  final User user;
+  final UserResponse user;
   final String challenge;
 
   LoginItem({
@@ -23,7 +24,7 @@ class LoginItem {
 
   LoginItem copyWith({
     Token? token,
-    User? user,
+    UserResponse? user,
     String? challenge,
   }) =>
       LoginItem(
@@ -70,77 +71,5 @@ class Token {
         "token": token,
         "created": created.toIso8601String(),
         "expiry": expiry,
-      };
-}
-
-class User {
-  final String id;
-  final DateTime createdAt;
-  final DateTime updatedAt;
-  final String status;
-  final String lastname;
-  final String firstname;
-  final String email;
-  final String profilePictureUrl;
-  final List<RoleResponse> roles;
-
-  User({
-    required this.id,
-    required this.createdAt,
-    required this.updatedAt,
-    required this.status,
-    required this.lastname,
-    required this.firstname,
-    required this.email,
-    required this.profilePictureUrl,
-    required this.roles,
-  });
-
-  User copyWith({
-    String? id,
-    DateTime? createdAt,
-    DateTime? updatedAt,
-    String? status,
-    String? lastname,
-    String? firstname,
-    String? email,
-    String? profilePictureUrl,
-    List<RoleResponse>? roles,
-  }) =>
-      User(
-        id: id ?? this.id,
-        createdAt: createdAt ?? this.createdAt,
-        updatedAt: updatedAt ?? this.updatedAt,
-        status: status ?? this.status,
-        lastname: lastname ?? this.lastname,
-        firstname: firstname ?? this.firstname,
-        email: email ?? this.email,
-        profilePictureUrl: profilePictureUrl ?? this.profilePictureUrl,
-        roles: roles ?? this.roles,
-      );
-
-  factory User.fromJson(Map<String, dynamic> json) => User(
-        id: json["id"],
-        createdAt: DateTime.parse(json["created_at"]),
-        updatedAt: DateTime.parse(json["updated_at"]),
-        status: json["status"],
-        lastname: json["lastname"],
-        firstname: json["firstname"],
-        email: json["email"],
-        profilePictureUrl: json["profile_picture_url"],
-        roles: List<RoleResponse>.from(
-            json["roles"].map((x) => RoleResponse.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "id": id,
-        "created_at": createdAt.toIso8601String(),
-        "updated_at": updatedAt.toIso8601String(),
-        "status": status,
-        "lastname": lastname,
-        "firstname": firstname,
-        "email": email,
-        "profile_picture_url": profilePictureUrl,
-        "roles": List<dynamic>.from(roles.map((x) => x.toJson())),
       };
 }

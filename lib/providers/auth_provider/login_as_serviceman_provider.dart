@@ -34,8 +34,10 @@ class LoginAsServicemanProvider with ChangeNotifier {
         return;
       }
 
-      if (!response.data!.user.roles
-          .any((element) => element.code == UserRoleCode.provider)) {
+      final hasProviderRole = response.data!.user.roles
+              ?.any((element) => element.code == UserRoleCode.provider) ??
+          false;
+      if (!hasProviderRole) {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text(

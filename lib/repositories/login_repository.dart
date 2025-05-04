@@ -1,10 +1,11 @@
 import 'package:salon_provider/common/Utils.dart';
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
-import 'package:salon_provider/model/response/check_auth_response.dart';
 import 'package:salon_provider/model/response/common_response.dart';
 import 'package:salon_provider/model/response/login_response.dart';
+import 'package:salon_provider/model/response/user_response.dart';
 import 'package:salon_provider/network/api.dart';
 import 'package:dio/dio.dart';
 
@@ -28,15 +29,17 @@ class LoginScreenRepository extends RepositoryConfig {
     }
   }
 
-  Future<CheckAuthResponse?> checkAuth() async {
+  Future<UserResponse?> checkAuth() async {
     try {
       var res = await restClient.checkAuth();
-      return res;
+      if (res.data == null) throw Exception("User not found");
+
+      await AuthConfig.setUser(res.data!);
+      return res.data;
     } catch (e) {
       if (e is DioException) {
         Utils.error(e);
       }
-      print(e);
     }
     return null;
   }
