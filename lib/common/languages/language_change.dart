@@ -82,8 +82,7 @@ class LanguageProvider with ChangeNotifier {
     if (currentLanguage.isNotEmpty) {
       definedCurrentLanguage = currentLanguage;
     } else {
-      print(
-          "locale from currentData: ${Localizations.localeOf(context).toString()}");
+      log("locale from currentData: ${Localizations.localeOf(context).toString()}");
       definedCurrentLanguage = languageHelper
           .convertLocaleToLangName(Localizations.localeOf(context).toString());
     }

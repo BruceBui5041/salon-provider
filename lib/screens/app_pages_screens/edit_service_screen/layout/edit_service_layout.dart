@@ -312,7 +312,6 @@
 //                   "${item.title} (${item.publishedDate != null ? "Published" : "Draft"})",
 //               // itemImage: (item) => item.,
 //               onChanged: (newValue) {
-//                 print(newValue);
 
 //                 Provider.of<EditServiceProvider>(context, listen: false)
 //                     .onCraftSelected(newValue!);

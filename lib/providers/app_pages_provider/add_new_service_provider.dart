@@ -289,7 +289,7 @@ class AddNewServiceProvider with ChangeNotifier {
       }
     } catch (e) {
       if (e is DioException) {
-        print(e.response!.data);
+        log(e.response!.data);
       }
     }
   }

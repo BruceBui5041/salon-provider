@@ -46,7 +46,6 @@ class AuthTokenInterceptor extends Interceptor {
       config.setCookies(response.requestOptions.uri, cookies);
     }
 
-    // print("Url opi: ${response.requestOptions.uri}");
     Utils.debug("Response: ${response.data}");
     log("================================================================================");
     super.onResponse(response, handler);

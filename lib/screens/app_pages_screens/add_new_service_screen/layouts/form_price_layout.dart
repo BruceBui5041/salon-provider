@@ -163,9 +163,7 @@ class FormPriceLayout extends StatelessWidget {
                 controller: value.discount,
                 hintText: appFonts.addDic,
                 prefixIcon: eSvgAssets.discount,
-                onFieldSubmitted: (val) {
-                  print("onFieldSubmitted: $val");
-                },
+                onFieldSubmitted: (val) {},
                 validator: (val) {
                   if (val == null || val.isEmpty) {
                     return language(context, appFonts.pleaseEnterNumber);

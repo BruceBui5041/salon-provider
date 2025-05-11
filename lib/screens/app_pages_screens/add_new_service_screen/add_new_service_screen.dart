@@ -45,7 +45,6 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer<AddNewServiceProvider>(builder: (context1, value, child) {
-      print("subCategoryValue: ${value.subCategoryValue}");
       return StatefulWrapper(
           onDispose: () {
             Provider.of<AddNewServiceProvider>(context, listen: false)

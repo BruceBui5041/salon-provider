@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:salon_provider/common/Utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
@@ -40,12 +42,12 @@ class NotificationHelper {
   }
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
-    print('Message received in foreground: ${message.toString()}');
+    log('Message received in foreground: ${message.toString()}');
     await _showNotification(message);
   }
 
   Future<void> _handleMessageOpenedApp(RemoteMessage message) async {
-    print('Message opened app: ${message.messageId}');
+    log('Message opened app: ${message.messageId}');
     // Handle navigation or other actions when notification is tapped
   }
 
@@ -82,7 +84,7 @@ class NotificationHelper {
       }
       return token;
     } catch (e) {
-      print('Error getting token: $e');
+      log('Error getting token: $e');
       return null;
     }
   }
@@ -104,7 +106,7 @@ class NotificationHelper {
 
       return token;
     } catch (e) {
-      print('Error generating device token: $e');
+      log('Error generating device token: $e');
       return null;
     }
   }
@@ -112,7 +114,7 @@ class NotificationHelper {
 
 // This needs to be a top-level function
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  print('Handling background message: ${message.messageId}');
+  log('Handling background message: ${message.messageId}');
   // Initialize Firebase if needed
   // await Firebase.initializeApp();
 }

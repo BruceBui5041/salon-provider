@@ -20,7 +20,6 @@ class ConstantApiConfig {
     final configEnv = ConfigEnv(environment: env);
 
     _url = configEnv.getApiUrl();
-    print(env);
   }
 
   // Getter để truy cập ooURL

@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'package:salon_provider/common/Utils.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/helper/notification_helper.dart';
@@ -30,7 +31,7 @@ class VerifyOtpProvider with ChangeNotifier {
         onSucess();
       }
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 

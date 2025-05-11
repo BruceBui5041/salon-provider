@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:salon_provider/common/Utils.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/auth_config.dart';
@@ -25,7 +27,7 @@ class LoginScreenRepository extends RepositoryConfig {
       var otpClient = getIt.get<OtpApiClient>();
       await otpClient.resendOtp();
     } catch (e) {
-      print(e);
+      log(e.toString());
     }
   }
 

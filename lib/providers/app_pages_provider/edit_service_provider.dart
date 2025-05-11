@@ -120,7 +120,6 @@ class EditServiceProvider extends ChangeNotifier {
               : "";
       durationController.text =
           itemService!.serviceVersion!.duration!.toString();
-      print("DURATION: ${itemService!.serviceVersion!.duration}");
     }
   }
 
@@ -134,7 +133,7 @@ class EditServiceProvider extends ChangeNotifier {
       }
     } catch (e) {
       if (e is DioException) {
-        print(e.response!.data);
+        log(e.response!.data);
       }
     }
   }
@@ -220,10 +219,10 @@ class EditServiceProvider extends ChangeNotifier {
               contentType: "multipart/form-data",
             ),
           );
-      print(res.data);
+      log(res.data);
     } catch (e) {
       if (e is DioError) {
-        print(e.response!.data);
+        log(e.response!.data);
       }
       log("ERROR: $e");
     }
