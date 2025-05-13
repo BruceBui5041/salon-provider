@@ -45,24 +45,40 @@ class AssignBookingProvider with ChangeNotifier {
 
   onStartServicePass(context) {
     if (booking != null) {
-      bookingRepository.inProgressBooking(booking!.id!).then((value) {
-        if (value) {
-          route.pushNamed(context, routeName.ongoingBooking, arg: booking!.id);
-        }
-      }).catchError((error) {
-        log("Error updating booking to in-progress: $error");
-        showDialog(
-          context: context,
-          builder: (context1) => AlertDialogCommon(
-            title: appFonts.errorOccur,
-            image: eGifAssets.error,
-            subtext: appFonts.doYouWant,
-            height: Sizes.s145,
-            bText1: appFonts.okay,
-            b1OnTap: () => route.pop(context),
-          ),
-        );
-      });
+      showDialog(
+        context: context,
+        builder: (context1) => AppAlertDialogCommon(
+          height: Sizes.s100,
+          title: appFonts.startService,
+          firstBText: appFonts.cancel,
+          secondBText: appFonts.yes,
+          image: eGifAssets.dateGif,
+          subtext: appFonts.startService,
+          firstBTap: () => route.pop(context),
+          secondBTap: () {
+            route.pop(context);
+            bookingRepository.inProgressBooking(booking!.id!).then((value) {
+              if (value) {
+                route.pushNamed(context, routeName.ongoingBooking,
+                    arg: booking!.id);
+              }
+            }).catchError((error) {
+              log("Error updating booking to in-progress: $error");
+              showDialog(
+                context: context,
+                builder: (context1) => AlertDialogCommon(
+                  title: appFonts.errorOccur,
+                  image: eGifAssets.error,
+                  subtext: appFonts.doYouWant,
+                  height: Sizes.s145,
+                  bText1: appFonts.okay,
+                  b1OnTap: () => route.pop(context),
+                ),
+              );
+            });
+          },
+        ),
+      );
     }
   }
 
