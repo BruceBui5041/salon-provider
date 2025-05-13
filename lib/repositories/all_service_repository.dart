@@ -38,7 +38,6 @@ class AllServiceRepository extends RepositoryConfig {
   }
 
   Future<Service> getServiceById(String id) async {
-    String? userId = await AuthConfig.getUserId();
     var response = await commonRestClient.search<Service>(
         SearchRequestBody(model: EnumColumn.service.name, conditions: [
       [

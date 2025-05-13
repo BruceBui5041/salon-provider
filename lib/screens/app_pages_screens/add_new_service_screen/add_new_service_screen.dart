@@ -500,7 +500,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                         },
                       ));
               Provider.of<AllServiceProvider>(context, listen: false)
-                  .getAllServices();
+                  .getAllServices(limit: 5);
               // Navigator.of(context).popUntil((route) => route.isFirst);
             });
           }),

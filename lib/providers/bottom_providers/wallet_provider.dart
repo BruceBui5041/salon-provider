@@ -9,40 +9,96 @@ class WalletProvider with ChangeNotifier {
   final PaymentRepository _paymentRepository = PaymentRepository();
   List<Payment> paymentList = [];
   bool isLoading = false;
+  bool isLoadingMore = false;
   String? error;
+
+  // Pagination properties
+  int currentOffset = 0;
+  int pageSize = 5;
+  bool hasMoreData = true;
 
   int statusIndex = 0;
   bool hasActiveFilters = false;
 
+  List<List<Condition>>? _buildConditions() {
+    List<List<Condition>>? conditions;
+
+    // Add status filter condition
+    if (statusIndex > 0 && statusIndex <= PaymentStatus.values.length) {
+      String status = PaymentStatus.values[statusIndex - 1].value;
+      conditions = [
+        [
+          Condition(
+            source: "payment.transaction_status",
+            operator: "=",
+            target: status,
+          ),
+        ]
+      ];
+    }
+
+    return conditions;
+  }
+
+  Future<void> resetPagination() async {
+    paymentList = [];
+    currentOffset = 0;
+    hasMoreData = true;
+    error = null;
+    notifyListeners();
+  }
+
   Future<void> fetchPayments() async {
+    await resetPagination();
+    await loadPayments();
+  }
+
+  Future<void> loadMorePayments() async {
+    if (isLoading || isLoadingMore || !hasMoreData) return;
+
+    isLoadingMore = true;
+    notifyListeners();
+
+    await loadPayments(loadMore: true);
+  }
+
+  Future<void> loadPayments({bool loadMore = false}) async {
     try {
-      isLoading = true;
+      if (!loadMore) {
+        isLoading = true;
+      } else {
+        isLoadingMore = true;
+      }
       notifyListeners();
 
-      List<List<Condition>>? conditions;
+      var conditions = _buildConditions();
 
-      // Add status filter condition
-      if (statusIndex > 0 && statusIndex <= PaymentStatus.values.length) {
-        String status = PaymentStatus.values[statusIndex - 1].value;
-        conditions = [
-          [
-            Condition(
-              source: "payment.transaction_status",
-              operator: "=",
-              target: status,
-            ),
-          ]
-        ];
+      var newPayments = await _paymentRepository.getPayments(
+        conditions: conditions,
+        limit: pageSize,
+        offset: loadMore ? currentOffset : 0,
+      );
+
+      if (loadMore) {
+        paymentList.addAll(newPayments);
+      } else {
+        paymentList = newPayments;
       }
 
-      paymentList = await _paymentRepository.getPayments(
-          conditions: conditions, limit: 10);
+      hasMoreData = newPayments.length >= pageSize;
+      if (hasMoreData) {
+        currentOffset += newPayments.length;
+      }
+
       error = null;
     } catch (e) {
       error = e.toString();
-      paymentList = [];
+      if (!loadMore) {
+        paymentList = [];
+      }
     } finally {
       isLoading = false;
+      isLoadingMore = false;
       notifyListeners();
     }
   }

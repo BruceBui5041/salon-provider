@@ -3,8 +3,35 @@ import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/boo
 
 import '../../../config.dart';
 
-class BookingScreen extends StatelessWidget {
+class BookingScreen extends StatefulWidget {
   const BookingScreen({super.key});
+
+  @override
+  State<BookingScreen> createState() => _BookingScreenState();
+}
+
+class _BookingScreenState extends State<BookingScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      Provider.of<BookingProvider>(context, listen: false).loadMoreBookings();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -98,6 +125,7 @@ class BookingScreen extends StatelessWidget {
     return RefreshIndicator(
       onRefresh: () => provider.refreshBookings(context),
       child: SingleChildScrollView(
+        controller: _scrollController,
         physics: const AlwaysScrollableScrollPhysics(),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
@@ -105,7 +133,7 @@ class BookingScreen extends StatelessWidget {
             _buildSearchField(provider),
             _buildAllBookingsHeader(context),
             if (isFreelancer != true) _buildAssignMeSwitch(context, provider),
-            if (provider.isProcessing)
+            if (provider.isProcessing && provider.bookingList.isEmpty)
               const Center(
                 child: CircularProgressIndicator(),
               ).paddingSymmetric(vertical: Insets.i50)
@@ -114,6 +142,10 @@ class BookingScreen extends StatelessWidget {
               _buildBookingList(context, provider)
             else
               _buildEmptyState(context),
+            if (provider.isLoadingMore && provider.bookingList.isNotEmpty)
+              const Center(
+                child: CircularProgressIndicator(),
+              ).paddingSymmetric(vertical: Insets.i20),
           ],
         ).padding(
           horizontal: Insets.i20,

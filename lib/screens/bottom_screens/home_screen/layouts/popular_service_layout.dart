@@ -15,43 +15,113 @@ class FeaturedServicesLayout extends StatefulWidget {
 }
 
 class _FeaturedServicesLayoutState extends State<FeaturedServicesLayout> {
+  final ScrollController _scrollController = ScrollController();
+  static const int _pageSize = 5;
+  bool _isInitialized = false;
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<AllServiceProvider>(context, listen: false)
-          .getAllServices(limit: widget.limit, orderBy: "id desc");
-    });
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_isInitialized) {
+      _isInitialized = true;
+      // Initial load of first page
+      _loadInitialPage();
+    }
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_onScroll);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  Future<void> _loadInitialPage() async {
+    final provider = Provider.of<AllServiceProvider>(context, listen: false);
+    await provider.fetchPage(0, limit: _pageSize, orderBy: "id desc");
+  }
+
+  void _onScroll() {
+    final provider = Provider.of<AllServiceProvider>(context, listen: false);
+    if (provider.isLoading || !provider.hasMoreData) return;
+
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      _loadNextPage();
+    }
+  }
+
+  Future<void> _loadNextPage() async {
+    final provider = Provider.of<AllServiceProvider>(context, listen: false);
+    await provider.fetchPage(provider.currentOffset,
+        limit: _pageSize, orderBy: "id desc");
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<AllServiceProvider>(builder: (context, value, _) {
-      return SizedBox(
-          width: MediaQuery.of(context).size.width,
-          child: Column(children: [
-            _listService(value),
-          ]));
-    });
-  }
+    return Consumer<AllServiceProvider>(builder: (context, provider, _) {
+      if (provider.serviceResponse.isEmpty && !provider.isLoading) {
+        return const SizedBox(
+          height: 200,
+          child: Center(
+            child: Text('No services found'),
+          ),
+        );
+      }
 
-  Widget _listService(AllServiceProvider value) {
-    if (value.serviceResponse == null) {
-      return const SizedBox();
-    }
-    return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: value.serviceResponse!.length,
-        itemBuilder: (context, index) {
-          return GestureDetector(
-              onTap: () {
-                route.pushNamed(context, routeName.customServiceDetails,
-                    arg: value.serviceResponse![index]);
+      return SizedBox(
+        width: MediaQuery.of(context).size.width,
+        child: Column(
+          children: [
+            ListView.builder(
+              shrinkWrap: true,
+              physics: const AlwaysScrollableScrollPhysics(),
+              controller: _scrollController,
+              itemCount: provider.serviceResponse.length +
+                  (provider.hasMoreData ? 1 : 0),
+              itemBuilder: (context, index) {
+                // If we're at the end and have more data, show a loading indicator
+                if (index == provider.serviceResponse.length) {
+                  return const Center(
+                    child: Padding(
+                      padding: EdgeInsets.all(16.0),
+                      child: CircularProgressIndicator(),
+                    ),
+                  );
+                }
+
+                // Otherwise, show a service item
+                final service = provider.serviceResponse[index];
+                return GestureDetector(
+                  onTap: () {
+                    route.pushNamed(
+                      context,
+                      routeName.customServiceDetails,
+                      arg: service,
+                    );
+                  },
+                  child: _serviceItem(context, service, index),
+                );
               },
-              child:
-                  _serviceItem(context, value.serviceResponse![index], index));
-        });
+            ),
+            // Show a loading indicator when loading the first page
+            if (provider.isLoading && provider.serviceResponse.isEmpty)
+              const Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Center(
+                  child: CircularProgressIndicator(),
+                ),
+              ),
+          ],
+        ),
+      );
+    });
   }
 
   Widget _serviceItem(BuildContext context, Service value, int index) {

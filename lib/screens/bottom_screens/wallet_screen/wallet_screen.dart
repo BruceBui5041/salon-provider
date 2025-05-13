@@ -1,7 +1,34 @@
 import '../../../config.dart';
 
-class WalletScreen extends StatelessWidget {
+class WalletScreen extends StatefulWidget {
   const WalletScreen({super.key});
+
+  @override
+  State<WalletScreen> createState() => _WalletScreenState();
+}
+
+class _WalletScreenState extends State<WalletScreen> {
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.removeListener(_scrollListener);
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (_scrollController.position.pixels >=
+        _scrollController.position.maxScrollExtent - 200) {
+      Provider.of<WalletProvider>(context, listen: false).loadMorePayments();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -54,6 +81,7 @@ class WalletScreen extends StatelessWidget {
               body: RefreshIndicator(
                   onRefresh: () => value.fetchPayments(),
                   child: SingleChildScrollView(
+                      controller: _scrollController,
                       physics: const AlwaysScrollableScrollPhysics(),
                       child: Column(children: [
                         WalletBalanceLayout(
@@ -63,7 +91,7 @@ class WalletScreen extends StatelessWidget {
                                   style: appCss.dmDenseRegular14.textColor(
                                       appColor(context).appTheme.red))
                               .paddingSymmetric(vertical: Insets.i20),
-                        if (value.isLoading)
+                        if (value.isLoading && value.paymentList.isEmpty)
                           const CircularProgressIndicator()
                               .paddingSymmetric(vertical: Insets.i20)
                         else
@@ -88,16 +116,29 @@ class WalletScreen extends StatelessWidget {
                                                       .lightText)))
                                       .paddingSymmetric(vertical: Insets.i20)
                                 else
-                                  ...value.paymentList
-                                      .map((payment) => PaymentHistoryLayout(
-                                          data: payment,
-                                          onTap: () {
-                                            if (payment.booking?.id != null) {
-                                              route.pushNamed(context,
-                                                  routeName.bookingDetails,
-                                                  arg: payment.booking!.id);
-                                            }
-                                          }))
+                                  Column(
+                                    children: [
+                                      ...value.paymentList.map(
+                                          (payment) => PaymentHistoryLayout(
+                                              data: payment,
+                                              onTap: () {
+                                                if (payment.booking?.id !=
+                                                    null) {
+                                                  route.pushNamed(context,
+                                                      routeName.bookingDetails,
+                                                      arg: payment.booking!.id);
+                                                }
+                                              })),
+                                      if (value.isLoadingMore)
+                                        const Padding(
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: 16.0),
+                                          child: Center(
+                                            child: CircularProgressIndicator(),
+                                          ),
+                                        ),
+                                    ],
+                                  ),
                               ]).paddingSymmetric(horizontal: Insets.i20)
                       ]).paddingOnly(bottom: Insets.i100)))));
     });

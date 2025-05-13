@@ -21,6 +21,12 @@ class BookingProvider with ChangeNotifier {
   Timer? _debounce;
   String _previousSearchText = "";
 
+  // Pagination properties
+  int currentOffset = 0;
+  int pageSize = 5;
+  bool hasMoreData = true;
+  bool isLoadingMore = false;
+
   // Add these constants at the top of the class
   static const String bookingStatusPending = "pending";
   static const String bookingStatusConfirmed = "confirmed";
@@ -39,119 +45,167 @@ class BookingProvider with ChangeNotifier {
     super.dispose();
   }
 
-  Future<void> refreshBookings(BuildContext context) async {
-    _context = context;
-    isProcessing = true;
-    notifyListeners();
+  Future<List<List<Condition>>> _buildConditions() async {
+    List<List<Condition>> conditions = [];
 
-    try {
-      List<List<Condition>>? conditions;
+    var userId = await AuthConfig.getUserId();
+    var serviceManCondition = Condition(
+      source: "service_man_id",
+      operator: "=",
+      target: userId ?? "",
+    );
 
-      var userId = await AuthConfig.getUserId();
-      conditions = [
-        [
-          Condition(
-            source: "service_man_id",
-            operator: "=",
-            target: userId ?? "",
-          ),
-        ]
-      ];
+    conditions.add([serviceManCondition]);
 
-      // Add search condition if search text exists
-      if (searchCtrl.text.isNotEmpty) {
-        conditions[0].add(Condition(
-          source: "service_versions.title",
-          operator: "like",
-          target: searchCtrl.text,
-        ));
+    // Add search condition if search text exists
+    if (searchCtrl.text.isNotEmpty) {
+      conditions[0].add(Condition(
+        source: "service_versions.title",
+        operator: "like",
+        target: searchCtrl.text,
+      ));
+    }
+
+    // Add status filter condition
+    if (statusIndex > 0 && statusIndex < appArray.bookingStatusList.length) {
+      String status;
+      switch (statusIndex) {
+        case 1:
+          status = bookingStatusPending;
+          break;
+        case 2:
+          status = bookingStatusConfirmed;
+          break;
+        case 3:
+          status = bookingStatusInProgress;
+          break;
+        case 4:
+          status = bookingStatusCompleted;
+          break;
+        case 5:
+          status = bookingStatusCancelled;
+          break;
+        default:
+          status = bookingStatusPending;
       }
+      conditions[0].add(
+        Condition(
+          source: "booking_status",
+          operator: "=",
+          target: status,
+        ),
+      );
+    }
 
-      // Add status filter condition
-      if (statusIndex > 0 && statusIndex < appArray.bookingStatusList.length) {
-        String status;
-        switch (statusIndex) {
-          case 1:
-            status = bookingStatusPending;
-            break;
-          case 2:
-            status = bookingStatusConfirmed;
-            break;
-          case 3:
-            status = bookingStatusInProgress;
-            break;
-          case 4:
-            status = bookingStatusCompleted;
-            break;
-          case 5:
-            status = bookingStatusCancelled;
-            break;
-          default:
-            status = bookingStatusPending;
-        }
+    // Add date range filter condition
+    if (rangeStart != null && rangeEnd != null) {
+      final startDate =
+          DateTime(rangeStart!.year, rangeStart!.month, rangeStart!.day);
+      final endDate =
+          DateTime(rangeEnd!.year, rangeEnd!.month, rangeEnd!.day, 23, 59, 59);
+
+      conditions[0].addAll([
+        Condition(
+          source: "booking_date",
+          operator: ">=",
+          target: startDate.toIso8601String(),
+        ),
+        Condition(
+          source: "booking_date",
+          operator: "<=",
+          target: endDate.toIso8601String(),
+        ),
+      ]);
+    }
+
+    // Add category filter conditions
+    if (statusList.isNotEmpty) {
+      List<String> categoryIds = statusList
+          .map((index) {
+            if (index is int && index >= 0 && index < categories.length) {
+              return categories[index].id.toString();
+            }
+            return null;
+          })
+          .where((id) => id != null)
+          .cast<String>()
+          .toList();
+
+      if (categoryIds.isNotEmpty) {
         conditions[0].add(
           Condition(
-            source: "booking_status",
-            operator: "=",
-            target: status,
+            source: "service_versions.category.id",
+            operator: "in",
+            target: categoryIds,
           ),
         );
       }
+    }
 
-      // Add date range filter condition
-      if (rangeStart != null && rangeEnd != null) {
-        final startDate =
-            DateTime(rangeStart!.year, rangeStart!.month, rangeStart!.day);
-        final endDate = DateTime(
-            rangeEnd!.year, rangeEnd!.month, rangeEnd!.day, 23, 59, 59);
+    return conditions;
+  }
 
-        conditions[0].addAll([
-          Condition(
-            source: "booking_date",
-            operator: ">=",
-            target: startDate.toIso8601String(),
-          ),
-          Condition(
-            source: "booking_date",
-            operator: "<=",
-            target: endDate.toIso8601String(),
-          ),
-        ]);
+  Future<void> resetPagination() async {
+    bookingList = [];
+    freelancerBookingList = [];
+    currentOffset = 0;
+    hasMoreData = true;
+    notifyListeners();
+  }
+
+  Future<void> refreshBookings(BuildContext context) async {
+    _context = context;
+    await resetPagination();
+    await loadBookings();
+  }
+
+  Future<void> loadMoreBookings() async {
+    if (isProcessing || isLoadingMore || !hasMoreData) return;
+
+    isLoadingMore = true;
+    notifyListeners();
+
+    await loadBookings(loadMore: true);
+  }
+
+  Future<void> loadBookings({bool loadMore = false}) async {
+    if (!loadMore) {
+      isProcessing = true;
+    } else {
+      isLoadingMore = true;
+    }
+    notifyListeners();
+
+    try {
+      List<List<Condition>> conditions = await _buildConditions();
+
+      var res = await repo.getBookings(
+        conditions: conditions,
+        limit: pageSize,
+        offset: loadMore ? currentOffset : 0,
+      );
+
+      if (loadMore) {
+        bookingList.addAll(res);
+        freelancerBookingList.addAll(res);
+      } else {
+        bookingList = res;
+        freelancerBookingList = res;
       }
 
-      // Add category filter conditions
-      if (statusList.isNotEmpty) {
-        List<String> categoryIds = statusList
-            .map((index) {
-              if (index is int && index >= 0 && index < categories.length) {
-                return categories[index].id.toString();
-              }
-              return null;
-            })
-            .where((id) => id != null)
-            .cast<String>()
-            .toList();
-
-        if (categoryIds.isNotEmpty) {
-          conditions[0].add(
-            Condition(
-              source: "service_versions.category.id",
-              operator: "in",
-              target: categoryIds,
-            ),
-          );
-        }
+      hasMoreData = res.length >= pageSize;
+      if (hasMoreData) {
+        currentOffset += res.length;
       }
-
-      var res = await repo.getBookings(conditions: conditions, limit: 10);
-      bookingList = res;
-      freelancerBookingList = res;
     } catch (e) {
       // Handle error if needed
-      bookingList = [];
-      freelancerBookingList = [];
+      if (!loadMore) {
+        bookingList = [];
+        freelancerBookingList = [];
+      }
     } finally {
       isProcessing = false;
+      isLoadingMore = false;
       notifyListeners();
     }
   }
@@ -166,129 +220,13 @@ class BookingProvider with ChangeNotifier {
       if (_debounce?.isActive ?? false) _debounce!.cancel();
       _debounce = Timer(const Duration(milliseconds: 500), () {
         _previousSearchText = searchCtrl.text;
-        _searchBookings();
+        refreshBookings(_context!);
       });
     }
   }
 
   Future<void> _searchBookings() async {
-    isProcessing = true;
-    notifyListeners();
-
-    try {
-      List<List<Condition>> conditions = [];
-      var userId = await AuthConfig.getUserId();
-      var serviceManCondition = Condition(
-        source: "service_man_id",
-        operator: "=",
-        target: userId ?? "",
-      );
-
-      // Add search text condition
-      if (searchCtrl.text.isNotEmpty) {
-        conditions.add([
-          serviceManCondition,
-          Condition(
-            source: "service_versions.title",
-            operator: "like",
-            target: searchCtrl.text,
-          ),
-        ]);
-      } else {
-        conditions.add([serviceManCondition]);
-      }
-
-      // Add status filter condition
-      if (statusIndex > 0 && statusIndex < appArray.bookingStatusList.length) {
-        String status;
-        switch (statusIndex) {
-          case 1:
-            status = bookingStatusPending;
-            break;
-          case 2:
-            status = bookingStatusConfirmed;
-            break;
-          case 3:
-            status = bookingStatusInProgress;
-            break;
-          case 4:
-            status = bookingStatusCompleted;
-            break;
-          case 5:
-            status = bookingStatusCancelled;
-            break;
-          default:
-            status = bookingStatusPending;
-        }
-        conditions[0].add(
-          Condition(
-            source: "booking_status",
-            operator: "=",
-            target: status,
-          ),
-        );
-      }
-
-      // Add date range filter condition
-      if (rangeStart != null && rangeEnd != null) {
-        // Create start and end dates at midnight for proper date comparison
-        final startDate =
-            DateTime(rangeStart!.year, rangeStart!.month, rangeStart!.day);
-        final endDate = DateTime(
-            rangeEnd!.year, rangeEnd!.month, rangeEnd!.day, 23, 59, 59);
-
-        conditions[0].addAll([
-          Condition(
-            source: "booking_date",
-            operator: ">=",
-            target: startDate.toIso8601String(),
-          ),
-          Condition(
-            source: "booking_date",
-            operator: "<=",
-            target: endDate.toIso8601String(),
-          ),
-        ]);
-      }
-
-      // Add category filter conditions
-      if (statusList.isNotEmpty) {
-        // Collect all category IDs into a single list
-        List<String> categoryIds = statusList
-            .map((index) {
-              if (index is int && index >= 0 && index < categories.length) {
-                return categories[index].id.toString();
-              }
-              return null;
-            })
-            .where((id) => id != null)
-            .cast<String>()
-            .toList();
-
-        if (categoryIds.isNotEmpty) {
-          conditions[0].add(
-            Condition(
-              source: "service_versions.category.id",
-              operator: "in",
-              target: categoryIds,
-            ),
-          );
-        }
-      }
-
-      var res = await repo.getBookings(conditions: conditions, limit: 10);
-      bookingList = res;
-      freelancerBookingList = res;
-      notifyListeners();
-    } catch (e) {
-      // Handle error if needed
-      bookingList = [];
-      freelancerBookingList = [];
-      notifyListeners();
-    } finally {
-      isProcessing = false;
-      notifyListeners();
-    }
+    await refreshBookings(_context!);
   }
 
   String? month;
@@ -373,9 +311,19 @@ class BookingProvider with ChangeNotifier {
                       shrinkWrap: true,
                       physics: const BouncingScrollPhysics(),
                       itemCount: isFreelancer
-                          ? freelancerBookingList.length
-                          : bookingList.length,
+                          ? freelancerBookingList.length + (hasMoreData ? 1 : 0)
+                          : bookingList.length + (hasMoreData ? 1 : 0),
                       itemBuilder: (context, index) {
+                        // Show loading indicator at the end if we have more data
+                        if (index == bookingList.length) {
+                          return const Padding(
+                            padding: EdgeInsets.all(16.0),
+                            child: Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                          );
+                        }
+
                         final booking = isFreelancer
                             ? freelancerBookingList[index]
                             : bookingList[index];
@@ -392,45 +340,11 @@ class BookingProvider with ChangeNotifier {
 
   onReady(context) async {
     _context = context;
-    isProcessing = true;
-    notifyListeners();
+    await refreshBookings(context);
+    onInit();
 
-    try {
-      List<List<Condition>>? conditions;
-
-      var userId = await AuthConfig.getUserId();
-      conditions = [
-        [
-          Condition(
-            source: "service_man_id",
-            operator: "=",
-            target: userId ?? "",
-          ),
-        ]
-      ];
-      if (searchCtrl.text.isNotEmpty) {
-        conditions[0].add(Condition(
-          source: "service_versions.title",
-          operator: "like",
-          target: searchCtrl.text,
-        ));
-      }
-
-      var res = await repo.getBookings(conditions: conditions, limit: 10);
-      bookingList = res;
-      freelancerBookingList = res;
-      onInit();
-
-      // Fetch categories
-      await fetchCategories();
-    } catch (e) {
-      // Handle error if needed
-      bookingList = [];
-      freelancerBookingList = [];
-    } finally {
-      isProcessing = false;
-      notifyListeners();
-    }
+    // Fetch categories
+    await fetchCategories();
   }
 
   Future<void> fetchCategories() async {
@@ -666,7 +580,7 @@ class BookingProvider with ChangeNotifier {
 
   onApplyFilter(context) {
     route.pop(context);
-    _searchBookings();
+    refreshBookings(_context!);
   }
 
   onClearFilter(context) {
@@ -676,7 +590,7 @@ class BookingProvider with ChangeNotifier {
     rangeEnd = null;
     isAssignMe = false;
     route.pop(context);
-    _searchBookings();
+    refreshBookings(_context!);
   }
 
   bool get hasActiveFilters {
