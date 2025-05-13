@@ -1,19 +1,80 @@
 import 'package:salon_provider/common/enum_value.dart';
+import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
+import 'package:salon_provider/model/response/notification_details_res.dart';
 import 'package:salon_provider/model/response/notification_res.dart';
 
 class NotificationRepository extends RepositoryConfig {
   NotificationRepository();
+
+  Future<List<NotificationDetailsRes>> getNotificationDetails({
+    List<List<Condition>>? conditions,
+    int? limit,
+    int? offset,
+  }) async {
+    var userId = await AuthConfig.getUserId();
+
+    var defaultCondition =
+        Condition(source: "user_id", operator: "=", target: userId);
+
+    if (conditions != null && conditions[0].isEmpty) {
+      conditions[0].add(defaultCondition);
+    }
+
+    var requestBody = SearchRequestBody(
+      model: EnumColumn.notification_details.name,
+      conditions: conditions ??
+          [
+            [defaultCondition]
+          ],
+      limit: limit,
+      offset: offset,
+      fields: [
+        FieldItem(field: "notification.booking.user.firstname"),
+        FieldItem(field: "notification.booking.user.lastname"),
+        FieldItem(field: "notification.booking.user.phone_number"),
+        FieldItem(
+            field:
+                "notification.booking.user.user_profile.profile_picture_url"),
+        FieldItem(field: "notification.metadata"),
+        FieldItem(field: "notification.booking.service_man.firstname"),
+        FieldItem(field: "notification.booking.service_man.lastname"),
+        FieldItem(field: "notification.booking.service_man.phone_number"),
+        FieldItem(
+            field:
+                "notification.booking.service_man.user_profile.profile_picture_url"),
+      ],
+    );
+
+    var response = await commonRestClient
+        .search<List<NotificationDetailsRes>>(requestBody.toJson());
+
+    return (response as List<dynamic>)
+        .map((e) => NotificationDetailsRes.fromJson(e))
+        .toList();
+  }
 
   Future<List<NotificationRes>> getNotifications({
     List<List<Condition>>? conditions,
     int? limit,
     int? offset,
   }) async {
+    var userId = await AuthConfig.getUserId();
+
+    var defaultCondition =
+        Condition(source: "user_id", operator: "=", target: userId);
+
+    if (conditions != null && conditions[0].isEmpty) {
+      conditions[0].add(defaultCondition);
+    }
+
     var requestBody = SearchRequestBody(
       model: EnumColumn.notifications.name,
-      conditions: conditions ?? [],
+      conditions: conditions ??
+          [
+            [defaultCondition]
+          ],
       fields: [
         FieldItem(field: "booking.user.firstname"),
         FieldItem(field: "booking.user.lastname"),

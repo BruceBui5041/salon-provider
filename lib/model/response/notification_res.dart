@@ -1,6 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:salon_provider/model/response/base_response.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/model/response/notification_details_res.dart';
 
 part 'notification_res.g.dart';
 
@@ -15,8 +16,8 @@ class NotificationRes extends CommonResponse {
   @JsonKey(name: 'metadata')
   Map<String, dynamic>? metadata;
 
-  // @JsonKey(name: 'details')
-  // List<NotificationDetail>? details;
+  @JsonKey(name: 'details')
+  List<NotificationDetailsRes>? details;
 
   @JsonKey(name: 'booking')
   Booking? booking;

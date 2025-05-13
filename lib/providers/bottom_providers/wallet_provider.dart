@@ -27,7 +27,7 @@ class WalletProvider with ChangeNotifier {
         conditions = [
           [
             Condition(
-              source: "transaction_status",
+              source: "payment.transaction_status",
               operator: "=",
               target: status,
             ),
@@ -35,8 +35,8 @@ class WalletProvider with ChangeNotifier {
         ];
       }
 
-      paymentList =
-          await _paymentRepository.getPayments(conditions: conditions);
+      paymentList = await _paymentRepository.getPayments(
+          conditions: conditions, limit: 10);
       error = null;
     } catch (e) {
       error = e.toString();

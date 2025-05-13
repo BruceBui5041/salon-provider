@@ -24,7 +24,9 @@ NotificationRes _$NotificationResFromJson(Map<String, dynamic> json) =>
       booking: json['booking'] == null
           ? null
           : Booking.fromJson(json['booking'] as Map<String, dynamic>),
-    );
+    )..details = (json['details'] as List<dynamic>?)
+        ?.map((e) => NotificationDetailsRes.fromJson(e as Map<String, dynamic>))
+        .toList();
 
 Map<String, dynamic> _$NotificationResToJson(NotificationRes instance) =>
     <String, dynamic>{
@@ -35,5 +37,6 @@ Map<String, dynamic> _$NotificationResToJson(NotificationRes instance) =>
       'type': instance.type,
       'scheduled': instance.scheduled?.toIso8601String(),
       'metadata': instance.metadata,
+      'details': instance.details,
       'booking': instance.booking,
     };

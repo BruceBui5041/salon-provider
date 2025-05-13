@@ -1,4 +1,5 @@
 import 'package:salon_provider/common/enum_value.dart';
+import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/generate_qr_req.dart';
@@ -6,6 +7,7 @@ import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/bank_account_res.dart';
 import 'package:salon_provider/model/response/bank_res.dart';
 import 'package:salon_provider/model/response/base_response.dart';
+import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/model/response/payment_response.dart';
 import 'package:salon_provider/network/api.dart';
 
@@ -13,9 +15,11 @@ class PaymentRepository extends RepositoryConfig {
   final paymentClient = getIt<PaymentApiClient>();
 
   Future<Payment> getPaymentById(String paymentId) async {
+    var userId = await AuthConfig.getUserId();
     var body = SearchRequestBody(model: EnumColumn.payment.name, conditions: [
       [
         Condition(source: "id", operator: "=", target: paymentId),
+        Condition(source: "user_id", operator: "=", target: userId)
       ]
     ], fields: [
       FieldItem(field: "payment_qr"),
@@ -30,27 +34,43 @@ class PaymentRepository extends RepositoryConfig {
     int? limit,
     int? offset,
   }) async {
+    var userId = await AuthConfig.getUserId();
+
+    var defaultCondition =
+        Condition(source: "service_man_id", operator: "=", target: userId);
+
+    if (conditions != null && conditions[0].isEmpty) {
+      conditions[0].add(defaultCondition);
+    }
+
     var requestBody = SearchRequestBody(
-      model: EnumColumn.payment.name,
-      conditions: conditions ?? [],
+      model: EnumColumn.booking.name,
+      conditions: conditions ??
+          [
+            [defaultCondition]
+          ],
       fields: [
         FieldItem(field: "user.user_profile.profile_picture_url"),
-        FieldItem(field: "booking.service_versions"),
-        FieldItem(field: "amount"),
-        FieldItem(field: "currency"),
-        FieldItem(field: "payment_method"),
-        FieldItem(field: "transaction_id"),
-        FieldItem(field: "transaction_status"),
+        FieldItem(field: "service_versions"),
+        FieldItem(field: "payment.amount"),
+        FieldItem(field: "payment.currency"),
+        FieldItem(field: "payment.payment_method"),
+        FieldItem(field: "payment.transaction_id"),
+        FieldItem(field: "payment.transaction_status"),
       ],
       orderBy: "id desc",
       limit: limit,
       offset: offset,
     );
-    final response =
-        await commonRestClient.search<List<Payment>>(requestBody.toJson());
-    var res =
-        (response as List<dynamic>).map((e) => Payment.fromJson(e)).toList();
-    return res;
+
+    final boookingRes =
+        await commonRestClient.search<List<Booking>>(requestBody.toJson());
+    var bookings =
+        (boookingRes as List<dynamic>).map((e) => Booking.fromJson(e)).toList();
+
+    var payments = bookings.map((e) => e.payment).whereType<Payment>().toList();
+
+    return payments;
   }
 
   Future<String> genPaymentQrCode(GenerateQRReq requestBody) async {

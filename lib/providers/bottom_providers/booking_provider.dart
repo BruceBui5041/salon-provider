@@ -143,7 +143,7 @@ class BookingProvider with ChangeNotifier {
         }
       }
 
-      var res = await repo.getBookings(conditions: conditions);
+      var res = await repo.getBookings(conditions: conditions, limit: 10);
       bookingList = res;
       freelancerBookingList = res;
     } catch (e) {
@@ -276,7 +276,7 @@ class BookingProvider with ChangeNotifier {
         }
       }
 
-      var res = await repo.getBookings(conditions: conditions);
+      var res = await repo.getBookings(conditions: conditions, limit: 10);
       bookingList = res;
       freelancerBookingList = res;
       notifyListeners();
@@ -416,7 +416,7 @@ class BookingProvider with ChangeNotifier {
         ));
       }
 
-      var res = await repo.getBookings(conditions: conditions);
+      var res = await repo.getBookings(conditions: conditions, limit: 10);
       bookingList = res;
       freelancerBookingList = res;
       onInit();

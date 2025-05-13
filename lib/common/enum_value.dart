@@ -5,7 +5,8 @@ enum EnumColumn {
   user,
   payment,
   bank_account,
-  notifications
+  notifications,
+  notification_details,
 }
 
 enum ServiceVersionStatus {
