@@ -59,7 +59,7 @@ class AssignBookingProvider with ChangeNotifier {
             route.pop(context);
             bookingRepository.inProgressBooking(booking!.id!).then((value) {
               if (value) {
-                route.pushNamed(context, routeName.ongoingBooking,
+                route.popAndPushNamed(context, routeName.ongoingBooking,
                     arg: booking!.id);
               }
             }).catchError((error) {

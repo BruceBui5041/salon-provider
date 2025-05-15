@@ -1,6 +1,7 @@
 class AppFonts {
   final fixit = "MeoMeo";
   final login = "login";
+  final selectPaymentMethod = "selectPaymentMethod";
 
   final firstName = "First name";
   final enterFirstName = "Enter First name";
@@ -433,11 +434,13 @@ class AppFonts {
   final assignBooking = "assignBooking";
   final assignNow = "assignNow";
   final doYouWant = "doYouWant";
+  final doYouWantToAccept = "doYouWantToAccept";
   final acceptedBooking = "acceptedBooking";
   final chooseOne = "chooseOne";
   final assignToMe = "assignToMe";
   final assignToOther = "assignToOther";
   final areYouSureYourself = "areYouSureYourself";
+  final areYouSureToCompleteBooking = "areYouSureToCompleteBooking";
   final memberSince = "memberSince";
   final rates = "rates";
   final showListOf = "showListOf";

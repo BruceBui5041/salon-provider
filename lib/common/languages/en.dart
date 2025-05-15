@@ -437,12 +437,16 @@ dynamic en = {
   "assignBooking": "Assign booking",
   "assignNow": "Assign now",
   "doYouWant": "Do you want to allocate this booking to servicemen right now?",
+  "doYouWantToAccept": "Do you want to accept this booking?",
   "acceptedBooking": "Accepted bookings",
   "chooseOne": "Choose one of below",
   "assignToMe": "Assign to me",
   "assignToOther": "Assign to other servicemen",
   "areYouSureYourself":
       "Are you sure you want to perform this task by yourself?",
+  "areYouSureToCompleteBooking":
+      "Are you sure you want to complete this booking?",
+  "selectPaymentMethod": "Select Payment Method",
   "memberSince": "Member since",
   "rates": "Rates",
   "showListOf": "Show list of",

@@ -436,12 +436,15 @@ dynamic vi = {
   "assignNow": "Giao ngay",
   "doYouWant":
       "Bạn có muốn phân bổ đặt lịch này cho nhân viên dịch vụ ngay bây giờ không?",
+  "doYouWantToAccept": "Bạn có muốn chấp nhận lịch đặt này không?",
   "acceptedBooking": "Đặt lịch đã chấp nhận",
   "chooseOne": "Chọn một trong các tùy chọn bên dưới",
   "assignToMe": "Giao cho tôi",
   "assignToOther": "Giao cho nhân viên dịch vụ khác",
   "areYouSureYourself":
       "Bạn có chắc chắn muốn thực hiện nhiệm vụ này một mình không?",
+  "areYouSureToCompleteBooking":
+      "Bạn có chắc chắn muốn hoàn thành lịch đặt này không?",
   "memberSince": "Thành viên từ",
   "rates": "Tỷ lệ",
   "showListOf": "Hiển thị danh sách",
@@ -487,7 +490,8 @@ dynamic vi = {
   "holdBooking": "Tạm dừng đặt lịch",
   "completedBookings": "Đặt lịch đã hoàn thành",
   "paymentSummary": "Tóm tắt thanh toán",
-  "addServiceProof": "Thêm bằng chứng dịch vụ",
+  "addServiceProof": "Thêm bằng chứng",
+  "selectPaymentMethod": "Chọn phương thức thanh toán",
   "title": "Tiêu đề",
   "enterTitle": "Nhập tiêu đề",
   "serviceImage": "Hình ảnh dịch vụ",

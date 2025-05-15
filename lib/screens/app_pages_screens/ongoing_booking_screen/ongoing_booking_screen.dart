@@ -18,13 +18,17 @@ class OngoingBookingScreen extends StatelessWidget {
             title: appFonts.ongoingBooking,
             actions: [
               TextButton(
-                onPressed: () => route.pushNamed(
-                    context, routeName.completedBooking,
-                    arg: value.ongoingBookingModel?.id),
+                onPressed: value.isPaymentCompleted
+                    ? () => route.pushNamed(context, routeName.completedBooking,
+                        arg: value.ongoingBookingModel?.id)
+                    : null,
                 child: Text(
                   language(context, appFonts.done).toUpperCase(),
-                  style: appCss.dmDenseBold14
-                      .textColor(appColor(context).appTheme.online),
+                  style: appCss.dmDenseBold14.textColor(
+                    value.isPaymentCompleted
+                        ? appColor(context).appTheme.online
+                        : appColor(context).appTheme.stroke,
+                  ),
                 ),
               ).paddingOnly(right: Insets.i10),
             ],

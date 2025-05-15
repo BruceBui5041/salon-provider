@@ -67,7 +67,7 @@ class CompletedBookingProvider with ChangeNotifier {
                 .completeBooking(completedBookingModel!.id!)
                 .then((value) {
               if (value) {
-                route.pushNamed(context, routeName.dashboard);
+                route.popAndPushNamed(context, routeName.dashboard);
               }
             }).catchError((error) {
               ScaffoldMessenger.of(context).showSnackBar(

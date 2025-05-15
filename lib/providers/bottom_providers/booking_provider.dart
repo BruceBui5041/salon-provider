@@ -391,7 +391,7 @@ class BookingProvider with ChangeNotifier {
             firstBText: appFonts.doItLater,
             secondBText: appFonts.yes,
             image: eGifAssets.dateGif,
-            subtext: appFonts.doYouWant,
+            subtext: appFonts.doYouWantToAccept,
             firstBTap: () => route.pop(context),
             secondBTap: () {
               route.pop(context);

@@ -15,11 +15,9 @@ class PaymentRepository extends RepositoryConfig {
   final paymentClient = getIt<PaymentApiClient>();
 
   Future<Payment> getPaymentById(String paymentId) async {
-    var userId = await AuthConfig.getUserId();
     var body = SearchRequestBody(model: EnumColumn.payment.name, conditions: [
       [
         Condition(source: "id", operator: "=", target: paymentId),
-        Condition(source: "user_id", operator: "=", target: userId)
       ]
     ], fields: [
       FieldItem(field: "payment_qr"),

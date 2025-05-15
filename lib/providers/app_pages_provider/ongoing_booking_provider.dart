@@ -9,6 +9,7 @@ import 'package:salon_provider/repositories/booking_repository.dart';
 import 'package:salon_provider/common/payment_method.dart';
 import 'package:salon_provider/common/transaction_status.dart';
 import 'package:salon_provider/screens/app_pages_screens/ongoing_booking_screen/layouts/show_qr_dialog.dart';
+import 'package:salon_provider/screens/app_pages_screens/ongoing_booking_screen/layouts/change_payment_method.dart';
 
 class OngoingBookingProvider with ChangeNotifier {
   Booking? ongoingBookingModel;
@@ -98,55 +99,79 @@ class OngoingBookingProvider with ChangeNotifier {
   markPaymentPaid(context) async {
     String? bookingId = ongoingBookingModel?.id;
     if (bookingId != null) {
-      // Show confirmation dialog first
-      showDialog(
+      // Show payment method selection bottom sheet
+      showModalBottomSheet(
         context: context,
-        builder: (context1) => AppAlertDialogCommon(
-          title: appFonts.payment,
-          subtext: language(context, appFonts.areYouSureYourself),
-          firstBText: appFonts.no,
-          secondBText: appFonts.yes,
-          image: eGifAssets.dateGif,
-          height: Sizes.s145,
-          firstBTap: () => route.pop(context),
-          secondBTap: () async {
-            route.pop(context); // Close dialog
-            try {
-              final result = await bookingRepository.paidBooking(bookingId);
-              if (result) {
-                // Update local model state
-                if (ongoingBookingModel?.payment != null) {
-                  ongoingBookingModel = ongoingBookingModel?.copyWith(
-                      payment: ongoingBookingModel?.payment?.copyWith(
-                          transactionStatus: TransactionStatus.completed));
-                  notifyListeners();
-                }
-                // Show success message
-                showDialog(
-                  context: context,
-                  builder: (context1) => AlertDialogCommon(
-                    title: appFonts.payment,
-                    image: eGifAssets.success,
-                    subtext: language(context, appFonts.updateSuccessfully),
-                    height: Sizes.s145,
-                    bText1: appFonts.okay,
-                    b1OnTap: () => route.pop(context),
-                  ),
-                );
-              }
-            } catch (error) {
-              log("Error marking payment as completed: $error");
+        isScrollControlled: true,
+        backgroundColor: Colors.transparent,
+        builder: (context) => ChangePaymentMethodSheet(
+          initialMethod: ongoingBookingModel?.payment?.paymentMethod,
+          onContinue: (selectedMethod, bottomSheetContext) {
+            if (selectedMethod == PaymentMethod.cash) {
               showDialog(
-                context: context,
-                builder: (context1) => AlertDialogCommon(
-                  title: appFonts.errorOccur,
-                  image: eGifAssets.error,
-                  subtext: language(context, appFonts.oppsThereHas),
+                context: bottomSheetContext,
+                barrierDismissible: false,
+                builder: (dialogContext) => AppAlertDialogCommon(
+                  title: appFonts.payment,
+                  subtext: language(
+                      bottomSheetContext, appFonts.areYouSureToCompleteBooking),
+                  firstBText: appFonts.no,
+                  secondBText: appFonts.yes,
+                  image: eGifAssets.dateGif,
                   height: Sizes.s145,
-                  bText1: appFonts.okay,
-                  b1OnTap: () => route.pop(context),
+                  firstBTap: () {
+                    route.pop(dialogContext);
+                  },
+                  secondBTap: () async {
+                    route.pop(dialogContext);
+                    try {
+                      final result =
+                          await bookingRepository.paidBooking(bookingId);
+                      if (result) {
+                        if (ongoingBookingModel?.payment != null) {
+                          ongoingBookingModel = ongoingBookingModel?.copyWith(
+                              payment: ongoingBookingModel?.payment?.copyWith(
+                                  transactionStatus:
+                                      TransactionStatus.completed));
+                          notifyListeners();
+                        }
+                        showDialog(
+                          context: bottomSheetContext,
+                          builder: (successContext) => AlertDialogCommon(
+                            title: appFonts.payment,
+                            image: eGifAssets.success,
+                            subtext: language(bottomSheetContext,
+                                appFonts.updateSuccessfully),
+                            height: Sizes.s145,
+                            bText1: appFonts.okay,
+                            b1OnTap: () => route.pop(successContext),
+                          ),
+                        );
+                      }
+                    } catch (error) {
+                      log("Error marking payment as completed: $error");
+                      showDialog(
+                        context: bottomSheetContext,
+                        builder: (errorContext) => AlertDialogCommon(
+                          title: appFonts.errorOccur,
+                          image: eGifAssets.error,
+                          subtext: language(
+                              bottomSheetContext, appFonts.oppsThereHas),
+                          height: Sizes.s145,
+                          bText1: appFonts.okay,
+                          b1OnTap: () => route.pop(errorContext),
+                        ),
+                      );
+                    }
+                  },
                 ),
               );
+            } else if (selectedMethod == PaymentMethod.transfer) {
+              // Navigate to payment QR screen with payment ID
+              if (ongoingBookingModel?.payment?.id != null) {
+                route.pushNamed(bottomSheetContext, routeName.paymentQr,
+                    arg: ongoingBookingModel!.payment!.id);
+              }
             }
           },
         ),
