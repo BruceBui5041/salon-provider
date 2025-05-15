@@ -45,21 +45,50 @@ class _ChangePaymentMethodSheetState extends State<ChangePaymentMethodSheet> {
             ),
           ),
           const VSpace(Sizes.s20),
-          ...PaymentMethod.values.map((method) => RadioListTile<PaymentMethod>(
-                title: Text(
-                  method.value.toUpperCase(),
-                  style: appCss.dmDenseRegular14.textColor(
-                    appColor(context).appTheme.primary,
+          ...PaymentMethod.values.map((method) {
+            final isSelected = selectedMethod == method;
+            return Container(
+              margin: const EdgeInsets.only(bottom: Insets.i10),
+              decoration: BoxDecoration(
+                border: isSelected
+                    ? Border.all(
+                        color: appColor(context).appTheme.primary,
+                        width: 2,
+                      )
+                    : null,
+                borderRadius: BorderRadius.circular(AppRadius.r8),
+              ),
+              child: Theme(
+                data: Theme.of(context).copyWith(
+                  unselectedWidgetColor: appColor(context).appTheme.primary,
+                  radioTheme: RadioThemeData(
+                    fillColor: WidgetStateProperty.resolveWith(
+                        (states) => appColor(context).appTheme.primary),
+                    overlayColor: WidgetStateProperty.resolveWith((states) =>
+                        appColor(context).appTheme.primary.withOpacity(0.1)),
                   ),
                 ),
-                value: method,
-                groupValue: selectedMethod,
-                onChanged: (PaymentMethod? value) {
-                  if (value != null) {
-                    setState(() => selectedMethod = value);
-                  }
-                },
-              )),
+                child: RadioListTile<PaymentMethod>(
+                  title: Text(
+                    method.value.toUpperCase(),
+                    style: appCss.dmDenseRegular14.textColor(
+                      appColor(context).appTheme.primary,
+                    ),
+                  ),
+                  value: method,
+                  groupValue: selectedMethod,
+                  activeColor: appColor(context).appTheme.primary,
+                  contentPadding:
+                      const EdgeInsets.symmetric(horizontal: Insets.i15),
+                  onChanged: (PaymentMethod? value) {
+                    if (value != null) {
+                      setState(() => selectedMethod = value);
+                    }
+                  },
+                ),
+              ),
+            );
+          }),
           const VSpace(Sizes.s20),
           ButtonCommon(
             title: language(context, appFonts.continues),

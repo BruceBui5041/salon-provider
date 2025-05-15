@@ -101,8 +101,8 @@ class PaymentQrScreen extends StatelessWidget {
                           if (provider.payment?.paymentQr?.qrDataUrl !=
                               null) ...[
                             Container(
-                              height: Sizes.s200,
-                              width: Sizes.s200,
+                              height: Sizes.s500,
+                              width: Sizes.s500,
                               padding: const EdgeInsets.all(Insets.i8),
                               margin: const EdgeInsets.only(bottom: Insets.i16),
                               decoration: BoxDecoration(
@@ -121,24 +121,35 @@ class PaymentQrScreen extends StatelessWidget {
                             ),
                             if (provider.payment?.paymentQr?.accountName !=
                                 null)
-                              Text(
-                                "${language(context, appFonts.holderName)}: ${provider.payment!.paymentQr!.accountName}",
-                                style: appCss.dmDenseMedium16.textColor(
-                                  appColor(context).appTheme.darkText,
-                                ),
-                                textAlign: TextAlign.center,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    "${provider.payment!.paymentQr!.accountName}",
+                                    style: appCss.dmDenseMedium16.textColor(
+                                      appColor(context).appTheme.darkText,
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ],
                               ),
                             if (provider.payment?.paymentQr?.accountNumber !=
                                 null)
-                              Padding(
-                                padding: const EdgeInsets.only(top: Insets.i8),
-                                child: Text(
-                                  "${language(context, appFonts.accountNo)}: ${provider.payment!.paymentQr!.accountNumber}",
-                                  style: appCss.dmDenseRegular14.textColor(
-                                    appColor(context).appTheme.lightText,
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Padding(
+                                    padding:
+                                        const EdgeInsets.only(top: Insets.i8),
+                                    child: Text(
+                                      "${provider.payment!.paymentQr!.accountNumber}",
+                                      style: appCss.dmDenseRegular14.textColor(
+                                        appColor(context).appTheme.lightText,
+                                      ),
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
-                                  textAlign: TextAlign.center,
-                                ),
+                                ],
                               ),
                           ]
                         ],

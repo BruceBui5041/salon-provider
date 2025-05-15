@@ -77,7 +77,8 @@ class PendingBookingProvider with ChangeNotifier {
           route.pop(context);
           bookingRepository.acceptBooking(pendingBooking!.id!).then((value) {
             if (value) {
-              route.popAndPushNamed(context, routeName.assignBooking);
+              route.popAndPushNamed(context, routeName.assignBooking,
+                  arg: pendingBooking?.id);
             }
           });
         },

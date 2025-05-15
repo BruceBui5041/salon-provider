@@ -197,14 +197,6 @@ class OngoingBookingProvider with ChangeNotifier {
     }
 
     if (ongoingBookingModel?.payment?.paymentQr != null) {
-      // If QR exists, show QR dialog directly
-      showDialog(
-        context: context,
-        barrierDismissible: true,
-        builder: (context1) => ShowQrDialog(booking: ongoingBookingModel!),
-      );
-    } else {
-      // If no QR exists, navigate to QR screen
       route.pushNamed(
         context,
         routeName.paymentQr,

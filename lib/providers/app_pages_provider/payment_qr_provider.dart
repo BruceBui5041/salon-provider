@@ -105,9 +105,12 @@ class PaymentQrProvider with ChangeNotifier {
               await _loadPayment();
             }
 
-            // Return to ongoing screen which will show the QR
             if (context.mounted) {
-              route.pop(context);
+              route.popAndPushNamed(
+                context,
+                routeName.paymentQr,
+                arg: paymentId,
+              );
             }
           } catch (e) {
             isGeneratingQr = false;
