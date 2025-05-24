@@ -53,7 +53,7 @@ class AllCategoriesLayoutState extends State<AllCategoriesLayout> {
                       route.pushNamed(context, routeName.popularServiceScreen))
               .paddingSymmetric(horizontal: Insets.i20),
           const VSpace(Sizes.s15),
-          const FeaturedServicesLayout(limit: 5)
+          const FeaturedServicesLayout(limit: 5, enableScroll: false)
               .paddingSymmetric(horizontal: Insets.i20),
         ],
       );

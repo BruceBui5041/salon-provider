@@ -31,6 +31,13 @@ class ProviderEarningResponse {
   @JsonKey(name: 'monthly_breakdown')
   final List<MonthlyEarning>? monthlyBreakdown;
 
+  @JsonKey(name: 'withdrawable_amount')
+  final String? withdrawableAmount;
+  @JsonKey(name: 'total_withdrawals')
+  final String? totalWithdrawals;
+  @JsonKey(name: 'currency')
+  final String? currency;
+
   ProviderEarningResponse({
     required this.totalEarnings,
     required this.completedBookings,
@@ -42,6 +49,9 @@ class ProviderEarningResponse {
     required this.totalCommission,
     required this.period,
     this.monthlyBreakdown,
+    this.withdrawableAmount,
+    this.totalWithdrawals,
+    this.currency,
   });
 
   ProviderEarningResponse copyWith({
@@ -54,6 +64,9 @@ class ProviderEarningResponse {
     int? totalHours,
     String? totalCommission,
     String? period,
+    String? withdrawableAmount,
+    String? totalWithdrawals,
+    String? currency,
     List<MonthlyEarning>? monthlyBreakdown,
   }) =>
       ProviderEarningResponse(
@@ -66,6 +79,9 @@ class ProviderEarningResponse {
         totalHours: totalHours ?? this.totalHours,
         totalCommission: totalCommission ?? this.totalCommission,
         period: period ?? this.period,
+        withdrawableAmount: withdrawableAmount ?? this.withdrawableAmount,
+        totalWithdrawals: totalWithdrawals ?? this.totalWithdrawals,
+        currency: currency ?? this.currency,
         monthlyBreakdown: monthlyBreakdown ?? this.monthlyBreakdown,
       );
 
@@ -75,6 +91,10 @@ class ProviderEarningResponse {
 
   getTotalCommission() {
     return totalCommission?.toCurrencyVnd();
+  }
+
+  getWithdrawableAmount() {
+    return withdrawableAmount?.toCurrencyVnd();
   }
 
   factory ProviderEarningResponse.fromJson(Map<String, dynamic> json) =>

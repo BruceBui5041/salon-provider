@@ -21,6 +21,9 @@ ProviderEarningResponse _$ProviderEarningResponseFromJson(
       monthlyBreakdown: (json['monthly_breakdown'] as List<dynamic>?)
           ?.map((e) => MonthlyEarning.fromJson(e as Map<String, dynamic>))
           .toList(),
+      withdrawableAmount: json['withdrawable_amount'] as String?,
+      totalWithdrawals: json['total_withdrawals'] as String?,
+      currency: json['currency'] as String?,
     );
 
 Map<String, dynamic> _$ProviderEarningResponseToJson(
@@ -36,6 +39,9 @@ Map<String, dynamic> _$ProviderEarningResponseToJson(
       'total_commission': instance.totalCommission,
       'period': instance.period,
       'monthly_breakdown': instance.monthlyBreakdown,
+      'withdrawable_amount': instance.withdrawableAmount,
+      'total_withdrawals': instance.totalWithdrawals,
+      'currency': instance.currency,
     };
 
 MonthlyEarning _$MonthlyEarningFromJson(Map<String, dynamic> json) =>

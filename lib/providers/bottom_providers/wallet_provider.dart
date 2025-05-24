@@ -29,7 +29,7 @@ class WalletProvider with ChangeNotifier {
       conditions = [
         [
           Condition(
-            source: "payment.transaction_status",
+            source: "transaction_status",
             operator: "=",
             target: status,
           ),

@@ -8,7 +8,9 @@ import 'package:provider/provider.dart';
 
 class FeaturedServicesLayout extends StatefulWidget {
   final int? limit;
-  const FeaturedServicesLayout({super.key, this.limit});
+  final bool enableScroll;
+  const FeaturedServicesLayout(
+      {super.key, this.limit, this.enableScroll = true});
 
   @override
   State<FeaturedServicesLayout> createState() => _FeaturedServicesLayoutState();
@@ -22,7 +24,9 @@ class _FeaturedServicesLayoutState extends State<FeaturedServicesLayout> {
   @override
   void initState() {
     super.initState();
-    _scrollController.addListener(_onScroll);
+    if (widget.enableScroll) {
+      _scrollController.addListener(_onScroll);
+    }
   }
 
   @override
@@ -37,7 +41,9 @@ class _FeaturedServicesLayoutState extends State<FeaturedServicesLayout> {
 
   @override
   void dispose() {
-    _scrollController.removeListener(_onScroll);
+    if (widget.enableScroll) {
+      _scrollController.removeListener(_onScroll);
+    }
     _scrollController.dispose();
     super.dispose();
   }
@@ -81,13 +87,16 @@ class _FeaturedServicesLayoutState extends State<FeaturedServicesLayout> {
           children: [
             ListView.builder(
               shrinkWrap: true,
-              physics: const AlwaysScrollableScrollPhysics(),
-              controller: _scrollController,
+              physics: widget.enableScroll
+                  ? const AlwaysScrollableScrollPhysics()
+                  : const NeverScrollableScrollPhysics(),
+              controller: widget.enableScroll ? _scrollController : null,
               itemCount: provider.serviceResponse.length +
-                  (provider.hasMoreData ? 1 : 0),
+                  (widget.enableScroll && provider.hasMoreData ? 1 : 0),
               itemBuilder: (context, index) {
                 // If we're at the end and have more data, show a loading indicator
-                if (index == provider.serviceResponse.length) {
+                if (index == provider.serviceResponse.length &&
+                    widget.enableScroll) {
                   return const Center(
                     child: Padding(
                       padding: EdgeInsets.all(16.0),

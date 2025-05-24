@@ -30,9 +30,9 @@ class HomeScreenProvider with ChangeNotifier {
 
   // Get total earnings formatted for display
   String getTotalEarnings() {
-    if (earningData == null || earningData!.totalEarnings == null) {
+    if (earningData == null || earningData!.withdrawableAmount == null) {
       return "0.00".toCurrencyVnd();
     }
-    return earningData!.totalEarnings!.toCurrencyVnd();
+    return earningData!.getWithdrawableAmount() ?? "0.00".toCurrencyVnd();
   }
 }
