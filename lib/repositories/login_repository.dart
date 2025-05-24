@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:salon_provider/common/Utils.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/auth_config.dart';
+import 'package:salon_provider/config/constant_api_config.dart';
+import 'package:salon_provider/config/cookie_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/response/common_response.dart';
@@ -33,6 +35,8 @@ class LoginScreenRepository extends RepositoryConfig {
 
   Future<UserResponse?> checkAuth() async {
     try {
+      await CookieConfig.setCookieToApi(Uri.parse(ConstantApiConfig().getUrl));
+
       var res = await restClient.checkAuth();
       if (res.data == null) throw Exception("User not found");
 

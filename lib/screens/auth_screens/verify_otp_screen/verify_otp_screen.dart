@@ -40,7 +40,7 @@ class VerifyOtpScreen extends StatelessWidget {
                                         margin: Insets.i20,
                                         onTap: () {
                                           model.verifyOtp(onSucess: () {
-                                            Provider.of<IntroProvider>(context,
+                                            Provider.of<SplashProvider>(context,
                                                     listen: false)
                                                 .checkCookie(context,
                                                     onSuccess: () {

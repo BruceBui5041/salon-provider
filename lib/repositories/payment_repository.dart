@@ -34,39 +34,40 @@ class PaymentRepository extends RepositoryConfig {
   }) async {
     var userId = await AuthConfig.getUserId();
 
-    var defaultCondition =
-        Condition(source: "service_man_id", operator: "=", target: userId);
+    var defaultCondition = Condition(
+      source: "booking.service_man_id",
+      operator: "=",
+      target: userId,
+    );
 
     if (conditions != null && conditions[0].isEmpty) {
       conditions[0].add(defaultCondition);
     }
 
     var requestBody = SearchRequestBody(
-      model: EnumColumn.booking.name,
+      model: EnumColumn.payment.name,
       conditions: conditions ??
           [
             [defaultCondition]
           ],
       fields: [
-        FieldItem(field: "user.user_profile.profile_picture_url"),
-        FieldItem(field: "service_versions"),
-        FieldItem(field: "payment.amount"),
-        FieldItem(field: "payment.currency"),
-        FieldItem(field: "payment.payment_method"),
-        FieldItem(field: "payment.transaction_id"),
-        FieldItem(field: "payment.transaction_status"),
+        FieldItem(field: "booking.user.user_profile.profile_picture_url"),
+        FieldItem(field: "booking.service_versions"),
+        FieldItem(field: "amount"),
+        FieldItem(field: "currency"),
+        FieldItem(field: "payment_method"),
+        FieldItem(field: "transaction_id"),
+        FieldItem(field: "transaction_status"),
       ],
       orderBy: "id desc",
       limit: limit,
       offset: offset,
     );
 
-    final boookingRes =
-        await commonRestClient.search<List<Booking>>(requestBody.toJson());
-    var bookings =
-        (boookingRes as List<dynamic>).map((e) => Booking.fromJson(e)).toList();
-
-    var payments = bookings.map((e) => e.payment).whereType<Payment>().toList();
+    final response =
+        await commonRestClient.search<List<Payment>>(requestBody.toJson());
+    var payments =
+        (response as List<dynamic>).map((e) => Payment.fromJson(e)).toList();
 
     return payments;
   }

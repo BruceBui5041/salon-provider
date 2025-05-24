@@ -96,7 +96,7 @@ class ProfileProvider with ChangeNotifier {
                               await loginProvider.logoutUser();
 
                               route.pushNamedAndRemoveUntil(
-                                  context, routeName.intro);
+                                  context, routeName.loginProvider);
                             },
                             title: appFonts.yes))
                   ])

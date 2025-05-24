@@ -1,6 +1,8 @@
 import 'dart:async';
 import 'dart:developer';
 import '../../config.dart';
+import 'package:salon_provider/config/constant_api_config.dart';
+import 'package:salon_provider/config/cookie_config.dart';
 
 class SplashProvider extends ChangeNotifier {
   double size = 10;
@@ -20,9 +22,7 @@ class SplashProvider extends ChangeNotifier {
 
   AnimationController? popUpAnimationController;
 
-
-
-  onReady(TickerProvider sync, context) async{
+  onReady(TickerProvider sync, context) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
 
     var freelancer = prefs.getBool("isFreelancer") ?? false;
@@ -59,7 +59,6 @@ class SplashProvider extends ChangeNotifier {
       notifyListeners();
     } else if (controller2!.status == AnimationStatus.dismissed) {
       Timer(const Duration(seconds: 2), () {
-
         controller2!.forward();
         notifyListeners();
       });
@@ -87,10 +86,18 @@ class SplashProvider extends ChangeNotifier {
 
     Timer(const Duration(seconds: 4), () async {
       log("IS LOGINN $login");
-      if(login){
-        route.pushReplacementNamed(context, routeName.dashboard);
+      if (login) {
+        // First check authentication before navigating to dashboard
+        try {
+          await checkCookie(context, onSuccess: () {
+            route.pushReplacementNamed(context, routeName.dashboard);
+          });
+        } catch (e) {
+          log("Auth check failed: $e");
+          route.pushReplacementNamed(context, routeName.loginProvider);
+        }
       } else {
-        route.pushReplacementNamed(context, routeName.intro);
+        route.pushReplacementNamed(context, routeName.loginProvider);
       }
     });
   }
@@ -105,6 +112,18 @@ class SplashProvider extends ChangeNotifier {
 
   onChangeSize() {
     size = size == 10 ? 115 : 115;
+    notifyListeners();
+  }
+
+  Future<void> checkCookie(BuildContext context,
+      {Function()? onSuccess}) async {
+    await CookieConfig.setCookieToApi(Uri.parse(ConstantApiConfig().getUrl));
+    await Provider.of<LoginAsProvider>(context, listen: false).checkAuth(
+        onSuccess: () {
+      if (onSuccess != null) {
+        onSuccess();
+      }
+    });
     notifyListeners();
   }
 }

@@ -1,6 +1,4 @@
 import 'package:salon_provider/config.dart';
-import 'package:salon_provider/config/constant_api_config.dart';
-import 'package:salon_provider/config/cookie_config.dart';
 
 class IntroProvider with ChangeNotifier {
   int selectedIndex = 0;
@@ -63,17 +61,5 @@ class IntroProvider with ChangeNotifier {
             });
           });
         });
-  }
-
-  Future<void> checkCookie(BuildContext context,
-      {Function()? onSuccess}) async {
-    await CookieConfig.setCookieToApi(Uri.parse(ConstantApiConfig().getUrl));
-    Provider.of<LoginAsProvider>(context, listen: false).checkAuth(
-        onSuccess: () {
-      if (onSuccess != null) {
-        onSuccess();
-      }
-    });
-    notifyListeners();
   }
 }

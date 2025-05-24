@@ -13,10 +13,6 @@ class _IntroScreenState extends State<IntroScreen> {
   @override
   initState() {
     super.initState();
-    Provider.of<IntroProvider>(context, listen: false).checkCookie(context,
-        onSuccess: () {
-      route.pushNamed(context, routeName.dashboard);
-    });
   }
 
   @override

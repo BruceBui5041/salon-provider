@@ -119,25 +119,10 @@ class OngoingBookingScreen extends StatelessWidget {
   }
 
   Widget _buildSecondaryButton(
-      BuildContext context, OngoingBookingProvider value) {
-    // Case 1: Payment method is transfer and status is pending
-    if (value.isTransferPayment && value.isPaymentPending) {
-      // Check if payment QR exists
-      if (value.hasPaymentQr) {
-        return ButtonCommon(
-          title: language(context, appFonts.showQr),
-          onTap: () => value.navigateToPaymentQr(context),
-        );
-      } else {
-        return ButtonCommon(
-          title: language(context, appFonts.generateQr),
-          onTap: () => value.navigateToPaymentQr(context),
-        );
-      }
-    }
-
-    // Case 2: Payment method is cash and status is pending
-    else if (value.isCashPayment && value.isPaymentPending) {
+    BuildContext context,
+    OngoingBookingProvider value,
+  ) {
+    if (value.isPaymentPending) {
       return ButtonCommon(
         title: language(context, appFonts.paid),
         onTap: () => value.markPaymentPaid(context),
