@@ -1,10 +1,35 @@
+import 'dart:async';
+
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/model/cloud_message_response/base_message_response.dart';
+import 'package:salon_provider/model/cloud_message_response/booking_message_response.dart';
 import 'package:salon_provider/model/notification_model.dart';
 
 class NotificationProvider with ChangeNotifier {
   bool isNotification = false;
   AnimationController? animationController;
   List<NotificationModel> notificationList = [];
+  final _cloudMessageController =
+      StreamController<BaseMessageResponse>.broadcast();
+  BookingNotificationMessage? _bookingNotificationMessage;
+
+  void onSubcribeCloudMessage({
+    required Function(BaseMessageResponse) onCallBack,
+  }) {
+    _cloudMessageController.stream.listen((message) {
+      onCallBack(message);
+    });
+  }
+
+  void pushMessage(RemoteMessage message) {
+    final eventName = message.data['event'];
+    if (eventName.toString().startsWith("booking_")) {
+      _bookingNotificationMessage =
+          BookingNotificationMessage.fromJson(message.data);
+    }
+    _cloudMessageController.sink.add(_bookingNotificationMessage!);
+  }
 
   onRefresh() {
     isNotification = true;

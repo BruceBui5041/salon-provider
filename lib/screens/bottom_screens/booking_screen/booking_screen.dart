@@ -1,6 +1,3 @@
-import 'package:salon_provider/providers/bottom_providers/booking_provider.dart';
-import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/booking_layout.dart';
-
 import '../../../config.dart';
 
 class BookingScreen extends StatefulWidget {
@@ -16,6 +13,7 @@ class _BookingScreenState extends State<BookingScreen> {
   @override
   void initState() {
     super.initState();
+    Provider.of<BookingProvider>(context, listen: false).listenBooking(context);
     _scrollController.addListener(_scrollListener);
   }
 

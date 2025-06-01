@@ -7,8 +7,11 @@ class HoldBookingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<HoldBookingProvider>(builder: (context, value, child) {
       return StatefulWrapper(
-          onInit: () => Future.delayed(
-              const Duration(milliseconds: 50), () => value.onReady(context)),
+          onInit: () {
+            value.listenHoldBooking(context);
+            Future.delayed(
+                const Duration(milliseconds: 50), () => value.onReady(context));
+          },
           child: Scaffold(
               appBar: AppBarCommon(title: appFonts.holdBooking),
               body: Stack(alignment: Alignment.bottomCenter, children: [

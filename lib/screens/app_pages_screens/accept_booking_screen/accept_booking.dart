@@ -1,3 +1,5 @@
+import 'package:salon_provider/config/injection_config.dart';
+
 import '../../../config.dart';
 
 class AcceptBookingScreen extends StatelessWidget {
@@ -8,8 +10,11 @@ class AcceptBookingScreen extends StatelessWidget {
     return Consumer2<AcceptedBookingProvider, AssignBookingProvider>(
         builder: (context, value, assignValue, child) {
       return StatefulWrapper(
-          onInit: () => Future.delayed(
-              const Duration(milliseconds: 50), () => value.onReady(context)),
+          onInit: () {
+            value.listenAcceptedBooking(context);
+            Future.delayed(
+                const Duration(milliseconds: 50), () => value.onReady(context));
+          },
           child: Scaffold(
               appBar: AppBarCommon(title: appFonts.acceptedBooking),
               body: Stack(alignment: Alignment.bottomCenter, children: [

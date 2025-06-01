@@ -14,6 +14,18 @@ enum ServiceVersionStatus {
   inactive,
 }
 
+enum NotificationEventEnum {
+  booking_created, // pending
+  booking_accepted, // confirm
+  booking_completed, // completed
+  booking_in_progress, // in_progress / on_going
+  booking_cancelled, // cancelled
+  booking_confirmed_paid, // paid
+  booking_transferred, // transferred
+
+  // final String value;
+}
+
 enum Status {
   active,
   inactive,

@@ -3,6 +3,8 @@ import 'dart:developer';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:salon_provider/common/Utils.dart';
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/providers/app_pages_provider/notification_provider.dart';
 
 class NotificationHelper {
   static final NotificationHelper _instance = NotificationHelper._internal();
@@ -42,6 +44,7 @@ class NotificationHelper {
   }
 
   Future<void> _handleForegroundMessage(RemoteMessage message) async {
+    getIt.get<NotificationProvider>().pushMessage(message);
     log('Message received in foreground: ${message.toString()}');
     await _showNotification(message);
   }

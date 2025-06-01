@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/injection_config.dart';
 import '../../model/pending_booking_model.dart';
 
 class AcceptedBookingProvider with ChangeNotifier {
@@ -14,6 +16,17 @@ class AcceptedBookingProvider with ChangeNotifier {
 
   FocusNode amountFocus = FocusNode();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  void listenAcceptedBooking(BuildContext context) {
+    getIt.get<NotificationProvider>().onSubcribeCloudMessage(
+      onCallBack: (message) {
+        if (message.event == NotificationEventEnum.booking_accepted.name) {
+          return;
+        }
+        onReady(context);
+        // event get
+      },
+    );
+  }
 
   onReady(context) {
     if (isFreelancer != true) {

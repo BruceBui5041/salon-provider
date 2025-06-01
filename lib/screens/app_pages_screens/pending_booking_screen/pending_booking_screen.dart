@@ -1,4 +1,3 @@
-import 'package:salon_provider/providers/app_pages_provider/pending_booking_provider.dart';
 import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/layouts/status_detail_layout.dart';
 
 import '../../../config.dart';
@@ -10,8 +9,12 @@ class PendingBookingScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<PendingBookingProvider>(builder: (context, value, child) {
       return StatefulWrapper(
-          onInit: () => Future.delayed(
-              const Duration(milliseconds: 100), () => value.onReady(context)),
+          onInit: () {
+            Provider.of<PendingBookingProvider>(context, listen: false)
+                .listenPendingNotification(context);
+            Future.delayed(const Duration(milliseconds: 100),
+                () => value.onReady(context));
+          },
           child: Scaffold(
               appBar: AppBarCommon(title: appFonts.pendingBooking),
               body: Stack(

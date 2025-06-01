@@ -1,3 +1,4 @@
+import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
@@ -22,6 +23,17 @@ class PendingBookingProvider with ChangeNotifier {
       pendingBooking = value.first;
       notifyListeners();
     });
+  }
+
+  void listenPendingNotification(BuildContext context) {
+    getIt.get<NotificationProvider>().onSubcribeCloudMessage(
+      onCallBack: (message) {
+        if (message.event == NotificationEventEnum.booking_created.name) {
+          return;
+        }
+        // event get
+      },
+    );
   }
 
   showBookingStatus(context) {

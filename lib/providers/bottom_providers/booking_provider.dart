@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'package:salon_provider/common/booking_status.dart';
+import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
@@ -43,6 +44,17 @@ class BookingProvider with ChangeNotifier {
     _debounce?.cancel();
     searchCtrl.dispose();
     super.dispose();
+  }
+
+  onBookingCreated(message) async {
+    await loadBookings(loadMore: false);
+  }
+
+  void listenBooking(BuildContext context) {
+    getIt.get<NotificationProvider>().onSubcribeCloudMessage(
+        onCallBack: (message) async {
+      await loadBookings(loadMore: false);
+    });
   }
 
   Future<List<List<Condition>>> _buildConditions() async {
