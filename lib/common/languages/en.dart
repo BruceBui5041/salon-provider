@@ -585,4 +585,5 @@ dynamic en = {
   "generateQr": "Generate QR",
   "showQr": "Show QR",
   "paid": "Paid",
+  "platformFee": "Platform fee",
 };

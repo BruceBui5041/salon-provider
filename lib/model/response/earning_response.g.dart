@@ -16,7 +16,7 @@ ProviderEarningResponse _$ProviderEarningResponseFromJson(
       cancelledBookings: (json['cancelled_bookings'] as num?)?.toInt(),
       confirmedBookings: (json['confirmed_bookings'] as num?)?.toInt(),
       totalHours: (json['total_hours'] as num?)?.toInt(),
-      totalCommission: json['total_commission'] as String?,
+      totalPlatformFee: json['total_platform_fee'] as String?,
       period: json['period'] as String?,
       monthlyBreakdown: (json['monthly_breakdown'] as List<dynamic>?)
           ?.map((e) => MonthlyEarning.fromJson(e as Map<String, dynamic>))
@@ -24,6 +24,8 @@ ProviderEarningResponse _$ProviderEarningResponseFromJson(
       withdrawableAmount: json['withdrawable_amount'] as String?,
       totalWithdrawals: json['total_withdrawals'] as String?,
       currency: json['currency'] as String?,
+      paidPlatformFee: json['paid_platform_fee'] as String?,
+      unpaidPlatformFee: json['unpaid_platform_fee'] as String?,
     );
 
 Map<String, dynamic> _$ProviderEarningResponseToJson(
@@ -36,7 +38,9 @@ Map<String, dynamic> _$ProviderEarningResponseToJson(
       'cancelled_bookings': instance.cancelledBookings,
       'confirmed_bookings': instance.confirmedBookings,
       'total_hours': instance.totalHours,
-      'total_commission': instance.totalCommission,
+      'total_platform_fee': instance.totalPlatformFee,
+      'paid_platform_fee': instance.paidPlatformFee,
+      'unpaid_platform_fee': instance.unpaidPlatformFee,
       'period': instance.period,
       'monthly_breakdown': instance.monthlyBreakdown,
       'withdrawable_amount': instance.withdrawableAmount,

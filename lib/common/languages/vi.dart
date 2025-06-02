@@ -583,4 +583,5 @@ dynamic vi = {
   "showQr": "Hiển thị mã QR",
   "paid": "Đã thanh toán",
   "vietnamese": "Tiếng Việt",
+  "platformFee": "Phí nền tảng",
 };

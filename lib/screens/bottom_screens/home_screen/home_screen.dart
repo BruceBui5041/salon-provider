@@ -103,9 +103,9 @@ class _HomeScreenState extends State<HomeScreen>
                             "price": earningData?.totalHours?.toString() ?? "0"
                           },
                           {
-                            "title": appFonts.commission,
+                            "title": appFonts.platformFee,
                             "image": eSvgAssets.category,
-                            "price": (earningData?.totalCommission ?? "0.00")
+                            "price": (earningData?.totalPlatformFee ?? "0.00")
                                 .toCurrencyVnd()
                           },
                         ];

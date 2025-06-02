@@ -24,8 +24,12 @@ class ProviderEarningResponse {
   final int? confirmedBookings;
   @JsonKey(name: 'total_hours')
   final int? totalHours;
-  @JsonKey(name: 'total_commission')
-  final String? totalCommission;
+  @JsonKey(name: 'total_platform_fee')
+  final String? totalPlatformFee;
+  @JsonKey(name: 'paid_platform_fee')
+  final String? paidPlatformFee;
+  @JsonKey(name: 'unpaid_platform_fee')
+  final String? unpaidPlatformFee;
   @JsonKey(name: 'period')
   final String? period;
   @JsonKey(name: 'monthly_breakdown')
@@ -39,19 +43,21 @@ class ProviderEarningResponse {
   final String? currency;
 
   ProviderEarningResponse({
-    required this.totalEarnings,
-    required this.completedBookings,
-    required this.pendingBookings,
-    required this.inProgressBookings,
-    required this.cancelledBookings,
-    required this.confirmedBookings,
-    required this.totalHours,
-    required this.totalCommission,
-    required this.period,
+    this.totalEarnings,
+    this.completedBookings,
+    this.pendingBookings,
+    this.inProgressBookings,
+    this.cancelledBookings,
+    this.confirmedBookings,
+    this.totalHours,
+    this.totalPlatformFee,
+    this.period,
     this.monthlyBreakdown,
     this.withdrawableAmount,
     this.totalWithdrawals,
     this.currency,
+    this.paidPlatformFee,
+    this.unpaidPlatformFee,
   });
 
   ProviderEarningResponse copyWith({
@@ -77,12 +83,14 @@ class ProviderEarningResponse {
         cancelledBookings: cancelledBookings ?? this.cancelledBookings,
         confirmedBookings: confirmedBookings ?? this.confirmedBookings,
         totalHours: totalHours ?? this.totalHours,
-        totalCommission: totalCommission ?? this.totalCommission,
+        totalPlatformFee: totalCommission ?? this.totalPlatformFee,
         period: period ?? this.period,
         withdrawableAmount: withdrawableAmount ?? this.withdrawableAmount,
         totalWithdrawals: totalWithdrawals ?? this.totalWithdrawals,
         currency: currency ?? this.currency,
         monthlyBreakdown: monthlyBreakdown ?? this.monthlyBreakdown,
+        paidPlatformFee: paidPlatformFee ?? this.paidPlatformFee,
+        unpaidPlatformFee: unpaidPlatformFee ?? this.unpaidPlatformFee,
       );
 
   getTotalEarnings() {
@@ -90,7 +98,7 @@ class ProviderEarningResponse {
   }
 
   getTotalCommission() {
-    return totalCommission?.toCurrencyVnd();
+    return totalPlatformFee?.toCurrencyVnd();
   }
 
   getWithdrawableAmount() {

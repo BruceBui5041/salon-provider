@@ -566,4 +566,5 @@ class AppFonts {
   final areYouSure = "Are you sure want to Logout ?";
   final generateQr = "generateQr";
   final showQr = "showQr";
+  final platformFee = "platformFee";
 }
