@@ -30,6 +30,15 @@ class CustomDropDownLayout<T> extends StatelessWidget {
       child: DropdownButtonHideUnderline(
         child: ButtonTheme(
           child: DropdownButtonFormField<T>(
+            selectedItemBuilder: (BuildContext context) {
+              return items?.map<Widget>((T item) {
+                    return Container(
+                      alignment: Alignment.centerLeft,
+                      child: itemBuilder(context, item),
+                    );
+                  }).toList() ??
+                  [];
+            },
             hint: Text(
               language(context, hintText ?? ""),
               style: appCss.dmDenseMedium14

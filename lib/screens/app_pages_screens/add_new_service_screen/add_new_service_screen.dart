@@ -102,138 +102,105 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
   }
 
   Widget _bodyAddNew(AddNewServiceProvider value) {
-    return Column(children: [
-      // _dropdownDraftService(context, value),
-      Expanded(
-        child: Stack(children: [
-          const FieldsBackground(),
-          SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              if (value.isEdit) _toolEdit(value),
-              FormServiceImageLayout(),
-              FormCategoryLayout(),
-              FormPriceLayout(),
-              // FormServiceDefaultLayout(),
-            ]).paddingSymmetric(vertical: Insets.i20),
-          )
-        ]),
-      ),
-
-      ButtonCommon(
-          title: value.isEdit ? appFonts.update : appFonts.addService,
-          onTap: () {
-            value.addService(context, callBack: () {
-              // use theme of this project to show dialog
-              showDialog(
+    return Padding(
+      padding: const EdgeInsets.all(Insets.i20),
+      child: Column(
+        children: [
+          Expanded(
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                if (value.isEdit) _toolEdit(value),
+                FormServiceImageLayout(),
+                FormCategoryLayout(),
+                FormPriceLayout(),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+          ButtonCommon(
+            title: value.isEdit ? appFonts.update : appFonts.addService,
+            onTap: () {
+              value.addService(context, callBack: () {
+                showDialog(
                   context: context,
                   builder: (context) => AppAlertDialogCommon(
-                        image: eSvgAssets.service,
-                        title: "Success",
-                        subtext: "Service added successfully",
-                        singleText: "OK",
-                        firstBText: "Cancel",
-                        secondBText: "OK",
-                        focusNode: FocusNode(),
-                        firstBTap: () {
-                          Navigator.of(context).pop();
-                        },
-                        secondBTap: () {
-                          Navigator.of(context).pop();
-                          value.clearInput();
-                        },
-                      ));
-            });
-          }).paddingOnly(top: Insets.i10, bottom: Insets.i5),
-
-      const SizedBox(
-        height: 20,
+                    image: eSvgAssets.service,
+                    title: "Success",
+                    subtext: "Service added successfully",
+                    singleText: "OK",
+                    firstBText: "Cancel",
+                    secondBText: "OK",
+                    focusNode: FocusNode(),
+                    firstBTap: () {
+                      Navigator.of(context).pop();
+                    },
+                    secondBTap: () {
+                      Navigator.of(context).pop();
+                      value.clearInput();
+                    },
+                  ),
+                );
+              });
+            },
+          ),
+        ],
       ),
-    ]).paddingSymmetric(horizontal: Insets.i20);
+    );
   }
 
   Widget _bodyEdit(AddNewServiceProvider value) {
-    return Column(crossAxisAlignment: CrossAxisAlignment.center, children: [
-      // _dropdownDraftService(context, value),
-      Padding(
-        padding: const EdgeInsets.only(bottom: Insets.i20),
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            BookingStatusLayout(
+    return Padding(
+      padding: const EdgeInsets.all(Insets.i20),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              BookingStatusLayout(
                 title: getPublishStatus(value),
                 color: colorCondition(
-                    getPublishStatus(value).toLowerCase(), context)),
-            const SizedBox(width: Insets.i10),
-
-            Text(value.serviceSelected?.serviceVersion!.title ?? "",
+                    getPublishStatus(value).toLowerCase(), context),
+              ),
+              const SizedBox(width: Insets.i10),
+              Text(
+                value.serviceSelected?.serviceVersion!.title ?? "",
                 style: appCss.dmDenseMedium16
-                    .textColor(appColor(context).appTheme.darkText)),
-            // if (value.serviceVersionSelected?.isDraft() == true)
-          ],
-        ),
-      ),
-
-      Expanded(
-        child: Stack(children: [
-          const FieldsBackground(),
-          SingleChildScrollView(
-            child:
-                Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              // if (value.isEdit) _toolEdit(value),
-              FormServiceImageLayout(),
-              FormCategoryLayout(),
-              FormPriceLayout(),
-              // FormServiceDefaultLayout(),
-            ]).paddingSymmetric(vertical: Insets.i20),
-          )
-        ]),
-      ),
-
-      const SizedBox(height: Insets.i10),
-      Stack(
-        children: [
-          const FieldsBackground(),
-          Column(
-            children: [
-              // if (value.isEdit)
-              //   Padding(
-              //     padding: const EdgeInsets.only(
-              //         top: Insets.i10, left: Insets.i20, right: Insets.i20),
-              //     child: _dropdownDraftServiceCustom(value),
-              //   ),
-              const SizedBox(height: Insets.i10),
-              if (value.isEdit)
-                Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Insets.i20,
-                  ),
-                  child: Row(
-                    children: [
-                      if (value.isDraft == true)
-                        Expanded(child: _btnSave(value)),
-                      if (value.isDraft == true)
-                        const SizedBox(width: Insets.i10),
-                      if (value.serviceVersionSelected?.status !=
-                          ServiceVersionStatus.active.name)
-                        Expanded(child: _btnPublish(value)),
-                    ],
-                  ),
-                ),
-              if (!value.isEdit)
-                ButtonCommon(
-                    title: value.isEdit ? appFonts.update : appFonts.addService,
-                    onTap: () {
-                      value.addService(context);
-                    }).paddingOnly(top: Insets.i10, bottom: Insets.i5),
-              const SizedBox(
-                height: 20,
+                    .textColor(appColor(context).appTheme.darkText),
               ),
             ],
           ),
+          const SizedBox(height: Insets.i20),
+          Expanded(
+            child: ListView(
+              physics: const AlwaysScrollableScrollPhysics(),
+              children: [
+                FormServiceImageLayout(),
+                FormCategoryLayout(),
+                FormPriceLayout(),
+                SizedBox(height: 20),
+              ],
+            ),
+          ),
+          if (value.isEdit)
+            Row(
+              children: [
+                if (value.isDraft == true) Expanded(child: _btnSave(value)),
+                if (value.isDraft == true) const SizedBox(width: Insets.i10),
+                if (value.serviceVersionSelected?.status !=
+                    ServiceVersionStatus.active.name)
+                  Expanded(child: _btnPublish(value)),
+              ],
+            ),
+          if (!value.isEdit)
+            ButtonCommon(
+                title: value.isEdit ? appFonts.update : appFonts.addService,
+                onTap: () {
+                  value.addService(context);
+                }),
         ],
-      )
-    ]).paddingSymmetric(horizontal: Insets.i20);
+      ),
+    );
   }
 
   Widget _toolEdit(AddNewServiceProvider value) {
@@ -308,6 +275,23 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
               Expanded(
                 child: DropdownButtonFormField<ServiceVersion>(
                   value: initServiceVersion ?? null,
+                  selectedItemBuilder: (BuildContext context) {
+                    return value.serviceVersionList
+                            ?.map<Widget>((ServiceVersion service) {
+                          String draftText =
+                              service.isDraft() ? "(Draft) " : "";
+                          return Container(
+                            alignment: Alignment.centerLeft,
+                            child: Text(
+                              "$draftText${service.title} (${service.id})",
+                              style: appCss.dmDenseMedium14.textColor(
+                                  appColor(context).appTheme.darkText),
+                              overflow: TextOverflow.ellipsis,
+                            ),
+                          );
+                        }).toList() ??
+                        [];
+                  },
                   decoration: InputDecoration(
                     disabledBorder: const OutlineInputBorder(
                       borderRadius:

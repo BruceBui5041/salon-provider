@@ -712,6 +712,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
   onChangeDuration(val) {
     durationValue = val;
+    duration.text = val;
     notifyListeners();
   }
 

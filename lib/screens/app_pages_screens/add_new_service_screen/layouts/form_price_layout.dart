@@ -1,5 +1,6 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/error_text_layout.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/featured_points_layout.dart';
 
 import '../../../../config.dart';
 
@@ -17,7 +18,7 @@ class FormPriceLayout extends StatelessWidget {
             // _buildPriceSection(context, value),
             _buildAmountSection(context, value),
             // _buildTaxSection(context, value),
-            _buildFeaturedPointsSection(context, value),
+            const FeaturedPointsLayout(),
             // _dropdownDraftService(context, value),
             // _buildStatusSection(context, value),
           ],
@@ -201,52 +202,6 @@ class FormPriceLayout extends StatelessWidget {
           onChanged: (val) => value.onChangeTax(val),
         ).paddingSymmetric(horizontal: Insets.i20),
       ],
-    );
-  }
-
-  /// Builds the featured points input section
-  Widget _buildFeaturedPointsSection(
-      BuildContext context, AddNewServiceProvider value) {
-    return Column(
-      children: [
-        ContainerWithTextLayout(
-          title: language(context, appFonts.featuredPoints),
-        ).paddingOnly(top: Insets.i24, bottom: Insets.i12),
-        Stack(
-          children: [
-            TextFieldCommon(
-              focusNode: value.featuredPointsFocus,
-              controller: value.featuredPoints,
-              hintText: appFonts.writeANote,
-              maxLines: 3,
-              minLines: 3,
-              isNumber: true,
-              isMaxLine: true,
-            ).paddingSymmetric(horizontal: Insets.i20),
-            _buildDetailsIcon(context, value),
-          ],
-        ),
-      ],
-    );
-  }
-
-  /// Builds the details icon for the featured points input
-  Widget _buildDetailsIcon(BuildContext context, AddNewServiceProvider value) {
-    return SvgPicture.asset(
-      eSvgAssets.details,
-      fit: BoxFit.scaleDown,
-      colorFilter: ColorFilter.mode(
-        !value.featuredPointsFocus.hasFocus
-            ? value.featuredPoints.text.isNotEmpty
-                ? appColor(context).appTheme.darkText
-                : appColor(context).appTheme.lightText
-            : appColor(context).appTheme.darkText,
-        BlendMode.srcIn,
-      ),
-    ).paddingOnly(
-      left: rtl(context) ? 0 : Insets.i35,
-      right: rtl(context) ? Insets.i35 : 0,
-      top: Insets.i13,
     );
   }
 

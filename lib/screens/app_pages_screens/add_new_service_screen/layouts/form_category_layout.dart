@@ -47,11 +47,16 @@ class FormCategoryLayout extends StatelessWidget {
           //create dropdown
           Expanded(
               flex: 2,
-              child: CustomDropDownLayout(
+              child: CustomDropDownLayout<String>(
                   value: value.durationValue ?? "15",
                   icon: eSvgAssets.timer,
+                  isIcon: true,
                   itemBuilder: (BuildContext context, item) {
-                    return Text(item + " minutes");
+                    return Text(
+                      item + " minutes",
+                      style: appCss.dmDenseMedium14
+                          .textColor(appColor(context).appTheme.darkText),
+                    );
                   },
                   items: ["15", "30", "45", "60", "120", "180", "300"],
                   onChanged: (val) => value.onChangeDuration(val ?? ""))),
