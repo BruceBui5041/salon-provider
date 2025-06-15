@@ -1,11 +1,13 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
-import 'package:flutter_html/flutter_html.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/add_new_service_provider.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/html_editor_screen.dart';
 
 import '../../../../config.dart';
 
-/// A widget that displays featured points with HTML support
+/// A widget that displays featured points with rich text support
 class FeaturedPointsLayout extends StatelessWidget {
   const FeaturedPointsLayout({super.key});
 
@@ -13,7 +15,6 @@ class FeaturedPointsLayout extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<AddNewServiceProvider>(
       builder: (context, value, child) {
-        print("featuredPoints: ${value.featuredPoints.text}");
         return Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -44,15 +45,15 @@ class FeaturedPointsLayout extends StatelessWidget {
                 ],
               ),
             ),
-            _buildHtmlPreview(context, value),
+            _buildQuillPreview(context, value),
           ],
         );
       },
     );
   }
 
-  /// Builds the HTML preview section
-  Widget _buildHtmlPreview(BuildContext context, AddNewServiceProvider value) {
+  /// Builds the Quill preview section
+  Widget _buildQuillPreview(BuildContext context, AddNewServiceProvider value) {
     return Container(
       height: 200,
       margin: const EdgeInsets.symmetric(horizontal: Insets.i20),
@@ -60,6 +61,10 @@ class FeaturedPointsLayout extends StatelessWidget {
       decoration: BoxDecoration(
         color: appColor(context).appTheme.whiteBg,
         borderRadius: BorderRadius.circular(AppRadius.r8),
+        border: Border.all(
+          color: appColor(context).appTheme.stroke,
+          width: 1,
+        ),
       ),
       child: value.featuredPoints.text.isEmpty
           ? Center(
@@ -70,19 +75,76 @@ class FeaturedPointsLayout extends StatelessWidget {
                 ),
               ),
             )
-          : SingleChildScrollView(
-              child: Html(
-                data: value.featuredPoints.text,
-                style: {
-                  "body": Style(
-                    margin: Margins.zero,
-                    padding: HtmlPaddings.zero,
-                    fontSize: FontSize(14.0),
-                    fontFamily: 'DM Sans',
-                  ),
-                },
-              ),
+          : _buildQuillContent(context, value.featuredPoints.text),
+    );
+  }
+
+  /// Builds a read-only Quill editor with the content
+  Widget _buildQuillContent(BuildContext context, String content) {
+    QuillController? controller;
+
+    try {
+      // Try to parse as Quill Delta JSON
+      final delta = content.startsWith('[') || content.startsWith('{')
+          ? jsonDecode(content)
+          : null;
+
+      if (delta != null) {
+        controller = QuillController(
+          document: Document.fromJson(delta),
+          selection: const TextSelection.collapsed(offset: 0),
+        );
+      }
+    } catch (e) {
+      // If parsing fails, show as plain text
+    }
+
+    if (controller != null) {
+      return Theme(
+        data: Theme.of(context).copyWith(
+          textTheme: TextTheme(
+            bodyMedium: appCss.dmDenseMedium14.textColor(
+              appColor(context).appTheme.darkText,
             ),
+            bodyLarge: appCss.dmDenseMedium16.textColor(
+              appColor(context).appTheme.darkText,
+            ),
+            bodySmall: appCss.dmDenseMedium12.textColor(
+              appColor(context).appTheme.darkText,
+            ),
+            labelLarge: appCss.dmDenseMedium14.textColor(
+              appColor(context).appTheme.darkText,
+            ),
+          ),
+          iconTheme: IconThemeData(
+            color: appColor(context).appTheme.darkText,
+          ),
+        ),
+        child: QuillEditor.basic(
+          controller: controller,
+          config: QuillEditorConfig(
+            showCursor: false,
+            autoFocus: false,
+            scrollable: true,
+            padding: EdgeInsets.zero,
+            expands: false,
+            scrollPhysics: const ClampingScrollPhysics(),
+            embedBuilders: [
+              CustomImageEmbedBuilder(),
+            ],
+          ),
+        ),
+      );
+    }
+
+    // Fallback to plain text display
+    return SingleChildScrollView(
+      child: Text(
+        content,
+        style: appCss.dmDenseMedium14.textColor(
+          appColor(context).appTheme.darkText,
+        ),
+      ),
     );
   }
 

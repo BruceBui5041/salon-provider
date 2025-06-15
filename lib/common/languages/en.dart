@@ -586,4 +586,11 @@ dynamic en = {
   "showQr": "Show QR",
   "paid": "Paid",
   "platformFee": "Platform fee",
+  "chooseImageSource": "Choose Image Source",
+  "gallery": "Gallery",
+  "camera": "Camera",
+  "processingImage": "Processing image...",
+  "imageUrl": "Image URL",
+  "enterImageUrl": "Enter Image URL",
+  "insert": "Insert",
 };

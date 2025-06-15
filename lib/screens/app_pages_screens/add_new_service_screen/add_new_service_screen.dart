@@ -1,4 +1,3 @@
-import 'package:flutter_html/flutter_html.dart';
 import 'package:salon_provider/common/enum_value.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';

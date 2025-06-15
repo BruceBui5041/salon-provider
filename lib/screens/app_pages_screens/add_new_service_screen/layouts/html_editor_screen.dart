@@ -1,12 +1,85 @@
 import 'dart:convert';
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:html_editor_enhanced/html_editor.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/providers/app_pages_provider/add_new_service_provider.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:path/path.dart' as path;
 
-/// A full screen dedicated to HTML editing
+// Custom image embed builder class
+class CustomImageEmbedBuilder extends EmbedBuilder {
+  @override
+  String get key => BlockEmbed.imageType;
+
+  @override
+  Widget build(
+    BuildContext context,
+    EmbedContext embedContext,
+  ) {
+    final node = embedContext.node;
+    final imageUrl = node.value.data;
+    Widget imageWidget;
+
+    if (imageUrl.startsWith('http')) {
+      // Network image
+      imageWidget = Image.network(
+        imageUrl,
+        fit: BoxFit.cover,
+        errorBuilder: (context, error, stackTrace) {
+          return Container(
+            width: double.infinity,
+            height: 200,
+            color: Colors.grey[300],
+            child: Icon(Icons.broken_image, color: Colors.red),
+          );
+        },
+      );
+    } else {
+      // Local image
+      try {
+        imageWidget = Image.file(
+          File(imageUrl),
+          fit: BoxFit.cover,
+          errorBuilder: (context, error, stackTrace) {
+            return Container(
+              width: double.infinity,
+              height: 200,
+              color: Colors.grey[300],
+              child: Icon(Icons.broken_image, color: Colors.red),
+            );
+          },
+        );
+      } catch (e) {
+        imageWidget = Container(
+          width: double.infinity,
+          height: 200,
+          color: Colors.grey[300],
+          child: Icon(Icons.broken_image, color: Colors.red),
+        );
+      }
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 8.0),
+      child: SizedBox(
+        height: 200,
+        width: double.infinity,
+        child: imageWidget,
+      ),
+    );
+  }
+
+  @override
+  String toPlainText(Embed node) {
+    return '[Image]';
+  }
+}
+
+/// A full screen dedicated to rich text editing
 class HtmlEditorScreen extends StatefulWidget {
   const HtmlEditorScreen({
     super.key,
@@ -17,63 +90,316 @@ class HtmlEditorScreen extends StatefulWidget {
 }
 
 class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
-  late HtmlEditorController controller;
+  late QuillController _controller;
   bool _isSaving = false;
   String _initialContent = '';
-  String _activeFormat = 'p'; // Default format is paragraph
-  String _activeFont = 'Arial, sans-serif'; // Default font
-  DateTime? _lastManualFontChange; // Track when font was last manually changed
-
-  final List<String> _availableFonts = [
-    'Arial, sans-serif',
-    'Times New Roman, serif',
-    'Courier New, monospace',
-    'Georgia, serif',
-    'Helvetica, sans-serif',
-    'Impact, sans-serif',
-    'Tahoma, sans-serif',
-    'Trebuchet MS, sans-serif',
-    'Verdana, sans-serif',
-  ];
-
-  final Map<String, bool> _activeFormats = {
-    'bold': false,
-    'italic': false,
-    'underline': false,
-    'insertUnorderedList': false,
-    'insertOrderedList': false,
-    'justifyLeft': false,
-    'justifyCenter': false,
-    'justifyRight': false,
-  };
+  final ImagePicker _imagePicker = ImagePicker();
+  bool _isImageProcessing = false;
+  final TextEditingController _imageUrlController = TextEditingController();
 
   @override
   void initState() {
     super.initState();
-    controller = HtmlEditorController();
+    _controller = QuillController.basic();
 
     // Get the initial content from the provider
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider =
           Provider.of<AddNewServiceProvider>(context, listen: false);
       _initialContent = provider.featuredPoints.text;
-      controller.setText(_initialContent);
+
+      if (_initialContent.isNotEmpty) {
+        try {
+          // Try to parse as Quill Delta JSON
+          final delta =
+              _initialContent.startsWith('[') || _initialContent.startsWith('{')
+                  ? jsonDecode(_initialContent)
+                  : null;
+
+          if (delta != null) {
+            _controller.document = Document.fromJson(delta);
+          } else {
+            // If not valid JSON, insert as plain text or HTML
+            _controller.document.insert(0, _initialContent);
+          }
+        } catch (e) {
+          // If parsing fails, insert as plain text
+          _controller.document.insert(0, _initialContent);
+        }
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    _imageUrlController.dispose();
+    super.dispose();
+  }
+
+  // Function to show image source selection dialog
+  Future<void> _showImageSourceDialog() async {
+    if (_isImageProcessing) return; // Prevent multiple dialogs
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            language(context, "chooseImageSource"),
+            style: appCss.dmDenseMedium16.textColor(
+              appColor(context).appTheme.darkText,
+            ),
+          ),
+          content: SingleChildScrollView(
+            child: ListBody(
+              children: <Widget>[
+                ListTile(
+                  leading: Icon(
+                    Icons.link,
+                    color: appColor(context).appTheme.primary,
+                  ),
+                  title: Text(
+                    language(context, "imageUrl"),
+                    style: appCss.dmDenseMedium14.textColor(
+                      appColor(context).appTheme.darkText,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _showImageUrlDialog();
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.photo_library,
+                    color: appColor(context).appTheme.primary,
+                  ),
+                  title: Text(
+                    language(context, "gallery"),
+                    style: appCss.dmDenseMedium14.textColor(
+                      appColor(context).appTheme.darkText,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _pickAndInsertImage(ImageSource.gallery);
+                  },
+                ),
+                ListTile(
+                  leading: Icon(
+                    Icons.photo_camera,
+                    color: appColor(context).appTheme.primary,
+                  ),
+                  title: Text(
+                    language(context, "camera"),
+                    style: appCss.dmDenseMedium14.textColor(
+                      appColor(context).appTheme.darkText,
+                    ),
+                  ),
+                  onTap: () {
+                    Navigator.of(context).pop();
+                    _pickAndInsertImage(ImageSource.camera);
+                  },
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+  }
+
+  // Function to show image URL input dialog
+  Future<void> _showImageUrlDialog() async {
+    _imageUrlController.clear();
+
+    return showDialog<void>(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text(
+            language(context, "enterImageUrl"),
+            style: appCss.dmDenseMedium16.textColor(
+              appColor(context).appTheme.darkText,
+            ),
+          ),
+          content: TextField(
+            controller: _imageUrlController,
+            decoration: InputDecoration(
+              hintText: 'https://example.com/image.jpg',
+              hintStyle: appCss.dmDenseMedium14.textColor(
+                appColor(context).appTheme.lightText,
+              ),
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: appColor(context).appTheme.stroke,
+                ),
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(8),
+                borderSide: BorderSide(
+                  color: appColor(context).appTheme.primary,
+                ),
+              ),
+            ),
+          ),
+          actions: <Widget>[
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: Text(
+                language(context, "cancel"),
+                style: appCss.dmDenseMedium14.textColor(
+                  appColor(context).appTheme.darkText,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+                _insertImageFromUrl(_imageUrlController.text.trim());
+              },
+              child: Text(
+                language(context, "insert"),
+                style: appCss.dmDenseMedium14.textColor(
+                  appColor(context).appTheme.primary,
+                ),
+              ),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
+  // Function to insert image from URL
+  void _insertImageFromUrl(String url) {
+    if (url.isEmpty) return;
+
+    if (!url.startsWith('http://') && !url.startsWith('https://')) {
+      url = 'https://' + url;
+    }
+
+    try {
+      // Add a line break before the image
+      _controller.document.insert(_controller.selection.baseOffset, '\n');
+
+      // Insert the image at current position
+      final index = _controller.selection.baseOffset;
+      _controller.document.insert(index, BlockEmbed.image(url));
+
+      // Add a line break after the image
+      _controller.document.insert(index + 1, '\n');
+
+      // Move cursor after the image and line break
+      _controller.updateSelection(
+        TextSelection.collapsed(offset: index + 2),
+        ChangeSource.local,
+      );
+    } catch (e) {
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to insert image: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
+  }
+
+  // Function to pick and insert an image
+  Future<void> _pickAndInsertImage(ImageSource source) async {
+    if (_isImageProcessing) return; // Prevent multiple image selections
+
+    setState(() {
+      _isImageProcessing = true;
+    });
+
+    try {
+      final XFile? image = await _imagePicker.pickImage(
+        source: source,
+        imageQuality: 80, // Reduce image quality to save storage
+        maxWidth: 1000, // Limit max width
+      );
+
+      // Check if widget is still mounted before proceeding
+      if (!mounted) return;
+
+      if (image == null) {
+        setState(() {
+          _isImageProcessing = false;
+        });
+        return;
+      }
+
+      try {
+        // Add a line break before the image
+        _controller.document.insert(_controller.selection.baseOffset, '\n');
+
+        // Insert the image at current position
+        final index = _controller.selection.baseOffset;
+        _controller.document.insert(index, BlockEmbed.image(image.path));
+
+        // Add a line break after the image
+        _controller.document.insert(index + 1, '\n');
+
+        // Move cursor after the image and line break
+        _controller.updateSelection(
+          TextSelection.collapsed(offset: index + 2),
+          ChangeSource.local,
+        );
+      } catch (e) {
+        if (mounted) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            SnackBar(
+              content: Text('Failed to insert image: ${e.toString()}'),
+              backgroundColor: Colors.red,
+            ),
+          );
+        }
+      }
+
+      // Reset processing flag
+      if (mounted) {
+        setState(() {
+          _isImageProcessing = false;
+        });
+      }
+    } catch (e) {
+      // Check if widget is still mounted before showing error
+      if (mounted) {
+        setState(() {
+          _isImageProcessing = false;
+        });
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text('Failed to insert image: ${e.toString()}'),
+            backgroundColor: Colors.red,
+          ),
+        );
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        return !_isSaving;
+        return !_isSaving && !_isImageProcessing;
       },
       child: Scaffold(
-        resizeToAvoidBottomInset: false,
+        backgroundColor: appColor(context).appTheme.whiteBg,
+        resizeToAvoidBottomInset: true,
         appBar: AppBarCommon(
           title: language(context, appFonts.featuredPoints),
           actions: [
             TextButton(
-              onPressed: _isSaving
+              onPressed: (_isSaving || _isImageProcessing)
                   ? null
                   : () async {
                       setState(() {
@@ -81,37 +407,44 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                       });
 
                       try {
-                        final html = await controller.getText();
+                        final json =
+                            jsonEncode(_controller.document.toDelta().toJson());
                         final provider = Provider.of<AddNewServiceProvider>(
                             context,
                             listen: false);
-                        provider.featuredPoints.text = html;
+                        provider.featuredPoints.text = json;
 
                         // Only call update API if we're editing an existing service
                         if (provider.serviceSelected != null &&
                             provider.serviceVersionSelected != null) {
                           await provider.updateServiceCraft(
                             callBack: () {
-                              _showToast(
-                                  context,
-                                  language(
-                                      context, 'Changes saved successfully'));
-                              Navigator.pop(context);
+                              if (mounted) {
+                                _showToast(
+                                    context,
+                                    language(
+                                        context, 'Changes saved successfully'));
+                                Navigator.pop(context);
+                              }
                             },
                           );
                         } else {
-                          Navigator.pop(context);
+                          if (mounted) {
+                            Navigator.pop(context);
+                          }
                         }
                       } catch (e) {
-                        // Show error message
-                        _showToast(context, 'Failed to save: ${e.toString()}');
-
-                        setState(() {
-                          _isSaving = false;
-                        });
+                        // Show error message if still mounted
+                        if (mounted) {
+                          _showToast(
+                              context, 'Failed to save: ${e.toString()}');
+                          setState(() {
+                            _isSaving = false;
+                          });
+                        }
                       }
                     },
-              child: _isSaving
+              child: _isSaving || _isImageProcessing
                   ? SizedBox(
                       width: 20,
                       height: 20,
@@ -128,760 +461,172 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                     ),
             ),
           ],
-          onTap: _isSaving ? null : () => Navigator.pop(context),
+          onTap: (_isSaving || _isImageProcessing)
+              ? null
+              : () => Navigator.pop(context),
         ),
-        body: Row(
+        body: Stack(
           children: [
-            // Vertical toolbar
-            Container(
-              width: 60,
-              color: appColor(context).appTheme.fieldCardBg,
+            SafeArea(
               child: Column(
                 children: [
-                  _buildToolbarButton(Icons.format_bold, 'bold',
-                      () => controller.execCommand('bold')),
-                  _buildToolbarButton(Icons.format_italic, 'italic',
-                      () => controller.execCommand('italic')),
-                  _buildToolbarButton(Icons.format_underlined, 'underline',
-                      () => controller.execCommand('underline')),
-                  _buildToolbarButton(
-                      Icons.format_list_bulleted,
-                      'insertUnorderedList',
-                      () => controller.execCommand('insertUnorderedList')),
-                  _buildToolbarButton(
-                      Icons.format_list_numbered,
-                      'insertOrderedList',
-                      () => controller.execCommand('insertOrderedList')),
-                  _buildToolbarButton(Icons.format_align_left, 'justifyLeft',
-                      () => controller.execCommand('justifyLeft')),
-                  _buildToolbarButton(
-                      Icons.format_align_center,
-                      'justifyCenter',
-                      () => controller.execCommand('justifyCenter')),
-                  _buildToolbarButton(Icons.format_align_right, 'justifyRight',
-                      () => controller.execCommand('justifyRight')),
-                  _buildToolbarButton(Icons.link, 'link', () => _insertLink()),
-                  _buildToolbarButton(
-                      Icons.image, 'image', () => _insertImage()),
+                  Container(
+                    height: 120, // Fixed height for toolbar
+                    decoration: BoxDecoration(
+                      color: appColor(context).appTheme.fieldCardBg,
+                      border: Border(
+                        bottom: BorderSide(
+                          color: appColor(context).appTheme.stroke,
+                          width: 1,
+                        ),
+                      ),
+                    ),
+                    child: SingleChildScrollView(
+                      child: Theme(
+                        data: Theme.of(context).copyWith(
+                          textTheme: TextTheme(
+                            bodyMedium: appCss.dmDenseMedium14.textColor(
+                              appColor(context).appTheme.darkText,
+                            ),
+                            labelLarge: appCss.dmDenseMedium14.textColor(
+                              appColor(context).appTheme.darkText,
+                            ),
+                          ),
+                          iconTheme: IconThemeData(
+                            color: appColor(context).appTheme.darkText,
+                          ),
+                        ),
+                        child: Column(
+                          children: [
+                            QuillSimpleToolbar(
+                              controller: _controller,
+                              config: const QuillSimpleToolbarConfig(
+                                showFontFamily: true,
+                                showFontSize: true,
+                                showBoldButton: true,
+                                showItalicButton: true,
+                                showUnderLineButton: true,
+                                showStrikeThrough: true,
+                                showInlineCode: true,
+                                showColorButton: true,
+                                showBackgroundColorButton: true,
+                                showClearFormat: true,
+                                showAlignmentButtons: true,
+                                showLeftAlignment: true,
+                                showCenterAlignment: true,
+                                showRightAlignment: true,
+                                showJustifyAlignment: true,
+                                showHeaderStyle: true,
+                                showListNumbers: true,
+                                showListBullets: true,
+                                showListCheck: true,
+                                showCodeBlock: true,
+                                showQuote: true,
+                                showIndent: true,
+                                showLink: true,
+                                multiRowsDisplay: true,
+                              ),
+                            ),
+                            // Custom image button row
+                            Container(
+                              padding: const EdgeInsets.symmetric(
+                                  horizontal: 8.0, vertical: 4.0),
+                              child: Row(
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      Icons.image,
+                                      color:
+                                          appColor(context).appTheme.darkText,
+                                      size: 20,
+                                    ),
+                                    tooltip: 'Insert Image',
+                                    onPressed: _isImageProcessing
+                                        ? null
+                                        : _showImageSourceDialog,
+                                    style: IconButton.styleFrom(
+                                      backgroundColor:
+                                          appColor(context).appTheme.whiteBg,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
+                  Divider(
+                    height: 1,
+                    thickness: 1,
+                    color: appColor(context).appTheme.stroke,
+                  ),
+                  Expanded(
+                    child: Container(
+                      padding: const EdgeInsets.all(8.0),
+                      color: appColor(context).appTheme.whiteBg,
+                      child: QuillEditor.basic(
+                        controller: _controller,
+                        config: QuillEditorConfig(
+                          placeholder: language(context, appFonts.writeANote),
+                          padding: const EdgeInsets.all(16),
+                          autoFocus: false,
+                          scrollable: true,
+                          expands: false,
+                          scrollPhysics: const ClampingScrollPhysics(),
+                          embedBuilders: [
+                            CustomImageEmbedBuilder(),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ),
                 ],
               ),
             ),
-            // HTML Editor
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(Insets.i8),
-                child: Column(
-                  children: [
-                    // Horizontal formatting toolbar
-                    Container(
-                      height: 50,
-                      width: double.infinity,
-                      decoration: BoxDecoration(
-                        color: appColor(context).appTheme.fieldCardBg,
-                        borderRadius: BorderRadius.circular(8),
-                      ),
-                      padding: const EdgeInsets.symmetric(horizontal: 12),
-                      child: Row(
+            // Loading overlay
+            if (_isImageProcessing)
+              Container(
+                color: Colors.black.withOpacity(0.3),
+                child: Center(
+                  child: Card(
+                    elevation: 4,
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
+                      child: Column(
+                        mainAxisSize: MainAxisSize.min,
                         children: [
-                          // Text format dropdown
-                          Expanded(
-                            flex: 1,
-                            child: _buildFormatDropdown(context),
+                          CircularProgressIndicator(
+                            color: appColor(context).appTheme.primary,
                           ),
-                          const SizedBox(width: 8),
-                          // Font family dropdown
-                          Expanded(
-                            flex: 1,
-                            child: _buildFontDropdown(context),
+                          const SizedBox(height: 16),
+                          Text(
+                            language(context, "processingImage"),
+                            style: appCss.dmDenseMedium14.textColor(
+                              appColor(context).appTheme.darkText,
+                            ),
                           ),
-                          // Add more horizontal toolbar items here if needed
                         ],
                       ),
                     ),
-                    const SizedBox(height: 8),
-                    // Editor
-                    Expanded(
-                      child: HtmlEditor(
-                        controller: controller,
-                        htmlEditorOptions: HtmlEditorOptions(
-                          hint: language(context, appFonts.writeANote),
-                          initialText: _initialContent,
-                          shouldEnsureVisible: false,
-                          autoAdjustHeight: false,
-                          adjustHeightForKeyboard: false,
-                          androidUseHybridComposition: true,
-                          spellCheck: false,
-                        ),
-                        htmlToolbarOptions: HtmlToolbarOptions(
-                          toolbarType: ToolbarType.nativeGrid,
-                          defaultToolbarButtons: [],
-                          toolbarPosition: ToolbarPosition.custom,
-                        ),
-                        otherOptions: OtherOptions(
-                          height: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.transparent),
-                          ),
-                        ),
-                        callbacks: Callbacks(
-                          onInit: () {
-                            controller.setText(_initialContent);
-                          },
-                          onFocus: () {
-                            _checkActiveFormats();
-                          },
-                          onBlur: () {
-                            _checkActiveFormats();
-                          },
-                          onKeyUp: (keyCode) {
-                            _checkActiveFormats();
-                          },
-                          onKeyDown: (keyCode) {
-                            _checkActiveFormats();
-                          },
-                          onMouseUp: () {
-                            _checkActiveFormats();
-                          },
-                          onChangeContent: (String? changed) {
-                            _checkActiveFormats();
-                          },
-                        ),
-                      ),
-                    ),
-                  ],
+                  ),
                 ),
               ),
-            ),
           ],
         ),
       ),
-    );
-  }
-
-  Widget _buildToolbarButton(
-      IconData icon, String formatCommand, VoidCallback onPressed) {
-    final bool isActive = _activeFormats[formatCommand] ?? false;
-
-    return Padding(
-      padding: const EdgeInsets.all(4.0),
-      child: IconButton(
-        icon: Icon(
-          icon,
-          color: isActive
-              ? appColor(context).appTheme.primary
-              : appColor(context).appTheme.darkText,
-          size: 20,
-        ),
-        onPressed: () {
-          setState(() {
-            // Toggle state for simple formatting options
-            if (['bold', 'italic', 'underline'].contains(formatCommand)) {
-              _activeFormats[formatCommand] = !isActive;
-            }
-
-            // For alignment options, only one can be active at a time
-            if (['justifyLeft', 'justifyCenter', 'justifyRight']
-                .contains(formatCommand)) {
-              _activeFormats['justifyLeft'] =
-                  formatCommand == 'justifyLeft' ? true : false;
-              _activeFormats['justifyCenter'] =
-                  formatCommand == 'justifyCenter' ? true : false;
-              _activeFormats['justifyRight'] =
-                  formatCommand == 'justifyRight' ? true : false;
-            }
-
-            // For list options, toggle the specific list type
-            if (['insertUnorderedList', 'insertOrderedList']
-                .contains(formatCommand)) {
-              _activeFormats[formatCommand] = !isActive;
-            }
-          });
-
-          onPressed();
-        },
-        style: IconButton.styleFrom(
-          backgroundColor: isActive
-              ? appColor(context).appTheme.primary.withOpacity(0.1)
-              : appColor(context).appTheme.whiteBg,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(8),
-          ),
-        ),
-      ),
-    );
-  }
-
-  void _insertLink() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        final urlController = TextEditingController();
-        final textController = TextEditingController();
-
-        return AlertDialog(
-          title: Text('Insert Link'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: textController,
-                decoration: InputDecoration(
-                  labelText: 'Link Text',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: urlController,
-                decoration: InputDecoration(
-                  labelText: 'URL',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (urlController.text.isNotEmpty &&
-                    textController.text.isNotEmpty) {
-                  controller.insertHtml(
-                      '<a href="${urlController.text}">${textController.text}</a>');
-                }
-                Navigator.pop(context);
-              },
-              child: Text('Insert'),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
-  /// Updates UI to reflect active formats by checking the current selection state
-  void _checkActiveFormats() async {
-    try {
-      // Use JavaScript to check the current formatting state
-      String jsScript = '''
-        (function() {
-          var formats = {
-            bold: document.queryCommandState('bold'),
-            italic: document.queryCommandState('italic'),
-            underline: document.queryCommandState('underline'),
-            insertUnorderedList: document.queryCommandState('insertUnorderedList'),
-            insertOrderedList: document.queryCommandState('insertOrderedList'),
-            justifyLeft: document.queryCommandState('justifyLeft'),
-            justifyCenter: document.queryCommandState('justifyCenter'),
-            justifyRight: document.queryCommandState('justifyRight')
-          };
-          
-          // Get the current block format
-          var formatBlock = '';
-          var fontName = '';
-          var node = window.getSelection().focusNode;
-          while (node && node.nodeType !== 1) {
-            node = node.parentNode;
-          }
-          if (node) {
-            var tagName = node.tagName.toLowerCase();
-            if (['h1', 'h2', 'h3', 'h4', 'blockquote', 'pre', 'p'].includes(tagName)) {
-              formatBlock = tagName;
-            }
-            
-            // Get computed font family
-            var computedStyle = window.getComputedStyle(node);
-            fontName = computedStyle.fontFamily || document.queryCommandValue('fontName');
-          }
-          
-          formats.formatBlock = formatBlock;
-          formats.fontName = fontName;
-          return JSON.stringify(formats);
-        })()
-      ''';
-
-      // Execute JavaScript and get result
-      final result = await controller.editorController
-          ?.evaluateJavascript(source: jsScript);
-
-      if (result != null && result.isNotEmpty) {
-        try {
-          // Parse result and update state
-          final Map<String, dynamic> formats = jsonDecode(result);
-
-          if (mounted) {
-            setState(() {
-              formats.forEach((key, value) {
-                if (_activeFormats.containsKey(key)) {
-                  _activeFormats[key] = value == true;
-                }
-              });
-
-              // Update active format
-              if (formats.containsKey('formatBlock') &&
-                  formats['formatBlock'] != null &&
-                  formats['formatBlock'].isNotEmpty) {
-                _activeFormat = formats['formatBlock'];
-              }
-
-              // Update active font only if it wasn't manually changed or if we detect a different font in the selection
-              if (formats.containsKey('fontName') &&
-                  formats['fontName'] != null &&
-                  formats['fontName'].isNotEmpty) {
-                String detectedFont = formats['fontName'];
-
-                // If font was manually changed recently, don't override it
-                bool canUpdateFont = _lastManualFontChange == null ||
-                    DateTime.now().difference(_lastManualFontChange!) >
-                        Duration(seconds: 2);
-
-                if (canUpdateFont) {
-                  // Find the closest matching font from our available fonts
-                  bool fontFound = false;
-                  for (String font in _availableFonts) {
-                    if (detectedFont
-                        .toLowerCase()
-                        .contains(font.split(',')[0].toLowerCase())) {
-                      if (_activeFont != font) {
-                        _activeFont = font;
-                      }
-                      fontFound = true;
-                      break;
-                    }
-                  }
-                  // If no match found and font wasn't manually changed, use default
-                  if (!fontFound && _lastManualFontChange == null) {
-                    _activeFont = _availableFonts[0];
-                  }
-                }
-              }
-            });
-          }
-        } catch (e) {
-          // JSON parsing error, ignore
-        }
-      }
-    } catch (e) {
-      // Ignore JavaScript execution errors
-    }
-  }
-
-  void _insertImage() {
-    showDialog(
-      context: context,
-      builder: (context) {
-        final urlController = TextEditingController();
-        final altController = TextEditingController();
-
-        return AlertDialog(
-          title: Text('Insert Image'),
-          content: Column(
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              TextField(
-                controller: urlController,
-                decoration: InputDecoration(
-                  labelText: 'Image URL',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-              SizedBox(height: 16),
-              TextField(
-                controller: altController,
-                decoration: InputDecoration(
-                  labelText: 'Alt Text',
-                  border: OutlineInputBorder(),
-                ),
-              ),
-            ],
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('Cancel'),
-            ),
-            TextButton(
-              onPressed: () {
-                if (urlController.text.isNotEmpty) {
-                  controller.insertHtml(
-                      '<img src="${urlController.text}" alt="${altController.text}" style="max-width: 100%; height: auto;">');
-                }
-                Navigator.pop(context);
-              },
-              child: Text('Insert'),
-            ),
-          ],
-        );
-      },
     );
   }
 
   void _showToast(BuildContext context, String message) {
+    if (!mounted) return;
+
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(message)),
-    );
-  }
-
-  /// Builds a button for the horizontal text style toolbar
-  Widget _buildTextStyleButton(
-      BuildContext context, String label, VoidCallback onPressed) {
-    // Determine if this button is active
-    bool isActive = false;
-    String formatTag = 'p'; // Default
-
-    switch (label) {
-      case 'Normal':
-        formatTag = 'p';
-        break;
-      case 'H1':
-        formatTag = 'h1';
-        break;
-      case 'H2':
-        formatTag = 'h2';
-        break;
-      case 'H3':
-        formatTag = 'h3';
-        break;
-      case 'H4':
-        formatTag = 'h4';
-        break;
-      case 'Quote':
-        formatTag = 'blockquote';
-        break;
-      case 'Code':
-        formatTag = 'pre';
-        break;
-    }
-
-    isActive = _activeFormat == formatTag;
-
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 4.0),
-      child: TextButton(
-        onPressed: () {
-          onPressed();
-          setState(() {
-            _activeFormat = formatTag;
-          });
-        },
-        style: TextButton.styleFrom(
-          padding: const EdgeInsets.symmetric(horizontal: 12),
-          backgroundColor: isActive
-              ? appColor(context).appTheme.primary.withOpacity(0.1)
-              : appColor(context).appTheme.whiteBg,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(6),
-            side: BorderSide(
-              color: isActive
-                  ? appColor(context).appTheme.primary
-                  : appColor(context).appTheme.lightText.withOpacity(0.3),
-            ),
-          ),
-        ),
-        child: Text(
-          label,
-          style: appCss.dmDenseMedium14.textColor(
-            isActive
-                ? appColor(context).appTheme.primary
-                : appColor(context).appTheme.darkText,
-          ),
-        ),
+      SnackBar(
+        content: Text(message),
+        backgroundColor: appColor(context).appTheme.primary,
       ),
     );
-  }
-
-  Widget _buildFormatDropdown(BuildContext context) {
-    return Container(
-      constraints: const BoxConstraints(minHeight: 36),
-      decoration: BoxDecoration(
-        color: appColor(context).appTheme.whiteBg,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-            color: appColor(context).appTheme.lightText.withOpacity(0.3)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Format:',
-            style: appCss.dmDenseMedium12.textColor(
-              appColor(context).appTheme.lightText,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Expanded(
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                value: _activeFormat,
-                selectedItemBuilder: (BuildContext context) {
-                  return ['p', 'h1', 'h2', 'h3', 'h4', 'blockquote', 'pre']
-                      .map<Widget>((String value) {
-                    String label = _getFormatLabel(value);
-                    return Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        label,
-                        style: _getFormatStyle(
-                            value, appColor(context).appTheme.darkText),
-                      ),
-                    );
-                  }).toList();
-                },
-                icon: Icon(Icons.arrow_drop_down,
-                    color: appColor(context).appTheme.darkText, size: 20),
-                elevation: 8,
-                isDense: true,
-                isExpanded: true,
-                borderRadius: BorderRadius.circular(8),
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    setState(() {
-                      _activeFormat = newValue;
-                    });
-                    controller.execCommand('formatBlock', argument: newValue);
-                  }
-                },
-                items: [
-                  _buildDropdownItem('p', 'Normal'),
-                  _buildDropdownItem('h1', 'Heading 1'),
-                  _buildDropdownItem('h2', 'Heading 2'),
-                  _buildDropdownItem('h3', 'Heading 3'),
-                  _buildDropdownItem('h4', 'Heading 4'),
-                  _buildDropdownItem('blockquote', 'Quote'),
-                  _buildDropdownItem('pre', 'Code'),
-                ],
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  DropdownMenuItem<String> _buildDropdownItem(String value, String label) {
-    return DropdownMenuItem<String>(
-      value: value,
-      child: Text(
-        label,
-        style: value.startsWith('h')
-            ? TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: value == 'h1'
-                    ? 18
-                    : value == 'h2'
-                        ? 16
-                        : value == 'h3'
-                            ? 14
-                            : 12,
-              )
-            : value == 'blockquote'
-                ? const TextStyle(fontStyle: FontStyle.italic)
-                : value == 'pre'
-                    ? const TextStyle(fontFamily: 'monospace')
-                    : null,
-      ),
-    );
-  }
-
-  Widget _buildFontDropdown(BuildContext context) {
-    // Make sure the active font is one of the available options
-    if (!_availableFonts.contains(_activeFont)) {
-      _activeFont =
-          _availableFonts[0]; // Default to first font if font not found
-    }
-
-    return Container(
-      constraints: const BoxConstraints(minHeight: 36),
-      decoration: BoxDecoration(
-        color: appColor(context).appTheme.whiteBg,
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(
-            color: appColor(context).appTheme.lightText.withOpacity(0.3)),
-      ),
-      padding: const EdgeInsets.symmetric(horizontal: 8),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-          Text(
-            'Font:',
-            style: appCss.dmDenseMedium12.textColor(
-              appColor(context).appTheme.lightText,
-            ),
-          ),
-          const SizedBox(width: 4),
-          Expanded(
-            child: DropdownButtonHideUnderline(
-              child: DropdownButton<String>(
-                key: ValueKey(_activeFont),
-                value: _activeFont,
-                selectedItemBuilder: (BuildContext context) {
-                  return _availableFonts.map<Widget>((String font) {
-                    String displayName = font.split(',')[0].trim();
-                    String fontFamily = _getFontFamily(displayName);
-                    return Container(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        displayName,
-                        style: TextStyle(
-                          fontFamily: fontFamily,
-                          fontWeight: displayName == 'Impact'
-                              ? FontWeight.bold
-                              : FontWeight.normal,
-                          color: appColor(context).appTheme.darkText,
-                        ),
-                      ),
-                    );
-                  }).toList();
-                },
-                icon: Icon(Icons.arrow_drop_down,
-                    color: appColor(context).appTheme.darkText, size: 20),
-                elevation: 8,
-                isDense: true,
-                isExpanded: true,
-                borderRadius: BorderRadius.circular(8),
-                onChanged: (String? newValue) {
-                  if (newValue != null) {
-                    print('Font manually changed to: $newValue'); // Debug log
-                    setState(() {
-                      _activeFont = newValue;
-                      _lastManualFontChange = DateTime.now();
-                    });
-                    controller.execCommand('fontName', argument: newValue);
-                    print('Active font set to: $_activeFont'); // Debug log
-                  }
-                },
-                items: _availableFonts.map((font) {
-                  String displayName = font.split(',')[0].trim();
-                  return _buildFontDropdownItem(font, displayName);
-                }).toList(),
-              ),
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-
-  DropdownMenuItem<String> _buildFontDropdownItem(String value, String label) {
-    // Map font family names to system fonts that are available on the device
-    String fontFamily;
-    switch (label) {
-      case 'Arial':
-        fontFamily = 'sans-serif';
-        break;
-      case 'Times New Roman':
-        fontFamily = 'serif';
-        break;
-      case 'Courier New':
-        fontFamily = 'monospace';
-        break;
-      case 'Georgia':
-        fontFamily = 'serif';
-        break;
-      case 'Helvetica':
-        fontFamily = 'sans-serif';
-        break;
-      case 'Impact':
-        fontFamily = 'sans-serif';
-        break;
-      case 'Tahoma':
-        fontFamily = 'sans-serif';
-        break;
-      case 'Trebuchet MS':
-        fontFamily = 'sans-serif';
-        break;
-      case 'Verdana':
-        fontFamily = 'sans-serif';
-        break;
-      default:
-        fontFamily = 'sans-serif';
-    }
-
-    return DropdownMenuItem<String>(
-      value: value,
-      child: Text(
-        label,
-        style: TextStyle(
-          fontFamily: fontFamily,
-          fontWeight: label == 'Impact' ? FontWeight.bold : FontWeight.normal,
-        ),
-      ),
-    );
-  }
-
-  String _getFontFamily(String displayName) {
-    // Map font family names to system fonts that are available on the device
-    switch (displayName) {
-      case 'Arial':
-        return 'sans-serif';
-      case 'Times New Roman':
-        return 'serif';
-      case 'Courier New':
-        return 'monospace';
-      case 'Georgia':
-        return 'serif';
-      case 'Helvetica':
-        return 'sans-serif';
-      case 'Impact':
-        return 'sans-serif';
-      case 'Tahoma':
-        return 'sans-serif';
-      case 'Trebuchet MS':
-        return 'sans-serif';
-      case 'Verdana':
-        return 'sans-serif';
-      default:
-        return 'sans-serif';
-    }
-  }
-
-  String _getFormatLabel(String value) {
-    switch (value) {
-      case 'p':
-        return 'Normal';
-      case 'h1':
-        return 'H1';
-      case 'h2':
-        return 'H2';
-      case 'h3':
-        return 'H3';
-      case 'h4':
-        return 'H4';
-      case 'blockquote':
-        return 'Quote';
-      case 'pre':
-        return 'Code';
-      default:
-        return value;
-    }
-  }
-
-  TextStyle _getFormatStyle(String value, Color color) {
-    switch (value) {
-      case 'p':
-        return TextStyle(fontWeight: FontWeight.normal, color: color);
-      case 'h1':
-        return TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 18, color: color);
-      case 'h2':
-        return TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 16, color: color);
-      case 'h3':
-        return TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 14, color: color);
-      case 'h4':
-        return TextStyle(
-            fontWeight: FontWeight.bold, fontSize: 12, color: color);
-      case 'blockquote':
-        return TextStyle(fontStyle: FontStyle.italic, color: color);
-      case 'pre':
-        return TextStyle(fontFamily: 'monospace', color: color);
-      default:
-        return TextStyle(color: color);
-    }
   }
 }

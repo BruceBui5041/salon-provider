@@ -584,4 +584,8 @@ dynamic vi = {
   "paid": "Đã thanh toán",
   "vietnamese": "Tiếng Việt",
   "platformFee": "Phí nền tảng",
+  "chooseImageSource": "Chọn nguồn hình ảnh",
+  "gallery": "Thư viện",
+  "camera": "Máy ảnh",
+  "processingImage": "Đang xử lý hình ảnh...",
 };

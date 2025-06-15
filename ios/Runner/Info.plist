@@ -31,6 +31,10 @@
 		</array>
 		<key>LSRequiresIPhoneOS</key>
 		<true />
+		<key>NSCameraUsageDescription</key>
+		<string>This app needs camera access to take photos for featured points</string>
+		<key>NSPhotoLibraryUsageDescription</key>
+		<string>This app needs photo library access to select images for featured points</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
 		<key>UILaunchStoryboardName</key>

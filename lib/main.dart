@@ -11,6 +11,7 @@ import 'package:salon_provider/providers/auth_provider/register_provider.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:flutter_quill/flutter_quill.dart';
 import 'firebase_options.dart';
 import 'common/languages/app_language.dart';
 import 'common/theme/app_theme.dart';
@@ -170,7 +171,8 @@ class MyApp extends StatelessWidget {
                             AppLocalizationDelagate(),
                             GlobalMaterialLocalizations.delegate,
                             GlobalWidgetsLocalizations.delegate,
-                            GlobalCupertinoLocalizations.delegate
+                            GlobalCupertinoLocalizations.delegate,
+                            FlutterQuillLocalizations.delegate,
                           ],
                           supportedLocales: appArray.localList,
                           themeMode: theme.theme,
