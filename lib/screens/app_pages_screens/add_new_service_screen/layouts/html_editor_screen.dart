@@ -393,7 +393,6 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
         return !_isSaving && !_isImageProcessing;
       },
       child: Scaffold(
-        backgroundColor: appColor(context).appTheme.whiteBg,
         resizeToAvoidBottomInset: true,
         appBar: AppBarCommon(
           title: language(context, appFonts.featuredPoints),
@@ -468,14 +467,16 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
         body: Stack(
           children: [
             SafeArea(
-              child: Column(
+              child: Row(
                 children: [
+                  // Left vertical toolbar
                   Container(
-                    height: 120, // Fixed height for toolbar
+                    width: 50,
+                    height: double.infinity,
                     decoration: BoxDecoration(
                       color: appColor(context).appTheme.fieldCardBg,
                       border: Border(
-                        bottom: BorderSide(
+                        right: BorderSide(
                           color: appColor(context).appTheme.stroke,
                           width: 1,
                         ),
@@ -483,103 +484,261 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
                     ),
                     child: SingleChildScrollView(
                       child: Theme(
-                        data: Theme.of(context).copyWith(
-                          textTheme: TextTheme(
-                            bodyMedium: appCss.dmDenseMedium14.textColor(
-                              appColor(context).appTheme.darkText,
-                            ),
-                            labelLarge: appCss.dmDenseMedium14.textColor(
-                              appColor(context).appTheme.darkText,
-                            ),
+                        data: ThemeData(
+                          // Force light theme for the vertical toolbar
+                          brightness: Brightness.light,
+                          scaffoldBackgroundColor:
+                              appColor(context).appTheme.whiteBg,
+                          cardColor: appColor(context).appTheme.whiteBg,
+                          dialogBackgroundColor:
+                              appColor(context).appTheme.whiteBg,
+                          canvasColor: appColor(context).appTheme.whiteBg,
+                          // Text colors
+                          textTheme: Typography.blackMountainView.apply(
+                            bodyColor: appColor(context).appTheme.darkText,
+                            displayColor: appColor(context).appTheme.darkText,
                           ),
+                          // Icon theme
                           iconTheme: IconThemeData(
                             color: appColor(context).appTheme.darkText,
+                            size: 20,
+                          ),
+                          // Dropdown styling
+                          popupMenuTheme: PopupMenuThemeData(
+                            color: appColor(context).appTheme.whiteBg,
+                            textStyle: TextStyle(
+                                color: appColor(context).appTheme.darkText,
+                                fontSize: 14),
                           ),
                         ),
                         child: Column(
+                          mainAxisSize: MainAxisSize.min,
                           children: [
-                            QuillSimpleToolbar(
+                            QuillToolbarHistoryButton(
+                              isUndo: true,
                               controller: _controller,
-                              config: const QuillSimpleToolbarConfig(
-                                showFontFamily: true,
-                                showFontSize: true,
-                                showBoldButton: true,
-                                showItalicButton: true,
-                                showUnderLineButton: true,
-                                showStrikeThrough: true,
-                                showInlineCode: true,
-                                showColorButton: true,
-                                showBackgroundColorButton: true,
-                                showClearFormat: true,
-                                showAlignmentButtons: true,
-                                showLeftAlignment: true,
-                                showCenterAlignment: true,
-                                showRightAlignment: true,
-                                showJustifyAlignment: true,
-                                showHeaderStyle: true,
-                                showListNumbers: true,
-                                showListBullets: true,
-                                showListCheck: true,
-                                showCodeBlock: true,
-                                showQuote: true,
-                                showIndent: true,
-                                showLink: true,
-                                multiRowsDisplay: true,
-                              ),
                             ),
-                            // Custom image button row
-                            Container(
-                              padding: const EdgeInsets.symmetric(
-                                  horizontal: 8.0, vertical: 4.0),
-                              child: Row(
-                                children: [
-                                  IconButton(
-                                    icon: Icon(
-                                      Icons.image,
-                                      color:
-                                          appColor(context).appTheme.darkText,
-                                      size: 20,
-                                    ),
-                                    tooltip: 'Insert Image',
-                                    onPressed: _isImageProcessing
-                                        ? null
-                                        : _showImageSourceDialog,
-                                    style: IconButton.styleFrom(
-                                      backgroundColor:
-                                          appColor(context).appTheme.whiteBg,
-                                    ),
-                                  ),
-                                ],
-                              ),
+                            QuillToolbarHistoryButton(
+                              isUndo: false,
+                              controller: _controller,
                             ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            QuillToolbarToggleStyleButton(
+                              options:
+                                  const QuillToolbarToggleStyleButtonOptions(),
+                              controller: _controller,
+                              attribute: Attribute.bold,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              options:
+                                  const QuillToolbarToggleStyleButtonOptions(),
+                              controller: _controller,
+                              attribute: Attribute.italic,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.underline,
+                            ),
+                            QuillToolbarClearFormatButton(
+                              controller: _controller,
+                            ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            // Alignment tools
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.leftAlignment,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.centerAlignment,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.rightAlignment,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.justifyAlignment,
+                            ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            IconButton(
+                              icon: Icon(
+                                Icons.image,
+                                color: appColor(context).appTheme.darkText,
+                                size: 20,
+                              ),
+                              tooltip: 'Insert Image',
+                              onPressed: _isImageProcessing
+                                  ? null
+                                  : _showImageSourceDialog,
+                            ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            QuillToolbarColorButton(
+                              controller: _controller,
+                              isBackground: false,
+                            ),
+                            QuillToolbarColorButton(
+                              controller: _controller,
+                              isBackground: true,
+                            ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            QuillToolbarToggleCheckListButton(
+                              controller: _controller,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.ol,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.ul,
+                            ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.inlineCode,
+                            ),
+                            QuillToolbarToggleStyleButton(
+                              controller: _controller,
+                              attribute: Attribute.blockQuote,
+                            ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            QuillToolbarIndentButton(
+                              controller: _controller,
+                              isIncrease: true,
+                            ),
+                            QuillToolbarIndentButton(
+                              controller: _controller,
+                              isIncrease: false,
+                            ),
+                            Divider(
+                                height: 2,
+                                color: appColor(context).appTheme.stroke),
+                            QuillToolbarLinkStyleButton(
+                                controller: _controller),
                           ],
                         ),
                       ),
                     ),
                   ),
-                  Divider(
-                    height: 1,
-                    thickness: 1,
-                    color: appColor(context).appTheme.stroke,
-                  ),
+                  // Main content area (horizontal toolbar + editor)
                   Expanded(
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      color: appColor(context).appTheme.whiteBg,
-                      child: QuillEditor.basic(
-                        controller: _controller,
-                        config: QuillEditorConfig(
-                          placeholder: language(context, appFonts.writeANote),
-                          padding: const EdgeInsets.all(16),
-                          autoFocus: false,
-                          scrollable: true,
-                          expands: false,
-                          scrollPhysics: const ClampingScrollPhysics(),
-                          embedBuilders: [
-                            CustomImageEmbedBuilder(),
-                          ],
+                    child: Column(
+                      children: [
+                        // Top horizontal toolbar
+                        Container(
+                          height: 45,
+                          decoration: BoxDecoration(
+                            color: appColor(context).appTheme.fieldCardBg,
+                            border: Border(
+                              bottom: BorderSide(
+                                color: appColor(context).appTheme.stroke,
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                          child: SingleChildScrollView(
+                            scrollDirection: Axis.horizontal,
+                            child: Theme(
+                              data: ThemeData(
+                                // Force light theme for the horizontal toolbar
+                                brightness: Brightness.light,
+                                scaffoldBackgroundColor:
+                                    appColor(context).appTheme.whiteBg,
+                                cardColor: appColor(context).appTheme.whiteBg,
+                                dialogBackgroundColor:
+                                    appColor(context).appTheme.whiteBg,
+                                canvasColor: appColor(context).appTheme.whiteBg,
+                                // Text colors
+                                textTheme: Typography.blackMountainView.apply(
+                                  bodyColor:
+                                      appColor(context).appTheme.darkText,
+                                  displayColor:
+                                      appColor(context).appTheme.darkText,
+                                ),
+                                // Icon theme
+                                iconTheme: IconThemeData(
+                                  color: appColor(context).appTheme.darkText,
+                                  size: 20,
+                                ),
+                                // Dropdown styling
+                                popupMenuTheme: PopupMenuThemeData(
+                                  color: appColor(context).appTheme.whiteBg,
+                                  textStyle: TextStyle(
+                                      color:
+                                          appColor(context).appTheme.darkText,
+                                      fontSize: 14),
+                                ),
+                                // Dropdown button theme
+                                buttonTheme: ButtonThemeData(
+                                  textTheme: ButtonTextTheme.normal,
+                                  buttonColor:
+                                      appColor(context).appTheme.whiteBg,
+                                ),
+                              ),
+                              child: Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 4.0),
+                                child: Row(
+                                  children: [
+                                    QuillToolbarFontFamilyButton(
+                                      controller: _controller,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    QuillToolbarFontSizeButton(
+                                      controller: _controller,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    QuillToolbarSelectHeaderStyleDropdownButton(
+                                      controller: _controller,
+                                    ),
+                                    const SizedBox(width: 8),
+                                    QuillToolbarSelectLineHeightStyleDropdownButton(
+                                      controller: _controller,
+                                    ),
+                                    // Removed alignment button as it's now in the vertical toolbar
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        // Editor area
+                        Expanded(
+                          child: Container(
+                            color: appColor(context).appTheme.whiteBg,
+                            child: QuillEditor.basic(
+                              controller: _controller,
+                              config: QuillEditorConfig(
+                                placeholder:
+                                    language(context, appFonts.writeANote),
+                                padding: const EdgeInsets.all(16),
+                                autoFocus: false,
+                                scrollable: true,
+                                expands: false,
+                                scrollPhysics: const ClampingScrollPhysics(),
+                                embedBuilders: [
+                                  CustomImageEmbedBuilder(),
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
                   ),
                 ],
@@ -588,7 +747,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
             // Loading overlay
             if (_isImageProcessing)
               Container(
-                color: Colors.black.withOpacity(0.3),
+                color: appColor(context).appTheme.whiteBg.withAlpha(30),
                 child: Center(
                   child: Card(
                     elevation: 4,
