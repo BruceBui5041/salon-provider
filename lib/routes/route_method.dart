@@ -1,4 +1,4 @@
-import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/html_editor_screen.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/description_editor_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/edit_service_screen/edit_service_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/payment_qr_screen/payment_qr_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/pending_booking_screen.dart';
@@ -76,6 +76,6 @@ class AppRoute {
     // routeName.editService: (p0) => EditServiceScreen(),
     routeName.customPendingBooking: (p0) => PendingBookingScreen(),
     routeName.customServiceDetails: (p0) => ServicesDetailsScreen(),
-    routeName.htmlEditor: (p0) => const HtmlEditorScreen(),
+    routeName.serviceDescriptionEditor: (p0) => const HtmlEditorScreen(),
   };
 }

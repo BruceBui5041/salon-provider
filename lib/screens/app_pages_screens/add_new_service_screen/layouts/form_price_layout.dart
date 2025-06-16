@@ -1,6 +1,6 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/error_text_layout.dart';
-import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/featured_points_layout.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/service_description_layout.dart';
 
 import '../../../../config.dart';
 
@@ -18,7 +18,7 @@ class FormPriceLayout extends StatelessWidget {
             // _buildPriceSection(context, value),
             _buildAmountSection(context, value),
             // _buildTaxSection(context, value),
-            const FeaturedPointsLayout(),
+            const ServiceDescriptionLayout(),
             // _dropdownDraftService(context, value),
             // _buildStatusSection(context, value),
           ],

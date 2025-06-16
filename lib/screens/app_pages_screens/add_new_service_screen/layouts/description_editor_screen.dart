@@ -64,12 +64,8 @@ class CustomImageEmbedBuilder extends EmbedBuilder {
     }
 
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8.0),
-      child: SizedBox(
-        height: 200,
-        width: double.infinity,
-        child: imageWidget,
-      ),
+      padding: const EdgeInsets.symmetric(vertical: Insets.i8),
+      child: imageWidget,
     );
   }
 

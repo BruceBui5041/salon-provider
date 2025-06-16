@@ -3,13 +3,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/add_new_service_provider.dart';
-import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/html_editor_screen.dart';
+import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/description_editor_screen.dart';
 
 import '../../../../config.dart';
 
 /// A widget that displays featured points with rich text support
-class FeaturedPointsLayout extends StatelessWidget {
-  const FeaturedPointsLayout({super.key});
+class ServiceDescriptionLayout extends StatelessWidget {
+  const ServiceDescriptionLayout({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +36,7 @@ class FeaturedPointsLayout extends StatelessWidget {
                   TextButton(
                     onPressed: () => _navigateToHtmlEditor(context, value),
                     child: Text(
-                      language(context, "Edit"),
+                      language(context, appFonts.edit),
                       style: appCss.dmDenseMedium14.textColor(
                         appColor(context).appTheme.primary,
                       ),
@@ -55,17 +55,7 @@ class FeaturedPointsLayout extends StatelessWidget {
   /// Builds the Quill preview section
   Widget _buildQuillPreview(BuildContext context, AddNewServiceProvider value) {
     return Container(
-      height: 200,
       margin: const EdgeInsets.symmetric(horizontal: Insets.i20),
-      padding: const EdgeInsets.all(Insets.i12),
-      decoration: BoxDecoration(
-        color: appColor(context).appTheme.whiteBg,
-        borderRadius: BorderRadius.circular(AppRadius.r8),
-        border: Border.all(
-          color: appColor(context).appTheme.stroke,
-          width: 1,
-        ),
-      ),
       child: value.featuredPoints.text.isEmpty
           ? Center(
               child: Text(
@@ -100,39 +90,18 @@ class FeaturedPointsLayout extends StatelessWidget {
     }
 
     if (controller != null) {
-      return Theme(
-        data: Theme.of(context).copyWith(
-          textTheme: TextTheme(
-            bodyMedium: appCss.dmDenseMedium14.textColor(
-              appColor(context).appTheme.darkText,
-            ),
-            bodyLarge: appCss.dmDenseMedium16.textColor(
-              appColor(context).appTheme.darkText,
-            ),
-            bodySmall: appCss.dmDenseMedium12.textColor(
-              appColor(context).appTheme.darkText,
-            ),
-            labelLarge: appCss.dmDenseMedium14.textColor(
-              appColor(context).appTheme.darkText,
-            ),
-          ),
-          iconTheme: IconThemeData(
-            color: appColor(context).appTheme.darkText,
-          ),
-        ),
-        child: QuillEditor.basic(
-          controller: controller,
-          config: QuillEditorConfig(
-            showCursor: false,
-            autoFocus: false,
-            scrollable: true,
-            padding: EdgeInsets.zero,
-            expands: false,
-            scrollPhysics: const ClampingScrollPhysics(),
-            embedBuilders: [
-              CustomImageEmbedBuilder(),
-            ],
-          ),
+      return QuillEditor.basic(
+        controller: controller,
+        config: QuillEditorConfig(
+          showCursor: false,
+          autoFocus: false,
+          scrollable: true,
+          padding: EdgeInsets.zero,
+          expands: false,
+          scrollPhysics: const ClampingScrollPhysics(),
+          embedBuilders: [
+            CustomImageEmbedBuilder(),
+          ],
         ),
       );
     }
@@ -151,6 +120,6 @@ class FeaturedPointsLayout extends StatelessWidget {
   /// Navigates to the HTML editor screen
   void _navigateToHtmlEditor(
       BuildContext context, AddNewServiceProvider value) {
-    Navigator.of(context).pushNamed(routeName.htmlEditor);
+    Navigator.of(context).pushNamed(routeName.serviceDescriptionEditor);
   }
 }

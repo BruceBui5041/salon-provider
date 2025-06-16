@@ -55,25 +55,25 @@ class ServiceDescription extends StatelessWidget {
           height: 1,
           color: appColor(context).appTheme.stroke),
       const VSpace(Sizes.s17),
-      DescriptionLayoutCommon(
-              isExpanded: true,
-              icon: eSvgAssets.tagUser,
-              title: appFonts.noOfRequired,
-              subtitle: "2 servicemen")
-          .paddingSymmetric(horizontal: Insets.i25),
+      // DescriptionLayoutCommon(
+      //         isExpanded: true,
+      //         icon: eSvgAssets.tagUser,
+      //         title: appFonts.noOfRequired,
+      //         subtitle: "2 servicemen")
+      //     .paddingSymmetric(horizontal: Insets.i25),
       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Text(language(context, appFonts.description),
             style: appCss.dmDenseMedium12
                 .textColor(appColor(context).appTheme.lightText)),
         const VSpace(Sizes.s6),
         ReadMoreLayout(text: data?.serviceVersion?.description ?? ''),
-        const VSpace(Sizes.s20),
-        ServiceAreaLayout(
-            onTapAdd: () => route.pushNamed(context, routeName.locationList)),
-        const VSpace(Sizes.s15),
-        Text("\u2022 Foamjet tachnology removes dust 2x deeper.",
-            style: appCss.dmDenseMedium13
-                .textColor(appColor(context).appTheme.lightText))
+        // const VSpace(Sizes.s20),
+        // ServiceAreaLayout(
+        //     onTapAdd: () => route.pushNamed(context, routeName.locationList)),
+        // const VSpace(Sizes.s15),
+        // Text("\u2022 Foamjet tachnology removes dust 2x deeper.",
+        //     style: appCss.dmDenseMedium13
+        //         .textColor(appColor(context).appTheme.lightText))
       ])
           .paddingSymmetric(horizontal: Insets.i20)
           .paddingSymmetric(vertical: Insets.i20)
