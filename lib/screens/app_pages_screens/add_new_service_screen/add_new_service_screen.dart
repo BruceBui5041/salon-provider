@@ -35,7 +35,8 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
     if (serviceVersion?.isDraft() == true) {
       return language(context, appFonts.draft);
     }
-    if (serviceVersion?.publishedDate != null) {
+    if (serviceVersion?.status == ServiceVersionStatus.inactive.name &&
+        serviceVersion?.publishedDate != null) {
       return language(context, appFonts.published);
     }
 
@@ -89,10 +90,8 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                                         value.serviceSelected?.serviceVersion!
                                                 .title ??
                                             "",
-                                        style: appCss.dmDenseMedium16.textColor(
-                                            appColor(context)
-                                                .appTheme
-                                                .darkText),
+                                        style: appCss.dmDenseBold16.textColor(
+                                            appColor(context).appTheme.primary),
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
@@ -340,11 +339,6 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                               ),
                             ],
                           ),
-                          trailing:
-                              version.status == ServiceVersionStatus.active.name
-                                  ? const Icon(Icons.check_circle,
-                                      color: Colors.green)
-                                  : null,
                           onTap: () {
                             value.onDraftSelected(version);
                             value.setIsDraft(version.publishedDate == null);

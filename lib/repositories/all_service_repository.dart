@@ -44,12 +44,13 @@ class AllServiceRepository extends RepositoryConfig {
         Condition(source: "id", operator: "=", target: id),
       ]
     ], fields: [
+      FieldItem(field: "versions", orderBy: "id desc"),
       FieldItem(field: "versions.images"),
       FieldItem(field: "versions.main_image"),
       FieldItem(field: "service_version.main_image"),
       FieldItem(field: "service_version.images"),
       FieldItem(field: "service_version.category"),
-      FieldItem(field: "images"),
+      FieldItem(field: "images", orderBy: "id desc"),
       FieldItem(field: "service_version")
     ]).toJson());
     var res = Service.fromJson(response);
