@@ -24,7 +24,7 @@ class BookingStatusLayout extends StatelessWidget {
       case 'declined':
         return appColor(context).appTheme.red;
       case 'draft':
-        return appColor(context).appTheme.yellow;
+        return appColor(context).appTheme.ongoing;
       default:
         return color ?? appColor(context).appTheme.online;
     }

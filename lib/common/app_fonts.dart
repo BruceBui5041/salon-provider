@@ -567,4 +567,9 @@ class AppFonts {
   final generateQr = "generateQr";
   final showQr = "showQr";
   final platformFee = "platformFee";
+
+  // Add status strings
+  final draft = "draft";
+  final published = "published";
+  final publishing = "publishing";
 }

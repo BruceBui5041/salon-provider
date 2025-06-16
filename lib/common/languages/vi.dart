@@ -588,4 +588,9 @@ dynamic vi = {
   "gallery": "Thư viện",
   "camera": "Máy ảnh",
   "processingImage": "Đang xử lý hình ảnh...",
+
+  // Status strings
+  "draft": "Bản nháp",
+  "published": "Đã xuất bản",
+  "publishing": "Đang xuất bản",
 };

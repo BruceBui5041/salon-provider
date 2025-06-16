@@ -593,4 +593,9 @@ dynamic en = {
   "imageUrl": "Image URL",
   "enterImageUrl": "Enter Image URL",
   "insert": "Insert",
+
+  // Status strings
+  "draft": "Draft",
+  "published": "Published",
+  "publishing": "Publishing",
 };

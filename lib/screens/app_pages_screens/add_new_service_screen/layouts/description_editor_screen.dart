@@ -34,7 +34,7 @@ class CustomImageEmbedBuilder extends EmbedBuilder {
             width: double.infinity,
             height: 200,
             color: Colors.grey[300],
-            child: Icon(Icons.broken_image, color: Colors.red),
+            child: const Icon(Icons.broken_image, color: Colors.red),
           );
         },
       );
@@ -49,7 +49,7 @@ class CustomImageEmbedBuilder extends EmbedBuilder {
               width: double.infinity,
               height: 200,
               color: Colors.grey[300],
-              child: Icon(Icons.broken_image, color: Colors.red),
+              child: const Icon(Icons.broken_image, color: Colors.red),
             );
           },
         );
@@ -58,7 +58,7 @@ class CustomImageEmbedBuilder extends EmbedBuilder {
           width: double.infinity,
           height: 200,
           color: Colors.grey[300],
-          child: Icon(Icons.broken_image, color: Colors.red),
+          child: const Icon(Icons.broken_image, color: Colors.red),
         );
       }
     }

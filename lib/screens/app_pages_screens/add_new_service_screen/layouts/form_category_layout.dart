@@ -53,12 +53,12 @@ class FormCategoryLayout extends StatelessWidget {
                   isIcon: true,
                   itemBuilder: (BuildContext context, item) {
                     return Text(
-                      item + " minutes",
+                      "$item minutes",
                       style: appCss.dmDenseMedium14
                           .textColor(appColor(context).appTheme.darkText),
                     );
                   },
-                  items: ["15", "30", "45", "60", "120", "180", "300"],
+                  items: const ["15", "30", "45", "60", "120", "180", "300"],
                   onChanged: (val) => value.onChangeDuration(val ?? ""))),
           const HSpace(Sizes.s6),
           // Expanded(
