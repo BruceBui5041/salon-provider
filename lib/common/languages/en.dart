@@ -70,7 +70,7 @@ dynamic en = {
   "loginAsProvider": "Login as provider",
   "notProvider": "You are not a provider",
   "loginAsServiceman": "Login as servicemen",
-  "donHaveAccount": "Don’t have an account ?",
+  "donHaveAccount": "Don't have an account ?",
   "signUp": " Sign up",
   "notMember": " Not member ?",
   "enterYourRegisterMail": "Enter your register mail or phone number",
@@ -81,7 +81,7 @@ dynamic en = {
   "selectOption": "Select option",
   "toCreateAnew":
       "To create a new account, choose one of the options listed below.",
-  "iAmJoining": "I’m joining as a :",
+  "iAmJoining": "I'm joining as a :",
   "company": "A Company",
   "freelancer": "A Freelancer",
   "continues": "Continue",
@@ -176,7 +176,7 @@ dynamic en = {
   "weeklyAverage": "Weekly average  :",
   "earnings": "Earnings",
   "history": "History",
-  "topCategorys": "Top category’s earnings",
+  "topCategorys": "Top category's earnings",
   "earningHistory": "Earnings history",
   "sortByCategories": "Sort by categories",
   "allCategory": "All category",
@@ -454,7 +454,7 @@ dynamic en = {
   "assignToServicemen": "Assign to servicemen",
   "areYouSureServicemen":
       "Are you sure you want to assign this booking to selected servicemen ?",
-  "youAssignedService": "You’ve assigned this service to you.",
+  "youAssignedService": "You've assigned this service to you.",
   "clearChat": "Clear chat",
   "online": "Online",
   "cancelService": "Cancel service",
@@ -506,7 +506,7 @@ dynamic en = {
   "addNewServicemen": "Add new servicemen",
   "serviceLocation": "Service location",
   "mainLocation": "Main location",
-  "onlyViewBookings": "Only View bookings that are “Assigned to me”.",
+  "onlyViewBookings": "Only View bookings that are \"Assigned to me\".",
   "search": "Search",
   "delete": "Delete",
   "areYiuSureDeleteLocation":
@@ -553,23 +553,23 @@ dynamic en = {
   "congLocationSuccessAdded":
       "Congratulations ! Your location has successfully added.",
   "hurrayUpdateHour": "Hurray ! Your hours is successfully updated.",
-  "onlyCompletedByMe": "Only View bookings that are “Completed by me”.",
+  "onlyCompletedByMe": "Only View bookings that are \"Completed by me\".",
   "deletePackages": "Delete packages",
   "areYouSureDeletePackage": "Are your sure you want to delete this package ?",
   "hurrayPackageDelete": "Hurray ! Your all package is successfully delete.",
   "updatePackage": "Update package",
-  "servicemenCharge": "Servicemen’s charge",
+  "servicemenCharge": "Servicemen's charge",
   "charges": "Charges",
   "perServicemen": "per servicemen",
   "done": "Done",
   "enterThePayableCharges":
       "Note : Enter the payable charges that is paid to the assigned servicemen after completing this service.",
-  "servicemenPayableAmount": "Servicemen’s payable amount",
+  "servicemenPayableAmount": "Servicemen's payable amount",
   "serviceProof": "Service proof",
   "editProof": "Edit proof",
   "freelancerDetails": "Freelancer details",
   "locationDetails": "Location details",
-  "youChangedTimeSlot": "You’ve changed time slot.",
+  "youChangedTimeSlot": "You've changed time slot.",
   "yourAccountWill":
       "Your account will be permanently erased if you choose to delete it. There is no way to get your info back.",
   "recentSearch": "Recent search",
@@ -577,7 +577,7 @@ dynamic en = {
   "attemptYourSearch":
       "Attempt your search once more with words that are more universal.",
   "searchAgain": "Search again",
-  "youHaveNotSearch": "You’ve not search anything yet!",
+  "youHaveNotSearch": "You've not search anything yet!",
   "startSearching":
       "Start searching your personalized service to make your home more better.",
   "addSelectLocation": "Add Select location",
@@ -593,6 +593,8 @@ dynamic en = {
   "imageUrl": "Image URL",
   "enterImageUrl": "Enter Image URL",
   "insert": "Insert",
+  "selectImage": "Select an image",
+  "noImagesAvailable": "No images available",
 
   // Status strings
   "draft": "Draft",

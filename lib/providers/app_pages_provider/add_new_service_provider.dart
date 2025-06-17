@@ -441,7 +441,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
     serviceSelected = currentService["itemServiceSelected"];
     var serviceInit = await repoService.getServiceById(serviceSelected!.id!);
-
+    listAllImage = serviceInit.imageResponse ?? [];
     serviceVersionList = serviceInit.versionsResponse;
     if (currentServiceTmp != "") {
       var category = categoryResponse

@@ -567,6 +567,8 @@ class AppFonts {
   final generateQr = "generateQr";
   final showQr = "showQr";
   final platformFee = "platformFee";
+  final selectImage = "selectImage";
+  final noImagesAvailable = "noImagesAvailable";
 
   // Add status strings
   final draft = "draft";

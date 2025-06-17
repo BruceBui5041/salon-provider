@@ -6,7 +6,6 @@ import 'package:flutter_quill/flutter_quill.dart';
 import 'package:provider/provider.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/providers/app_pages_provider/add_new_service_provider.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:path/path.dart' as path;
 
@@ -89,9 +88,7 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
   late QuillController _controller;
   bool _isSaving = false;
   String _initialContent = '';
-  final ImagePicker _imagePicker = ImagePicker();
   bool _isImageProcessing = false;
-  final TextEditingController _imageUrlController = TextEditingController();
 
   @override
   void initState() {
@@ -129,7 +126,6 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
   @override
   void dispose() {
     _controller.dispose();
-    _imageUrlController.dispose();
     super.dispose();
   }
 
@@ -137,66 +133,88 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
   Future<void> _showImageSourceDialog() async {
     if (_isImageProcessing) return; // Prevent multiple dialogs
 
+    final provider = Provider.of<AddNewServiceProvider>(context, listen: false);
+    final serviceImages = provider.listAllImage;
+
+    if (serviceImages.isEmpty) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text(language(context, appFonts.noImagesAvailable)),
+          backgroundColor: Colors.red,
+        ),
+      );
+      return;
+    }
+
     return showDialog<void>(
       context: context,
       builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            language(context, "chooseImageSource"),
-            style: appCss.dmDenseMedium16.textColor(
-              appColor(context).appTheme.darkText,
-            ),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                ListTile(
-                  leading: Icon(
-                    Icons.link,
-                    color: appColor(context).appTheme.primary,
+        return Dialog(
+          insetPadding: const EdgeInsets.all(16),
+          child: Container(
+            width: double.infinity,
+            padding: const EdgeInsets.all(16),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  language(context, appFonts.selectImage),
+                  style: appCss.dmDenseMedium16.textColor(
+                    appColor(context).appTheme.darkText,
                   ),
-                  title: Text(
-                    language(context, "imageUrl"),
-                    style: appCss.dmDenseMedium14.textColor(
-                      appColor(context).appTheme.darkText,
-                    ),
-                  ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _showImageUrlDialog();
-                  },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.photo_library,
-                    color: appColor(context).appTheme.primary,
-                  ),
-                  title: Text(
-                    language(context, "gallery"),
-                    style: appCss.dmDenseMedium14.textColor(
-                      appColor(context).appTheme.darkText,
+                const SizedBox(height: 16),
+                Flexible(
+                  child: SingleChildScrollView(
+                    child: Wrap(
+                      spacing: 8,
+                      runSpacing: 8,
+                      children: serviceImages.map((image) {
+                        return InkWell(
+                          onTap: () {
+                            Navigator.of(context).pop();
+                            _insertImageFromUrl(image.url ?? "");
+                          },
+                          child: Container(
+                            width: 100,
+                            height: 100,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: appColor(context).appTheme.stroke,
+                              ),
+                              borderRadius: BorderRadius.circular(8),
+                            ),
+                            child: ClipRRect(
+                              borderRadius: BorderRadius.circular(8),
+                              child: Image.network(
+                                image.url ?? "",
+                                fit: BoxFit.cover,
+                                errorBuilder: (context, error, stackTrace) {
+                                  return Container(
+                                    color: Colors.grey[300],
+                                    child: const Icon(Icons.broken_image,
+                                        color: Colors.red),
+                                  );
+                                },
+                              ),
+                            ),
+                          ),
+                        );
+                      }).toList(),
                     ),
                   ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _pickAndInsertImage(ImageSource.gallery);
-                  },
                 ),
-                ListTile(
-                  leading: Icon(
-                    Icons.photo_camera,
-                    color: appColor(context).appTheme.primary,
-                  ),
-                  title: Text(
-                    language(context, "camera"),
+                const SizedBox(height: 16),
+                TextButton(
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                  child: Text(
+                    language(context, appFonts.cancel),
                     style: appCss.dmDenseMedium14.textColor(
                       appColor(context).appTheme.darkText,
                     ),
                   ),
-                  onTap: () {
-                    Navigator.of(context).pop();
-                    _pickAndInsertImage(ImageSource.camera);
-                  },
                 ),
               ],
             ),
@@ -206,78 +224,9 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
     );
   }
 
-  // Function to show image URL input dialog
-  Future<void> _showImageUrlDialog() async {
-    _imageUrlController.clear();
-
-    return showDialog<void>(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text(
-            language(context, "enterImageUrl"),
-            style: appCss.dmDenseMedium16.textColor(
-              appColor(context).appTheme.darkText,
-            ),
-          ),
-          content: TextField(
-            controller: _imageUrlController,
-            decoration: InputDecoration(
-              hintText: 'https://example.com/image.jpg',
-              hintStyle: appCss.dmDenseMedium14.textColor(
-                appColor(context).appTheme.lightText,
-              ),
-              border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: appColor(context).appTheme.stroke,
-                ),
-              ),
-              focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(8),
-                borderSide: BorderSide(
-                  color: appColor(context).appTheme.primary,
-                ),
-              ),
-            ),
-          ),
-          actions: <Widget>[
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: Text(
-                language(context, "cancel"),
-                style: appCss.dmDenseMedium14.textColor(
-                  appColor(context).appTheme.darkText,
-                ),
-              ),
-            ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-                _insertImageFromUrl(_imageUrlController.text.trim());
-              },
-              child: Text(
-                language(context, "insert"),
-                style: appCss.dmDenseMedium14.textColor(
-                  appColor(context).appTheme.primary,
-                ),
-              ),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   // Function to insert image from URL
   void _insertImageFromUrl(String url) {
     if (url.isEmpty) return;
-
-    if (!url.startsWith('http://') && !url.startsWith('https://')) {
-      url = 'https://' + url;
-    }
 
     try {
       // Add a line break before the image
@@ -297,81 +246,6 @@ class _HtmlEditorScreenState extends State<HtmlEditorScreen> {
       );
     } catch (e) {
       if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(
-            content: Text('Failed to insert image: ${e.toString()}'),
-            backgroundColor: Colors.red,
-          ),
-        );
-      }
-    }
-  }
-
-  // Function to pick and insert an image
-  Future<void> _pickAndInsertImage(ImageSource source) async {
-    if (_isImageProcessing) return; // Prevent multiple image selections
-
-    setState(() {
-      _isImageProcessing = true;
-    });
-
-    try {
-      final XFile? image = await _imagePicker.pickImage(
-        source: source,
-        imageQuality: 80, // Reduce image quality to save storage
-        maxWidth: 1000, // Limit max width
-      );
-
-      // Check if widget is still mounted before proceeding
-      if (!mounted) return;
-
-      if (image == null) {
-        setState(() {
-          _isImageProcessing = false;
-        });
-        return;
-      }
-
-      try {
-        // Add a line break before the image
-        _controller.document.insert(_controller.selection.baseOffset, '\n');
-
-        // Insert the image at current position
-        final index = _controller.selection.baseOffset;
-        _controller.document.insert(index, BlockEmbed.image(image.path));
-
-        // Add a line break after the image
-        _controller.document.insert(index + 1, '\n');
-
-        // Move cursor after the image and line break
-        _controller.updateSelection(
-          TextSelection.collapsed(offset: index + 2),
-          ChangeSource.local,
-        );
-      } catch (e) {
-        if (mounted) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            SnackBar(
-              content: Text('Failed to insert image: ${e.toString()}'),
-              backgroundColor: Colors.red,
-            ),
-          );
-        }
-      }
-
-      // Reset processing flag
-      if (mounted) {
-        setState(() {
-          _isImageProcessing = false;
-        });
-      }
-    } catch (e) {
-      // Check if widget is still mounted before showing error
-      if (mounted) {
-        setState(() {
-          _isImageProcessing = false;
-        });
-
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
             content: Text('Failed to insert image: ${e.toString()}'),

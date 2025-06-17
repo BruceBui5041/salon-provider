@@ -588,6 +588,8 @@ dynamic vi = {
   "gallery": "Thư viện",
   "camera": "Máy ảnh",
   "processingImage": "Đang xử lý hình ảnh...",
+  "selectImage": "Chọn hình ảnh",
+  "noImagesAvailable": "Không có hình ảnh nào",
 
   // Status strings
   "draft": "Bản nháp",
