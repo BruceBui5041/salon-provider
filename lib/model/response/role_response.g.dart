@@ -18,6 +18,9 @@ RoleResponse _$RoleResponseFromJson(Map<String, dynamic> json) => RoleResponse(
       code: $enumDecode(_$UserRoleCodeEnumMap, json['code']),
       name: json['name'] as String,
       userCount: (json['user_count'] as num?)?.toInt(),
+      commission: json['commission'] == null
+          ? null
+          : Commission.fromJson(json['commission'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$RoleResponseToJson(RoleResponse instance) =>
@@ -29,6 +32,7 @@ Map<String, dynamic> _$RoleResponseToJson(RoleResponse instance) =>
       'code': _$UserRoleCodeEnumMap[instance.code]!,
       'name': instance.name,
       'user_count': instance.userCount,
+      'commission': instance.commission,
     };
 
 const _$UserRoleCodeEnumMap = {

@@ -95,7 +95,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                                         overflow: TextOverflow.ellipsis,
                                       ),
                                       Text(
-                                        "${value.serviceSelected?.serviceVersion!.id ?? ""}",
+                                        value.serviceVersionSelected?.id ?? "",
                                         style: appCss.dmDenseRegular12
                                             .textColor(appColor(context)
                                                 .appTheme

@@ -35,10 +35,8 @@ class ServiceDescription extends StatelessWidget {
             child: DescriptionLayoutCommon(
                 icon: eSvgAssets.commission,
                 title: appFonts.commission,
-                subtitle: data?.serviceVersion?.discountedPrice
-                        .toString()
-                        .toCurrencyVnd() ??
-                    '')),
+                subtitle:
+                    "${data?.owner?.roles?.first.commission?.percentage ?? 0}%")),
         Container(
                 height: Sizes.s78,
                 width: 1,

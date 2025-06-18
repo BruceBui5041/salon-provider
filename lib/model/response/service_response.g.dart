@@ -29,6 +29,9 @@ Service _$ServiceFromJson(Map<String, dynamic> json) => Service(
       imageResponse: (json['images'] as List<dynamic>?)
           ?.map((e) => ImageResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
+      owner: json['owner'] == null
+          ? null
+          : UserResponse.fromJson(json['owner'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$ServiceToJson(Service instance) => <String, dynamic>{
@@ -43,4 +46,5 @@ Map<String, dynamic> _$ServiceToJson(Service instance) => <String, dynamic>{
       'service_version': instance.serviceVersion,
       'versions': instance.versionsResponse,
       'images': instance.imageResponse,
+      'owner': instance.owner,
     };

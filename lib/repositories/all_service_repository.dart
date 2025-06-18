@@ -51,7 +51,8 @@ class AllServiceRepository extends RepositoryConfig {
       FieldItem(field: "service_version.images"),
       FieldItem(field: "service_version.category"),
       FieldItem(field: "images", orderBy: "id desc"),
-      FieldItem(field: "service_version")
+      FieldItem(field: "service_version"),
+      FieldItem(field: "owner.roles.commission")
     ]).toJson());
     var res = Service.fromJson(response);
     return res;

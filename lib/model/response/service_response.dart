@@ -8,6 +8,8 @@ import 'package:salon_provider/model/response/service_version_response.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'dart:convert';
 
+import 'package:salon_provider/model/response/user_response.dart';
+
 part 'service_response.g.dart';
 
 @JsonSerializable()
@@ -26,6 +28,8 @@ class Service extends CommonResponse {
   final List<ServiceVersion>? versionsResponse;
   @JsonKey(name: "images")
   final List<ImageResponse>? imageResponse;
+  @JsonKey(name: "owner")
+  final UserResponse? owner;
 
   Service({
     super.id,
@@ -39,6 +43,7 @@ class Service extends CommonResponse {
     this.serviceVersion,
     this.versionsResponse,
     this.imageResponse,
+    this.owner,
   });
 
   Service copyWith({

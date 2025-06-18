@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+import 'package:salon_provider/model/response/commission_response.dart';
 import 'base_response.dart';
 
 part 'role_response.g.dart';
@@ -22,6 +23,8 @@ class RoleResponse extends CommonResponse {
   final String name;
   @JsonKey(name: 'user_count')
   final int? userCount;
+  @JsonKey(name: 'commission')
+  final Commission? commission;
 
   RoleResponse({
     required super.id,
@@ -31,6 +34,7 @@ class RoleResponse extends CommonResponse {
     required this.code,
     required this.name,
     this.userCount,
+    this.commission,
   });
 
   factory RoleResponse.fromJson(Map<String, dynamic> json) =>
