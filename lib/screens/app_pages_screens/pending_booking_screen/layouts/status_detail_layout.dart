@@ -78,7 +78,9 @@ class StatusDetailLayout extends StatelessWidget {
                       ]).paddingSymmetric(vertical: Insets.i15),
                   Text(data!.serviceVersions?.first.title ?? "",
                       style: appCss.dmDenseMedium16
-                          .textColor(appColor(context).appTheme.darkText)),
+                          .textColor(appColor(context).appTheme.darkText),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 3),
                   const VSpace(Sizes.s15),
                   Column(
                       crossAxisAlignment: CrossAxisAlignment.start,

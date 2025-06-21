@@ -33,8 +33,7 @@ class AddNewServiceRepository extends RepositoryConfig {
     return res;
   }
 
-  Future<void> publisthService(
-      String serviceId, String serviceVersionId) async {
+  Future<void> publishService(String serviceId, String serviceVersionId) async {
     await api.publishService(serviceId, {
       "service_version_id": serviceVersionId,
       "id": serviceId,

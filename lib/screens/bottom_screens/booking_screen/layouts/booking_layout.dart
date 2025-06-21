@@ -134,6 +134,8 @@ class _BookingInfo extends StatelessWidget {
         Text(
           data?.serviceVersions?.firstOrNull?.title ?? '',
           style: appCss.dmDenseMedium16.textColor(theme.darkText),
+          overflow: TextOverflow.ellipsis,
+          maxLines: 2,
         ).paddingOnly(top: Insets.i8, bottom: Insets.i3),
         Row(
           children: [

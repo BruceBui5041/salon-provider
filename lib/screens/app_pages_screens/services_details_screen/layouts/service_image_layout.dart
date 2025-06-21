@@ -4,15 +4,19 @@ import 'package:salon_provider/widgets/cache_image.dart';
 import '../../../../config.dart';
 
 class ServiceImageLayout extends StatelessWidget {
-  final String? image, rating, title;
+  final String? image, rating;
+  final Widget? titleWidget;
+  final String? title;
   final GestureTapCallback? editTap, deleteTap;
-  const ServiceImageLayout(
-      {super.key,
-      this.rating,
-      this.image,
-      this.deleteTap,
-      this.editTap,
-      this.title});
+  const ServiceImageLayout({
+    super.key,
+    this.rating,
+    this.image,
+    this.deleteTap,
+    this.editTap,
+    this.title,
+    this.titleWidget,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -38,10 +42,10 @@ class ServiceImageLayout extends StatelessWidget {
         Container(
           width: MediaQuery.of(context).size.width,
           height: Sizes.s230,
-          decoration: ShapeDecoration(
+          decoration: const ShapeDecoration(
             // image: DecorationImage(
             //     image: AssetImage(image!), fit: BoxFit.cover),
-            shape: const SmoothRectangleBorder(
+            shape: SmoothRectangleBorder(
               borderRadius: SmoothBorderRadius.only(
                 bottomRight: SmoothRadius(
                     cornerRadius: AppRadius.r20, cornerSmoothing: 1),
@@ -81,19 +85,32 @@ class ServiceImageLayout extends StatelessWidget {
                                   onTap: deleteTap)
                             ])
                           ]),
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(title!,
-                                style: appCss.dmDenseSemiBold18.textColor(
-                                    appColor(context).appTheme.whiteColor)),
-                            Row(children: [
-                              SvgPicture.asset(eSvgAssets.star),
-                              const HSpace(Sizes.s4),
-                              Text(rating!,
-                                  style: appCss.dmDenseMedium13.textColor(
-                                      appColor(context).appTheme.whiteColor))
-                            ])
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.end,
+                              children: [
+                                Row(children: [
+                                  SvgPicture.asset(eSvgAssets.star),
+                                  const HSpace(Sizes.s4),
+                                  Text(rating ?? '',
+                                      style: appCss.dmDenseMedium13.textColor(
+                                          appColor(context)
+                                              .appTheme
+                                              .whiteColor))
+                                ])
+                              ],
+                            ),
+                            const SizedBox(height: 8),
+                            titleWidget ??
+                                Text(
+                                  title ?? '',
+                                  style: appCss.dmDenseSemiBold18.textColor(
+                                      appColor(context).appTheme.whiteColor),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 3,
+                                ),
                           ])
                     ]).padding(
                     horizontal: Insets.i20,

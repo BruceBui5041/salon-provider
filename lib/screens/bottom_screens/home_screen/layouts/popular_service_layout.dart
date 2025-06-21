@@ -205,7 +205,9 @@ class _FeaturedServicesLayoutState extends State<FeaturedServicesLayout> {
                               language(context,
                                   value.serviceVersion?.title ?? 'Unknown'),
                               style: appCss.dmDenseSemiBold15.textColor(
-                                  appColor(context).appTheme.darkText)),
+                                  appColor(context).appTheme.darkText),
+                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2),
                         ],
                       ),
                       Column(

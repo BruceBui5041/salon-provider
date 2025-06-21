@@ -279,7 +279,7 @@ class AddNewServiceProvider with ChangeNotifier {
 
   Future<void> publishService({Function? callBack}) async {
     try {
-      await repo.publisthService(
+      await repo.publishService(
           serviceSelected!.id!, serviceVersionSelected!.id!);
       await repo.fetchServiceVersion(serviceVersionSelected!.id!);
       if (callBack != null) {

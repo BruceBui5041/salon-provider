@@ -64,13 +64,77 @@ class CustomImageEmbedBuilder extends EmbedBuilder {
 
     return Padding(
       padding: const EdgeInsets.symmetric(vertical: Insets.i8),
-      child: imageWidget,
+      child: GestureDetector(
+        onTap: () => _showCustomImageViewerPager(context, imageUrl),
+        child: imageWidget,
+      ),
+    );
+  }
+
+  void _showCustomImageViewerPager(BuildContext context, String imageUrl) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => ImageViewerPage(imageUrl: imageUrl),
+      ),
     );
   }
 
   @override
   String toPlainText(Embed node) {
     return '[Image]';
+  }
+}
+
+/// Full screen image viewer page
+class ImageViewerPage extends StatelessWidget {
+  final String imageUrl;
+
+  const ImageViewerPage({super.key, required this.imageUrl});
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      backgroundColor: Colors.black,
+      appBar: AppBar(
+        backgroundColor: Colors.black,
+        iconTheme: const IconThemeData(color: Colors.white),
+        elevation: 0,
+      ),
+      body: Center(
+        child: InteractiveViewer(
+          minScale: 0.5,
+          maxScale: 4.0,
+          child: imageUrl.startsWith('http')
+              ? Image.network(
+                  imageUrl,
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 300,
+                      color: Colors.grey[800],
+                      child: const Icon(Icons.broken_image,
+                          color: Colors.red, size: 50),
+                    );
+                  },
+                )
+              : Image.file(
+                  File(imageUrl),
+                  fit: BoxFit.contain,
+                  errorBuilder: (context, error, stackTrace) {
+                    return Container(
+                      width: double.infinity,
+                      height: 300,
+                      color: Colors.grey[800],
+                      child: const Icon(Icons.broken_image,
+                          color: Colors.red, size: 50),
+                    );
+                  },
+                ),
+        ),
+      ),
+    );
   }
 }
 

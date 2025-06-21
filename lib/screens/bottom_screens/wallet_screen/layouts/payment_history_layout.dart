@@ -32,7 +32,7 @@ class PaymentHistoryLayout extends StatelessWidget {
                     style: appCss.dmDenseMedium14
                         .textColor(appColor(context).appTheme.darkText),
                     overflow: TextOverflow.ellipsis,
-                    maxLines: 1,
+                    maxLines: 2,
                   ),
                   const VSpace(Sizes.s5),
                   Text(amount,

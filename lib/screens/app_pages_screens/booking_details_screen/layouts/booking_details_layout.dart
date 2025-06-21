@@ -40,7 +40,9 @@ class BookingDetailsLayout extends StatelessWidget {
                         const VSpace(Sizes.s10),
                         Text(data!.serviceVersions?.first.title ?? "",
                                 style: appCss.dmDenseMedium16.textColor(
-                                    appColor(context).appTheme.darkText))
+                                    appColor(context).appTheme.darkText),
+                                overflow: TextOverflow.ellipsis,
+                                maxLines: 2)
                             .width(Sizes.s150)
                       ]).paddingOnly(top: Insets.i6)
                 ]),

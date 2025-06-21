@@ -34,7 +34,9 @@ class NewServiceReviewLayout extends StatelessWidget {
                       image: AssetImage(data?.imageResponse?[0].url ?? '')))),
           title: Text(data?.serviceVersion?.title ?? '',
               style: appCss.dmDenseMedium14
-                  .textColor(appColor(context).appTheme.darkText)),
+                  .textColor(appColor(context).appTheme.darkText),
+              overflow: TextOverflow.ellipsis,
+              maxLines: 2),
           subtitle: Text(data?.serviceVersion?.duration.toString() ?? '',
               style: appCss.dmDenseMedium12
                   .textColor(appColor(context).appTheme.lightText)),

@@ -70,7 +70,8 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                           mainAxisSize: MainAxisSize.min,
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Row(
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
                               mainAxisSize: MainAxisSize.min,
                               children: [
                                 BookingStatusLayout(
@@ -79,30 +80,20 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                                       getPublishStatus(value).toLowerCase(),
                                       context),
                                 ),
-                                const SizedBox(width: Insets.i10),
-                                Flexible(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Text(
-                                        value.serviceSelected?.serviceVersion!
-                                                .title ??
-                                            "",
-                                        style: appCss.dmDenseBold16.textColor(
-                                            appColor(context).appTheme.primary),
-                                        overflow: TextOverflow.ellipsis,
-                                      ),
-                                      Text(
-                                        value.serviceVersionSelected?.id ?? "",
-                                        style: appCss.dmDenseRegular12
-                                            .textColor(appColor(context)
-                                                .appTheme
-                                                .lightText),
-                                      ),
-                                    ],
-                                  ),
+                                const SizedBox(height: Insets.i8),
+                                Text(
+                                  value.serviceSelected?.serviceVersion!
+                                          .title ??
+                                      "",
+                                  style: appCss.dmDenseBold16.textColor(
+                                      appColor(context).appTheme.primary),
+                                  overflow: TextOverflow.ellipsis,
+                                  maxLines: 2,
+                                ),
+                                Text(
+                                  value.serviceVersionSelected?.id ?? "",
+                                  style: appCss.dmDenseRegular12.textColor(
+                                      appColor(context).appTheme.lightText),
                                 ),
                               ],
                             ),
