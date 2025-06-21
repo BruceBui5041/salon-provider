@@ -98,9 +98,9 @@ class AddNewServiceProvider with ChangeNotifier {
   List<CategoryItem>? categoryResponse = [];
   List<CategoryItem>? subCategoryResponse = [];
   CategoryItem? categoryItem;
-  List<String> pathMainImageSystem = [];
+  List<String> serviceImages = [];
   String pathMainImageUrl = "";
-  List<String> pathImageService = [];
+  List<String> serviceVersionImages = [];
   String? pathMainImageId;
 
   List<ImageResponse> listAllImage = [];
@@ -139,12 +139,11 @@ class AddNewServiceProvider with ChangeNotifier {
     categoryValue = null;
     subCategoryValue = null;
     pathMainImageUrl = "";
-    pathMainImageSystem = [];
-    pathImageService = [];
+    serviceImages = [];
+    serviceVersionImages = [];
 
     subCategoryResponse = [];
     categoryResponse = [];
-    pathMainImageSystem = [];
     notifyListeners();
   }
 
@@ -171,9 +170,8 @@ class AddNewServiceProvider with ChangeNotifier {
     await Future.delayed(const Duration(milliseconds: 500));
 
     serviceVersionSelected = serviceInit.serviceVersion;
-    log("serviceVersionList ${json.encode(serviceVersionList)}");
     onInitService(currentService);
-    pathImageService =
+    serviceVersionImages =
         serviceInit.serviceVersion?.images?.map((e) => e.url ?? "").toList() ??
             [];
     notifyListeners();
@@ -187,7 +185,7 @@ class AddNewServiceProvider with ChangeNotifier {
     } else {
       listImageServiceSelected = imageSelected;
 
-      pathImageService = imageSelected.map((e) => e.url ?? "").toList();
+      serviceVersionImages = imageSelected.map((e) => e.url ?? "").toList();
     }
     notifyListeners();
     if (callBack != null) {
@@ -247,8 +245,8 @@ class AddNewServiceProvider with ChangeNotifier {
             // "main_image_id": null
           }
         }),
-        if (pathMainImageSystem.isNotEmpty)
-          "images": pathMainImageSystem
+        if (serviceImages.isNotEmpty)
+          "images": serviceImages
               .map((e) =>
                   MultipartFile.fromFileSync(e, filename: e.split('/').last))
               .toList(),
@@ -295,7 +293,7 @@ class AddNewServiceProvider with ChangeNotifier {
   }
 
   void uploadMainImage(XFile image, {Function()? callBack}) {
-    pathMainImageSystem = [image.path];
+    serviceImages = [image.path];
     notifyListeners();
     if (callBack != null) {
       callBack();
@@ -348,8 +346,8 @@ class AddNewServiceProvider with ChangeNotifier {
     FormData formData = FormData.fromMap({
       "json": json.encode(jsonBody),
       // if (image != null) "images": [image],
-      if (pathMainImageSystem.isNotEmpty)
-        "images": pathMainImageSystem
+      if (serviceImages.isNotEmpty)
+        "images": serviceImages
             .map((e) =>
                 MultipartFile.fromFileSync(e, filename: e.split('/').last))
             .toList(),
@@ -364,7 +362,7 @@ class AddNewServiceProvider with ChangeNotifier {
             ),
           );
       // update xong phải clear file hình
-      pathMainImageSystem = [];
+      serviceImages = [];
       if (callBack != null) {
         callBack();
       }
@@ -420,7 +418,7 @@ class AddNewServiceProvider with ChangeNotifier {
   onReady(context) async {
     clearError();
     isLoadingData = true;
-    pathMainImageSystem = [];
+    serviceImages = [];
     dynamic data = ModalRoute.of(context)!.settings.arguments ?? "";
     if (data != "") {
       currentService = data;
@@ -488,7 +486,7 @@ class AddNewServiceProvider with ChangeNotifier {
       serviceVersionSelected = serviceSelected?.serviceVersion;
       isDraft = serviceVersionSelected?.publishedDate == null;
 
-      pathImageService = serviceInit.serviceVersion?.images
+      serviceVersionImages = serviceInit.serviceVersion?.images
               ?.map((e) => e.url ?? "")
               .toList() ??
           [];
@@ -584,8 +582,8 @@ class AddNewServiceProvider with ChangeNotifier {
     featuredPoints.text = "";
     isSwitch = false;
     pathMainImageUrl = "";
-    pathMainImageSystem = [];
-    pathImageService = [];
+    serviceImages = [];
+    serviceVersionImages = [];
     listAllImage = [];
     listImageServiceSelected = [];
     serviceVersionList = [];
@@ -610,9 +608,9 @@ class AddNewServiceProvider with ChangeNotifier {
 
   Future<void> onDraftSelected(ServiceVersion serviceVersion) async {
     serviceVersionSelected = serviceVersion;
-    pathImageService = [];
+    serviceVersionImages = [];
     var res = await repo.fetchServiceVersion(serviceVersion.id ?? "");
-    pathImageService = res.images?.map((e) => e.url ?? "").toList() ?? [];
+    serviceVersionImages = res.images?.map((e) => e.url ?? "").toList() ?? [];
     if (isDraft! == true) {
       var serviceInit = await repoService.getServiceById(serviceSelected!.id!);
       listAllImage = serviceInit.imageResponse ?? [];
@@ -656,7 +654,7 @@ class AddNewServiceProvider with ChangeNotifier {
           getImage(context, ImageSource.gallery, isThumbnail);
         } else {
           getImage(context, ImageSource.gallery, isThumbnail)
-              .then((value) => pathMainImageSystem.add(imageFile!.path));
+              .then((value) => serviceImages.add(imageFile!.path));
         }
         notifyListeners();
       } else {
@@ -664,7 +662,7 @@ class AddNewServiceProvider with ChangeNotifier {
           getImage(context, ImageSource.camera, isThumbnail);
         } else {
           getImage(context, ImageSource.camera, isThumbnail)
-              .then((value) => pathMainImageSystem.add(imageFile!.path));
+              .then((value) => serviceImages.add(imageFile!.path));
         }
         notifyListeners();
       }
