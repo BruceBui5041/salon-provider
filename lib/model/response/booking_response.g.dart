@@ -54,6 +54,10 @@ Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
           ? null
           : Commission.fromJson(json['commission'] as Map<String, dynamic>),
       isPopToHome: json['isPopToHome'] as bool? ?? false,
+      bookingLocation: json['booking_location'] == null
+          ? null
+          : BookingLocation.fromJson(
+              json['booking_location'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
@@ -78,6 +82,7 @@ Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
       'user': instance.user,
       'coupon': instance.coupon,
       'commission': instance.commission,
+      'booking_location': instance.bookingLocation,
       'isPopToHome': instance.isPopToHome,
     };
 

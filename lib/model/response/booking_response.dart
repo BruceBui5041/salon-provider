@@ -5,6 +5,7 @@
 import 'package:salon_provider/common/booking_status.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/model/response/base_response.dart';
+import 'package:salon_provider/model/response/booking_location_res.dart';
 import 'package:salon_provider/model/response/commission_response.dart';
 import 'package:salon_provider/model/response/coupon_response.dart';
 import 'package:salon_provider/model/response/payment_response.dart';
@@ -70,6 +71,9 @@ class Booking extends CommonResponse {
   @JsonKey(name: 'commission')
   final Commission? commission;
 
+  @JsonKey(name: 'booking_location')
+  final BookingLocation? bookingLocation;
+
   bool? isPopToHome;
 
   Booking({
@@ -95,6 +99,7 @@ class Booking extends CommonResponse {
     this.coupon,
     this.commission,
     this.isPopToHome = false,
+    this.bookingLocation,
   });
 
   Booking copyWith({
@@ -120,6 +125,7 @@ class Booking extends CommonResponse {
     Coupon? coupon,
     Commission? commission,
     bool? isPopToHome,
+    BookingLocation? bookingLocation,
   }) =>
       Booking(
         id: id ?? this.id,
@@ -144,6 +150,7 @@ class Booking extends CommonResponse {
         coupon: coupon ?? this.coupon,
         commission: commission ?? this.commission,
         isPopToHome: isPopToHome ?? this.isPopToHome,
+        bookingLocation: bookingLocation ?? this.bookingLocation,
       );
 
   getDiscountedPrice() {

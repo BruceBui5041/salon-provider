@@ -118,7 +118,7 @@ class _AddNewServiceScreenState extends State<AddNewServiceScreen> {
                               color: appColor(context)
                                   .appTheme
                                   .red
-                                  .withOpacity(0.3),
+                                  .withValues(alpha: 0.3),
                               arrow: eSvgAssets.delete,
                               svgColor: Colors.red,
                               onTap: () => _buildModalBottomSheet(value),

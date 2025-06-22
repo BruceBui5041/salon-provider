@@ -600,4 +600,7 @@ dynamic en = {
   "draft": "Draft",
   "published": "Published",
   "publishing": "Publishing",
+
+  // Travel Duration
+  "travelDuration": "Travel Duration",
 };

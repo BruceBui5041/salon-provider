@@ -595,4 +595,7 @@ dynamic vi = {
   "draft": "Bản nháp",
   "published": "Đã xuất bản",
   "publishing": "Đang xuất bản",
+
+  // Travel Duration
+  "travelDuration": "Thời gian di chuyển",
 };

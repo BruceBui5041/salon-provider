@@ -1,5 +1,6 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/model/response/booking_location_res.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/service_provider_layout.dart'
     as booking;
@@ -188,6 +189,28 @@ class _BookingDetails extends StatelessWidget {
     required this.theme,
   });
 
+  String _getLocationText(Booking? data) {
+    if (data?.bookingLocation?.customerAddress?.text != null) {
+      return data!.bookingLocation!.customerAddress!.text!;
+    }
+    return '';
+  }
+
+  String _getTravelDurationText(Booking? data) {
+    if (data?.bookingLocation != null) {
+      final location = data!.bookingLocation!;
+      if (location.initialDistanceText != null &&
+          location.initialDurationText != null) {
+        return '${location.initialDistanceText} (${location.initialDurationText})';
+      } else if (location.initialDistanceText != null) {
+        return location.initialDistanceText!;
+      } else if (location.initialDurationText != null) {
+        return location.initialDurationText!;
+      }
+    }
+    return '';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -203,7 +226,13 @@ class _BookingDetails extends StatelessWidget {
         ),
         StatusRow(
           title: appFonts.location,
-          title2: data?.serviceVersions?.firstOrNull?.description ?? '',
+          title2: _getLocationText(data),
+          style: appCss.dmDenseMedium12.textColor(theme.darkText),
+          maxLines: 2,
+        ),
+        StatusRow(
+          title: language(context, appFonts.travelDuration),
+          title2: _getTravelDurationText(data),
           style: appCss.dmDenseMedium12.textColor(theme.darkText),
         ),
         StatusRow(

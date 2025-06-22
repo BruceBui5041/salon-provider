@@ -25,6 +25,8 @@ class BookingRepository extends RepositoryConfig {
       FieldItem(field: "service_versions.category"),
       FieldItem(field: "coupon"),
       FieldItem(field: "commission"),
+      FieldItem(field: "booking_location.customer_address"),
+      FieldItem(field: "booking_location.service_man_address"),
     ]);
     var response = await commonRestClient.search<List<Booking>>(body.toJson());
     var res =
@@ -47,6 +49,8 @@ class BookingRepository extends RepositoryConfig {
         FieldItem(field: "service_versions.category"),
         FieldItem(field: "coupon"),
         FieldItem(field: "commission"),
+        FieldItem(field: "booking_location.customer_address"),
+        FieldItem(field: "booking_location.service_man_address"),
       ],
       orderBy: "id desc",
       limit: limit,

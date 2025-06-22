@@ -574,4 +574,7 @@ class AppFonts {
   final draft = "draft";
   final published = "published";
   final publishing = "publishing";
+
+  // Travel Duration
+  final travelDuration = "travelDuration";
 }

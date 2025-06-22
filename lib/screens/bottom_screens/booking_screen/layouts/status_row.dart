@@ -2,10 +2,17 @@ import '../../../../config.dart';
 
 class StatusRow extends StatelessWidget {
   final String? title, title2, statusText;
-
   final TextStyle? style;
-  const StatusRow(
-      {super.key, this.title, this.style, this.title2, this.statusText});
+  final int? maxLines;
+
+  const StatusRow({
+    super.key,
+    this.title,
+    this.style,
+    this.title2,
+    this.statusText,
+    this.maxLines,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +21,12 @@ class StatusRow extends StatelessWidget {
       title == appFonts.status
           ? BookingStatusLayout(
               title: statusText, color: colorCondition(statusText, context))
-          : Text(title2!, style: style)
+          : Text(
+              title2!,
+              style: style,
+              maxLines: maxLines,
+              overflow: maxLines != null ? TextOverflow.ellipsis : null,
+            )
     ]).paddingOnly(bottom: Insets.i12);
   }
 }
