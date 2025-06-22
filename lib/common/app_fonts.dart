@@ -584,4 +584,5 @@ class AppFonts {
   final distance = "distance";
   final travelTime = "travelTime";
   final chargedDistance = "chargedDistance";
+  final servicemanLocation = "servicemanLocation";
 }

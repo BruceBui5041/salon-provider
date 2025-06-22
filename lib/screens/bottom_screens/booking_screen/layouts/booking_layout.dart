@@ -198,6 +198,13 @@ class _BookingDetails extends StatelessWidget {
     return '';
   }
 
+  String _getServicemanLocationText(Booking? data) {
+    if (data?.bookingLocation?.serviceManAddress?.text != null) {
+      return data!.bookingLocation!.serviceManAddress!.text!;
+    }
+    return '';
+  }
+
   String _getTravelDistanceText(Booking? data) {
     if (data?.bookingLocation != null) {
       final location = data!.bookingLocation!;
@@ -266,11 +273,34 @@ class _BookingDetails extends StatelessWidget {
     // Add distance and duration info
     if (data?.bookingLocation != null) {
       final location = data!.bookingLocation!;
+
+      // Add customer address if available
+      if (location.customerAddress?.text != null) {
+        tooltip +=
+            '${language(context, appFonts.location)}: ${location.customerAddress!.text}';
+      }
+
+      // Add serviceman address if available
+      if (location.serviceManAddress?.text != null) {
+        if (tooltip.isNotEmpty) tooltip += '\n\n';
+        tooltip +=
+            '${language(context, appFonts.servicemanLocation)}: ${location.serviceManAddress!.text}';
+      }
+
+      // Add a separator before distance info if we already have content
+      if (tooltip.isNotEmpty &&
+          (location.initialDistanceText != null ||
+              location.initialDurationText != null)) {
+        tooltip += '\n\n';
+      }
+
+      // Add distance info
       if (location.initialDistanceText != null) {
         tooltip +=
             '${language(context, appFonts.distance)}: ${location.initialDistanceText}';
       }
 
+      // Add duration info
       if (location.initialDurationText != null) {
         tooltip +=
             '\n${language(context, appFonts.travelTime)}: ${location.initialDurationText}';
@@ -367,6 +397,13 @@ class _BookingDetails extends StatelessWidget {
           style: appCss.dmDenseMedium12.textColor(theme.darkText),
           maxLines: 2,
         ),
+        if (_getServicemanLocationText(data).isNotEmpty)
+          StatusRow(
+            title: language(context, appFonts.servicemanLocation),
+            title2: _getServicemanLocationText(data),
+            style: appCss.dmDenseMedium12.textColor(theme.darkText),
+            maxLines: 2,
+          ),
         StatusRow(
           title: language(context, appFonts.travelFee),
           title2: _getTravelFeeValue(data, context),

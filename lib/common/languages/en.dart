@@ -610,4 +610,5 @@ dynamic en = {
   "distance": "Distance",
   "travelTime": "Travel Time",
   "chargedDistance": "Charged Distance",
+  "servicemanLocation": "Serviceman Location",
 };

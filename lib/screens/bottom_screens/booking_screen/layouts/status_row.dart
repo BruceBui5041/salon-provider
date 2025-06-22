@@ -67,11 +67,15 @@ class StatusRow extends StatelessWidget {
       title == appFonts.status
           ? BookingStatusLayout(
               title: statusText, color: colorCondition(statusText, context))
-          : Text(
-              title2!,
-              style: style,
-              maxLines: maxLines,
-              overflow: maxLines != null ? TextOverflow.ellipsis : null,
+          : Container(
+              width: 200,
+              alignment: Alignment.centerRight,
+              child: Text(
+                title2!,
+                style: style,
+                maxLines: maxLines,
+                overflow: TextOverflow.ellipsis,
+              ),
             )
     ]).paddingOnly(bottom: Insets.i12);
   }

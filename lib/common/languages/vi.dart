@@ -605,4 +605,5 @@ dynamic vi = {
   "distance": "Khoảng cách",
   "travelTime": "Thời gian di chuyển",
   "chargedDistance": "Khoảng cách tính phí",
+  "servicemanLocation": "Vị trí nhân viên dịch vụ",
 };
