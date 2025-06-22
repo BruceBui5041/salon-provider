@@ -58,6 +58,9 @@ Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
           ? null
           : BookingLocation.fromJson(
               json['booking_location'] as Map<String, dynamic>),
+      fees: (json['fees'] as List<dynamic>?)
+          ?.map((e) => Fee.fromJson(e as Map<String, dynamic>))
+          .toList(),
     );
 
 Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
@@ -83,6 +86,7 @@ Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
       'coupon': instance.coupon,
       'commission': instance.commission,
       'booking_location': instance.bookingLocation,
+      'fees': instance.fees,
       'isPopToHome': instance.isPopToHome,
     };
 

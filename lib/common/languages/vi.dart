@@ -598,4 +598,11 @@ dynamic vi = {
 
   // Travel Duration
   "travelDuration": "Thời gian di chuyển",
+  "travelFee": "Phí di chuyển",
+  "freeOver": "Miễn phí trên",
+  "free": "Miễn phí",
+  "freeUnder": "Miễn phí dưới",
+  "distance": "Khoảng cách",
+  "travelTime": "Thời gian di chuyển",
+  "chargedDistance": "Khoảng cách tính phí",
 };

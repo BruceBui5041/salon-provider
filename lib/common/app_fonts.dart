@@ -577,4 +577,11 @@ class AppFonts {
 
   // Travel Duration
   final travelDuration = "travelDuration";
+  final travelFee = "travelFee";
+  final freeOver = "freeOver";
+  final free = "free";
+  final freeUnder = "freeUnder";
+  final distance = "distance";
+  final travelTime = "travelTime";
+  final chargedDistance = "chargedDistance";
 }

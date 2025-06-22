@@ -1,19 +1,14 @@
-// To parse this JSON data, do
-//
-//     final bookingResponse = bookingResponseFromJson(jsonString);
-
 import 'package:salon_provider/common/booking_status.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/model/response/base_response.dart';
 import 'package:salon_provider/model/response/booking_location_res.dart';
 import 'package:salon_provider/model/response/commission_response.dart';
 import 'package:salon_provider/model/response/coupon_response.dart';
+import 'package:salon_provider/model/response/fee_res.dart';
 import 'package:salon_provider/model/response/payment_response.dart';
 import 'package:salon_provider/model/response/service_version_response.dart';
 
 import 'package:json_annotation/json_annotation.dart';
-import 'package:meta/meta.dart';
-import 'dart:convert';
 
 import 'package:salon_provider/model/response/user_response.dart';
 part 'booking_response.g.dart';
@@ -74,6 +69,9 @@ class Booking extends CommonResponse {
   @JsonKey(name: 'booking_location')
   final BookingLocation? bookingLocation;
 
+  @JsonKey(name: 'fees')
+  final List<Fee>? fees;
+
   bool? isPopToHome;
 
   Booking({
@@ -100,6 +98,7 @@ class Booking extends CommonResponse {
     this.commission,
     this.isPopToHome = false,
     this.bookingLocation,
+    this.fees,
   });
 
   Booking copyWith({
@@ -126,6 +125,7 @@ class Booking extends CommonResponse {
     Commission? commission,
     bool? isPopToHome,
     BookingLocation? bookingLocation,
+    List<Fee>? fees,
   }) =>
       Booking(
         id: id ?? this.id,
@@ -151,6 +151,7 @@ class Booking extends CommonResponse {
         commission: commission ?? this.commission,
         isPopToHome: isPopToHome ?? this.isPopToHome,
         bookingLocation: bookingLocation ?? this.bookingLocation,
+        fees: fees ?? this.fees,
       );
 
   getDiscountedPrice() {

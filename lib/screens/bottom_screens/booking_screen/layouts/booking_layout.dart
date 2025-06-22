@@ -1,7 +1,9 @@
 import 'package:figma_squircle_updated/figma_squircle.dart';
+import 'package:salon_provider/common/fee_type.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/model/response/booking_location_res.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/model/response/fee_res.dart';
 import 'package:salon_provider/screens/bottom_screens/booking_screen/layouts/service_provider_layout.dart'
     as booking;
 
@@ -196,7 +198,7 @@ class _BookingDetails extends StatelessWidget {
     return '';
   }
 
-  String _getTravelDurationText(Booking? data) {
+  String _getTravelDistanceText(Booking? data) {
     if (data?.bookingLocation != null) {
       final location = data!.bookingLocation!;
       if (location.initialDistanceText != null &&
@@ -209,6 +211,141 @@ class _BookingDetails extends StatelessWidget {
       }
     }
     return '';
+  }
+
+  String _getTravelFeeValue(Booking? data, BuildContext context) {
+    if (data?.fees != null && data!.fees!.isNotEmpty) {
+      final travelFee = data.fees!.firstWhere(
+        (fee) => fee.type == FeeType.travelFeePerKm,
+        orElse: () => Fee(
+          id: '',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          status: '',
+          travelFeePerKm: null,
+        ),
+      );
+
+      if (travelFee.travelFeePerKm != null) {
+        // Calculate actual charged fee if we have distance info
+        if (data.bookingLocation?.initialDistance != null) {
+          // Get the distance in km (initialDistance is in meters)
+          double distanceInKm = data.bookingLocation!.initialDistance! / 1000.0;
+
+          // Parse the fee per km as double
+          double? feePerKm = double.tryParse(travelFee.travelFeePerKm!);
+
+          if (feePerKm != null) {
+            // Check if free travel applies
+            double freeTravelThreshold = 0.0;
+            if (travelFee.freeTravelFeeAt != null) {
+              freeTravelThreshold =
+                  double.tryParse(travelFee.freeTravelFeeAt!) ?? 0.0;
+            }
+
+            // Calculate the charged fee based on the distance exceeding the free threshold
+            if (distanceInKm > freeTravelThreshold) {
+              // Only charge for distance beyond the free threshold
+              double chargeableDistance = distanceInKm - freeTravelThreshold;
+              double chargedFee = feePerKm * chargeableDistance;
+              return chargedFee.toStringAsFixed(0).toCurrencyVnd();
+            } else {
+              return language(context, appFonts.free);
+            }
+          }
+        }
+        return '${travelFee.travelFeePerKm} / km';
+      }
+    }
+    return '';
+  }
+
+  String _getTravelFeeTooltip(Booking? data, BuildContext context) {
+    String tooltip = '';
+
+    // Add distance and duration info
+    if (data?.bookingLocation != null) {
+      final location = data!.bookingLocation!;
+      if (location.initialDistanceText != null) {
+        tooltip +=
+            '${language(context, appFonts.distance)}: ${location.initialDistanceText}';
+      }
+
+      if (location.initialDurationText != null) {
+        tooltip +=
+            '\n${language(context, appFonts.travelTime)}: ${location.initialDurationText}';
+      }
+    }
+
+    // Add fee info
+    if (data?.fees != null && data!.fees!.isNotEmpty) {
+      final travelFee = data.fees!.firstWhere(
+        (fee) => fee.type == FeeType.travelFeePerKm,
+        orElse: () => Fee(
+          id: '',
+          createdAt: DateTime.now(),
+          updatedAt: DateTime.now(),
+          status: '',
+          travelFeePerKm: null,
+        ),
+      );
+
+      if (travelFee.travelFeePerKm != null) {
+        // Add a separator if we already have content
+        if (tooltip.isNotEmpty) {
+          tooltip += '\n\n';
+        }
+
+        // Format the base fee text
+        tooltip +=
+            '${language(context, appFonts.travelFee)}: ${travelFee.travelFeePerKm} / km';
+
+        // Add free travel info
+        if (travelFee.freeTravelFeeAt != null) {
+          tooltip +=
+              '\n${language(context, appFonts.freeUnder)} ${travelFee.freeTravelFeeAt} km';
+        }
+
+        // Calculate actual charged fee if we have distance info
+        if (data.bookingLocation?.initialDistance != null) {
+          // Get the distance in km (initialDistance is in meters)
+          double distanceInKm = data.bookingLocation!.initialDistance! / 1000.0;
+
+          // Parse the fee per km as double
+          double? feePerKm = double.tryParse(travelFee.travelFeePerKm!);
+
+          if (feePerKm != null) {
+            // Check if free travel applies
+            double freeTravelThreshold = 0.0;
+            if (travelFee.freeTravelFeeAt != null) {
+              freeTravelThreshold =
+                  double.tryParse(travelFee.freeTravelFeeAt!) ?? 0.0;
+            }
+
+            // Calculate the charged fee based on the distance exceeding the free threshold
+            double chargedFee = 0.0;
+            if (distanceInKm > freeTravelThreshold) {
+              // Only charge for distance beyond the free threshold
+              double chargeableDistance = distanceInKm - freeTravelThreshold;
+              chargedFee = feePerKm * chargeableDistance;
+
+              // Add charged distance information
+              tooltip +=
+                  '\n${language(context, appFonts.chargedDistance)}: ${chargeableDistance.toStringAsFixed(1)} km';
+
+              // Add payment information
+              tooltip +=
+                  '\n${language(context, appFonts.payment)}: ${chargedFee.toStringAsFixed(0).toCurrencyVnd()}';
+            } else if (freeTravelThreshold > 0) {
+              tooltip +=
+                  '\n${language(context, appFonts.payment)}: ${language(context, appFonts.free)}';
+            }
+          }
+        }
+      }
+    }
+
+    return tooltip;
   }
 
   @override
@@ -231,9 +368,10 @@ class _BookingDetails extends StatelessWidget {
           maxLines: 2,
         ),
         StatusRow(
-          title: language(context, appFonts.travelDuration),
-          title2: _getTravelDurationText(data),
+          title: language(context, appFonts.travelFee),
+          title2: _getTravelFeeValue(data, context),
           style: appCss.dmDenseMedium12.textColor(theme.darkText),
+          infoTooltip: _getTravelFeeTooltip(data, context),
         ),
         StatusRow(
           title: appFonts.payment,

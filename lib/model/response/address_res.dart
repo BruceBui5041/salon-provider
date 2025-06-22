@@ -1,14 +1,3 @@
-// type Address struct {
-// 	common.SQLModel `json:",inline"`
-// 	Type            string  `json:"type" gorm:"column:type;type:varchar(255)"`
-// 	Default         *bool   `json:"default" gorm:"column:default;type:tinyint(1);default:0"`
-// 	UserId          uint32  `json:"-" gorm:"column:user_id;not null;index"`
-// 	User            *User   `json:"user,omitempty" gorm:"foreignKey:UserId"`
-// 	Text            string  `json:"text" gorm:"column:text;type:text;not null"`
-// 	Latitude        float64 `json:"latitude" gorm:"column:latitude;type:decimal(10,8);not null;index"`
-// 	Longitude       float64 `json:"longitude" gorm:"column:longitude;type:decimal(11,8);not null;index"`
-// }
-
 import 'package:json_annotation/json_annotation.dart';
 import 'package:salon_provider/model/response/base_response.dart';
 
@@ -16,10 +5,19 @@ part 'address_res.g.dart';
 
 @JsonSerializable()
 class Address extends CommonResponse {
+  @JsonKey(name: 'type')
   final String? type;
+
+  @JsonKey(name: 'default')
   final bool? isDefault;
+
+  @JsonKey(name: 'text')
   final String? text;
+
+  @JsonKey(name: 'latitude')
   final double? latitude;
+
+  @JsonKey(name: 'longitude')
   final double? longitude;
 
   Address({

@@ -603,4 +603,11 @@ dynamic en = {
 
   // Travel Duration
   "travelDuration": "Travel Duration",
+  "travelFee": "Travel Fee",
+  "freeOver": "Free over",
+  "free": "Free",
+  "freeUnder": "Free under",
+  "distance": "Distance",
+  "travelTime": "Travel Time",
+  "chargedDistance": "Charged Distance",
 };
