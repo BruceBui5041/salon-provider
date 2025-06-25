@@ -16,6 +16,7 @@ class RouteName {
   final String serviceDetails = 'serviceDetails';
   final String customServiceDetails = 'customServiceDetails';
   final String serviceDescriptionEditor = 'serviceDescriptionEditor';
+  final String selectLocation = 'selectLocation';
 
   final String serviceReview = 'serviceReview';
   final String locationList = 'locationList';

@@ -1,9 +1,15 @@
 import 'package:salon_provider/config.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:geolocator/geolocator.dart';
+import 'package:salon_provider/model/request/location_req.dart';
+import 'package:salon_provider/model/response/address_res.dart';
+import 'package:salon_provider/repositories/location_repo.dart';
+import 'package:salon_provider/config/injection_config.dart';
 
 class LocationListProvider with ChangeNotifier {
   List selectedLocation = [];
   List addedLocation = [];
+  List<Address> listNearByAddress = [];
   List locationList = [
     {
       "title": "Howthorne - Los angels",
@@ -38,7 +44,9 @@ class LocationListProvider with ChangeNotifier {
       "address": "Howthorne - Los angels,USA - 90250",
     },
   ];
+  List<Address> savedAddresses = [];
   String? subtext;
+  bool isLoading = false;
 
   TextEditingController areaCtrl = TextEditingController();
   TextEditingController latitudeCtrl = TextEditingController();
@@ -52,6 +60,94 @@ class LocationListProvider with ChangeNotifier {
   FocusNode addressFocus = FocusNode();
   FocusNode zipcodeFocus = FocusNode();
 
+  // Fetch saved addresses for the current user
+  Future<void> fetchSavedAddresses(BuildContext context) async {
+    try {
+      final locationRepo = getIt<LocationRepo>();
+      savedAddresses = await locationRepo.getRecentAddresses();
+      notifyListeners();
+    } catch (e) {
+      scaffoldMessage(context,
+          "${language(context, appFonts.errorFetchingLocationData)}: $e");
+    }
+  }
+
+  // Get current location and fetch nearby locations
+  Future<void> getCurrentLocation(BuildContext context) async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          scaffoldMessage(
+              context, language(context, appFonts.locationPermissionDenied));
+          isLoading = false;
+          notifyListeners();
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        scaffoldMessage(context,
+            language(context, appFonts.locationPermissionPermanentlyDenied));
+        isLoading = false;
+        notifyListeners();
+        return;
+      }
+
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ));
+
+      // Use reverseGeocode to get location data
+      await fetchNearbyLocations(position, context);
+
+      // Also fetch saved addresses
+      await fetchSavedAddresses(context);
+    } catch (e) {
+      scaffoldMessage(context, "Error getting location: $e");
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Fetch nearby locations using reverseGeocode
+  Future<void> fetchNearbyLocations(
+      Position position, BuildContext context) async {
+    try {
+      final locationRepo = getIt<LocationRepo>();
+      final request = ReverseGeocodeReq(
+          latlng: "${position.latitude},${position.longitude}");
+
+      final response = await locationRepo.reverseGeocode(request);
+
+      if (response.errorKey == null) {
+        final addresses = response.data!;
+
+        // Clear previous nearby locations
+        listNearByAddress.clear();
+
+        // Add the nearby locations to the list
+        listNearByAddress.addAll(addresses);
+
+        scaffoldMessage(context, language(context, appFonts.locationsFound));
+      } else {
+        scaffoldMessage(
+            context, language(context, appFonts.failedToGetLocationDetails));
+      }
+    } catch (e) {
+      scaffoldMessage(context,
+          "${language(context, appFonts.errorFetchingLocationData)}: $e");
+    }
+  }
+
   onTapLocation(id, val) {
     if (!selectedLocation.contains(id)) {
       selectedLocation.add(id);
@@ -60,6 +156,42 @@ class LocationListProvider with ChangeNotifier {
       selectedLocation.remove(id);
       addedLocation.remove(val);
     }
+    notifyListeners();
+  }
+
+  onTapNearbyLocation(int id, Address address) {
+    selectedLocation.clear();
+    addedLocation.clear();
+
+    selectedLocation.add(id);
+    addedLocation.add({
+      "title": address.text ?? appFonts.currentLocation,
+      "subtext": id == 0 ? appFonts.currentLocation : appFonts.nearbyLocation,
+      "zip": "",
+      "latitude": address.latitude.toString(),
+      "longitude": address.longitude.toString(),
+      "address": address.text ?? appFonts.currentLocation,
+    });
+
+    notifyListeners();
+  }
+
+  onTapSavedLocation(String id, Address address) {
+    selectedLocation.clear();
+    addedLocation.clear();
+
+    selectedLocation.add(id);
+    addedLocation.add({
+      "title": address.text ?? "",
+      "subtext": address.isDefault == true
+          ? appFonts.defaultLocation
+          : address.type ?? "",
+      "zip": "",
+      "latitude": address.latitude.toString(),
+      "longitude": address.longitude.toString(),
+      "address": address.text ?? "",
+    });
+
     notifyListeners();
   }
 

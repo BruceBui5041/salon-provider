@@ -562,13 +562,23 @@ class AppFonts {
   final youHaveNotSearch = "youHaveNotSearch";
   final startSearching = "startSearching";
   final addSelectLocation = "addSelectLocation";
-  final selectLocationFirst = "Select location first...";
-  final areYouSure = "Are you sure want to Logout ?";
+  final selectLocationFirst = "selectLocationFirst";
+  final areYouSure = "areYouSure";
   final generateQr = "generateQr";
   final showQr = "showQr";
   final platformFee = "platformFee";
   final selectImage = "selectImage";
   final noImagesAvailable = "noImagesAvailable";
+  final locationPermissionDenied = "locationPermissionDenied";
+  final locationPermissionPermanentlyDenied =
+      "locationPermissionPermanentlyDenied";
+  final currentLocation = "currentLocation";
+  final nearbyLocation = "nearbyLocation";
+  final locationsFound = "locationsFound";
+  final failedToGetLocationDetails = "failedToGetLocationDetails";
+  final errorFetchingLocationData = "errorFetchingLocationData";
+  final savedLocations = "savedLocations";
+  final defaultLocation = "defaultLocation";
 
   // Add status strings
   final draft = "draft";

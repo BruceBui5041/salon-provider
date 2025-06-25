@@ -1,10 +1,12 @@
 import 'package:salon_provider/network/api.dart';
 import 'package:salon_provider/network/api_config.dart';
 import 'package:salon_provider/network/common_api.dart';
+import 'package:salon_provider/network/location_api.dart';
 import 'package:salon_provider/providers/app_pages_provider/notification_provider.dart';
 import 'package:salon_provider/providers/index.dart';
 import 'package:salon_provider/repositories/add_new_service_repository.dart';
 import 'package:salon_provider/repositories/edit_service_repository.dart';
+import 'package:salon_provider/repositories/location_repo.dart';
 import 'package:salon_provider/repositories/payment_repository.dart';
 import 'package:salon_provider/repositories/popular_service_repository.dart';
 import 'package:salon_provider/repositories/login_repository.dart';
@@ -28,6 +30,7 @@ Future<void> initInjector() async {
   getIt.registerLazySingleton(() => BookingApiClient(getIt()));
   getIt.registerLazySingleton(() => UserApiClient(getIt()));
   getIt.registerLazySingleton(() => CommonApi());
+  getIt.registerLazySingleton(() => LocationApi(getIt()));
 
   // Add other modules here
   getIt.registerLazySingleton(() => LoginScreenRepository());
@@ -41,6 +44,7 @@ Future<void> initInjector() async {
   getIt.registerLazySingleton(() => EditServiceRepository());
   getIt.registerLazySingleton(() => TokenRepository());
   getIt.registerLazySingleton(() => UserRepository());
+  getIt.registerLazySingleton(() => LocationRepo(getIt()));
   getIt.registerLazySingleton(() => BookingProvider());
   getIt.registerLazySingleton(() => NotificationProvider());
   getIt.registerLazySingleton(() => AcceptedBookingProvider());

@@ -591,6 +591,18 @@ dynamic vi = {
   "selectImage": "Chọn hình ảnh",
   "noImagesAvailable": "Không có hình ảnh nào",
 
+  // Location related strings
+  "locationPermissionDenied": "Quyền truy cập vị trí bị từ chối",
+  "locationPermissionPermanentlyDenied":
+      "Quyền truy cập vị trí bị từ chối vĩnh viễn. Vui lòng bật trong cài đặt ứng dụng.",
+  "currentLocation": "Vị trí hiện tại",
+  "nearbyLocation": "Vị trí gần đây",
+  "locationsFound": "Đã tìm thấy vị trí thành công",
+  "failedToGetLocationDetails": "Không thể lấy chi tiết vị trí",
+  "errorFetchingLocationData": "Lỗi khi tải dữ liệu vị trí",
+  "savedLocations": "Vị trí đã lưu",
+  "defaultLocation": "Vị trí mặc định",
+
   // Status strings
   "draft": "Bản nháp",
   "published": "Đã xuất bản",
@@ -606,4 +618,20 @@ dynamic vi = {
   "travelTime": "Thời gian di chuyển",
   "chargedDistance": "Khoảng cách tính phí",
   "servicemanLocation": "Vị trí nhân viên dịch vụ",
+  "selectLocationFirst": "Chọn vị trí trước...",
+  "areYouSure": "Bạn có chắc chắn muốn đăng xuất không?",
+  "generateQr": "Tạo mã QR",
+  "showQr": "Hiển thị mã QR",
+  "platformFee": "Phí nền tảng",
+  "selectImage": "Chọn hình ảnh",
+  "noImagesAvailable": "Không có hình ảnh",
+  "locationPermissionDenied": "Quyền truy cập vị trí bị từ chối",
+  "locationPermissionPermanentlyDenied":
+      "Quyền truy cập vị trí bị từ chối vĩnh viễn. Vui lòng bật trong cài đặt ứng dụng.",
+  "currentLocation": "Vị trí hiện tại",
+  "nearbyLocation": "Vị trí gần đây",
+  "locationsFound": "Đã tìm thấy vị trí thành công",
+  "failedToGetLocationDetails": "Không thể lấy chi tiết vị trí",
+  "errorFetchingLocationData": "Lỗi khi tải dữ liệu vị trí",
+  "savedLocations": "Vị trí đã lưu",
 };

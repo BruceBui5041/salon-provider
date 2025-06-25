@@ -2,6 +2,7 @@ import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/
 import 'package:salon_provider/screens/app_pages_screens/edit_service_screen/edit_service_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/payment_qr_screen/payment_qr_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/pending_booking_screen.dart';
+import 'package:salon_provider/screens/app_pages_screens/select_location_screen/select_location_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/services_details_screen/services_details_screen.dart';
 import 'package:salon_provider/screens/auth_screens/register_screen/register_screen.dart';
 
@@ -77,5 +78,6 @@ class AppRoute {
     routeName.customPendingBooking: (p0) => PendingBookingScreen(),
     routeName.customServiceDetails: (p0) => ServicesDetailsScreen(),
     routeName.serviceDescriptionEditor: (p0) => const HtmlEditorScreen(),
+    routeName.selectLocation: (p0) => SelectCurrentLocationScreen(),
   };
 }

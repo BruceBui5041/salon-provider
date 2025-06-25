@@ -4,6 +4,7 @@ globs:
 alwaysApply: true
 ---
 # Main focus
+- Run ```flutter analyze``` for your changed files fix all the need to fix
 - KEEP EXEACT THE ORIGINAL UI JUST UPDATE THE DATA ONLY
 - DONNOT UPDATE THING THAT NOT RELEVANT TO YOU TASK
 - Check all relevant files in the conversation for type issue

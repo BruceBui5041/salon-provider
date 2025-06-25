@@ -22,6 +22,7 @@ class AppTheme {
   Color red;
   Color yellow;
   Color whiteColor;
+  Color divider;
   Color pending, accepted, ongoing, pendingApproval, hold, assign;
 
   /// Default constructor
@@ -38,6 +39,7 @@ class AppTheme {
     required this.red,
     required this.green,
     required this.whiteColor,
+    required this.divider,
     required this.pending,
     required this.accepted,
     required this.ongoing,
@@ -64,6 +66,7 @@ class AppTheme {
           green: Colors.green,
           online: Colors.green,
           red: const Color(0xffFF4B4B),
+          divider: const Color(0xffE5E8EA),
           pending: const Color(0xffFDB448),
           accepted: const Color(0xff48BFFD),
           ongoing: const Color(0xffFF7456),
@@ -87,6 +90,7 @@ class AppTheme {
           green: Colors.green,
           online: Colors.green,
           red: const Color(0xffFF4B4B),
+          divider: const Color(0xff3A3D48),
           pending: const Color(0xffFDB448),
           accepted: const Color(0xff48BFFD),
           ongoing: const Color(0xffFF7456),

@@ -204,7 +204,7 @@ dynamic en = {
   "addServiceTime": "Add service time",
   "hour": "Hour",
   "availableServiceAt": "Available service at",
-  "selectLocation": "Select location",
+  "selectLocation": "Select Location",
   "minRequiredServiceman": "Min. required servicemen",
   "addNoOfServiceman": "Add no. of servicemen",
   "price": "Price",
@@ -578,14 +578,13 @@ dynamic en = {
       "Attempt your search once more with words that are more universal.",
   "searchAgain": "Search again",
   "youHaveNotSearch": "You've not search anything yet!",
-  "startSearching":
-      "Start searching your personalized service to make your home more better.",
-  "addSelectLocation": "Add Select location",
+  "startSearching": "Start Searching",
+  "addSelectLocation": "Add & Select Location",
   "mainImage": "Main image",
   "generateQr": "Generate QR",
   "showQr": "Show QR",
   "paid": "Paid",
-  "platformFee": "Platform fee",
+  "platformFee": "Platform Fee",
   "chooseImageSource": "Choose Image Source",
   "gallery": "Gallery",
   "camera": "Camera",
@@ -594,7 +593,19 @@ dynamic en = {
   "enterImageUrl": "Enter Image URL",
   "insert": "Insert",
   "selectImage": "Select an image",
-  "noImagesAvailable": "No images available",
+  "noImagesAvailable": "No Images Available",
+
+  // Location related strings
+  "locationPermissionDenied": "Location permission denied",
+  "locationPermissionPermanentlyDenied":
+      "Location permission permanently denied. Please enable it from app settings.",
+  "currentLocation": "Current Location",
+  "nearbyLocation": "Nearby Location",
+  "locationsFound": "Locations found successfully",
+  "failedToGetLocationDetails": "Failed to get location details",
+  "errorFetchingLocationData": "Error fetching location data",
+  "savedLocations": "Saved Locations",
+  "defaultLocation": "Default Location",
 
   // Status strings
   "draft": "Draft",
@@ -611,4 +622,25 @@ dynamic en = {
   "travelTime": "Travel Time",
   "chargedDistance": "Charged Distance",
   "servicemanLocation": "Serviceman Location",
+
+  // New strings from the code block
+  "selectLocation": "Select Location",
+  "startSearching": "Start Searching",
+  "addSelectLocation": "Add & Select Location",
+  "selectLocationFirst": "Select location first...",
+  "areYouSure": "Are you sure want to Logout ?",
+  "generateQr": "Generate QR",
+  "showQr": "Show QR",
+  "platformFee": "Platform Fee",
+  "selectImage": "Select Image",
+  "noImagesAvailable": "No Images Available",
+  "locationPermissionDenied": "Location permission denied",
+  "locationPermissionPermanentlyDenied":
+      "Location permission permanently denied. Please enable it from app settings.",
+  "currentLocation": "Current Location",
+  "nearbyLocation": "Nearby Location",
+  "locationsFound": "Locations found successfully",
+  "failedToGetLocationDetails": "Failed to get location details",
+  "errorFetchingLocationData": "Error fetching location data",
+  "savedLocations": "Saved Locations",
 };

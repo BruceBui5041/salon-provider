@@ -1,5 +1,6 @@
 import 'package:json_annotation/json_annotation.dart';
 import 'package:salon_provider/model/response/base_response.dart';
+import 'package:salon_provider/model/response/user_response.dart';
 
 part 'address_res.g.dart';
 
@@ -20,6 +21,9 @@ class Address extends CommonResponse {
   @JsonKey(name: 'longitude')
   final double? longitude;
 
+  @JsonKey(name: 'user')
+  final UserResponse? user;
+
   Address({
     required super.id,
     required super.createdAt,
@@ -30,6 +34,7 @@ class Address extends CommonResponse {
     this.text,
     this.latitude,
     this.longitude,
+    this.user,
   });
 
   factory Address.fromJson(Map<String, dynamic> json) =>

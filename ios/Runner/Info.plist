@@ -35,6 +35,16 @@
 		<string>This app needs camera access to take photos for featured points</string>
 		<key>NSPhotoLibraryUsageDescription</key>
 		<string>This app needs photo library access to select images for featured points</string>
+		<key>NSLocationWhenInUseUsageDescription</key>
+		<string>This app needs access to your location to find nearby service locations</string>
+		<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
+		<string>This app needs access to your location to find nearby service locations</string>
+		<key>NSLocationAlwaysUsageDescription</key>
+		<string>This app needs access to your location to find nearby service locations</string>
+		<key>NSLocationUsageDescription</key>
+		<string>This app needs access to your location to find nearby service locations</string>
+		<key>NSLocalNetworkUsageDescription</key>
+		<string>This app needs access to the local network for debugging purposes</string>
 		<key>UIApplicationSupportsIndirectInputEvents</key>
 		<true />
 		<key>UILaunchStoryboardName</key>

@@ -20,6 +20,9 @@ Address _$AddressFromJson(Map<String, dynamic> json) => Address(
       text: json['text'] as String?,
       latitude: (json['latitude'] as num?)?.toDouble(),
       longitude: (json['longitude'] as num?)?.toDouble(),
+      user: json['user'] == null
+          ? null
+          : UserResponse.fromJson(json['user'] as Map<String, dynamic>),
     );
 
 Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
@@ -32,4 +35,5 @@ Map<String, dynamic> _$AddressToJson(Address instance) => <String, dynamic>{
       'text': instance.text,
       'latitude': instance.latitude,
       'longitude': instance.longitude,
+      'user': instance.user,
     };
