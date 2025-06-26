@@ -605,6 +605,7 @@ dynamic en = {
   "failedToGetLocationDetails": "Failed to get location details",
   "errorFetchingLocationData": "Error fetching location data",
   "savedLocations": "Saved Locations",
+  "recentLocations": "Recent Locations",
   "defaultLocation": "Default Location",
 
   // Status strings

@@ -1,4 +1,6 @@
 import '../../../config.dart';
+import '../../../widgets/near_location_layout.dart';
+import '../../../widgets/saved_location_layout.dart';
 
 class SelectCurrentLocationScreen extends StatefulWidget {
   const SelectCurrentLocationScreen({super.key});
@@ -67,37 +69,16 @@ class _SelectCurrentLocationScreenState
                                   final address = e.value;
                                   final index = e.key;
 
-                                  // Create a map for the ServicemanListLayout
-                                  final addressMap = {
-                                    "title": address.text ??
-                                        language(
-                                            context, appFonts.currentLocation),
-                                    "subtext": index == 0
-                                        ? language(
-                                            context, appFonts.currentLocation)
-                                        : language(
-                                            context, appFonts.nearbyLocation),
-                                    "latitude": address.latitude.toString(),
-                                    "longitude": address.longitude.toString(),
-                                    "address": address.text ??
-                                        language(
-                                            context, appFonts.currentLocation),
-                                  };
-
-                                  return ServicemanListLayout(
+                                  return NearLocationLayout(
                                       isCheck: value.selectedLocation
                                               .contains(index) &&
-                                          value.addedLocation
-                                              .contains(addressMap),
+                                          value.addedLocation.contains(address),
                                       onIconTap: () => value
                                           .onTapNearbyLocation(index, address),
                                       isBorder: true,
-                                      onEdit: null,
-                                      onDelete: null,
-                                      data: addressMap,
-                                      index: index,
-                                      list: value.listNearByAddress);
-                                }).toList(),
+                                      data: address,
+                                      index: index);
+                                }),
                                 Divider(
                                   color: appColor(context).appTheme.divider,
                                   thickness: 1,
@@ -107,7 +88,7 @@ class _SelectCurrentLocationScreenState
                               // Saved addresses section from API
                               if (value.savedAddresses.isNotEmpty) ...[
                                 Text(
-                                  language(context, appFonts.savedLocations),
+                                  language(context, appFonts.recentLocations),
                                   style: appCss.dmDenseBold16.textColor(
                                       appColor(context).appTheme.darkText),
                                 ).paddingOnly(bottom: Insets.i10),
@@ -118,32 +99,22 @@ class _SelectCurrentLocationScreenState
                                   final address = e.value;
                                   final index = e.key;
 
-                                  // Create a map for the ServicemanListLayout
-                                  final addressMap = {
-                                    "title": address.text ?? "",
-                                    "subtext": address.isDefault == true
-                                        ? language(
-                                            context, appFonts.defaultLocation)
-                                        : address.type ?? "",
-                                    "latitude": address.latitude.toString(),
-                                    "longitude": address.longitude.toString(),
-                                    "address": address.text ?? "",
-                                  };
-
-                                  return ServicemanListLayout(
+                                  return SavedLocationLayout(
+                                      type: address.isDefault == true
+                                          ? "current"
+                                          : address.type,
                                       isCheck: value.selectedLocation
                                               .contains("saved_$index") &&
-                                          value.addedLocation
-                                              .contains(addressMap),
+                                          value.addedLocation.contains(address),
                                       onIconTap: () => value.onTapSavedLocation(
                                           "saved_$index", address),
                                       isBorder: true,
                                       onEdit: null,
                                       onDelete: null,
-                                      data: addressMap,
+                                      data: address,
                                       index: index,
                                       list: value.savedAddresses);
-                                }).toList(),
+                                }),
                                 Divider(
                                   color: appColor(context).appTheme.divider,
                                   thickness: 1,

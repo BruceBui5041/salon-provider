@@ -578,6 +578,7 @@ class AppFonts {
   final failedToGetLocationDetails = "failedToGetLocationDetails";
   final errorFetchingLocationData = "errorFetchingLocationData";
   final savedLocations = "savedLocations";
+  final recentLocations = "recentLocations";
   final defaultLocation = "defaultLocation";
 
   // Add status strings

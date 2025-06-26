@@ -601,6 +601,7 @@ dynamic vi = {
   "failedToGetLocationDetails": "Không thể lấy chi tiết vị trí",
   "errorFetchingLocationData": "Lỗi khi tải dữ liệu vị trí",
   "savedLocations": "Vị trí đã lưu",
+  "recentLocations": "Vị trí gần đây",
   "defaultLocation": "Vị trí mặc định",
 
   // Status strings
