@@ -12,12 +12,13 @@ class LoginAsProviderScreen extends StatefulWidget {
 class _LoginAsProviderScreenState extends State<LoginAsProviderScreen> {
   @override
   initState() {
-    super.initState();
     Provider.of<LoginAsProvider>(context, listen: false).checkAuth(
       onSuccess: () {
-        route.pushNamed(context, routeName.dashboard);
+        route.pushReplacementNamed(context, routeName.selectLocation);
       },
     );
+
+    super.initState();
   }
 
   @override

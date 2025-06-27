@@ -45,7 +45,8 @@ class VerifyOtpScreen extends StatelessWidget {
                                                 .checkCookie(context,
                                                     onSuccess: () {
                                               route.pushReplacementNamed(
-                                                  context, routeName.dashboard);
+                                                  context,
+                                                  routeName.selectLocation);
                                             });
                                           });
                                           // route.pushNamed(

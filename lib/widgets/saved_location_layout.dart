@@ -44,9 +44,12 @@ class SavedLocationLayout extends StatelessWidget {
           appColor(context).appTheme.accepted.withValues(alpha: 10);
     }
 
+    Color? currentColor = isCurrent ? appColor(context).appTheme.primary : null;
+
     return ListTile(
       contentPadding: EdgeInsets.zero,
       dense: true,
+      onTap: onIconTap,
       selectedColor: appColor(context).appTheme.primary,
       selected: isCurrent,
       leading: SvgPicture.asset(
@@ -101,9 +104,7 @@ class SavedLocationLayout extends StatelessWidget {
     )
         .paddingSymmetric(horizontal: Insets.i15)
         .boxBorderExtension(context,
-            color: backgroundColor,
-            isShadow: true,
-            bColor: isCurrent ? appColor(context).appTheme.primary : null)
+            color: backgroundColor, isShadow: true, bColor: currentColor)
         .paddingOnly(bottom: index != list!.length - 1 ? Insets.i15 : 0);
   }
 }

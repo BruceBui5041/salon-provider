@@ -63,15 +63,15 @@ class LocationProvider with ChangeNotifier {
       "subtext": "${place!.country!} - ${place!.postalCode!}"
     });
     log("ADDED LIST ${appArray.serviceAvailableAreaList}");
-    location.locationList.add({
-      "title": "${place!.name!} - ${place!.subLocality!}",
-      "subtext": "${place!.country!} - ${place!.postalCode!}",
-      "latitude": "${position!.latitude}",
-      "longitude": "${position!.longitude}",
-      "zip": "${place!.postalCode}",
-      "address":
-          "${place!.street!}, ${place!.name!}, ${place!.subLocality!}, ${place!.administrativeArea!}",
-    });
+    // location.locationList.add({
+    //   "title": "${place!.name!} - ${place!.subLocality!}",
+    //   "subtext": "${place!.country!} - ${place!.postalCode!}",
+    //   "latitude": "${position!.latitude}",
+    //   "longitude": "${position!.longitude}",
+    //   "zip": "${place!.postalCode}",
+    //   "address":
+    //       "${place!.street!}, ${place!.name!}, ${place!.subLocality!}, ${place!.administrativeArea!}",
+    // });
     value.notifyListeners();
     location.notifyListeners();
     notifyListeners();

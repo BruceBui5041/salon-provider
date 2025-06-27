@@ -61,3 +61,4 @@ export '../providers/app_pages_provider/id_verification_provider.dart';
 export '../providers/app_pages_provider/commission_history_provider.dart';
 export '../providers/app_pages_provider/search_provider.dart';
 export '../providers/app_pages_provider/view_location_provider.dart';
+export '../providers/app_pages_provider/address_provider.dart';

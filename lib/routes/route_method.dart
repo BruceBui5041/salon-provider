@@ -26,7 +26,7 @@ class AppRoute {
     routeName.addNewService: (p0) => AddNewServiceScreen(),
     routeName.serviceDetails: (p0) => ServicesDetailsScreenOld(),
     routeName.serviceReview: (p0) => ServiceReviewScreen(),
-    routeName.locationList: (p0) => LocationListScreen(),
+    // routeName.locationList: (p0) => LocationListScreen(),
     routeName.categories: (p0) => CategoriesListScreen(),
     routeName.servicemanList: (p0) => ServicemanListScreen(),
     routeName.servicemanDetail: (p0) => ServicemanDetailScreen(),

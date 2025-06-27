@@ -18,10 +18,21 @@ class NearLocationLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Determine background color based on selection
+    Color backgroundColor = appColor(context).appTheme.whiteBg;
+
+    if (isCheck == true) {
+      backgroundColor =
+          appColor(context).appTheme.primary.withValues(alpha: 10);
+    } else if (isDetail == true) {
+      backgroundColor = appColor(context).appTheme.fieldCardBg;
+    }
+
     return isBorder == true
         ? ListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
+            onTap: onIconTap,
             leading: SvgPicture.asset(
                     isCheck == true ? eSvgAssets.tick : eSvgAssets.location,
                     colorFilter: ColorFilter.mode(
@@ -53,12 +64,12 @@ class NearLocationLayout extends StatelessWidget {
             ),
           )
             .paddingSymmetric(horizontal: Insets.i15)
-            .boxBorderExtension(context,
-                color: appColor(context).appTheme.whiteBg, isShadow: true)
+            .boxBorderExtension(context, color: backgroundColor, isShadow: true)
             .paddingOnly(bottom: Insets.i15)
         : ListTile(
             contentPadding: EdgeInsets.zero,
             dense: true,
+            onTap: onIconTap,
             leading: SvgPicture.asset(eSvgAssets.location,
                     colorFilter: ColorFilter.mode(
                         appColor(context).appTheme.primary, BlendMode.srcIn))
@@ -68,7 +79,8 @@ class NearLocationLayout extends StatelessWidget {
                     color: appColor(context)
                         .appTheme
                         .primary
-                        .withValues(alpha: 26)),
+                        .withValues(alpha: 26))
+                .inkWell(onTap: onIconTap),
             title: Text(
               data?.text ?? "",
               overflow: TextOverflow.ellipsis,
@@ -85,10 +97,7 @@ class NearLocationLayout extends StatelessWidget {
             ),
           )
             .paddingSymmetric(horizontal: Insets.i15)
-            .boxShapeExtension(
-                color: isDetail == true
-                    ? appColor(context).appTheme.fieldCardBg
-                    : appColor(context).appTheme.whiteBg)
+            .boxShapeExtension(color: backgroundColor)
             .paddingOnly(bottom: Insets.i15);
   }
 }

@@ -342,8 +342,8 @@ class EditServiceProvider extends ChangeNotifier {
   }
 
   onAvailableServiceTap(context) async {
-    var result = await route.push(context, LocationListScreen());
-    availableService.text = result;
+    // var result = await route.push(context, LocationListScreen());
+    // availableService.text = result;
     notifyListeners();
   }
 

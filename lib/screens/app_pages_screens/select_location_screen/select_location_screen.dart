@@ -70,9 +70,8 @@ class _SelectCurrentLocationScreenState
                                   final index = e.key;
 
                                   return NearLocationLayout(
-                                      isCheck: value.selectedLocation
-                                              .contains(index) &&
-                                          value.addedLocation.contains(address),
+                                      isCheck:
+                                          value.selectedLocation == address,
                                       onIconTap: () => value
                                           .onTapNearbyLocation(index, address),
                                       isBorder: true,
@@ -103,9 +102,8 @@ class _SelectCurrentLocationScreenState
                                       type: address.isDefault == true
                                           ? "current"
                                           : address.type,
-                                      isCheck: value.selectedLocation
-                                              .contains("saved_$index") &&
-                                          value.addedLocation.contains(address),
+                                      isCheck:
+                                          value.selectedLocation == address,
                                       onIconTap: () => value.onTapSavedLocation(
                                           "saved_$index", address),
                                       isBorder: true,

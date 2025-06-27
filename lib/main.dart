@@ -2,6 +2,7 @@ import 'package:salon_provider/config/constant_api_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/storage_config.dart';
 import 'package:salon_provider/helper/notification_helper.dart';
+import 'package:salon_provider/providers/app_pages_provider/address_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/all_service_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/payment_qr_provider.dart';
 import 'package:salon_provider/providers/app_pages_provider/service_details_provider.dart';
@@ -152,6 +153,8 @@ class MyApp extends StatelessWidget {
                       create: (_) => ServiceDetailsProvider()),
                   ChangeNotifierProvider(create: (_) => ImageServiceProvider()),
                   ChangeNotifierProvider(create: (_) => PaymentQrProvider()),
+                  ChangeNotifierProvider(
+                      create: (_) => AddressProvider(getIt())),
                 ],
                 child: Consumer<ThemeService>(builder: (context, theme, child) {
                   return Consumer<LanguageProvider>(

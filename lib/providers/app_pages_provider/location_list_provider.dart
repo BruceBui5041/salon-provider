@@ -7,7 +7,7 @@ import 'package:salon_provider/repositories/location_repo.dart';
 import 'package:salon_provider/config/injection_config.dart';
 
 class LocationListProvider with ChangeNotifier {
-  List selectedLocation = [];
+  Address? selectedLocation;
   List addedLocation = [];
   List<Address> listNearByAddress = [];
   List locationList = [
@@ -65,6 +65,33 @@ class LocationListProvider with ChangeNotifier {
     try {
       final locationRepo = getIt<LocationRepo>();
       savedAddresses = await locationRepo.getRecentAddresses();
+
+      // Set default selection to the "current" location if available
+      if (savedAddresses.isNotEmpty) {
+        // Find the address with isDefault=true or type="current"
+        final defaultAddress = savedAddresses.firstWhere(
+          (address) => address.isDefault == true || address.type == "current",
+          orElse: () => savedAddresses
+              .first, // Fallback to first address if no current/default found
+        );
+
+        // Set as selected location
+        selectedLocation = defaultAddress;
+
+        // Add to addedLocation for backward compatibility
+        addedLocation.clear();
+        addedLocation.add({
+          "title": defaultAddress.text ?? "",
+          "subtext": defaultAddress.isDefault == true
+              ? appFonts.defaultLocation
+              : defaultAddress.type ?? "",
+          "zip": "",
+          "latitude": defaultAddress.latitude.toString(),
+          "longitude": defaultAddress.longitude.toString(),
+          "address": defaultAddress.text ?? "",
+        });
+      }
+
       notifyListeners();
     } catch (e) {
       scaffoldMessage(context,
@@ -110,6 +137,30 @@ class LocationListProvider with ChangeNotifier {
 
       // Also fetch saved addresses
       await fetchSavedAddresses(context);
+
+      // Ensure a default selection is applied
+      // (this should be handled by fetchSavedAddresses now, but in case it fails)
+      if (selectedLocation == null && savedAddresses.isNotEmpty) {
+        // Prioritize current/default location from saved addresses
+        final defaultAddress = savedAddresses.firstWhere(
+          (address) => address.isDefault == true || address.type == "current",
+          orElse: () => savedAddresses.first,
+        );
+
+        selectedLocation = defaultAddress;
+        // Add to addedLocation for backward compatibility
+        addedLocation.clear();
+        addedLocation.add({
+          "title": defaultAddress.text ?? "",
+          "subtext": defaultAddress.isDefault == true
+              ? appFonts.defaultLocation
+              : defaultAddress.type ?? "",
+          "zip": "",
+          "latitude": defaultAddress.latitude.toString(),
+          "longitude": defaultAddress.longitude.toString(),
+          "address": defaultAddress.text ?? "",
+        });
+      }
     } catch (e) {
       scaffoldMessage(context, "Error getting location: $e");
     } finally {
@@ -149,21 +200,14 @@ class LocationListProvider with ChangeNotifier {
   }
 
   onTapLocation(id, val) {
-    if (!selectedLocation.contains(id)) {
-      selectedLocation.add(id);
-      addedLocation.add(val);
-    } else {
-      selectedLocation.remove(id);
-      addedLocation.remove(val);
-    }
+    // Legacy method - no longer used with single selection
     notifyListeners();
   }
 
   onTapNearbyLocation(int id, Address address) {
-    selectedLocation.clear();
+    selectedLocation = address;
     addedLocation.clear();
 
-    selectedLocation.add(id);
     addedLocation.add({
       "title": address.text ?? appFonts.currentLocation,
       "subtext": id == 0 ? appFonts.currentLocation : appFonts.nearbyLocation,
@@ -177,10 +221,9 @@ class LocationListProvider with ChangeNotifier {
   }
 
   onTapSavedLocation(String id, Address address) {
-    selectedLocation.clear();
+    selectedLocation = address;
     addedLocation.clear();
 
-    selectedLocation.add(id);
     addedLocation.add({
       "title": address.text ?? "",
       "subtext": address.isDefault == true
@@ -222,12 +265,32 @@ class LocationListProvider with ChangeNotifier {
     notifyListeners();
   }
 
-  onAddSelectLocation(context) {
-    if (selectedLocation.isNotEmpty) {
-      Navigator.pop(context, "${addedLocation[0]["title"]}");
+  onAddSelectLocation(context) async {
+    if (selectedLocation != null) {
+      isLoading = true;
       notifyListeners();
+
+      final addressProvider =
+          Provider.of<AddressProvider>(context, listen: false);
+
+      // Call the provider method
+      await addressProvider.chooseCurrentAddress(
+        addressId: selectedLocation!.id,
+        latitude: selectedLocation!.latitude.toString(),
+        longitude: selectedLocation!.longitude.toString(),
+        text: selectedLocation!.text,
+        onSuccess: (success) {
+          if (!success) {
+            scaffoldMessage(context, language(context, appFonts.errorOccur));
+          }
+          route.pushNamed(context, routeName.dashboard);
+        },
+        onError: (error) {
+          scaffoldMessage(context, error);
+        },
+      );
     } else {
-      scaffoldMessage(context, appFonts.selectLocationFirst);
+      scaffoldMessage(context, language(context, appFonts.selectLocationFirst));
     }
   }
 
