@@ -15,13 +15,19 @@ class DashboardScreen extends StatelessWidget {
             canPop: false,
             child: Scaffold(
                 floatingActionButton: SizedBox(
-                        height: Sizes.s50,
-                        width: Sizes.s50,
-                        child: SvgPicture.asset(eSvgAssets.add,colorFilter: ColorFilter.mode(appColor(context).appTheme.whiteColor, BlendMode.srcIn)).paddingAll(Insets.i10))
+                  height: Sizes.s50,
+                  width: Sizes.s50,
+                  child: SvgPicture.asset(eSvgAssets.add,
+                          colorFilter: ColorFilter.mode(
+                              appColor(context).appTheme.whiteColor,
+                              BlendMode.srcIn))
+                      .paddingAll(Insets.i10),
+                )
                     .decorated(
                         color: appColor(context).appTheme.primary,
-                        borderRadius:
-                            const BorderRadius.all(Radius.circular(AppRadius.r30))).inkWell(onTap: ()=> value.onAdd(context)),
+                        borderRadius: const BorderRadius.all(
+                            Radius.circular(AppRadius.r30)))
+                    .inkWell(onTap: () => value.onAdd(context)),
                 floatingActionButtonLocation:
                     FloatingActionButtonLocation.centerDocked,
                 extendBody: true,
