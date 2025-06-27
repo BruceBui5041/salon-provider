@@ -78,18 +78,12 @@ class LocationListProvider with ChangeNotifier {
         // Set as selected location
         selectedLocation = defaultAddress;
 
-        // Add to addedLocation for backward compatibility
-        addedLocation.clear();
-        addedLocation.add({
-          "title": defaultAddress.text ?? "",
-          "subtext": defaultAddress.isDefault == true
-              ? appFonts.defaultLocation
-              : defaultAddress.type ?? "",
-          "zip": "",
-          "latitude": defaultAddress.latitude.toString(),
-          "longitude": defaultAddress.longitude.toString(),
-          "address": defaultAddress.text ?? "",
-        });
+        // Sort the savedAddresses list to put the selected location on top
+        if (selectedLocation != null) {
+          savedAddresses
+              .removeWhere((address) => address.id == selectedLocation!.id);
+          savedAddresses.insert(0, selectedLocation!);
+        }
       }
 
       notifyListeners();
@@ -187,8 +181,6 @@ class LocationListProvider with ChangeNotifier {
 
         // Add the nearby locations to the list
         listNearByAddress.addAll(addresses);
-
-        scaffoldMessage(context, language(context, appFonts.locationsFound));
       } else {
         scaffoldMessage(
             context, language(context, appFonts.failedToGetLocationDetails));
