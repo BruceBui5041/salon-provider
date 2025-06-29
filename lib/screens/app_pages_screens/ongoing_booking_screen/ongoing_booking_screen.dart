@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import '../../../config.dart';
 import '../assign_booking_screen/layouts/assign_bill_layout.dart';
 import '../pending_booking_screen/layouts/status_detail_layout.dart';
@@ -20,7 +18,7 @@ class OngoingBookingScreen extends StatelessWidget {
               TextButton(
                 onPressed: value.isPaymentCompleted
                     ? () => route.pushNamed(context, routeName.completedBooking,
-                        arg: value.ongoingBookingModel?.id)
+                        arg: value.ongoingBooking?.id)
                     : null,
                 child: Text(
                   language(context, appFonts.done).toUpperCase(),
@@ -33,7 +31,7 @@ class OngoingBookingScreen extends StatelessWidget {
               ).paddingOnly(right: Insets.i10),
             ],
           ),
-          body: value.ongoingBookingModel == null
+          body: value.ongoingBooking == null
               ? Center(child: CircularProgressIndicator())
               : Stack(
                   alignment: Alignment.bottomCenter,
@@ -46,7 +44,7 @@ class OngoingBookingScreen extends StatelessWidget {
                             StatusDetailLayout(
                                 onChat: () =>
                                     route.pushNamed(context, routeName.chat),
-                                data: value.ongoingBookingModel,
+                                data: value.ongoingBooking,
                                 onMore: () => route.pushNamed(
                                     context, routeName.servicemanDetail,
                                     arg: false),
@@ -62,7 +60,7 @@ class OngoingBookingScreen extends StatelessWidget {
                             value.isServicemen
                                 ? PendingApprovalBillSummary()
                                 : AssignBillLayout(
-                                    booking: value.ongoingBookingModel,
+                                    booking: value.ongoingBooking,
                                   ),
                             const VSpace(Sizes.s20),
                             // HeadingRowCommon(

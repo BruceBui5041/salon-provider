@@ -1,38 +1,91 @@
-import 'dart:convert';
 import 'dart:developer';
 
-import 'package:provider/provider.dart';
 import 'package:salon_provider/config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/repositories/booking_repository.dart';
+import 'package:salon_provider/repositories/payment_repository.dart';
+import 'package:salon_provider/model/request/payment_req.dart';
 import 'package:salon_provider/common/payment_method.dart';
 import 'package:salon_provider/common/transaction_status.dart';
-import 'package:salon_provider/screens/app_pages_screens/ongoing_booking_screen/layouts/show_qr_dialog.dart';
 import 'package:salon_provider/screens/app_pages_screens/ongoing_booking_screen/layouts/change_payment_method.dart';
 
 class OngoingBookingProvider with ChangeNotifier {
-  Booking? ongoingBookingModel;
+  Booking? ongoingBooking;
   String? amount;
   bool isServicemen = false;
   TextEditingController reasonCtrl = TextEditingController();
   final BookingRepository bookingRepository = getIt<BookingRepository>();
+  final PaymentRepository paymentRepository = getIt<PaymentRepository>();
   final GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final FocusNode reasonFocus = FocusNode();
 
   // Updated payment status properties to use enum values directly
   bool get isPaymentPending =>
-      ongoingBookingModel?.payment?.transactionStatus ==
-      TransactionStatus.pending;
+      ongoingBooking?.payment?.transactionStatus == TransactionStatus.pending;
   bool get isPaymentCompleted =>
-      ongoingBookingModel?.payment?.transactionStatus ==
-      TransactionStatus.completed;
+      ongoingBooking?.payment?.transactionStatus == TransactionStatus.completed;
   bool get isTransferPayment =>
-      ongoingBookingModel?.payment?.paymentMethod == PaymentMethod.transfer;
+      ongoingBooking?.payment?.paymentMethod == PaymentMethod.transfer;
   bool get isCashPayment =>
-      ongoingBookingModel?.payment?.paymentMethod == PaymentMethod.cash;
+      ongoingBooking?.payment?.paymentMethod == PaymentMethod.cash;
   // Check if payment has QR code
-  bool get hasPaymentQr => ongoingBookingModel?.payment?.paymentQr != null;
+  bool get hasPaymentQr => ongoingBooking?.payment?.paymentQr != null;
+
+  // Function to update payment method if different from current method
+  Future<bool> updatePaymentMethodIfDifferent(
+      PaymentMethod selectedMethod, BuildContext context) async {
+    try {
+      // Only call API if the selected method is different from current method
+      if (ongoingBooking?.payment?.paymentMethod != selectedMethod) {
+        final paymentId = ongoingBooking?.payment?.id;
+        if (paymentId != null) {
+          final updateReq = UpdatePaymentReq(paymentMethod: selectedMethod);
+          final result =
+              await paymentRepository.updatePaymentMethod(paymentId, updateReq);
+
+          if (result.errorKey != null) {
+            throw Exception(result.errorKey);
+          }
+
+          // Refetch booking data after successful payment method update
+          final bookingId = ongoingBooking?.id;
+          if (bookingId != null) {
+            await _refetchBookingData(bookingId);
+          }
+        }
+      }
+      return true;
+    } catch (error) {
+      log("Error updating payment method: $error");
+      showDialog(
+        context: context,
+        builder: (errorContext) => AlertDialogCommon(
+          title: appFonts.errorOccur,
+          image: eGifAssets.error,
+          subtext: language(context, error.toString()),
+          height: Sizes.s145,
+          bText1: appFonts.okay,
+          b1OnTap: () => route.pop(errorContext),
+        ),
+      );
+      return false;
+    }
+  }
+
+  // Helper function to refetch booking data
+  Future<void> _refetchBookingData(String bookingId) async {
+    try {
+      final bookings = await bookingRepository.getBookingByIdBooking(bookingId);
+      if (bookings.isNotEmpty) {
+        ongoingBooking = bookings.first;
+        notifyListeners();
+      }
+    } catch (error) {
+      log("Error refetching booking data: $error");
+      // Silently fail as this is just for data refresh
+    }
+  }
 
   onReady(context) {
     if (isFreelancer) {
@@ -46,7 +99,7 @@ class OngoingBookingProvider with ChangeNotifier {
       // Fetch booking from repository
       bookingRepository.getBookingByIdBooking(bookingId).then((value) {
         if (value.isNotEmpty) {
-          ongoingBookingModel = value.first;
+          ongoingBooking = value.first;
           notifyListeners();
         }
       });
@@ -64,14 +117,14 @@ class OngoingBookingProvider with ChangeNotifier {
       isScrollControlled: true,
       context: context,
       builder: (context) {
-        return BookingStatusDialog(bookingId: ongoingBookingModel?.id);
+        return BookingStatusDialog(bookingId: ongoingBooking?.id);
       },
     );
   }
 
   onStartServicePass(context) {
     // Get booking ID from the model
-    String? bookingId = ongoingBookingModel?.id;
+    String? bookingId = ongoingBooking?.id;
 
     if (bookingId != null) {
       bookingRepository.inProgressBooking(bookingId).then((value) {
@@ -97,7 +150,7 @@ class OngoingBookingProvider with ChangeNotifier {
 
   // Method to mark payment as completed
   markPaymentPaid(context) async {
-    String? bookingId = ongoingBookingModel?.id;
+    String? bookingId = ongoingBooking?.id;
     if (bookingId != null) {
       // Show payment method selection bottom sheet
       showModalBottomSheet(
@@ -105,8 +158,16 @@ class OngoingBookingProvider with ChangeNotifier {
         isScrollControlled: true,
         backgroundColor: Colors.transparent,
         builder: (context) => ChangePaymentMethodSheet(
-          initialMethod: ongoingBookingModel?.payment?.paymentMethod,
-          onContinue: (selectedMethod, bottomSheetContext) {
+          initialMethod: ongoingBooking?.payment?.paymentMethod,
+          onContinue: (selectedMethod, bottomSheetContext) async {
+            // Update payment method first if different from current method
+            final success = await updatePaymentMethodIfDifferent(
+                selectedMethod, bottomSheetContext);
+
+            if (!success) {
+              return; // Cancel the whole process if payment method update fails
+            }
+
             if (selectedMethod == PaymentMethod.cash) {
               showDialog(
                 context: bottomSheetContext,
@@ -128,9 +189,9 @@ class OngoingBookingProvider with ChangeNotifier {
                       final result =
                           await bookingRepository.paidBooking(bookingId);
                       if (result) {
-                        if (ongoingBookingModel?.payment != null) {
-                          ongoingBookingModel = ongoingBookingModel?.copyWith(
-                              payment: ongoingBookingModel?.payment?.copyWith(
+                        if (ongoingBooking?.payment != null) {
+                          ongoingBooking = ongoingBooking?.copyWith(
+                              payment: ongoingBooking?.payment?.copyWith(
                                   transactionStatus:
                                       TransactionStatus.completed));
                           notifyListeners();
@@ -168,9 +229,9 @@ class OngoingBookingProvider with ChangeNotifier {
               );
             } else if (selectedMethod == PaymentMethod.transfer) {
               // Navigate to payment QR screen with payment ID
-              if (ongoingBookingModel?.payment?.id != null) {
+              if (ongoingBooking?.payment?.id != null) {
                 route.pushNamed(bottomSheetContext, routeName.paymentQr,
-                    arg: ongoingBookingModel!.payment!.id);
+                    arg: ongoingBooking!.payment!.id);
               }
             }
           },
@@ -181,22 +242,22 @@ class OngoingBookingProvider with ChangeNotifier {
 
   void navigateToPaymentQr(BuildContext context) {
     // First check if we have a valid booking model
-    if (ongoingBookingModel == null) {
+    if (ongoingBooking == null) {
       return;
     }
 
     // Then check if we have a payment
-    if (ongoingBookingModel?.payment == null) {
+    if (ongoingBooking?.payment == null) {
       return;
     }
 
     // Finally check if we have a payment ID
-    final paymentId = ongoingBookingModel?.payment?.id;
+    final paymentId = ongoingBooking?.payment?.id;
     if (paymentId == null || paymentId.isEmpty) {
       return;
     }
 
-    if (ongoingBookingModel?.payment?.paymentQr != null) {
+    if (ongoingBooking?.payment?.paymentQr != null) {
       route.pushNamed(
         context,
         routeName.paymentQr,
@@ -220,7 +281,7 @@ class OngoingBookingProvider with ChangeNotifier {
               if (formKey.currentState!.validate()) {
                 route.pop(context);
                 bookingRepository
-                    .cancelBooking(ongoingBookingModel!.id!, reasonCtrl.text)
+                    .cancelBooking(ongoingBooking!.id!, reasonCtrl.text)
                     .then((value) {
                   if (value) {
                     route.pop(context);

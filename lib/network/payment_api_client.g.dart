@@ -84,6 +84,40 @@ class _PaymentApiClient implements PaymentApiClient {
     return _value;
   }
 
+  @override
+  Future<BaseResponse<bool>> updatePayment(
+    String id,
+    UpdatePaymentReq requestBody,
+  ) async {
+    final _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _headers = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    _data.addAll(requestBody.toJson());
+    final _options = _setStreamType<BaseResponse<bool>>(
+      Options(method: 'PUT', headers: _headers, extra: _extra)
+          .compose(
+            _dio.options,
+            '/payment/${id}',
+            queryParameters: queryParameters,
+            data: _data,
+          )
+          .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
+    );
+    final _result = await _dio.fetch<Map<String, dynamic>>(_options);
+    late BaseResponse<bool> _value;
+    try {
+      _value = BaseResponse<bool>.fromJson(
+        _result.data!,
+        (json) => json as bool,
+      );
+    } on Object catch (e, s) {
+      errorLogger?.logError(e, s, _options);
+      rethrow;
+    }
+    return _value;
+  }
+
   RequestOptions _setStreamType<T>(RequestOptions requestOptions) {
     if (T != dynamic &&
         !(requestOptions.responseType == ResponseType.bytes ||

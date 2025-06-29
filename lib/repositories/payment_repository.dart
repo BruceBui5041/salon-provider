@@ -3,11 +3,11 @@ import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/config/repository_config.dart';
 import 'package:salon_provider/model/request/generate_qr_req.dart';
+import 'package:salon_provider/model/request/payment_req.dart';
 import 'package:salon_provider/model/request/search_request_model.dart';
 import 'package:salon_provider/model/response/bank_account_res.dart';
 import 'package:salon_provider/model/response/bank_res.dart';
-import 'package:salon_provider/model/response/base_response.dart';
-import 'package:salon_provider/model/response/booking_response.dart';
+import 'package:salon_provider/model/response/common_response.dart';
 import 'package:salon_provider/model/response/payment_response.dart';
 import 'package:salon_provider/network/api.dart';
 
@@ -112,6 +112,12 @@ class PaymentRepository extends RepositoryConfig {
     var res = (response as List<dynamic>)
         .map((e) => BankAccountRes.fromJson(e))
         .toList();
+    return res;
+  }
+
+  Future<BaseResponse<bool>> updatePaymentMethod(
+      String id, UpdatePaymentReq requestBody) async {
+    var res = await paymentClient.updatePayment(id, requestBody);
     return res;
   }
 }

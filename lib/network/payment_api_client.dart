@@ -1,6 +1,7 @@
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import 'package:salon_provider/model/request/generate_qr_req.dart';
+import 'package:salon_provider/model/request/payment_req.dart';
 import 'package:salon_provider/model/response/bank_account_res.dart';
 import 'package:salon_provider/model/response/bank_res.dart';
 import 'package:salon_provider/model/response/base_response.dart';
@@ -20,4 +21,8 @@ abstract class PaymentApiClient extends BaseApiClient {
 
   @GET("/payment/banks")
   Future<BaseResponse<List<Bank>>> getBanks();
+
+  @PUT("/payment/{id}")
+  Future<BaseResponse<bool>> updatePayment(
+      @Path("id") String id, @Body() UpdatePaymentReq requestBody);
 }
