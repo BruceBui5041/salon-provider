@@ -47,6 +47,8 @@ class LocationListProvider with ChangeNotifier {
   List<Address> savedAddresses = [];
   String? subtext;
   bool isLoading = false;
+  bool isLoadingNearby = false;
+  bool hasShownNearbyLocations = false;
 
   TextEditingController areaCtrl = TextEditingController();
   TextEditingController latitudeCtrl = TextEditingController();
@@ -99,36 +101,6 @@ class LocationListProvider with ChangeNotifier {
     notifyListeners();
 
     try {
-      // Check location permission
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          scaffoldMessage(
-              context, language(context, appFonts.locationPermissionDenied));
-          isLoading = false;
-          notifyListeners();
-          return;
-        }
-      }
-
-      if (permission == LocationPermission.deniedForever) {
-        scaffoldMessage(context,
-            language(context, appFonts.locationPermissionPermanentlyDenied));
-        isLoading = false;
-        notifyListeners();
-        return;
-      }
-
-      // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-      ));
-
-      // Use reverseGeocode to get location data
-      await fetchNearbyLocations(position, context);
-
       // Also fetch saved addresses
       await fetchSavedAddresses(context);
 
@@ -159,6 +131,52 @@ class LocationListProvider with ChangeNotifier {
       scaffoldMessage(context, "Error getting location: $e");
     } finally {
       isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Show nearby locations - separate method
+  Future<void> showNearbyLocations(BuildContext context) async {
+    if (hasShownNearbyLocations) return;
+
+    isLoadingNearby = true;
+    notifyListeners();
+
+    try {
+      // Check location permission
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied) {
+          scaffoldMessage(
+              context, language(context, appFonts.locationPermissionDenied));
+          isLoadingNearby = false;
+          notifyListeners();
+          return;
+        }
+      }
+
+      if (permission == LocationPermission.deniedForever) {
+        scaffoldMessage(context,
+            language(context, appFonts.locationPermissionPermanentlyDenied));
+        isLoadingNearby = false;
+        notifyListeners();
+        return;
+      }
+
+      // Get current position
+      Position position = await Geolocator.getCurrentPosition(
+          locationSettings: const LocationSettings(
+        accuracy: LocationAccuracy.high,
+      ));
+
+      // Use reverseGeocode to get location data
+      await fetchNearbyLocations(position, context);
+      hasShownNearbyLocations = true;
+    } catch (e) {
+      scaffoldMessage(context, "Error getting location: $e");
+    } finally {
+      isLoadingNearby = false;
       notifyListeners();
     }
   }

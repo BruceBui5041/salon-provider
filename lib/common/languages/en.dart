@@ -607,6 +607,7 @@ dynamic en = {
   "savedLocations": "Saved Locations",
   "recentLocations": "Recent Locations",
   "defaultLocation": "Default Location",
+  "showNearLocation": "Show Near Location",
 
   // Status strings
   "draft": "Draft",
