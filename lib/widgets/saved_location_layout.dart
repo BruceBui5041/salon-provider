@@ -75,11 +75,7 @@ class SavedLocationLayout extends StatelessWidget {
       ),
       subtitle: Text(
         isCurrent
-            ? (isDefault
-                ? language(context, appFonts.currentLocation)
-                    .toString()
-                    .toUpperCase()
-                : (data?.type ?? "").toUpperCase())
+            ? language(context, appFonts.savedLocations)
             : (isDefault
                 ? language(context, appFonts.defaultLocation)
                 : (data?.type ?? "")),

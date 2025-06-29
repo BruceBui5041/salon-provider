@@ -577,7 +577,7 @@ dynamic vi = {
   "youHaveNotSearch": "Bạn chưa tìm kiếm gì cả!",
   "startSearching":
       "Bắt đầu tìm kiếm dịch vụ cá nhân hóa để làm cho ngôi nhà của bạn tốt hơn.",
-  "addSelectLocation": "Thêm chọn vị trí",
+  "addSelectLocation": "Chọn vị trí",
   "mainImage": "Hình ảnh chính",
   "generateQr": "Tạo mã QR",
   "showQr": "Hiển thị mã QR",
@@ -604,6 +604,7 @@ dynamic vi = {
   "recentLocations": "Vị trí gần đây",
   "defaultLocation": "Vị trí mặc định",
   "showNearLocation": "Hiển thị vị trí gần",
+  "loading": "Đang tải...",
 
   // Status strings
   "draft": "Bản nháp",

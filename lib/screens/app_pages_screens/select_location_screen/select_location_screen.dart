@@ -18,6 +18,8 @@ class _SelectCurrentLocationScreenState
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final provider =
           Provider.of<LocationListProvider>(context, listen: false);
+      // Reset nearby location flags when screen is loaded
+      provider.resetNearbyLocationFlags();
       // Only fetch saved addresses initially, not nearby locations
       provider.getCurrentLocation(context);
     });
@@ -94,7 +96,7 @@ class _SelectCurrentLocationScreenState
                                           ),
                                     label: Text(
                                       value.isLoadingNearby
-                                          ? "Loading..."
+                                          ? language(context, appFonts.loading)
                                           : language(context,
                                               appFonts.showNearLocation),
                                       style: appCss.dmDenseMedium14.textColor(

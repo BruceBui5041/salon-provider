@@ -209,6 +209,14 @@ class LocationListProvider with ChangeNotifier {
     }
   }
 
+  // Reset nearby location flags when screen is reloaded
+  void resetNearbyLocationFlags() {
+    hasShownNearbyLocations = false;
+    isLoadingNearby = false;
+    listNearByAddress.clear();
+    notifyListeners();
+  }
+
   onTapLocation(id, val) {
     // Legacy method - no longer used with single selection
     notifyListeners();
