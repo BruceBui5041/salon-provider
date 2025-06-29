@@ -1,5 +1,6 @@
 import '../../../../config.dart';
 import '../../../../model/response/booking_response.dart';
+import '../../../../common/Utils.dart';
 
 class CancelledBillSummary extends StatelessWidget {
   final Booking? booking;
@@ -33,6 +34,9 @@ class CancelledBillSummary extends StatelessWidget {
         ? (totalServicePrice * commission.percentage! / 100)
         : 0;
 
+    // Calculate travel fee using Utils
+    final travelFeeAmount = Utils.calculateTravelFeeAmount(booking);
+
     final totalVersionDiscountedPrice = booking!.serviceVersions?.fold<double>(
             0,
             (sum, service) =>
@@ -42,8 +46,10 @@ class CancelledBillSummary extends StatelessWidget {
                     0)) ??
         0;
 
-    final earnings =
-        totalVersionDiscountedPrice - commissionAmount + couponAmount;
+    final earnings = totalVersionDiscountedPrice -
+        commissionAmount +
+        couponAmount +
+        travelFeeAmount;
 
     return Container(
         decoration: BoxDecoration(
@@ -80,7 +86,17 @@ class CancelledBillSummary extends StatelessWidget {
                       .textColor(appColor(context).appTheme.primary),
                 ).paddingOnly(bottom: Insets.i10),
               ];
-            }).toList(),
+            }),
+
+          // Travel fee if any
+          if (travelFeeAmount > 0)
+            BillRowCommon(
+                    title: language(context, appFonts.travelFee),
+                    price:
+                        "+${travelFeeAmount.toStringAsFixed(0).toCurrencyVnd()}",
+                    style: appCss.dmDenseMedium14
+                        .textColor(appColor(context).appTheme.primary))
+                .paddingOnly(bottom: Insets.i10),
 
           Divider(
                   color: appColor(context).appTheme.stroke,
@@ -93,7 +109,9 @@ class CancelledBillSummary extends StatelessWidget {
           // Total amount
           BillRowCommon(
                   title: appFonts.totalAmount,
-                  price: totalVersionDiscountedPrice.toString().toCurrencyVnd(),
+                  price: (totalVersionDiscountedPrice + travelFeeAmount)
+                      .toString()
+                      .toCurrencyVnd(),
                   styleTitle: appCss.dmDenseMedium14
                       .textColor(appColor(context).appTheme.darkText),
                   style: appCss.dmDenseBold16

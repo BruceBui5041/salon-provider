@@ -49,6 +49,8 @@ class BookingLocation extends CommonResponse {
     this.initialDuration,
     this.initialDurationText,
     this.booking,
+    this.serviceManAddress,
+    this.customerAddress,
   });
 
   factory BookingLocation.fromJson(Map<String, dynamic> json) =>

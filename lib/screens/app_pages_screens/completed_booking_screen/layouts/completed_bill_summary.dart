@@ -1,57 +1,10 @@
 import '../../../../config.dart';
 import '../../../../model/response/booking_response.dart';
-import '../../../../common/fee_type.dart';
-import '../../../../model/response/fee_res.dart';
+import '../../../../common/Utils.dart';
 
 class CompletedBillSummary extends StatelessWidget {
   final Booking? booking;
   const CompletedBillSummary({super.key, required this.booking});
-
-  // Calculate travel fee amount
-  double _calculateTravelFeeAmount(Booking? booking) {
-    if (booking?.fees != null && booking!.fees!.isNotEmpty) {
-      final travelFee = booking.fees!.firstWhere(
-        (fee) => fee.type == FeeType.travelFeePerKm,
-        orElse: () => Fee(
-          id: '',
-          createdAt: DateTime.now(),
-          updatedAt: DateTime.now(),
-          status: '',
-          travelFeePerKm: null,
-        ),
-      );
-
-      if (travelFee.travelFeePerKm != null) {
-        // Calculate actual charged fee if we have distance info
-        if (booking.bookingLocation?.initialDistance != null) {
-          // Get the distance in km (initialDistance is in meters)
-          double distanceInKm =
-              booking.bookingLocation!.initialDistance! / 1000.0;
-
-          // Parse the fee per km as double
-          double? feePerKm = double.tryParse(travelFee.travelFeePerKm!);
-
-          if (feePerKm != null) {
-            // Check if free travel applies
-            double freeTravelThreshold = 0.0;
-            if (travelFee.freeTravelFeeAt != null) {
-              freeTravelThreshold =
-                  double.tryParse(travelFee.freeTravelFeeAt!) ?? 0.0;
-            }
-
-            // Calculate the charged fee based on the distance exceeding the free threshold
-            if (distanceInKm > freeTravelThreshold) {
-              // Only charge for distance beyond the free threshold
-              double chargeableDistance = distanceInKm - freeTravelThreshold;
-              double chargedFee = feePerKm * chargeableDistance;
-              return chargedFee;
-            }
-          }
-        }
-      }
-    }
-    return 0.0;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -81,8 +34,8 @@ class CompletedBillSummary extends StatelessWidget {
         ? (totalServicePrice * commission.percentage! / 100)
         : 0;
 
-    // Calculate travel fee
-    final travelFeeAmount = _calculateTravelFeeAmount(booking);
+    // Calculate travel fee using Utils
+    final travelFeeAmount = Utils.calculateTravelFeeAmount(booking);
 
     final totalVersionDiscountedPrice = booking!.serviceVersions?.fold<double>(
             0,

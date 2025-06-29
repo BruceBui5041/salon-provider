@@ -23,14 +23,14 @@ BookingLocation _$BookingLocationFromJson(Map<String, dynamic> json) =>
       booking: json['booking'] == null
           ? null
           : Booking.fromJson(json['booking'] as Map<String, dynamic>),
-    )
-      ..serviceManAddress = json['service_man_address'] == null
+      serviceManAddress: json['service_man_address'] == null
           ? null
           : Address.fromJson(
-              json['service_man_address'] as Map<String, dynamic>)
-      ..customerAddress = json['customer_address'] == null
+              json['service_man_address'] as Map<String, dynamic>),
+      customerAddress: json['customer_address'] == null
           ? null
-          : Address.fromJson(json['customer_address'] as Map<String, dynamic>);
+          : Address.fromJson(json['customer_address'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$BookingLocationToJson(BookingLocation instance) =>
     <String, dynamic>{

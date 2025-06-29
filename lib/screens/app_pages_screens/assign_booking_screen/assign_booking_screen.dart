@@ -17,7 +17,7 @@ class AssignBookingScreen extends StatelessWidget {
                       ? appFonts.acceptedBooking
                       : appFonts.assignBooking),
               body: value.booking == null
-                  ? Center(child: CircularProgressIndicator())
+                  ? const Center(child: CircularProgressIndicator())
                   : Stack(alignment: Alignment.bottomCenter, children: [
                       SingleChildScrollView(
                           child: Column(children: [
