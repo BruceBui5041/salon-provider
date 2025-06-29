@@ -129,7 +129,10 @@ class StatusDetailLayout extends StatelessWidget {
                                       color: appColor(context).appTheme.stroke)
                                   .paddingSymmetric(horizontal: Insets.i9),
                               Expanded(
-                                  child: Text("user address",
+                                  child: Text(
+                                      data?.bookingLocation?.customerAddress
+                                              ?.text ??
+                                          language(context, appFonts.address),
                                       overflow: TextOverflow.fade,
                                       style: appCss.dmDenseRegular12.textColor(
                                           appColor(context).appTheme.darkText)))

@@ -264,7 +264,7 @@ class _BookingDetails extends StatelessWidget {
         return '${travelFee.travelFeePerKm} / km';
       }
     }
-    return '';
+    return '0'.toCurrencyVnd();
   }
 
   String _getTravelFeeTooltip(Booking? data, BuildContext context) {

@@ -85,19 +85,43 @@ class CompletedBookingScreen extends StatelessWidget {
                                                   .asMap()
                                                   .entries
                                                   .map((e) => Container(
-                                                          height: Sizes.s70,
-                                                          width: Sizes.s70,
-                                                          decoration: ShapeDecoration(
-                                                              image: DecorationImage(
-                                                                  image: FileImage(
-                                                                      File(e.value)),
-                                                                  fit: BoxFit.cover),
-                                                              shape: RoundedRectangleBorder(borderRadius: SmoothBorderRadius(cornerRadius: AppRadius.r8, cornerSmoothing: 1))))
-                                                      .paddingOnly(right: e.key != serviceProofVal.proofList.length - 1 ? Insets.i10 : 0))
+                                                        height: Sizes.s70,
+                                                        width: Sizes.s70,
+                                                        decoration:
+                                                            ShapeDecoration(
+                                                          image: DecorationImage(
+                                                              image: FileImage(
+                                                                  File(
+                                                                      e.value)),
+                                                              fit:
+                                                                  BoxFit.cover),
+                                                          shape:
+                                                              RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                SmoothBorderRadius(
+                                                              cornerRadius:
+                                                                  AppRadius.r8,
+                                                              cornerSmoothing:
+                                                                  1,
+                                                            ),
+                                                          ),
+                                                        ),
+                                                      ).paddingOnly(
+                                                          right: e.key !=
+                                                                  serviceProofVal
+                                                                          .proofList
+                                                                          .length -
+                                                                      1
+                                                              ? Insets.i10
+                                                              : 0))
                                                   .toList())
                                           .paddingAll(Insets.i15)
-                                          .boxBorderExtension(context, bColor: appColor(context).appTheme.stroke))
-                                  .paddingOnly(top: Insets.i10, bottom: Insets.i20),
+                                          .boxBorderExtension(context,
+                                              bColor: appColor(context)
+                                                  .appTheme
+                                                  .stroke))
+                                  .paddingOnly(
+                                      top: Insets.i10, bottom: Insets.i20),
                             // HeadingRowCommon(
                             //         title: appFonts.review,
                             //         onTap: () => route.pushNamed(
