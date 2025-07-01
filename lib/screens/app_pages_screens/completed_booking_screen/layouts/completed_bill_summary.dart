@@ -1,6 +1,5 @@
 import '../../../../config.dart';
 import '../../../../model/response/booking_response.dart';
-import '../../../../common/Utils.dart';
 
 class CompletedBillSummary extends StatelessWidget {
   final Booking? booking;
@@ -34,8 +33,8 @@ class CompletedBillSummary extends StatelessWidget {
         ? (totalServicePrice * commission.percentage! / 100)
         : 0;
 
-    // Calculate travel fee using Utils
-    final travelFeeAmount = Utils.calculateTravelFeeAmount(booking);
+    // Get travel fee from booking response
+    final travelFeeAmount = double.tryParse(booking!.travelFee ?? '0') ?? 0;
 
     final totalVersionDiscountedPrice = booking!.serviceVersions?.fold<double>(
             0,

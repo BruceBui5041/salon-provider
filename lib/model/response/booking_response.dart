@@ -72,6 +72,9 @@ class Booking extends CommonResponse {
   @JsonKey(name: 'fees')
   final List<Fee>? fees;
 
+  @JsonKey(name: 'travel_fee')
+  final String? travelFee;
+
   bool? isPopToHome;
 
   Booking({
@@ -99,6 +102,7 @@ class Booking extends CommonResponse {
     this.isPopToHome = false,
     this.bookingLocation,
     this.fees,
+    this.travelFee,
   });
 
   Booking copyWith({

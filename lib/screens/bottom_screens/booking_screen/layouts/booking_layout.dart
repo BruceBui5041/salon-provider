@@ -204,7 +204,7 @@ class _BookingDetails extends StatelessWidget {
   }
 
   String _getTravelFeeValue(Booking? data, BuildContext context) {
-    return Utils.getTravelFeeDisplayValue(data, context);
+    return data?.travelFee?.toCurrencyVnd() ?? '0'.toCurrencyVnd();
   }
 
   String _getTravelFeeTooltip(Booking? data, BuildContext context) {
