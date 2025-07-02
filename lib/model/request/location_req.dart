@@ -13,3 +13,18 @@ class ReverseGeocodeReq {
       _$ReverseGeocodeReqFromJson(json);
   Map<String, dynamic> toJson() => _$ReverseGeocodeReqToJson(this);
 }
+
+@JsonSerializable()
+class AutoCompleteReq {
+  @JsonKey(name: "input")
+  String? input; // "input": "123 Main St"
+
+  @JsonKey(name: "location")
+  String? location; // "location": "10.791878471000075,106.69549369900005"
+
+  AutoCompleteReq({this.input, this.location});
+
+  factory AutoCompleteReq.fromJson(Map<String, dynamic> json) =>
+      _$AutoCompleteReqFromJson(json);
+  Map<String, dynamic> toJson() => _$AutoCompleteReqToJson(this);
+}

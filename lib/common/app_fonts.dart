@@ -580,7 +580,6 @@ class AppFonts {
   final savedLocations = "savedLocations";
   final recentLocations = "recentLocations";
   final defaultLocation = "defaultLocation";
-  final showNearLocation = "showNearLocation";
   final loading = "loading";
 
   // Add status strings

@@ -21,6 +21,9 @@ class Address extends CommonResponse {
   @JsonKey(name: 'longitude')
   final double? longitude;
 
+  @JsonKey(name: 'place_id')
+  final String? placeId;
+
   @JsonKey(name: 'user')
   final UserResponse? user;
 
@@ -34,6 +37,7 @@ class Address extends CommonResponse {
     this.text,
     this.latitude,
     this.longitude,
+    this.placeId,
     this.user,
   });
 

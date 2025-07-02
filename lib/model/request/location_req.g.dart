@@ -15,3 +15,15 @@ Map<String, dynamic> _$ReverseGeocodeReqToJson(ReverseGeocodeReq instance) =>
     <String, dynamic>{
       'latlng': instance.latlng,
     };
+
+AutoCompleteReq _$AutoCompleteReqFromJson(Map<String, dynamic> json) =>
+    AutoCompleteReq(
+      input: json['input'] as String?,
+      location: json['location'] as String?,
+    );
+
+Map<String, dynamic> _$AutoCompleteReqToJson(AutoCompleteReq instance) =>
+    <String, dynamic>{
+      'input': instance.input,
+      'location': instance.location,
+    };

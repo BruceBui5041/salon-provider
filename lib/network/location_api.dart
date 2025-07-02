@@ -14,4 +14,8 @@ abstract class LocationApi extends BaseApiClient {
   @POST("/location/reverse-geocode")
   Future<BaseResponse<List<Address>>> reverseGeocode(
       @Body() ReverseGeocodeReq requestBody);
+
+  @POST("/location/autocomplete")
+  Future<BaseResponse<List<Address>>> autocomplete(
+      @Body() AutoCompleteReq requestBody);
 }

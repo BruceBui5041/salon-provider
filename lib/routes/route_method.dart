@@ -1,5 +1,4 @@
 import 'package:salon_provider/screens/app_pages_screens/add_new_service_screen/layouts/description_editor_screen.dart';
-import 'package:salon_provider/screens/app_pages_screens/edit_service_screen/edit_service_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/payment_qr_screen/payment_qr_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/pending_booking_screen.dart';
 import 'package:salon_provider/screens/app_pages_screens/select_location_screen/select_location_screen.dart';

@@ -48,7 +48,7 @@ class LocationListProvider with ChangeNotifier {
   String? subtext;
   bool isLoading = false;
   bool isLoadingNearby = false;
-  bool hasShownNearbyLocations = false;
+  String? currentLocationString; // Cache current location for autocomplete
 
   TextEditingController areaCtrl = TextEditingController();
   TextEditingController latitudeCtrl = TextEditingController();
@@ -135,69 +135,54 @@ class LocationListProvider with ChangeNotifier {
     }
   }
 
-  // Show nearby locations - separate method
-  Future<void> showNearbyLocations(BuildContext context) async {
-    if (hasShownNearbyLocations) return;
-
+  // Search locations using autocomplete API
+  Future<void> searchLocations(BuildContext context, String query) async {
     isLoadingNearby = true;
     notifyListeners();
 
     try {
-      // Check location permission
-      LocationPermission permission = await Geolocator.checkPermission();
-      if (permission == LocationPermission.denied) {
-        permission = await Geolocator.requestPermission();
-        if (permission == LocationPermission.denied) {
-          scaffoldMessage(
-              context, language(context, appFonts.locationPermissionDenied));
-          isLoadingNearby = false;
-          notifyListeners();
-          return;
+      final locationRepo = getIt<LocationRepo>();
+
+      // Use cached current location for better autocomplete results
+      // If not available, try to get it quickly with a timeout
+      String? locationForSearch = currentLocationString;
+      if (locationForSearch == null) {
+        try {
+          LocationPermission permission = await Geolocator.checkPermission();
+          if (permission != LocationPermission.denied &&
+              permission != LocationPermission.deniedForever) {
+            Position position = await Geolocator.getCurrentPosition(
+              locationSettings: const LocationSettings(
+                accuracy: LocationAccuracy
+                    .medium, // Use medium accuracy for faster response
+                timeLimit: Duration(seconds: 3), // Quick timeout for search
+              ),
+            );
+            locationForSearch = "${position.latitude},${position.longitude}";
+            // Update cache for future requests
+            currentLocationString = locationForSearch;
+          }
+        } catch (e) {
+          // If getting current location fails, continue without it
+          // Could not get current location for autocomplete, continue without it
         }
       }
 
-      if (permission == LocationPermission.deniedForever) {
-        scaffoldMessage(context,
-            language(context, appFonts.locationPermissionPermanentlyDenied));
-        isLoadingNearby = false;
-        notifyListeners();
-        return;
-      }
+      final request = AutoCompleteReq(
+        input: query,
+        location:
+            locationForSearch, // Include current location for better results
+      );
 
-      // Get current position
-      Position position = await Geolocator.getCurrentPosition(
-          locationSettings: const LocationSettings(
-        accuracy: LocationAccuracy.high,
-      ));
-
-      // Use reverseGeocode to get location data
-      await fetchNearbyLocations(position, context);
-      hasShownNearbyLocations = true;
-    } catch (e) {
-      scaffoldMessage(context, "Error getting location: $e");
-    } finally {
-      isLoadingNearby = false;
-      notifyListeners();
-    }
-  }
-
-  // Fetch nearby locations using reverseGeocode
-  Future<void> fetchNearbyLocations(
-      Position position, BuildContext context) async {
-    try {
-      final locationRepo = getIt<LocationRepo>();
-      final request = ReverseGeocodeReq(
-          latlng: "${position.latitude},${position.longitude}");
-
-      final response = await locationRepo.reverseGeocode(request);
+      final response = await locationRepo.autocomplete(request);
 
       if (response.errorKey == null) {
         final addresses = response.data!;
 
-        // Clear previous nearby locations
+        // Clear previous locations
         listNearByAddress.clear();
 
-        // Add the nearby locations to the list
+        // Add the search results to the list
         listNearByAddress.addAll(addresses);
       } else {
         scaffoldMessage(
@@ -206,15 +191,10 @@ class LocationListProvider with ChangeNotifier {
     } catch (e) {
       scaffoldMessage(context,
           "${language(context, appFonts.errorFetchingLocationData)}: $e");
+    } finally {
+      isLoadingNearby = false;
+      notifyListeners();
     }
-  }
-
-  // Reset nearby location flags when screen is reloaded
-  void resetNearbyLocationFlags() {
-    hasShownNearbyLocations = false;
-    isLoadingNearby = false;
-    listNearByAddress.clear();
-    notifyListeners();
   }
 
   onTapLocation(id, val) {

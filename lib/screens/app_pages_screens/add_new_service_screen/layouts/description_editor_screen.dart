@@ -1,13 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_quill/flutter_quill.dart';
-import 'package:provider/provider.dart';
 import 'package:salon_provider/config.dart';
-import 'package:salon_provider/providers/app_pages_provider/add_new_service_provider.dart';
-import 'package:path_provider/path_provider.dart';
-import 'package:path/path.dart' as path;
 
 // Custom image embed builder class
 class CustomImageEmbedBuilder extends EmbedBuilder {
@@ -24,42 +18,156 @@ class CustomImageEmbedBuilder extends EmbedBuilder {
     Widget imageWidget;
 
     if (imageUrl.startsWith('http')) {
-      // Network image
+      // Network image with loading indicator
       imageWidget = Image.network(
         imageUrl,
         fit: BoxFit.cover,
+        loadingBuilder: (context, child, loadingProgress) {
+          if (loadingProgress == null) {
+            return child;
+          }
+          return Container(
+            width: double.infinity,
+            height: 200,
+            color: appColor(context).appTheme.fieldCardBg,
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CircularProgressIndicator(
+                    value: loadingProgress.expectedTotalBytes != null
+                        ? loadingProgress.cumulativeBytesLoaded /
+                            loadingProgress.expectedTotalBytes!
+                        : null,
+                    color: appColor(context).appTheme.primary,
+                    strokeWidth: 2,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    language(context, appFonts.loading),
+                    style: appCss.dmDenseRegular12.textColor(
+                      appColor(context).appTheme.lightText,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          );
+        },
         errorBuilder: (context, error, stackTrace) {
           return Container(
             width: double.infinity,
             height: 200,
-            color: Colors.grey[300],
-            child: const Icon(Icons.broken_image, color: Colors.red),
+            color: appColor(context).appTheme.fieldCardBg,
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(
+                  Icons.broken_image,
+                  color: appColor(context).appTheme.red,
+                  size: 40,
+                ),
+                const SizedBox(height: 8),
+                Text(
+                  language(context, appFonts.errorOccur),
+                  style: appCss.dmDenseRegular12.textColor(
+                    appColor(context).appTheme.lightText,
+                  ),
+                  textAlign: TextAlign.center,
+                ),
+              ],
+            ),
           );
         },
       );
     } else {
-      // Local image
-      try {
-        imageWidget = Image.file(
-          File(imageUrl),
-          fit: BoxFit.cover,
-          errorBuilder: (context, error, stackTrace) {
+      // Local image with loading indicator
+      imageWidget = FutureBuilder<bool>(
+        future: _checkFileExists(imageUrl),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
             return Container(
               width: double.infinity,
               height: 200,
-              color: Colors.grey[300],
-              child: const Icon(Icons.broken_image, color: Colors.red),
+              color: appColor(context).appTheme.fieldCardBg,
+              child: Center(
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    CircularProgressIndicator(
+                      color: appColor(context).appTheme.primary,
+                      strokeWidth: 2,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      language(context, appFonts.loading),
+                      style: appCss.dmDenseRegular12.textColor(
+                        appColor(context).appTheme.lightText,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
             );
-          },
-        );
-      } catch (e) {
-        imageWidget = Container(
-          width: double.infinity,
-          height: 200,
-          color: Colors.grey[300],
-          child: const Icon(Icons.broken_image, color: Colors.red),
-        );
-      }
+          }
+
+          if (snapshot.hasError || !snapshot.data!) {
+            return Container(
+              width: double.infinity,
+              height: 200,
+              color: appColor(context).appTheme.fieldCardBg,
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.broken_image,
+                    color: appColor(context).appTheme.red,
+                    size: 40,
+                  ),
+                  const SizedBox(height: 8),
+                  Text(
+                    language(context, appFonts.errorOccur),
+                    style: appCss.dmDenseRegular12.textColor(
+                      appColor(context).appTheme.lightText,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            );
+          }
+
+          return Image.file(
+            File(imageUrl),
+            fit: BoxFit.cover,
+            errorBuilder: (context, error, stackTrace) {
+              return Container(
+                width: double.infinity,
+                height: 200,
+                color: appColor(context).appTheme.fieldCardBg,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Icon(
+                      Icons.broken_image,
+                      color: appColor(context).appTheme.red,
+                      size: 40,
+                    ),
+                    const SizedBox(height: 8),
+                    Text(
+                      language(context, appFonts.errorOccur),
+                      style: appCss.dmDenseRegular12.textColor(
+                        appColor(context).appTheme.lightText,
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              );
+            },
+          );
+        },
+      );
     }
 
     return Padding(
@@ -69,6 +177,15 @@ class CustomImageEmbedBuilder extends EmbedBuilder {
         child: imageWidget,
       ),
     );
+  }
+
+  Future<bool> _checkFileExists(String filePath) async {
+    try {
+      final file = File(filePath);
+      return await file.exists();
+    } catch (e) {
+      return false;
+    }
   }
 
   void _showCustomImageViewerPager(BuildContext context, String imageUrl) {

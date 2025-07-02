@@ -603,7 +603,6 @@ dynamic vi = {
   "savedLocations": "Vị trí đã lưu",
   "recentLocations": "Vị trí gần đây",
   "defaultLocation": "Vị trí mặc định",
-  "showNearLocation": "Hiển thị vị trí gần",
   "loading": "Đang tải...",
 
   // Status strings
