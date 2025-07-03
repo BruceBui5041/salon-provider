@@ -1,20 +1,20 @@
 import 'package:flutter/material.dart';
 import 'package:salon_provider/model/request/address_req.dart';
+import 'package:salon_provider/model/request/location_req.dart';
 import 'package:salon_provider/model/response/address_res.dart';
 import 'package:salon_provider/repositories/address_repository.dart';
+import 'package:salon_provider/repositories/location_repo.dart';
 
 class AddressProvider extends ChangeNotifier {
   final AddressRepository _addressRepository;
+  final LocationRepo _locationRepo;
   bool isLoading = false;
   String? errorMessage;
 
-  AddressProvider(this._addressRepository);
+  AddressProvider(this._addressRepository, this._locationRepo);
 
   Future<void> chooseCurrentAddress({
-    String? addressId,
-    String? latitude,
-    String? longitude,
-    String? text,
+    required Address address,
     required Function(bool) onSuccess,
     required Function(String) onError,
   }) async {
@@ -22,14 +22,33 @@ class AddressProvider extends ChangeNotifier {
       isLoading = true;
       notifyListeners();
 
+      String? finalLatitude = address.latitude;
+      String? finalLongitude = address.longitude;
+
+      if (address.placeId != null && address.placeId != "") {
+        final geocodeRequest = GeocodePlaceDetailReq(placeId: address.placeId);
+        final geocodeResponse =
+            await _locationRepo.geocodePlaceDetail(geocodeRequest);
+
+        if (geocodeResponse.data != null) {
+          finalLatitude = geocodeResponse.data!.latitude;
+          finalLongitude = geocodeResponse.data!.longitude;
+        } else {
+          errorMessage =
+              geocodeResponse.message ?? "Failed to get coordinates from place";
+          onError(errorMessage!);
+          return;
+        }
+      }
+
       final request = ChooseCurrentAddressReq(
-        latitude: latitude,
-        longitude: longitude,
-        text: text,
+        latitude: finalLatitude,
+        longitude: finalLongitude,
+        text: address.text,
       );
 
-      if (addressId != null) {
-        request.addressId = addressId;
+      if (address.id != null) {
+        request.addressId = address.id;
       }
 
       final response = await _addressRepository.chooseCurrentAddress(request);

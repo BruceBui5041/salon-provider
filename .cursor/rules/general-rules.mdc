@@ -4,9 +4,10 @@ globs:
 alwaysApply: true
 ---
 # Main focus
+- DO NOT add thing that not required or requested in the question
 - Run ```flutter analyze``` for your changed files fix all the need to fix
 - KEEP EXEACT THE ORIGINAL UI JUST UPDATE THE DATA ONLY
-- DONNOT UPDATE THING THAT NOT RELEVANT TO YOU TASK
+- DO NOT UPDATE THING THAT NOT RELEVANT TO YOU TASK
 - Check all relevant files in the conversation for type issue
 - Remove unused code and DONNOT add comment when the code already easy to understand
 - Clean up that you added previously if it's not used anymore

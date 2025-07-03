@@ -122,8 +122,8 @@ class LocationListProvider with ChangeNotifier {
               ? appFonts.defaultLocation
               : defaultAddress.type ?? "",
           "zip": "",
-          "latitude": defaultAddress.latitude.toString(),
-          "longitude": defaultAddress.longitude.toString(),
+          "latitude": defaultAddress.latitude ?? "",
+          "longitude": defaultAddress.longitude ?? "",
           "address": defaultAddress.text ?? "",
         });
       }
@@ -210,8 +210,8 @@ class LocationListProvider with ChangeNotifier {
       "title": address.text ?? appFonts.currentLocation,
       "subtext": id == 0 ? appFonts.currentLocation : appFonts.nearbyLocation,
       "zip": "",
-      "latitude": address.latitude.toString(),
-      "longitude": address.longitude.toString(),
+      "latitude": address.latitude ?? "",
+      "longitude": address.longitude ?? "",
       "address": address.text ?? appFonts.currentLocation,
     });
 
@@ -228,8 +228,8 @@ class LocationListProvider with ChangeNotifier {
           ? appFonts.defaultLocation
           : address.type ?? "",
       "zip": "",
-      "latitude": address.latitude.toString(),
-      "longitude": address.longitude.toString(),
+      "latitude": address.latitude ?? "",
+      "longitude": address.longitude ?? "",
       "address": address.text ?? "",
     });
 
@@ -273,10 +273,7 @@ class LocationListProvider with ChangeNotifier {
 
       // Call the provider method
       await addressProvider.chooseCurrentAddress(
-        addressId: selectedLocation!.id,
-        latitude: selectedLocation!.latitude.toString(),
-        longitude: selectedLocation!.longitude.toString(),
-        text: selectedLocation!.text,
+        address: selectedLocation!,
         onSuccess: (success) {
           if (!success) {
             scaffoldMessage(context, language(context, appFonts.errorOccur));

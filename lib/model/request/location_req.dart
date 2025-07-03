@@ -28,3 +28,15 @@ class AutoCompleteReq {
       _$AutoCompleteReqFromJson(json);
   Map<String, dynamic> toJson() => _$AutoCompleteReqToJson(this);
 }
+
+@JsonSerializable()
+class GeocodePlaceDetailReq {
+  @JsonKey(name: "place_id")
+  String? placeId; // "place_id": "ChIJN1t_t3u0GxQ3jNRRG61p6s"
+
+  GeocodePlaceDetailReq({this.placeId});
+
+  factory GeocodePlaceDetailReq.fromJson(Map<String, dynamic> json) =>
+      _$GeocodePlaceDetailReqFromJson(json);
+  Map<String, dynamic> toJson() => _$GeocodePlaceDetailReqToJson(this);
+}

@@ -21,6 +21,11 @@ class LocationRepo extends RepositoryConfig {
     return await _locationApi.autocomplete(requestBody);
   }
 
+  Future<BaseResponse<Address>> geocodePlaceDetail(
+      GeocodePlaceDetailReq requestBody) async {
+    return await _locationApi.geocodePlaceDetail(requestBody);
+  }
+
   Future<List<Address>> getRecentAddresses({int limit = 10}) async {
     var userId = await AuthConfig.getUserId();
 

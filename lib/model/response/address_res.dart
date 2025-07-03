@@ -16,10 +16,10 @@ class Address extends CommonResponse {
   final String? text;
 
   @JsonKey(name: 'latitude')
-  final double? latitude;
+  final String? latitude;
 
   @JsonKey(name: 'longitude')
-  final double? longitude;
+  final String? longitude;
 
   @JsonKey(name: 'place_id')
   final String? placeId;

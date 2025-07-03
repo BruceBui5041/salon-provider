@@ -18,4 +18,8 @@ abstract class LocationApi extends BaseApiClient {
   @POST("/location/autocomplete")
   Future<BaseResponse<List<Address>>> autocomplete(
       @Body() AutoCompleteReq requestBody);
+
+  @POST("/location/place-detail")
+  Future<BaseResponse<Address>> geocodePlaceDetail(
+      @Body() GeocodePlaceDetailReq requestBody);
 }

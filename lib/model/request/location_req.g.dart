@@ -27,3 +27,15 @@ Map<String, dynamic> _$AutoCompleteReqToJson(AutoCompleteReq instance) =>
       'input': instance.input,
       'location': instance.location,
     };
+
+GeocodePlaceDetailReq _$GeocodePlaceDetailReqFromJson(
+        Map<String, dynamic> json) =>
+    GeocodePlaceDetailReq(
+      placeId: json['place_id'] as String?,
+    );
+
+Map<String, dynamic> _$GeocodePlaceDetailReqToJson(
+        GeocodePlaceDetailReq instance) =>
+    <String, dynamic>{
+      'place_id': instance.placeId,
+    };

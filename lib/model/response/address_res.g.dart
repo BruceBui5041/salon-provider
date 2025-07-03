@@ -18,8 +18,8 @@ Address _$AddressFromJson(Map<String, dynamic> json) => Address(
       type: json['type'] as String?,
       isDefault: json['default'] as bool?,
       text: json['text'] as String?,
-      latitude: (json['latitude'] as num?)?.toDouble(),
-      longitude: (json['longitude'] as num?)?.toDouble(),
+      latitude: json['latitude'] as String?,
+      longitude: json['longitude'] as String?,
       placeId: json['place_id'] as String?,
       user: json['user'] == null
           ? null

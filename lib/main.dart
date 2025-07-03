@@ -154,7 +154,7 @@ class MyApp extends StatelessWidget {
                   ChangeNotifierProvider(create: (_) => ImageServiceProvider()),
                   ChangeNotifierProvider(create: (_) => PaymentQrProvider()),
                   ChangeNotifierProvider(
-                      create: (_) => AddressProvider(getIt())),
+                      create: (_) => AddressProvider(getIt(), getIt())),
                 ],
                 child: Consumer<ThemeService>(builder: (context, theme, child) {
                   return Consumer<LanguageProvider>(
