@@ -93,3 +93,18 @@ class UpdateProfileRequestModel {
 
   static dynamic _profilePictureToJson(MultipartFile? file) => file;
 }
+
+@JsonSerializable()
+class UpdateUserStatusRequest {
+  @JsonKey(name: "status")
+  final String? status;
+
+  UpdateUserStatusRequest({
+    this.status,
+  });
+
+  factory UpdateUserStatusRequest.fromJson(Map<String, dynamic> json) =>
+      _$UpdateUserStatusRequestFromJson(json);
+
+  Map<String, dynamic> toJson() => _$UpdateUserStatusRequestToJson(this);
+}

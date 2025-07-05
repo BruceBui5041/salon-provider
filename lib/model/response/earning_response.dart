@@ -23,7 +23,7 @@ class ProviderEarningResponse {
   @JsonKey(name: 'confirmed_bookings')
   final int? confirmedBookings;
   @JsonKey(name: 'total_hours')
-  final int? totalHours;
+  final double? totalHours;
   @JsonKey(name: 'total_platform_fee')
   final String? totalPlatformFee;
   @JsonKey(name: 'paid_platform_fee')
@@ -67,7 +67,7 @@ class ProviderEarningResponse {
     int? inProgressBookings,
     int? cancelledBookings,
     int? confirmedBookings,
-    int? totalHours,
+    double? totalHours,
     String? totalCommission,
     String? period,
     String? withdrawableAmount,

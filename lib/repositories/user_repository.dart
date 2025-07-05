@@ -87,4 +87,16 @@ class UserRepository extends RepositoryConfig {
       throw Exception('Failed to fetch user: $e');
     }
   }
+
+  Future<bool> updateUserStatus(String id, String status) async {
+    try {
+      var response = await api.updateUserStatus(
+        id,
+        UpdateUserStatusRequest(status: status),
+      );
+      return response.data ?? false;
+    } catch (e) {
+      throw Exception('Failed to update user status: $e');
+    }
+  }
 }

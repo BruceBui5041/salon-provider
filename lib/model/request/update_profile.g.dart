@@ -41,3 +41,15 @@ Map<String, dynamic> _$UpdateProfileRequestModelToJson(
           instance.profilePicture),
       'role_ids': instance.roleIds,
     };
+
+UpdateUserStatusRequest _$UpdateUserStatusRequestFromJson(
+        Map<String, dynamic> json) =>
+    UpdateUserStatusRequest(
+      status: json['status'] as String?,
+    );
+
+Map<String, dynamic> _$UpdateUserStatusRequestToJson(
+        UpdateUserStatusRequest instance) =>
+    <String, dynamic>{
+      'status': instance.status,
+    };

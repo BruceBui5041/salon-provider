@@ -15,7 +15,7 @@ ProviderEarningResponse _$ProviderEarningResponseFromJson(
       inProgressBookings: (json['in_progress_bookings'] as num?)?.toInt(),
       cancelledBookings: (json['cancelled_bookings'] as num?)?.toInt(),
       confirmedBookings: (json['confirmed_bookings'] as num?)?.toInt(),
-      totalHours: (json['total_hours'] as num?)?.toInt(),
+      totalHours: (json['total_hours'] as num?)?.toDouble(),
       totalPlatformFee: json['total_platform_fee'] as String?,
       period: json['period'] as String?,
       monthlyBreakdown: (json['monthly_breakdown'] as List<dynamic>?)
