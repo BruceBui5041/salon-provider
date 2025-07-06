@@ -3,6 +3,7 @@ import 'package:salon_provider/network/api_config.dart';
 import 'package:salon_provider/network/common_api.dart';
 import 'package:salon_provider/network/location_api.dart';
 import 'package:salon_provider/network/address_api.dart';
+import 'package:salon_provider/network/ws_api.dart';
 import 'package:salon_provider/providers/app_pages_provider/notification_provider.dart';
 import 'package:salon_provider/providers/index.dart';
 import 'package:salon_provider/repositories/add_new_service_repository.dart';
@@ -25,6 +26,7 @@ final getIt = GetIt.instance;
 Future<void> initInjector() async {
   // Register core
   getIt.registerLazySingleton(() => ApiConfig.createDio());
+  getIt.registerLazySingleton(() => WebSocketApi());
   getIt.registerLazySingleton(() => AuthApiClient(getIt()));
   getIt.registerLazySingleton(() => OtpApiClient(getIt()));
   getIt.registerLazySingleton(() => ServiceApiClient(getIt()));

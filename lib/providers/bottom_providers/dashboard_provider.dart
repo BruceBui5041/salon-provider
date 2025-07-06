@@ -1,8 +1,9 @@
 import 'package:salon_provider/config.dart';
+import 'package:salon_provider/config/auth_config.dart';
 import 'package:salon_provider/config/injection_config.dart';
 import 'package:salon_provider/model/response/service_response.dart';
 import 'package:salon_provider/repositories/popular_service_repository.dart';
-import 'package:salon_provider/screens/bottom_screens/booking_screen/booking_screen.dart';
+import 'package:salon_provider/network/api_config.dart';
 import '../../model/blog_model.dart';
 
 class DashboardProvider with ChangeNotifier {
@@ -21,6 +22,7 @@ class DashboardProvider with ChangeNotifier {
         blogList.add(BlogModel.fromJson(element.value));
       }
     });
+
     notifyListeners();
   }
 

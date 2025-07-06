@@ -12,6 +12,8 @@ import 'package:salon_provider/model/response/login_response.dart';
 import 'package:salon_provider/model/response/user_response.dart';
 import 'package:salon_provider/network/api.dart';
 import 'package:dio/dio.dart';
+import 'package:salon_provider/network/api_config.dart';
+import 'package:salon_provider/network/ws_api.dart';
 
 class LoginScreenRepository extends RepositoryConfig {
   var restClient = getIt.get<AuthApiClient>();
@@ -41,6 +43,17 @@ class LoginScreenRepository extends RepositoryConfig {
       if (res.data == null) throw Exception("User not found");
 
       await AuthConfig.setUser(res.data!);
+
+      if (!getIt.get<WebSocketApi>().isConnected) {
+        var userId = await AuthConfig.getUserId();
+        await ApiConfig.connectWebSocket(
+          endpoint: 'ws',
+          queryParams: {
+            'user_id': userId,
+          },
+        );
+      }
+
       return res.data;
     } catch (e) {
       if (e is DioException) {
