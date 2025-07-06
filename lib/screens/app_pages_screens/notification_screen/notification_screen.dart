@@ -40,7 +40,7 @@ class _NotificationScreenState extends State<NotificationScreen>
                               color: appColor(context)
                                   .appTheme
                                   .red
-                                  .withOpacity(0.1))
+                                  .withValues(alpha: 0.1))
                           .paddingOnly(
                               right: rtl(context) ? 0 : Insets.i20,
                               left: rtl(context) ? Insets.i20 : 0)
@@ -70,21 +70,31 @@ class _NotificationScreenState extends State<NotificationScreen>
                       : value.isNotification
                           ? RefreshIndicator(
                               onRefresh: () => value.onRefresh(),
-                              child: SingleChildScrollView(
+                              child: ListView(
+                                  controller: value.scrollController,
                                   physics:
                                       const AlwaysScrollableScrollPhysics(),
-                                  child: Column(
-                                          children: value
-                                              .notificationDetailsList
-                                              .map((notification) =>
-                                                  NotificationLayout(
-                                                    data: notification,
-                                                    onTap: () {
-                                                      // Handle notification tap if needed
-                                                    },
-                                                  ))
-                                              .toList())
-                                      .paddingAll(Insets.i20)),
+                                  padding: const EdgeInsets.all(Insets.i20),
+                                  children: [
+                                    ...value.notificationDetailsList.map(
+                                        (notification) => NotificationLayout(
+                                              data: notification,
+                                              onTap: () {
+                                                // Handle notification tap if needed
+                                              },
+                                            )),
+                                    if (value.isLoadingMore)
+                                      const Padding(
+                                        padding: EdgeInsets.all(Insets.i8),
+                                        child: Center(
+                                            child: SizedBox(
+                                                height: Sizes.s24,
+                                                width: Sizes.s24,
+                                                child:
+                                                    CircularProgressIndicator(
+                                                        strokeWidth: 2))),
+                                      ),
+                                  ]),
                             )
                           : EmptyLayout(
                               isButton: true,

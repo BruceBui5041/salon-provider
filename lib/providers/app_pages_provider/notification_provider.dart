@@ -13,12 +13,40 @@ class NotificationProvider with ChangeNotifier {
 
   bool isNotification = false;
   bool isLoading = false;
+  bool isLoadingMore = false;
   String? error;
   AnimationController? animationController;
   List<NotificationDetailsRes> notificationDetailsList = [];
   final _cloudMessageController =
       StreamController<BaseMessageResponse>.broadcast();
   BookingNotificationMessage? _bookingNotificationMessage;
+
+  // Pagination parameters
+  int _currentPage = 0;
+  final int _perPage = 10;
+  bool _hasMoreData = true;
+  ScrollController scrollController = ScrollController();
+
+  NotificationProvider() {
+    scrollController.addListener(_scrollListener);
+  }
+
+  @override
+  void dispose() {
+    scrollController.removeListener(_scrollListener);
+    scrollController.dispose();
+    super.dispose();
+  }
+
+  void _scrollListener() {
+    if (scrollController.position.pixels >=
+            scrollController.position.maxScrollExtent * 0.8 &&
+        !isLoadingMore &&
+        _hasMoreData &&
+        !isLoading) {
+      loadMoreNotifications();
+    }
+  }
 
   void onSubcribeCloudMessage({
     required Function(BaseMessageResponse) onCallBack,
@@ -38,6 +66,9 @@ class NotificationProvider with ChangeNotifier {
   }
 
   Future<void> onRefresh() async {
+    _currentPage = 0;
+    _hasMoreData = true;
+    notificationDetailsList.clear();
     await loadNotifications();
   }
 
@@ -47,9 +78,17 @@ class NotificationProvider with ChangeNotifier {
       error = null;
       notifyListeners();
 
-      notificationDetailsList =
-          await _notificationRepository.getNotificationDetails();
+      final notifications =
+          await _notificationRepository.getNotificationDetails(
+        limit: _perPage,
+        offset: _currentPage * _perPage,
+      );
 
+      if (notifications.isEmpty) {
+        _hasMoreData = false;
+      }
+
+      notificationDetailsList = notifications;
       isNotification = notificationDetailsList.isNotEmpty;
 
       isLoading = false;
@@ -58,6 +97,35 @@ class NotificationProvider with ChangeNotifier {
       isLoading = false;
       error = e.toString();
       isNotification = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> loadMoreNotifications() async {
+    if (!_hasMoreData) return;
+
+    try {
+      isLoadingMore = true;
+      notifyListeners();
+
+      _currentPage++;
+      final moreNotifications =
+          await _notificationRepository.getNotificationDetails(
+        limit: _perPage,
+        offset: _currentPage * _perPage,
+      );
+
+      if (moreNotifications.isEmpty) {
+        _hasMoreData = false;
+      } else {
+        notificationDetailsList.addAll(moreNotifications);
+        isNotification = true;
+      }
+
+      isLoadingMore = false;
+      notifyListeners();
+    } catch (e) {
+      isLoadingMore = false;
       notifyListeners();
     }
   }

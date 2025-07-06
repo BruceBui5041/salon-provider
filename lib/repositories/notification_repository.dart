@@ -11,8 +11,8 @@ class NotificationRepository extends RepositoryConfig {
 
   Future<List<NotificationDetailsRes>> getNotificationDetails({
     List<List<Condition>>? conditions,
-    int? limit,
-    int? offset,
+    int? limit = 10,
+    int? offset = 0,
   }) async {
     var userId = await AuthConfig.getUserId();
 
