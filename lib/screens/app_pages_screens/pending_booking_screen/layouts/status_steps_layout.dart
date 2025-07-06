@@ -20,8 +20,9 @@ class StatusStepsLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final eventTitle = provider.getEventTitle(data.metadata?['event']);
-    final eventDescription = provider.getEventDescription(data);
+    final eventTitle =
+        language(context, provider.getEventTitle(data.metadata?['event']));
+    final eventDescription = provider.getEventDescription(context, data);
     final statusColor =
         provider.getStatusColor(context, data.metadata?['event']);
     final createdAt = data.createdAt;

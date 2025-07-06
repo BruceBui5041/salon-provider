@@ -30,10 +30,17 @@ class NotificationDetailsRes extends CommonResponse {
     super.createdAt,
     super.updatedAt,
     super.status,
+    this.state,
+    this.sendAt,
+    this.error,
+    this.readAt,
+    this.user,
+    this.notification,
   });
 
   factory NotificationDetailsRes.fromJson(Map<String, dynamic> json) =>
       _$NotificationDetailsResFromJson(json);
 
+  @override
   Map<String, dynamic> toJson() => _$NotificationDetailsResToJson(this);
 }

@@ -622,18 +622,32 @@ dynamic vi = {
   "servicemanLocation": "Vị trí nhân viên dịch vụ",
   "selectLocationFirst": "Chọn vị trí trước...",
   "areYouSure": "Bạn có chắc chắn muốn đăng xuất không?",
-  "generateQr": "Tạo mã QR",
-  "showQr": "Hiển thị mã QR",
-  "platformFee": "Phí nền tảng",
-  "selectImage": "Chọn hình ảnh",
-  "noImagesAvailable": "Không có hình ảnh",
-  "locationPermissionDenied": "Quyền truy cập vị trí bị từ chối",
-  "locationPermissionPermanentlyDenied":
-      "Quyền truy cập vị trí bị từ chối vĩnh viễn. Vui lòng bật trong cài đặt ứng dụng.",
-  "currentLocation": "Vị trí hiện tại",
-  "nearbyLocation": "Vị trí gần đây",
-  "locationsFound": "Đã tìm thấy vị trí thành công",
-  "failedToGetLocationDetails": "Không thể lấy chi tiết vị trí",
-  "errorFetchingLocationData": "Lỗi khi tải dữ liệu vị trí",
-  "savedLocations": "Vị trí đã lưu",
+
+  // Notification titles
+  "newBookingRequest": "Yêu cầu đặt lịch mới",
+  "bookingConfirmed": "Đặt lịch đã xác nhận",
+  "bookingCancelled": "Đặt lịch đã hủy",
+  "serviceCompleted": "Dịch vụ đã hoàn thành",
+  "serviceStarted": "Dịch vụ đã bắt đầu",
+  "paymentConfirmed": "Thanh toán đã xác nhận",
+
+  // Notification descriptions
+  "newBookingPlacedBy":
+      "Đặt lịch mới #{bookingId} được đặt bởi {userName}{phone} cho {services}.",
+  "bookingConfirmedReady":
+      "Đặt lịch #{bookingId} đã được xác nhận. Dịch vụ: {services} đã sẵn sàng để bắt đầu.",
+  "bookingCancelledBy":
+      "Đặt lịch #{bookingId} đã bị hủy bởi {cancelledBy}. Dịch vụ: {services}.",
+  "serviceCompletedBy":
+      "Dịch vụ hoàn thành! Đặt lịch #{bookingId} cho {services} đã được hoàn thành thành công bởi {servicemanName}.",
+  "serviceStartedBy":
+      "Dịch vụ bắt đầu! {servicemanName} đã bắt đầu làm việc trên đặt lịch #{bookingId} cho {services}.",
+  "paymentConfirmedFor":
+      "Thanh toán đã được xác nhận cho đặt lịch #{bookingId}.",
+  "bookingFor": "cho",
+  "provider": "Nhà cung cấp",
+  "justNow": "Vừa xong",
+  "minAgo": "phút",
+  "hrAgo": "giờ",
+  "dayAgo": "ngày",
 };

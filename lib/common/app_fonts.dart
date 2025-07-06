@@ -597,4 +597,26 @@ class AppFonts {
   final travelTime = "travelTime";
   final chargedDistance = "chargedDistance";
   final servicemanLocation = "servicemanLocation";
+
+  // Notification titles
+  final newBookingRequest = "newBookingRequest";
+  final bookingConfirmed = "bookingConfirmed";
+  final bookingCancelled = "bookingCancelled";
+  final serviceCompleted = "serviceCompleted";
+  final serviceStarted = "serviceStarted";
+  final paymentConfirmed = "paymentConfirmed";
+
+  // Notification descriptions
+  final newBookingPlacedBy = "newBookingPlacedBy";
+  final bookingConfirmedReady = "bookingConfirmedReady";
+  final bookingCancelledBy = "bookingCancelledBy";
+  final serviceCompletedBy = "serviceCompletedBy";
+  final serviceStartedBy = "serviceStartedBy";
+  final paymentConfirmedFor = "paymentConfirmedFor";
+  final bookingFor = "bookingFor";
+  final provider = "provider";
+  final justNow = "justNow";
+  final minAgo = "minAgo";
+  final hrAgo = "hrAgo";
+  final dayAgo = "dayAgo";
 }

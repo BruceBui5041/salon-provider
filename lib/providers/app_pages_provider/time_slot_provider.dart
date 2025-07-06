@@ -203,7 +203,7 @@ class TimeSlotProvider with ChangeNotifier {
       builder: (context) => AlertDialogCommon(
         title: 'Change Status',
         height: Sizes.s180,
-        image: eSvgAssets.calender,
+        image: eGifAssets.dateGif,
         subtext:
             'Are you sure you want to change your status to $statusText?\n\n$bookingText',
         isTwoButton: true,

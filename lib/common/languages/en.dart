@@ -625,24 +625,30 @@ dynamic en = {
   "chargedDistance": "Charged Distance",
   "servicemanLocation": "Serviceman Location",
 
-  // New strings from the code block
-  "selectLocation": "Select Location",
-  "startSearching": "Start Searching",
-  "addSelectLocation": "Add & Select Location",
-  "selectLocationFirst": "Select location first...",
-  "areYouSure": "Are you sure want to Logout ?",
-  "generateQr": "Generate QR",
-  "showQr": "Show QR",
-  "platformFee": "Platform Fee",
-  "selectImage": "Select Image",
-  "noImagesAvailable": "No Images Available",
-  "locationPermissionDenied": "Location permission denied",
-  "locationPermissionPermanentlyDenied":
-      "Location permission permanently denied. Please enable it from app settings.",
-  "currentLocation": "Current Location",
-  "nearbyLocation": "Nearby Location",
-  "locationsFound": "Locations found successfully",
-  "failedToGetLocationDetails": "Failed to get location details",
-  "errorFetchingLocationData": "Error fetching location data",
-  "savedLocations": "Saved Locations",
+  // Notification titles
+  "newBookingRequest": "New Booking Request",
+  "bookingConfirmed": "Booking Confirmed",
+  "bookingCancelled": "Booking Cancelled",
+  "serviceCompleted": "Service Completed",
+  "serviceStarted": "Service Started",
+  "paymentConfirmed": "Payment Confirmed",
+
+  // Notification descriptions
+  "newBookingPlacedBy":
+      "New booking #{bookingId} placed by {userName}{phone} for {services}.",
+  "bookingConfirmedReady":
+      "Booking #{bookingId} has been confirmed. Service: {services} is ready to start.",
+  "bookingCancelledBy":
+      "Booking #{bookingId} has been cancelled by {cancelledBy}. Service: {services}.",
+  "serviceCompletedBy":
+      "Service completed! Booking #{bookingId} for {services} has been successfully finished by {servicemanName}.",
+  "serviceStartedBy":
+      "Service started! {servicemanName} has begun working on booking #{bookingId} for {services}.",
+  "paymentConfirmedFor": "Payment has been confirmed for booking #{bookingId}.",
+  "bookingFor": "for",
+  "provider": "Provider",
+  "justNow": "Just now",
+  "minAgo": "min",
+  "hrAgo": "hr",
+  "dayAgo": "day",
 };

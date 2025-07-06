@@ -17,20 +17,20 @@ NotificationDetailsRes _$NotificationDetailsResFromJson(
           ? null
           : DateTime.parse(json['updated_at'] as String),
       status: json['status'] as String?,
-    )
-      ..state = json['state'] as String?
-      ..sendAt = json['send_at'] == null
+      state: json['state'] as String?,
+      sendAt: json['send_at'] == null
           ? null
-          : DateTime.parse(json['send_at'] as String)
-      ..error = json['error'] as String?
-      ..readAt = json['read_at'] as String?
-      ..user = json['user'] == null
+          : DateTime.parse(json['send_at'] as String),
+      error: json['error'] as String?,
+      readAt: json['read_at'] as String?,
+      user: json['user'] == null
           ? null
-          : UserResponse.fromJson(json['user'] as Map<String, dynamic>)
-      ..notification = json['notification'] == null
+          : UserResponse.fromJson(json['user'] as Map<String, dynamic>),
+      notification: json['notification'] == null
           ? null
           : NotificationRes.fromJson(
-              json['notification'] as Map<String, dynamic>);
+              json['notification'] as Map<String, dynamic>),
+    );
 
 Map<String, dynamic> _$NotificationDetailsResToJson(
         NotificationDetailsRes instance) =>
