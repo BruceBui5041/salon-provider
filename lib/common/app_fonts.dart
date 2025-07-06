@@ -2,6 +2,10 @@ class AppFonts {
   final fixit = "MeoMeo";
   final login = "login";
   final selectPaymentMethod = "selectPaymentMethod";
+  final nearbyLocations = "nearbyLocations";
+  final locationPermissionDenied = "locationPermissionDenied";
+  final failedToGetLocationDetails = "failedToGetLocationDetails";
+  final errorFetchingLocationData = "errorFetchingLocationData";
 
   final firstName = "First name";
   final enterFirstName = "Enter First name";
@@ -569,14 +573,11 @@ class AppFonts {
   final platformFee = "platformFee";
   final selectImage = "selectImage";
   final noImagesAvailable = "noImagesAvailable";
-  final locationPermissionDenied = "locationPermissionDenied";
   final locationPermissionPermanentlyDenied =
       "locationPermissionPermanentlyDenied";
   final currentLocation = "currentLocation";
   final nearbyLocation = "nearbyLocation";
   final locationsFound = "locationsFound";
-  final failedToGetLocationDetails = "failedToGetLocationDetails";
-  final errorFetchingLocationData = "errorFetchingLocationData";
   final savedLocations = "savedLocations";
   final recentLocations = "recentLocations";
   final defaultLocation = "defaultLocation";

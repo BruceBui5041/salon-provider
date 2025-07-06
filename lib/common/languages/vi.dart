@@ -650,4 +650,5 @@ dynamic vi = {
   "minAgo": "phút",
   "hrAgo": "giờ",
   "dayAgo": "ngày",
+  "nearbyLocations": "Vị trí gần đây",
 };

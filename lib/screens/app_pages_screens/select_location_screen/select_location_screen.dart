@@ -36,6 +36,11 @@ class _SelectCurrentLocationScreenState
     _searchController.dispose();
     _searchFocusNode.dispose();
     _debounceTimer?.cancel();
+
+    // Clear nearby locations when screen is disposed
+    final provider = Provider.of<LocationListProvider>(context, listen: false);
+    provider.clearNearbyAddresses();
+
     super.dispose();
   }
 
@@ -49,6 +54,13 @@ class _SelectCurrentLocationScreenState
       setState(() {
         _showSearchResults = false;
       });
+
+      // When search is cleared, show nearby addresses again
+      if (mounted) {
+        final provider =
+            Provider.of<LocationListProvider>(context, listen: false);
+        provider.getNearbyAddresses(context);
+      }
       return;
     }
 
@@ -74,133 +86,188 @@ class _SelectCurrentLocationScreenState
     setState(() {
       _showSearchResults = false;
     });
+
+    // When search is cleared, show nearby addresses again
+    if (mounted) {
+      final provider =
+          Provider.of<LocationListProvider>(context, listen: false);
+      provider.getNearbyAddresses(context);
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Consumer<LocationListProvider>(builder: (context, value, child) {
-      return Scaffold(
-          appBar: AppBar(
-              leadingWidth: Navigator.of(context).canPop() ? 80 : 0,
-              title: Text(language(context, appFonts.locationList),
-                  style: appCss.dmDenseBold18
-                      .textColor(appColor(context).appTheme.darkText)),
-              centerTitle: true,
-              leading: Navigator.of(context).canPop()
-                  ? CommonArrow(
-                      arrow: rtl(context)
-                          ? eSvgAssets.arrowRight
-                          : eSvgAssets.arrowLeft,
-                      onTap: () => route.pop(context)).paddingAll(Insets.i8)
-                  : null,
-              actions: [
-                CommonArrow(
+      return WillPopScope(
+          onWillPop: () async {
+            // Clear nearby locations when navigating away
+            value.clearNearbyAddresses();
+            return true;
+          },
+          child: Scaffold(
+              appBar: AppBar(
+                  leadingWidth: Navigator.of(context).canPop() ? 80 : 0,
+                  title: Text(language(context, appFonts.locationList),
+                      style: appCss.dmDenseBold18
+                          .textColor(appColor(context).appTheme.darkText)),
+                  centerTitle: true,
+                  leading: Navigator.of(context).canPop()
+                      ? CommonArrow(
+                          arrow: rtl(context)
+                              ? eSvgAssets.arrowRight
+                              : eSvgAssets.arrowLeft,
+                          onTap: () {
+                            // Clear nearby locations before popping
+                            value.clearNearbyAddresses();
+                            route.pop(context);
+                          }).paddingAll(Insets.i8)
+                      : null,
+                  actions: [
+                    CommonArrow(
                         arrow: eSvgAssets.add,
-                        onTap: () =>
-                            route.pushNamed(context, routeName.location))
-                    .paddingOnly(right: Insets.i20)
-              ]),
-          body: value.isLoading
-              ? const Center(child: CircularProgressIndicator())
-              : Column(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                      Expanded(
-                        child: SingleChildScrollView(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              // Search field
-                              Container(
-                                margin: EdgeInsets.only(
-                                    top: Insets.i20, bottom: Insets.i15),
-                                decoration: BoxDecoration(
-                                  borderRadius:
-                                      BorderRadius.circular(AppRadius.r10),
-                                  border: Border.all(
-                                    color: appColor(context).appTheme.stroke,
-                                    width: 1,
-                                  ),
-                                ),
-                                child: StatefulBuilder(
-                                  builder: (context, setState) {
-                                    return TextFieldCommon(
-                                      controller: _searchController,
-                                      focusNode: _searchFocusNode,
-                                      hintText: appFonts.searchHere,
-                                      prefixIcon: eSvgAssets.search,
-                                      suffixIcon:
-                                          _searchController.text.isNotEmpty
-                                              ? InkWell(
-                                                  onTap: () {
-                                                    _clearSearch();
-                                                    setState(() {});
-                                                  },
-                                                  child: Icon(
-                                                    Icons.clear,
-                                                    color: appColor(context)
-                                                        .appTheme
-                                                        .lightText,
-                                                  ),
-                                                )
-                                              : null,
-                                      onChanged: (value) {
-                                        setState(() {});
-                                      },
-                                    );
-                                  },
-                                ),
-                              ),
-
-                              // Show search results or saved addresses
-                              if (_showSearchResults) ...[
-                                // Search/Nearby results section
-                                if (value.isLoadingNearby)
+                        onTap: () {
+                          // Clear nearby locations before navigating
+                          value.clearNearbyAddresses();
+                          route.pushNamed(context, routeName.location);
+                        }).paddingOnly(right: Insets.i20)
+                  ]),
+              body: value.isLoading
+                  ? const Center(child: CircularProgressIndicator())
+                  : Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                          Expanded(
+                            child: SingleChildScrollView(
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  // Search field
                                   Container(
-                                    height: 200,
-                                    child: const Center(
-                                        child: CircularProgressIndicator()),
-                                  )
-                                else if (value.listNearByAddress.isEmpty)
-                                  Container(
-                                    height: 200,
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          SvgPicture.asset(
-                                            eSvgAssets.location,
-                                            colorFilter: ColorFilter.mode(
-                                              appColor(context)
-                                                  .appTheme
-                                                  .lightText,
-                                              BlendMode.srcIn,
-                                            ),
-                                            width: 40,
-                                            height: 40,
-                                          ),
-                                          const VSpace(Sizes.s10),
-                                          Text(
-                                            language(context,
-                                                appFonts.ohhNoListEmpty),
-                                            style: appCss.dmDenseMedium14
-                                                .textColor(appColor(context)
-                                                    .appTheme
-                                                    .lightText),
-                                            textAlign: TextAlign.center,
-                                          ),
-                                        ],
+                                    margin: EdgeInsets.only(
+                                        top: Insets.i20, bottom: Insets.i15),
+                                    decoration: BoxDecoration(
+                                      borderRadius:
+                                          BorderRadius.circular(AppRadius.r10),
+                                      border: Border.all(
+                                        color:
+                                            appColor(context).appTheme.stroke,
+                                        width: 1,
                                       ),
                                     ),
-                                  )
-                                else
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
+                                    child: StatefulBuilder(
+                                      builder: (context, setState) {
+                                        return TextFieldCommon(
+                                          controller: _searchController,
+                                          focusNode: _searchFocusNode,
+                                          hintText: appFonts.searchHere,
+                                          prefixIcon: eSvgAssets.search,
+                                          suffixIcon:
+                                              _searchController.text.isNotEmpty
+                                                  ? InkWell(
+                                                      onTap: () {
+                                                        _clearSearch();
+                                                        setState(() {});
+                                                      },
+                                                      child: Icon(
+                                                        Icons.clear,
+                                                        color: appColor(context)
+                                                            .appTheme
+                                                            .lightText,
+                                                      ),
+                                                    )
+                                                  : null,
+                                          onChanged: (value) {
+                                            setState(() {});
+                                          },
+                                        );
+                                      },
+                                    ),
+                                  ),
+
+                                  // Show search results or saved addresses
+                                  if (_showSearchResults) ...[
+                                    // Search/Nearby results section
+                                    if (value.isLoadingNearby)
+                                      const SizedBox(
+                                        height: 200,
+                                        child: Center(
+                                            child: CircularProgressIndicator()),
+                                      )
+                                    else if (value.listNearByAddress.isEmpty)
+                                      SizedBox(
+                                        height: 200,
+                                        child: Center(
+                                          child: Column(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SvgPicture.asset(
+                                                eSvgAssets.location,
+                                                colorFilter: ColorFilter.mode(
+                                                  appColor(context)
+                                                      .appTheme
+                                                      .lightText,
+                                                  BlendMode.srcIn,
+                                                ),
+                                                width: 40,
+                                                height: 40,
+                                              ),
+                                              const VSpace(Sizes.s10),
+                                              Text(
+                                                language(context,
+                                                    appFonts.ohhNoListEmpty),
+                                                style: appCss.dmDenseMedium14
+                                                    .textColor(appColor(context)
+                                                        .appTheme
+                                                        .lightText),
+                                                textAlign: TextAlign.center,
+                                              ),
+                                            ],
+                                          ),
+                                        ),
+                                      )
+                                    else
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            language(
+                                                context, appFonts.searchHere),
+                                            style: appCss.dmDenseBold16
+                                                .textColor(appColor(context)
+                                                    .appTheme
+                                                    .darkText),
+                                          ).paddingOnly(bottom: Insets.i10),
+                                          ...value.listNearByAddress
+                                              .asMap()
+                                              .entries
+                                              .map((e) {
+                                            final address = e.value;
+                                            final index = e.key;
+
+                                            return SavedLocationLayout(
+                                              type: appFonts.searchHere,
+                                              isCheck: value.selectedLocation ==
+                                                  address,
+                                              onIconTap: () {
+                                                value.onTapNearbyLocation(
+                                                    index, address);
+                                              },
+                                              isBorder: true,
+                                              data: address,
+                                              index: index,
+                                              list: value.listNearByAddress,
+                                            );
+                                          }),
+                                        ],
+                                      ),
+                                  ] else ...[
+                                    // Nearby addresses section from reverseGeocode
+                                    if (value.listNearByAddress.isNotEmpty) ...[
                                       Text(
-                                        language(context, appFonts.searchHere),
+                                        language(
+                                            context, appFonts.nearbyLocations),
                                         style: appCss.dmDenseBold16.textColor(
                                             appColor(context)
                                                 .appTheme
@@ -214,7 +281,7 @@ class _SelectCurrentLocationScreenState
                                         final index = e.key;
 
                                         return SavedLocationLayout(
-                                          type: appFonts.searchHere,
+                                          type: appFonts.nearbyLocations,
                                           isCheck:
                                               value.selectedLocation == address,
                                           onIconTap: () {
@@ -227,59 +294,65 @@ class _SelectCurrentLocationScreenState
                                           list: value.listNearByAddress,
                                         );
                                       }),
+                                      Divider(
+                                        color:
+                                            appColor(context).appTheme.divider,
+                                        thickness: 1,
+                                      ).paddingSymmetric(vertical: Insets.i20),
                                     ],
-                                  ),
-                              ] else ...[
-                                // Saved addresses section from API
-                                if (value.savedAddresses.isNotEmpty) ...[
-                                  Text(
-                                    language(context, appFonts.recentLocations),
-                                    style: appCss.dmDenseBold16.textColor(
-                                        appColor(context).appTheme.darkText),
-                                  ).paddingOnly(bottom: Insets.i10),
-                                  ...value.savedAddresses
-                                      .asMap()
-                                      .entries
-                                      .map((e) {
-                                    final address = e.value;
-                                    final index = e.key;
 
-                                    return SavedLocationLayout(
-                                        type: address.isDefault == true
-                                            ? "current"
-                                            : address.type,
-                                        isCheck:
-                                            value.selectedLocation == address,
-                                        onIconTap: () =>
-                                            value.onTapSavedLocation(
-                                                "saved_$index", address),
-                                        isBorder: true,
-                                        onEdit: null,
-                                        onDelete: null,
-                                        data: address,
-                                        index: index,
-                                        list: value.savedAddresses);
-                                  }),
-                                  Divider(
-                                    color: appColor(context).appTheme.divider,
-                                    thickness: 1,
-                                  ).paddingSymmetric(vertical: Insets.i20),
+                                    // Saved addresses section from API
+                                    if (value.savedAddresses.isNotEmpty &&
+                                        value.listNearByAddress.isEmpty) ...[
+                                      Text(
+                                        language(
+                                            context, appFonts.savedLocations),
+                                        style: appCss.dmDenseBold16.textColor(
+                                            appColor(context)
+                                                .appTheme
+                                                .darkText),
+                                      ).paddingOnly(bottom: Insets.i10),
+                                      ...value.savedAddresses
+                                          .asMap()
+                                          .entries
+                                          .map((e) {
+                                        final address = e.value;
+                                        final index = e.key;
+
+                                        return SavedLocationLayout(
+                                            type: address.isDefault == true
+                                                ? "current"
+                                                : address.type,
+                                            isCheck: value.selectedLocation ==
+                                                address,
+                                            onIconTap: () =>
+                                                value.onTapSavedLocation(
+                                                    "saved_$index", address),
+                                            isBorder: true,
+                                            onEdit: null,
+                                            onDelete: null,
+                                            data: address,
+                                            index: index,
+                                            list: value.savedAddresses);
+                                      }),
+                                    ],
+                                  ],
                                 ],
-                              ],
-                            ],
-                          ).paddingSymmetric(horizontal: Insets.i20),
-                        ),
-                      ),
-                      ButtonCommon(
-                              title: appFonts.addSelectLocation,
-                              onTap: () => value.onAddSelectLocation(context),
-                              style: appCss.dmDenseRegular16.textColor(
-                                  appColor(context).appTheme.primary),
-                              color: appColor(context).appTheme.trans,
-                              borderColor: appColor(context).appTheme.primary)
-                          .paddingSymmetric(
-                              horizontal: Insets.i20, vertical: Insets.i20)
-                    ]));
+                              ).paddingSymmetric(horizontal: Insets.i20),
+                            ),
+                          ),
+                          ButtonCommon(
+                                  title: appFonts.addSelectLocation,
+                                  onTap: () =>
+                                      value.onAddSelectLocation(context),
+                                  style: appCss.dmDenseRegular16.textColor(
+                                      appColor(context).appTheme.primary),
+                                  color: appColor(context).appTheme.trans,
+                                  borderColor:
+                                      appColor(context).appTheme.primary)
+                              .paddingSymmetric(
+                                  horizontal: Insets.i20, vertical: Insets.i20)
+                        ])));
     });
   }
 }

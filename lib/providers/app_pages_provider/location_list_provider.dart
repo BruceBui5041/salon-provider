@@ -62,6 +62,84 @@ class LocationListProvider with ChangeNotifier {
   FocusNode addressFocus = FocusNode();
   FocusNode zipcodeFocus = FocusNode();
 
+  // Clear nearby locations list
+  void clearNearbyAddresses() {
+    listNearByAddress.clear();
+    notifyListeners();
+  }
+
+  // Get nearby locations using reverseGeocode API
+  Future<void> getNearbyAddresses(BuildContext context) async {
+    isLoadingNearby = true;
+    notifyListeners();
+
+    try {
+      // Get current location
+      LocationPermission permission = await Geolocator.checkPermission();
+      if (permission == LocationPermission.denied) {
+        permission = await Geolocator.requestPermission();
+        if (permission == LocationPermission.denied ||
+            permission == LocationPermission.deniedForever) {
+          scaffoldMessage(
+              context, language(context, appFonts.locationPermissionDenied));
+          isLoadingNearby = false;
+          notifyListeners();
+          return;
+        }
+      }
+
+      Position position = await Geolocator.getCurrentPosition(
+        locationSettings: const LocationSettings(
+          accuracy: LocationAccuracy.high,
+        ),
+      );
+
+      // Cache the current location for future use
+      currentLocationString = "${position.latitude},${position.longitude}";
+
+      // Call reverseGeocode API
+      final locationRepo = getIt<LocationRepo>();
+      final request = ReverseGeocodeReq(
+        latlng: currentLocationString,
+      );
+
+      final response = await locationRepo.reverseGeocode(request);
+
+      if (response.errorKey == null) {
+        final addresses = response.data!;
+
+        // Clear previous locations
+        listNearByAddress.clear();
+
+        // Add the nearby addresses to the list
+        listNearByAddress.addAll(addresses);
+
+        // If there are results and no selected location yet, select the first one
+        if (listNearByAddress.isNotEmpty && selectedLocation == null) {
+          selectedLocation = listNearByAddress.first;
+          addedLocation.clear();
+          addedLocation.add({
+            "title": selectedLocation!.text ?? appFonts.currentLocation,
+            "subtext": appFonts.currentLocation,
+            "zip": "",
+            "latitude": selectedLocation!.latitude ?? "",
+            "longitude": selectedLocation!.longitude ?? "",
+            "address": selectedLocation!.text ?? appFonts.currentLocation,
+          });
+        }
+      } else {
+        scaffoldMessage(
+            context, language(context, appFonts.failedToGetLocationDetails));
+      }
+    } catch (e) {
+      scaffoldMessage(context,
+          "${language(context, appFonts.errorFetchingLocationData)}: $e");
+    } finally {
+      isLoadingNearby = false;
+      notifyListeners();
+    }
+  }
+
   // Fetch saved addresses for the current user
   Future<void> fetchSavedAddresses(BuildContext context) async {
     try {
@@ -278,6 +356,10 @@ class LocationListProvider with ChangeNotifier {
           if (!success) {
             scaffoldMessage(context, language(context, appFonts.errorOccur));
           }
+
+          // Clear nearby addresses before navigating
+          clearNearbyAddresses();
+
           route.pushNamed(context, routeName.dashboard);
         },
         onError: (error) {

@@ -651,4 +651,5 @@ dynamic en = {
   "minAgo": "min",
   "hrAgo": "hr",
   "dayAgo": "day",
+  "nearbyLocations": "Nearby Locations",
 };
