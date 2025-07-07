@@ -6,3 +6,4 @@ export 'payment_api_client.dart';
 export 'booking_api_client.dart';
 export 'user_api_client.dart';
 export 'base_api_client.dart';
+export 'chat_api.dart';

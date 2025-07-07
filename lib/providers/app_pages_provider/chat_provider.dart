@@ -1,12 +1,12 @@
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/repositories/chat_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 import '../../config.dart';
 import '../../model/chat_model.dart';
 
-
 class ChatProvider with ChangeNotifier {
-
-  List <ChatModel> chatList = [];
+  List<ChatModel> chatList = [];
   final TextEditingController controller = TextEditingController();
   final FocusNode focus = FocusNode();
   final ScrollController scrollController = ScrollController();
@@ -21,26 +21,32 @@ class ChatProvider with ChangeNotifier {
       await launchUrl(url);
     } else {
       throw 'Could not launch $url';
-    }}
+    }
+  }
 
-  onTapPhone(){
+  onTapPhone() {
     makePhoneCall(Uri.parse('tel:+91 8200798552'));
     notifyListeners();
   }
 
   //send message
   setMessage() {
-
     if (controller.text.isNotEmpty) {
       scrollController.animateTo(
         scrollController.position.maxScrollExtent,
         curve: Curves.easeOut,
         duration: const Duration(milliseconds: 300),
       );
+
       ChatModel messageModel = ChatModel(
         type: "source",
         message: controller.text,
       );
+
+      getIt.get<ChatRepository>().sendMessage(
+            '1234567890',
+            controller.text,
+          );
 
       chatList.add(messageModel);
       controller.text = "";
@@ -48,16 +54,15 @@ class ChatProvider with ChangeNotifier {
     }
   }
 
-  onClearChat(context,sync){
+  onClearChat(context, sync) {
     final value = Provider.of<DeleteDialogProvider>(context, listen: false);
 
-    value.onDeleteDialog(sync, context, eImageAssets.clearChat, appFonts.clearChat, appFonts.areYouClearChat, (){
+    value.onDeleteDialog(sync, context, eImageAssets.clearChat,
+        appFonts.clearChat, appFonts.areYouClearChat, () {
       route.pop(context);
-      value.onResetPass(context, language(context, appFonts.hurrayChatDelete),language(context, appFonts.okay),()=>Navigator.pop(context));
-
+      value.onResetPass(context, language(context, appFonts.hurrayChatDelete),
+          language(context, appFonts.okay), () => Navigator.pop(context));
     });
     value.notifyListeners();
-
   }
-
 }

@@ -19,6 +19,7 @@ import 'package:salon_provider/repositories/booking_repository.dart';
 import 'package:salon_provider/repositories/all_service_repository.dart';
 import 'package:salon_provider/repositories/user_repository.dart';
 import 'package:salon_provider/repositories/address_repository.dart';
+import 'package:salon_provider/repositories/chat_repository.dart';
 import 'package:get_it/get_it.dart';
 
 final getIt = GetIt.instance;
@@ -33,6 +34,7 @@ Future<void> initInjector() async {
   getIt.registerLazySingleton(() => PaymentApiClient(getIt()));
   getIt.registerLazySingleton(() => BookingApiClient(getIt()));
   getIt.registerLazySingleton(() => UserApiClient(getIt()));
+  getIt.registerLazySingleton(() => ChatApiClient(getIt()));
   getIt.registerLazySingleton(() => CommonApi());
   getIt.registerLazySingleton(() => LocationApi(getIt()));
   getIt.registerLazySingleton(() => AddressApi(getIt()));
@@ -51,6 +53,7 @@ Future<void> initInjector() async {
   getIt.registerLazySingleton(() => UserRepository());
   getIt.registerLazySingleton(() => LocationRepo(getIt()));
   getIt.registerLazySingleton(() => AddressRepository(getIt()));
+  getIt.registerLazySingleton(() => ChatRepository());
   getIt.registerLazySingleton(() => BookingProvider());
   getIt.registerLazySingleton(() => NotificationProvider());
   getIt.registerLazySingleton(() => AcceptedBookingProvider());
