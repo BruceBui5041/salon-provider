@@ -12,5 +12,5 @@ abstract class ChatApiClient extends BaseApiClient {
   factory ChatApiClient(Dio dio, {String? baseUrl}) = _ChatApiClient;
 
   @POST("/chatroom")
-  Future<BaseResponse<bool>> createChatRoom(@Body() CreateChatRoomReq req);
+  Future<BaseResponse<ChatRoom>> createChatRoom(@Body() CreateChatRoomReq req);
 }

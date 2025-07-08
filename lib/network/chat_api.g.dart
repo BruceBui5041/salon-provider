@@ -18,13 +18,13 @@ class _ChatApiClient implements ChatApiClient {
   final ParseErrorLogger? errorLogger;
 
   @override
-  Future<BaseResponse<bool>> createChatRoom(CreateChatRoomReq req) async {
+  Future<BaseResponse<ChatRoom>> createChatRoom(CreateChatRoomReq req) async {
     final _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _headers = <String, dynamic>{};
     final _data = <String, dynamic>{};
     _data.addAll(req.toJson());
-    final _options = _setStreamType<BaseResponse<bool>>(
+    final _options = _setStreamType<BaseResponse<ChatRoom>>(
       Options(method: 'POST', headers: _headers, extra: _extra)
           .compose(
             _dio.options,
@@ -35,11 +35,11 @@ class _ChatApiClient implements ChatApiClient {
           .copyWith(baseUrl: _combineBaseUrls(_dio.options.baseUrl, baseUrl)),
     );
     final _result = await _dio.fetch<Map<String, dynamic>>(_options);
-    late BaseResponse<bool> _value;
+    late BaseResponse<ChatRoom> _value;
     try {
-      _value = BaseResponse<bool>.fromJson(
+      _value = BaseResponse<ChatRoom>.fromJson(
         _result.data!,
-        (json) => json as bool,
+        (json) => ChatRoom.fromJson(json as Map<String, dynamic>),
       );
     } on Object catch (e, s) {
       errorLogger?.logError(e, s, _options);

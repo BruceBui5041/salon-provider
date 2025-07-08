@@ -95,8 +95,13 @@ class BookingDetailsLayout extends StatelessWidget {
                     style: appCss.dmDenseRegular14
                         .textColor(appColor(context).appTheme.darkText)),
                 const VSpace(Sizes.s15),
-                CustomerLayout(
-                    title: appFonts.customerDetails, user: data!.user),
+                CustomerServiceLayout(
+                  title: appFonts.customerDetails,
+                  image: data!.user?.userProfile?.profilePictureUrl,
+                  name: "${data!.user?.firstname} ${data!.user?.lastname}",
+                  phoneNumber: data!.user?.phoneNumber,
+                  status: data!.bookingStatus?.value,
+                ),
                 const VSpace(Sizes.s15),
                 if (data!.serviceMan != null)
                   CustomerDetailsLayout(

@@ -24,7 +24,6 @@ class CustomerServiceLayout extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("RATEEE $rate");
     return SizedBox(
             child: Column(children: [
       Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [

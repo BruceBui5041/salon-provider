@@ -20,8 +20,9 @@ class CancelledBookingScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                         StatusDetailLayout(
-                            onChat: () =>
-                                route.pushNamed(context, routeName.chat),
+                            onChat: () {
+                              value.openChat(context);
+                            },
                             data: value.cancelledBooking,
                             onMore: () => route.pushNamed(
                                 context, routeName.servicemanDetail),

@@ -153,20 +153,15 @@ class StatusDetailLayout extends StatelessWidget {
                         const VSpace(Sizes.s6),
                         ReadMoreLayout(text: data!.notes ?? "")
                       ]).paddingSymmetric(vertical: Insets.i15),
-                  data!.bookingStatus == BookingStatus.completed ||
-                          data!.bookingStatus == BookingStatus.cancelled
-                      ? CustomerLayout(
-                          title: appFonts.customerDetails, user: data!.user)
-                      : CustomerServiceLayout(
-                          title: appFonts.customerDetails,
-                          image: data!.user?.userProfile?.profilePictureUrl,
-                          name:
-                              "${data!.user?.firstname} ${data!.user?.lastname}",
-                          phoneNumber: data!.user?.phoneNumber,
-                          status: data!.bookingStatus?.value,
-                          chatTap: onChat,
-                          moreTap: onMore,
-                          phoneTap: onPhone),
+                  CustomerServiceLayout(
+                      title: appFonts.customerDetails,
+                      image: data!.user?.userProfile?.profilePictureUrl,
+                      name: "${data!.user?.firstname} ${data!.user?.lastname}",
+                      phoneNumber: data!.user?.phoneNumber,
+                      status: data!.bookingStatus?.value,
+                      chatTap: onChat,
+                      moreTap: onMore,
+                      phoneTap: onPhone),
                   if (isFreelancer != true) const VSpace(Sizes.s15),
                   if (isFreelancer != true)
                     Column(

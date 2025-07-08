@@ -115,7 +115,7 @@ class MyApp extends StatelessWidget {
                       create: (_) => AcceptedBookingProvider()),
                   ChangeNotifierProvider(
                       create: (_) => BookingServicemenListProvider()),
-                  ChangeNotifierProvider(create: (_) => ChatProvider()),
+                  ChangeNotifierProvider(create: (_) => ChatProvider(getIt())),
                   ChangeNotifierProvider(
                       create: (_) => AssignBookingProvider()),
                   ChangeNotifierProvider(
@@ -130,7 +130,7 @@ class MyApp extends StatelessWidget {
                   ChangeNotifierProvider(
                       create: (_) => AddServiceProofProvider()),
                   ChangeNotifierProvider(
-                      create: (_) => CancelledBookingProvider()),
+                      create: (_) => CancelledBookingProvider(getIt())),
                   ChangeNotifierProvider(create: (_) => ChatHistoryProvider()),
                   ChangeNotifierProvider(create: (_) => DeleteDialogProvider()),
                   ChangeNotifierProvider(create: (_) => LocationListProvider()),
