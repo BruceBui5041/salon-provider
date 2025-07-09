@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:salon_provider/config/auth_config.dart';
 
 import '../../config.dart';
+import '../../model/response/booking_response.dart';
 import '../../model/response/chatroom_response.dart';
 
 class ChatProvider with ChangeNotifier {
@@ -18,6 +19,11 @@ class ChatProvider with ChangeNotifier {
   bool isLoading = false;
   String? currentUserId;
   String? customerId;
+
+  // Add booking information
+  Booking? booking;
+  String userName = "";
+  String serviceTitle = "";
 
   final ChatRepository _chatRepository;
   ChatProvider(this._chatRepository);
@@ -34,6 +40,7 @@ class ChatProvider with ChangeNotifier {
 
     // Load chat room if we have a booking ID
     if (bookingId != null) {
+      await loadBookingDetails();
       await loadChatRoom();
     } else {
       // Fallback to empty list for backward compatibility
@@ -41,6 +48,31 @@ class ChatProvider with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  Future<void> loadBookingDetails() async {
+    if (bookingId == null) return;
+
+    try {
+      booking = await _chatRepository.getBookingById(bookingId!);
+      if (booking != null) {
+        // Set user name from firstname and lastname
+        userName =
+            "${booking!.user?.firstname ?? ""} ${booking!.user?.lastname ?? ""}"
+                .trim();
+        if (userName.isEmpty) {
+          userName = "User";
+        }
+
+        // Set service title if available
+        if (booking!.serviceVersions != null &&
+            booking!.serviceVersions!.isNotEmpty) {
+          serviceTitle = booking!.serviceVersions!.first.title ?? "";
+        }
+      }
+    } catch (e) {
+      log('Error loading booking details: $e');
+    }
   }
 
   Future<void> loadChatRoom() async {
@@ -98,7 +130,11 @@ class ChatProvider with ChangeNotifier {
   }
 
   void onTapPhone() {
-    makePhoneCall(Uri.parse('tel:+91 8200798552'));
+    if (booking?.user?.phoneNumber != null) {
+      makePhoneCall(Uri.parse('tel:${booking!.user!.phoneNumber}'));
+    } else {
+      makePhoneCall(Uri.parse('tel:+91 8200798552'));
+    }
     notifyListeners();
   }
 

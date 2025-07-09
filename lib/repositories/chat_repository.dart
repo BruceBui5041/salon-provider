@@ -25,10 +25,34 @@ class ChatRepository extends RepositoryConfig {
 
   Future<BaseResponse<ChatRoom>> createChatRoomWithBooking(
       String userId, String customerId, String bookingId) async {
+    // First get booking details to include in the room name
+    Booking? booking = await getBookingById(bookingId);
+    String roomName = "";
+
+    if (booking != null) {
+      // Create room name from user name and service title
+      String userName =
+          "${booking.user?.firstname ?? ""} ${booking.user?.lastname ?? ""}"
+              .trim();
+      if (userName.isEmpty) {
+        userName = "User";
+      }
+
+      String serviceTitle = "";
+      if (booking.serviceVersions != null &&
+          booking.serviceVersions!.isNotEmpty) {
+        serviceTitle = booking.serviceVersions!.first.title ?? "";
+      }
+
+      roomName =
+          serviceTitle.isNotEmpty ? "$userName - $serviceTitle" : userName;
+    }
+
     var body = req.CreateChatRoomReq(
       roomType: req.RoomType.booking,
       participantIds: [userId, customerId],
       bookingId: bookingId,
+      name: roomName.isNotEmpty ? roomName : null,
     );
     var response = await chatClient.createChatRoom(body);
     return response;
@@ -88,6 +112,7 @@ class ChatRepository extends RepositoryConfig {
       FieldItem(field: "user"),
       FieldItem(field: "user.user_profile"),
       FieldItem(field: "service_man"),
+      FieldItem(field: "service_versions"),
     ]);
     final response =
         await commonRestClient.search<List<Booking>>(body.toJson());
