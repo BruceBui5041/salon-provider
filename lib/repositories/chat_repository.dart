@@ -13,41 +13,39 @@ class ChatRepository extends RepositoryConfig {
   final chatClient = getIt.get<ChatApiClient>();
   final wsApi = getIt.get<WebSocketApi>();
 
-  Future<BaseResponse<ChatRoom>> createChatRoom(
-      String userId, String serviceManId) async {
-    var body = req.CreateChatRoomReq(
-      roomType: req.RoomType.booking,
-      participantIds: [userId, serviceManId],
-    );
-    var response = await chatClient.createChatRoom(body);
-    return response;
-  }
-
   Future<BaseResponse<ChatRoom>> createChatRoomWithBooking(
       String userId, String customerId, String bookingId) async {
+    // First get booking details to include in the room name
+    Booking? booking = await getBookingById(bookingId);
+    String roomName = "";
+
+    if (booking != null) {
+      // Create room name from user name and service title
+      String userName =
+          "${booking.user?.firstname ?? ""} ${booking.user?.lastname ?? ""}"
+              .trim();
+      if (userName.isEmpty) {
+        userName = "User";
+      }
+
+      String serviceTitle = "";
+      if (booking.serviceVersions != null &&
+          booking.serviceVersions!.isNotEmpty) {
+        serviceTitle = booking.serviceVersions!.first.title ?? "";
+      }
+
+      roomName =
+          serviceTitle.isNotEmpty ? "$userName - $serviceTitle" : userName;
+    }
+
     var body = req.CreateChatRoomReq(
       roomType: req.RoomType.booking,
       participantIds: [userId, customerId],
       bookingId: bookingId,
+      name: roomName.isNotEmpty ? roomName : null,
     );
     var response = await chatClient.createChatRoom(body);
     return response;
-  }
-
-  Future<List<ChatRoom>> getChatRoomsByRecipient(String recipientId) async {
-    var body = SearchRequestBody(model: "chat_room", conditions: [
-      [
-        Condition(
-            source: "participants.user_id", operator: "=", target: recipientId),
-      ]
-    ], fields: [
-      FieldItem(field: "participants.user"),
-      FieldItem(field: "booking"),
-    ]);
-    var response = await commonRestClient.search<List<ChatRoom>>(body.toJson());
-    var res =
-        (response as List<dynamic>).map((e) => ChatRoom.fromJson(e)).toList();
-    return res;
   }
 
   Future<List<ChatRoom>> getChatRoomsByBooking(String bookingId) async {
@@ -65,20 +63,6 @@ class ChatRepository extends RepositoryConfig {
     return res;
   }
 
-  Future<ChatRoom?> getChatRoomById(String roomId) async {
-    var body = SearchRequestBody(model: "chat_room", conditions: [
-      [
-        Condition(source: "id", operator: "=", target: roomId),
-      ]
-    ], fields: [
-      FieldItem(field: "participants.user"),
-      FieldItem(field: "booking"),
-    ]);
-    var response = await commonRestClient.search<List<ChatRoom>>(body.toJson());
-    if ((response as List<dynamic>).isEmpty) return null;
-    return ChatRoom.fromJson(response.first);
-  }
-
   Future<Booking?> getBookingById(String bookingId) async {
     var body = SearchRequestBody(model: "booking", conditions: [
       [
@@ -88,6 +72,7 @@ class ChatRepository extends RepositoryConfig {
       FieldItem(field: "user"),
       FieldItem(field: "user.user_profile"),
       FieldItem(field: "service_man"),
+      FieldItem(field: "service_versions"),
     ]);
     final response =
         await commonRestClient.search<List<Booking>>(body.toJson());
@@ -100,15 +85,33 @@ class ChatRepository extends RepositoryConfig {
     return booking?.user?.id;
   }
 
-  Future<List<ChatMessage>> getMessagesByRoom(String roomId,
-      {int? limit, int? offset}) async {
+  Future<List<ChatMessage>> getMessagesByRoomWithLastMessage(
+    String roomId,
+    String? lastMessageId, {
+    int limit = 20,
+    bool isFirstLoad = true,
+    String? earliestMessageId,
+  }) async {
+    List<Condition> conditions = [
+      Condition(source: "room_id", operator: "=", target: roomId),
+    ];
+
+    // For first load, get messages up to last_message_id
+    if (isFirstLoad && lastMessageId != null) {
+      conditions.add(
+        Condition(source: "id", operator: "<=", target: lastMessageId),
+      );
+    }
+    // For loading more, get messages before the earliest message we have
+    else if (!isFirstLoad && earliestMessageId != null) {
+      conditions.add(
+        Condition(source: "id", operator: "<", target: earliestMessageId),
+      );
+    }
+
     var body = SearchRequestBody(
       model: "chat_message",
-      conditions: [
-        [
-          Condition(source: "room_id", operator: "=", target: roomId),
-        ]
-      ],
+      conditions: [conditions],
       fields: [
         FieldItem(field: "sender"),
         FieldItem(field: "reply_to"),
@@ -116,8 +119,8 @@ class ChatRepository extends RepositoryConfig {
       ],
       orderBy: "created_at desc",
       limit: limit,
-      offset: offset,
     );
+
     var response =
         await commonRestClient.search<List<ChatMessage>>(body.toJson());
     var res = (response as List<dynamic>)

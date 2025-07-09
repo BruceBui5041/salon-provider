@@ -5,6 +5,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:salon_provider/config/auth_config.dart';
 
 import '../../config.dart';
+import '../../model/response/booking_response.dart';
 import '../../model/response/chatroom_response.dart';
 
 class ChatProvider with ChangeNotifier {
@@ -16,8 +17,15 @@ class ChatProvider with ChangeNotifier {
   String? bookingId;
   String? roomId;
   bool isLoading = false;
+  bool isLoadingMore = false;
   String? currentUserId;
   String? customerId;
+  String? earliestMessageId;
+
+  // Add booking information
+  Booking? booking;
+  String userName = "";
+  String serviceTitle = "";
 
   final ChatRepository _chatRepository;
   ChatProvider(this._chatRepository);
@@ -32,8 +40,12 @@ class ChatProvider with ChangeNotifier {
     // Get current user ID
     currentUserId = await AuthConfig.getUserId();
 
+    // Set up scroll controller for pagination
+    scrollController.addListener(_onScroll);
+
     // Load chat room if we have a booking ID
     if (bookingId != null) {
+      await loadBookingDetails();
       await loadChatRoom();
     } else {
       // Fallback to empty list for backward compatibility
@@ -41,6 +53,43 @@ class ChatProvider with ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  void _onScroll() {
+    if (scrollController.hasClients &&
+        scrollController.position.pixels <=
+            scrollController.position.maxScrollExtent *
+                0.1 && // About 10% from the top
+        !isLoadingMore &&
+        roomId != null &&
+        earliestMessageId != null) {
+      loadMoreMessages();
+    }
+  }
+
+  Future<void> loadBookingDetails() async {
+    if (bookingId == null) return;
+
+    try {
+      booking = await _chatRepository.getBookingById(bookingId!);
+      if (booking != null) {
+        // Set user name from firstname and lastname
+        userName =
+            "${booking!.user?.firstname ?? ""} ${booking!.user?.lastname ?? ""}"
+                .trim();
+        if (userName.isEmpty) {
+          userName = "User";
+        }
+
+        // Set service title if available
+        if (booking!.serviceVersions != null &&
+            booking!.serviceVersions!.isNotEmpty) {
+          serviceTitle = booking!.serviceVersions!.first.title ?? "";
+        }
+      }
+    } catch (e) {
+      log('Error loading booking details: $e');
+    }
   }
 
   Future<void> loadChatRoom() async {
@@ -56,7 +105,7 @@ class ChatProvider with ChangeNotifier {
       if (rooms.isNotEmpty) {
         // Chat room exists, load messages
         roomId = rooms.first.id;
-        await loadMessages();
+        await loadMessages(rooms.first.lastMessageId);
       } else {
         // No chat room exists yet, we'll create one when sending first message
         // Get customer ID from booking for later use
@@ -69,23 +118,96 @@ class ChatProvider with ChangeNotifier {
     } finally {
       isLoading = false;
       notifyListeners();
+
+      // Scroll to bottom after messages are loaded and UI is updated
+      if (chatList.isNotEmpty) {
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          _scrollToBottom();
+        });
+      }
     }
   }
 
-  Future<void> loadMessages() async {
+  Future<void> loadMessages(String? lastMessageId) async {
     if (roomId == null) return;
 
     try {
-      final messages =
-          await _chatRepository.getMessagesByRoom(roomId!, limit: 20);
+      final messages = await _chatRepository.getMessagesByRoomWithLastMessage(
+        roomId!,
+        lastMessageId,
+        isFirstLoad: true,
+        limit: 20,
+      );
 
       // Use the messages directly
       chatList = messages;
+
+      // Store the earliest message ID for pagination
+      if (chatList.isNotEmpty) {
+        earliestMessageId = chatList.last.id;
+      }
 
       // Reverse to show oldest first
       chatList = chatList.reversed.toList();
     } catch (e) {
       log('Error loading messages: $e');
+    }
+  }
+
+  Future<void> loadMoreMessages() async {
+    if (roomId == null || earliestMessageId == null || isLoadingMore) return;
+
+    isLoadingMore = true;
+    notifyListeners();
+
+    try {
+      final messages = await _chatRepository.getMessagesByRoomWithLastMessage(
+        roomId!,
+        null,
+        isFirstLoad: false,
+        earliestMessageId: earliestMessageId,
+        limit: 20,
+      );
+
+      if (messages.isNotEmpty) {
+        // Store the new earliest message ID
+        earliestMessageId = messages.last.id;
+
+        // Save current scroll position and content height
+        final double previousScrollOffset = scrollController.position.pixels;
+        final double previousContentHeight =
+            scrollController.position.maxScrollExtent;
+
+        // Add the messages to the beginning of the list (they come in desc order)
+        final oldMessages = messages.reversed.toList();
+        chatList = [...oldMessages, ...chatList];
+
+        // Notify listeners to rebuild the UI with new messages
+        notifyListeners();
+
+        // After UI is updated, restore scroll position accounting for new content
+        WidgetsBinding.instance.addPostFrameCallback((_) {
+          if (scrollController.hasClients) {
+            final double newContentHeight =
+                scrollController.position.maxScrollExtent;
+            final double contentHeightDifference =
+                newContentHeight - previousContentHeight;
+            scrollController.animateTo(
+              previousScrollOffset + contentHeightDifference,
+              duration: const Duration(milliseconds: 100),
+              curve: Curves.easeOut,
+            );
+          }
+        });
+      } else {
+        // No more messages to load, set earliestMessageId to null to prevent further loading
+        earliestMessageId = null;
+      }
+    } catch (e) {
+      log('Error loading more messages: $e');
+    } finally {
+      isLoadingMore = false;
+      notifyListeners();
     }
   }
 
@@ -98,7 +220,11 @@ class ChatProvider with ChangeNotifier {
   }
 
   void onTapPhone() {
-    makePhoneCall(Uri.parse('tel:+91 8200798552'));
+    if (booking?.user?.phoneNumber != null) {
+      makePhoneCall(Uri.parse('tel:${booking!.user!.phoneNumber}'));
+    } else {
+      makePhoneCall(Uri.parse('tel:+91 8200798552'));
+    }
     notifyListeners();
   }
 
@@ -120,8 +246,10 @@ class ChatProvider with ChangeNotifier {
       controller.text = "";
       notifyListeners();
 
-      // Scroll to bottom only if controller is attached
-      _scrollToBottom();
+      // Scroll to bottom after UI is updated
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _scrollToBottom();
+      });
 
       // If we don't have a room ID yet but have booking ID, create a room
       if (roomId == null && bookingId != null) {
@@ -187,6 +315,32 @@ class ChatProvider with ChangeNotifier {
   }
 
   bool isSentByMe(ChatMessage message) {
-    return message.sender?.id == currentUserId;
+    // Check both sender.id and senderId to handle both server messages and local temporary messages
+    return message.sender?.id == currentUserId ||
+        message.senderId == currentUserId;
+  }
+
+  // Add a reset method to clear all state
+  void reset() {
+    chatList = [];
+    controller.clear();
+    bookingId = null;
+    roomId = null;
+    isLoading = false;
+    isLoadingMore = false;
+    earliestMessageId = null;
+    booking = null;
+    userName = "";
+    serviceTitle = "";
+    notifyListeners();
+  }
+
+  // Dispose method to clean up resources
+  @override
+  void dispose() {
+    scrollController.removeListener(_onScroll);
+    controller.dispose();
+    focus.dispose();
+    super.dispose();
   }
 }
