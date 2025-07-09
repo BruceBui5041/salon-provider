@@ -19,6 +19,14 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
   }
 
   @override
+  void dispose() {
+    // Reset the provider when leaving the screen
+    final provider = Provider.of<ChatProvider>(context, listen: false);
+    provider.reset();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Consumer<ChatProvider>(builder: (context, value, child) {
       return Scaffold(
@@ -53,20 +61,40 @@ class _ChatScreenState extends State<ChatScreen> with TickerProviderStateMixin {
                       .paddingOnly(bottom: Insets.i20),
                 if (!value.isLoading && value.chatList.isNotEmpty)
                   Expanded(
-                    child: ListView.builder(
-                      scrollDirection: Axis.vertical,
-                      physics: const AlwaysScrollableScrollPhysics(),
-                      padding: EdgeInsets.zero,
-                      shrinkWrap: true,
-                      controller: value.scrollController,
-                      itemCount: value.chatList.length,
-                      itemBuilder: (context, index) {
-                        final message = value.chatList[index];
-                        final isSentByMe = value.isSentByMe(message);
+                    child: Stack(
+                      children: [
+                        ListView.builder(
+                          scrollDirection: Axis.vertical,
+                          physics: const AlwaysScrollableScrollPhysics(),
+                          padding: EdgeInsets.zero,
+                          shrinkWrap: true,
+                          controller: value.scrollController,
+                          itemCount: value.chatList.length,
+                          itemBuilder: (context, index) {
+                            final message = value.chatList[index];
+                            final isSentByMe = value.isSentByMe(message);
 
-                        return ChatLayout(
-                            title: message.content, isSentByMe: isSentByMe);
-                      },
+                            return ChatLayout(
+                                title: message.content, isSentByMe: isSentByMe);
+                          },
+                        ),
+                        if (value.isLoadingMore)
+                          Positioned(
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            child: Container(
+                              padding: const EdgeInsets.all(8),
+                              alignment: Alignment.center,
+                              child: const SizedBox(
+                                height: 20,
+                                width: 20,
+                                child:
+                                    CircularProgressIndicator(strokeWidth: 2),
+                              ),
+                            ),
+                          ),
+                      ],
                     ),
                   ),
               ],

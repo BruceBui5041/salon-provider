@@ -61,6 +61,9 @@ class ChatRoom extends CommonResponse {
   @JsonKey(name: 'last_message_id')
   final String? lastMessageId;
 
+  @JsonKey(name: 'last_message')
+  final ChatMessage? lastMessage;
+
   @JsonKey(name: 'last_activity_at')
   final DateTime? lastActivityAt;
 
@@ -84,6 +87,7 @@ class ChatRoom extends CommonResponse {
     this.booking,
     this.name,
     this.lastMessageId,
+    this.lastMessage,
     this.lastActivityAt,
     this.shardKey,
     this.participants,
