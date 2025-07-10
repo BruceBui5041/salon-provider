@@ -1,5 +1,4 @@
 import '../../../config.dart';
-import '../assign_booking_screen/layouts/assign_bill_layout.dart';
 import '../pending_booking_screen/layouts/status_detail_layout.dart';
 
 class OngoingBookingScreen extends StatelessWidget {
@@ -32,7 +31,7 @@ class OngoingBookingScreen extends StatelessWidget {
             ],
           ),
           body: value.ongoingBooking == null
-              ? Center(child: CircularProgressIndicator())
+              ? const Center(child: CircularProgressIndicator())
               : Stack(
                   alignment: Alignment.bottomCenter,
                   children: [
@@ -42,8 +41,7 @@ class OngoingBookingScreen extends StatelessWidget {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             StatusDetailLayout(
-                                onChat: () =>
-                                    route.pushNamed(context, routeName.chat),
+                                onChat: () => value.openChat(context),
                                 data: value.ongoingBooking,
                                 onMore: () => route.pushNamed(
                                     context, routeName.servicemanDetail,
@@ -58,24 +56,11 @@ class OngoingBookingScreen extends StatelessWidget {
                                 .paddingOnly(
                                     top: Insets.i25, bottom: Insets.i10),
                             value.isServicemen
-                                ? PendingApprovalBillSummary()
+                                ? const PendingApprovalBillSummary()
                                 : AssignBillLayout(
                                     booking: value.ongoingBooking,
                                   ),
                             const VSpace(Sizes.s20),
-                            // HeadingRowCommon(
-                            //         title: appFonts.review,
-                            //         onTap: () => route.pushNamed(
-                            //             context, routeName.serviceReview))
-                            //     .paddingOnly(bottom: Insets.i12),
-                            // ...appArray.reviewList
-                            //     .asMap()
-                            //     .entries
-                            //     .map((e) => ServiceReviewLayout(
-                            //         data: e.value,
-                            //         index: e.key,
-                            //         list: appArray.reviewList))
-                            //     .toList()
                           ]).padding(
                           horizontal: Insets.i20,
                           top: Insets.i20,

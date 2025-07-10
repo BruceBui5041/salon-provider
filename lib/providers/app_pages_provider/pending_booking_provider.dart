@@ -36,6 +36,12 @@ class PendingBookingProvider with ChangeNotifier {
     );
   }
 
+  Future<void> openChat(BuildContext context) async {
+    if (pendingBooking?.id != null) {
+      route.pushNamed(context, routeName.chat, arg: pendingBooking!.id);
+    }
+  }
+
   showBookingStatus(context) {
     showModalBottomSheet(
       isScrollControlled: true,

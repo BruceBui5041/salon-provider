@@ -25,6 +25,7 @@ class PendingBookingScreen extends StatelessWidget {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                         StatusDetailLayout(
+                            onChat: () => value.openChat(context),
                             onMore: () => route.pushNamed(
                                 context, routeName.servicemanDetail,
                                 arg: false),
