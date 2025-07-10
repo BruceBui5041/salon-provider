@@ -112,6 +112,12 @@ class OngoingBookingProvider with ChangeNotifier {
     }
   }
 
+  Future<void> openChat(BuildContext context) async {
+    if (ongoingBooking?.id != null) {
+      route.pushNamed(context, routeName.chat, arg: ongoingBooking!.id);
+    }
+  }
+
   showBookingStatus(context) {
     showModalBottomSheet(
       isScrollControlled: true,

@@ -28,8 +28,7 @@ class CompletedBookingScreen extends StatelessWidget {
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
                             StatusDetailLayout(
-                                onChat: () =>
-                                    route.pushNamed(context, routeName.chat),
+                                onChat: () => value.openChat(context),
                                 data: value.completedBookingModel,
                                 onMore: () => route.pushNamed(
                                     context, routeName.servicemanDetail,

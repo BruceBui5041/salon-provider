@@ -39,6 +39,12 @@ class CompletedBookingProvider with ChangeNotifier {
     Navigator.pop(context);
   }
 
+  Future<void> openChat(BuildContext context) async {
+    if (completedBookingModel?.id != null) {
+      route.pushNamed(context, routeName.chat, arg: completedBookingModel!.id);
+    }
+  }
+
   showBookingStatus(context) {
     showModalBottomSheet(
       isScrollControlled: true,

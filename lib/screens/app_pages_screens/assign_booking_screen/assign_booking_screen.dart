@@ -1,4 +1,3 @@
-import 'package:salon_provider/model/response/booking_response.dart';
 import 'package:salon_provider/screens/app_pages_screens/pending_booking_screen/layouts/status_detail_layout.dart';
 import '../../../config.dart';
 
@@ -25,8 +24,7 @@ class AssignBookingScreen extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               StatusDetailLayout(
-                                  onChat: () =>
-                                      route.pushNamed(context, routeName.chat),
+                                  onChat: () => value.openChat(context),
                                   data: value.booking,
                                   onMore: () => route.pushNamed(
                                       context, routeName.servicemanDetail,
@@ -44,19 +42,6 @@ class AssignBookingScreen extends StatelessWidget {
                                 booking: value.booking,
                               ),
                               const VSpace(Sizes.s20),
-                              // HeadingRowCommon(
-                              //         title: appFonts.review,
-                              //         onTap: () => route.pushNamed(
-                              //             context, routeName.serviceReview))
-                              //     .paddingOnly(bottom: Insets.i12),
-                              // ...appArray.reviewList
-                              //     .asMap()
-                              //     .entries
-                              //     .map((e) => ServiceReviewLayout(
-                              //         data: e.value,
-                              //         index: e.key,
-                              //         list: appArray.reviewList))
-                              //     .toList(),
                             ]).padding(
                             horizontal: Insets.i20,
                             top: Insets.i20,

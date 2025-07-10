@@ -211,6 +211,7 @@ class _BookingScreenState extends State<BookingScreen> {
           .entries
           .map(
             (e) => BookingLayout(
+              key: Key(e.value.id.toString()),
               data: e.value,
               onTap: () {
                 provider.onTapBookings(e.value, context);
