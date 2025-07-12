@@ -1,8 +1,12 @@
 import 'dart:developer';
+import 'dart:async';
 
 import 'package:salon_provider/repositories/chat_repository.dart';
 import 'package:url_launcher/url_launcher.dart';
 import 'package:salon_provider/config/auth_config.dart';
+import 'package:salon_provider/network/ws_api.dart';
+import 'package:salon_provider/config/injection_config.dart';
+import 'package:salon_provider/common/enum_value.dart';
 
 import '../../config.dart';
 import '../../model/response/booking_response.dart';
@@ -13,6 +17,8 @@ class ChatProvider with ChangeNotifier {
   final TextEditingController controller = TextEditingController();
   final FocusNode focus = FocusNode();
   final ScrollController scrollController = ScrollController();
+  final WebSocketApi _wsApi = getIt.get<WebSocketApi>();
+  StreamSubscription? _wsSubscription;
 
   String? bookingId;
   String? roomId;
@@ -43,6 +49,9 @@ class ChatProvider with ChangeNotifier {
     // Set up scroll controller for pagination
     scrollController.addListener(_onScroll);
 
+    // Set up WebSocket listener
+    _setupWebSocketListener();
+
     // Load chat room if we have a booking ID
     if (bookingId != null) {
       await loadBookingDetails();
@@ -55,11 +64,51 @@ class ChatProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void _setupWebSocketListener() {
+    _wsSubscription = _wsApi.messageStream.listen((message) {
+      if (message is Map<String, dynamic>) {
+        if (message['event'] == WebSocketEventEnum.new_message.value &&
+            message['body'] != null) {
+          _handleNewMessage(message['body']);
+        }
+      }
+    });
+  }
+
+  void _handleNewMessage(Map<String, dynamic> message) {
+    try {
+      // Convert message to ChatMessage object
+      final chatMessage = ChatMessage.fromJson(message);
+
+      // Check if message belongs to current room
+      if (chatMessage.roomId == roomId) {
+        // Add to chat list if it's not already there
+        if (!chatList.any((element) => element.id == chatMessage.id)) {
+          chatList.add(chatMessage);
+          notifyListeners();
+
+          // Scroll to bottom after UI is updated
+          WidgetsBinding.instance.addPostFrameCallback((_) {
+            _scrollToBottom();
+          });
+
+          // Mark message as read if it's not from current user
+          if (chatMessage.sender?.id != currentUserId &&
+              chatMessage.senderId != currentUserId) {
+            // _chatRepository.markMessageAsRead(chatMessage.id!);
+          }
+        }
+      }
+    } catch (e) {
+      log('Error handling new message: $e');
+    }
+  }
+
   void _onScroll() {
     if (scrollController.hasClients &&
         scrollController.position.pixels <=
             scrollController.position.maxScrollExtent *
-                0.1 && // About 10% from the top
+                0.05 && // About 10% from the top
         !isLoadingMore &&
         roomId != null &&
         earliestMessageId != null) {
@@ -332,6 +381,7 @@ class ChatProvider with ChangeNotifier {
     booking = null;
     userName = "";
     serviceTitle = "";
+    _wsSubscription?.cancel();
     notifyListeners();
   }
 
@@ -341,6 +391,7 @@ class ChatProvider with ChangeNotifier {
     scrollController.removeListener(_onScroll);
     controller.dispose();
     focus.dispose();
+    _wsSubscription?.cancel();
     super.dispose();
   }
 }

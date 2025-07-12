@@ -9,6 +9,12 @@ enum EnumColumn {
   notification_details,
 }
 
+enum WebSocketEventEnum {
+  chat_message,
+  new_message,
+  chat_mark_read,
+}
+
 enum ServiceVersionStatus {
   active,
   inactive,
@@ -92,6 +98,19 @@ extension PaymentStatusExtension on PaymentStatus {
         return 'refunded';
       case PaymentStatus.error:
         return 'error';
+    }
+  }
+}
+
+extension WebSocketEventEnumExtension on WebSocketEventEnum {
+  String get value {
+    switch (this) {
+      case WebSocketEventEnum.chat_message:
+        return 'chat_message';
+      case WebSocketEventEnum.new_message:
+        return 'new_message';
+      case WebSocketEventEnum.chat_mark_read:
+        return 'chat_mark_read';
     }
   }
 }

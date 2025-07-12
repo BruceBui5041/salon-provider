@@ -215,6 +215,11 @@ class BookingProvider with ChangeNotifier {
         bookingList = [];
         freelancerBookingList = [];
       }
+      ScaffoldMessenger.of(_context!).showSnackBar(
+        SnackBar(
+          content: Text(e.toString()),
+        ),
+      );
     } finally {
       isProcessing = false;
       isLoadingMore = false;
