@@ -39,10 +39,16 @@ class ServiceVersion extends CommonResponse {
   final DateTime? publishedDate;
   @JsonKey(name: "category")
   final CategoryItem? categoryResponse;
+  @JsonKey(name: "category_id")
+  final String? categoryId;
   @JsonKey(name: "main_image")
   final ImageResponse? mainImageResponse;
+  @JsonKey(name: "main_image_id")
+  final String? mainImageId;
   @JsonKey(name: "service")
   final Service? service;
+  @JsonKey(name: "service_id")
+  final String? serviceId;
   @JsonKey(name: "images")
   final List<ImageResponse>? images;
 
@@ -59,8 +65,11 @@ class ServiceVersion extends CommonResponse {
     required this.duration,
     required this.publishedDate,
     this.categoryResponse,
+    this.categoryId,
     this.mainImageResponse,
+    this.mainImageId,
     this.service,
+    this.serviceId,
     this.images,
   });
 
@@ -77,9 +86,12 @@ class ServiceVersion extends CommonResponse {
     int? duration,
     DateTime? publishedDate,
     CategoryItem? categoryResponse,
+    String? categoryId,
     ImageResponse? imageResponse,
     ImageResponse? mainImageResponse,
+    String? mainImageId,
     Service? service,
+    String? serviceId,
     List<ImageResponse>? images,
   }) =>
       ServiceVersion(
@@ -95,8 +107,11 @@ class ServiceVersion extends CommonResponse {
         duration: duration ?? this.duration,
         publishedDate: publishedDate ?? this.publishedDate,
         categoryResponse: categoryResponse ?? this.categoryResponse,
+        categoryId: categoryId ?? this.categoryId,
         mainImageResponse: mainImageResponse ?? this.mainImageResponse,
+        mainImageId: mainImageId ?? this.mainImageId,
         service: service ?? this.service,
+        serviceId: serviceId ?? this.serviceId,
         images: images ?? this.images,
       );
 

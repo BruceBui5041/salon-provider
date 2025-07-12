@@ -10,7 +10,7 @@ part 'payment_response.g.dart';
 @JsonSerializable()
 class Payment extends CommonResponse {
   @JsonKey(name: "user_id")
-  final int? userId;
+  final String? userId;
   @JsonKey(name: "amount")
   final double? amount;
   @JsonKey(name: "currency")
@@ -23,9 +23,13 @@ class Payment extends CommonResponse {
   final TransactionStatus? transactionStatus;
   @JsonKey(name: "payment_qr")
   final PaymentQr? paymentQr;
+  @JsonKey(name: "payment_qr_id")
+  final String? paymentQrId;
 
   @JsonKey(name: "booking")
   final Booking? booking;
+  @JsonKey(name: "booking_id")
+  final String? bookingId;
 
   @JsonKey(name: "user")
   final UserResponse? user;
@@ -42,7 +46,9 @@ class Payment extends CommonResponse {
     required this.transactionId,
     required this.transactionStatus,
     required this.paymentQr,
+    this.paymentQrId,
     required this.booking,
+    this.bookingId,
     required this.user,
   });
 
@@ -51,19 +57,22 @@ class Payment extends CommonResponse {
     String? status,
     DateTime? createdAt,
     DateTime? updatedAt,
-    int? userId,
+    String? userId,
     double? amount,
     String? currency,
     PaymentMethod? paymentMethod,
     String? transactionId,
     TransactionStatus? transactionStatus,
     PaymentQr? paymentQr,
+    String? paymentQrId,
     Booking? booking,
+    String? bookingId,
     UserResponse? user,
   }) =>
       Payment(
         id: id ?? this.id,
         booking: booking ?? this.booking,
+        bookingId: bookingId ?? this.bookingId,
         user: user ?? this.user,
         createdAt: createdAt ?? this.createdAt,
         updatedAt: updatedAt ?? this.updatedAt,
@@ -75,6 +84,7 @@ class Payment extends CommonResponse {
         transactionId: transactionId ?? this.transactionId,
         transactionStatus: transactionStatus ?? this.transactionStatus,
         paymentQr: paymentQr ?? this.paymentQr,
+        paymentQrId: paymentQrId ?? this.paymentQrId,
       );
 
   getPaymentMethod() {

@@ -41,23 +41,29 @@ Booking _$BookingFromJson(Map<String, dynamic> json) => Booking(
       payment: json['payment'] == null
           ? null
           : Payment.fromJson(json['payment'] as Map<String, dynamic>),
+      paymentId: json['payment_id'] as String?,
       serviceMan: json['service_man'] == null
           ? null
           : UserResponse.fromJson(json['service_man'] as Map<String, dynamic>),
+      serviceManId: json['service_man_id'] as String?,
       user: json['user'] == null
           ? null
           : UserResponse.fromJson(json['user'] as Map<String, dynamic>),
+      userId: json['user_id'] as String?,
       coupon: json['coupon'] == null
           ? null
           : Coupon.fromJson(json['coupon'] as Map<String, dynamic>),
+      couponId: json['coupon_id'] as String?,
       commission: json['commission'] == null
           ? null
           : Commission.fromJson(json['commission'] as Map<String, dynamic>),
+      commissionId: json['commission_id'] as String?,
       isPopToHome: json['isPopToHome'] as bool? ?? false,
       bookingLocation: json['booking_location'] == null
           ? null
           : BookingLocation.fromJson(
               json['booking_location'] as Map<String, dynamic>),
+      bookingLocationId: json['booking_location_id'] as String?,
       fees: (json['fees'] as List<dynamic>?)
           ?.map((e) => Fee.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -82,11 +88,17 @@ Map<String, dynamic> _$BookingToJson(Booking instance) => <String, dynamic>{
       'cancellation_reason': instance.cancellationReason,
       'cancelled_at': instance.cancelledAt?.toIso8601String(),
       'payment': instance.payment,
+      'payment_id': instance.paymentId,
       'service_man': instance.serviceMan,
+      'service_man_id': instance.serviceManId,
       'user': instance.user,
+      'user_id': instance.userId,
       'coupon': instance.coupon,
+      'coupon_id': instance.couponId,
       'commission': instance.commission,
+      'commission_id': instance.commissionId,
       'booking_location': instance.bookingLocation,
+      'booking_location_id': instance.bookingLocationId,
       'fees': instance.fees,
       'travel_fee': instance.travelFee,
       'isPopToHome': instance.isPopToHome,

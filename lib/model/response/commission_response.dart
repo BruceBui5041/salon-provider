@@ -21,7 +21,7 @@ class Commission extends CommonResponse {
   final DateTime? publishedAt;
 
   @JsonKey(name: "role_id")
-  final int? roleId;
+  final String? roleId;
 
   @JsonKey(name: "percentage")
   final double? percentage;
@@ -38,8 +38,14 @@ class Commission extends CommonResponse {
   @JsonKey(name: "creator")
   final UserResponse? creator;
 
+  @JsonKey(name: "creator_id")
+  final String? creatorId;
+
   @JsonKey(name: "updater")
   final UserResponse? updater;
+
+  @JsonKey(name: "updater_id")
+  final String? updaterId;
 
   Commission({
     super.id,
@@ -54,7 +60,9 @@ class Commission extends CommonResponse {
     this.maxAmount,
     this.role,
     this.creator,
+    this.creatorId,
     this.updater,
+    this.updaterId,
   });
 
   Commission copyWith({
@@ -64,13 +72,15 @@ class Commission extends CommonResponse {
     DateTime? updatedAt,
     String? code,
     DateTime? publishedAt,
-    int? roleId,
+    String? roleId,
     double? percentage,
     double? minAmount,
     double? maxAmount,
     RoleResponse? role,
     UserResponse? creator,
+    String? creatorId,
     UserResponse? updater,
+    String? updaterId,
   }) =>
       Commission(
         id: id ?? this.id,
@@ -85,7 +95,9 @@ class Commission extends CommonResponse {
         maxAmount: maxAmount ?? this.maxAmount,
         role: role ?? this.role,
         creator: creator ?? this.creator,
+        creatorId: creatorId ?? this.creatorId,
         updater: updater ?? this.updater,
+        updaterId: updaterId ?? this.updaterId,
       );
 
   factory Commission.fromJson(Map<String, dynamic> json) =>

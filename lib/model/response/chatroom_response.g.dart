@@ -23,6 +23,9 @@ ChatRoom _$ChatRoomFromJson(Map<String, dynamic> json) => ChatRoom(
           : Booking.fromJson(json['booking'] as Map<String, dynamic>),
       name: json['name'] as String?,
       lastMessageId: json['last_message_id'] as String?,
+      lastMessage: json['last_message'] == null
+          ? null
+          : ChatMessage.fromJson(json['last_message'] as Map<String, dynamic>),
       lastActivityAt: json['last_activity_at'] == null
           ? null
           : DateTime.parse(json['last_activity_at'] as String),
@@ -46,6 +49,7 @@ Map<String, dynamic> _$ChatRoomToJson(ChatRoom instance) => <String, dynamic>{
       'booking': instance.booking,
       'name': instance.name,
       'last_message_id': instance.lastMessageId,
+      'last_message': instance.lastMessage,
       'last_activity_at': instance.lastActivityAt?.toIso8601String(),
       'shard_key': instance.shardKey,
       'participants': instance.participants,

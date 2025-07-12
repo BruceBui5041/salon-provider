@@ -23,6 +23,7 @@ Service _$ServiceFromJson(Map<String, dynamic> json) => Service(
           ? null
           : ServiceVersion.fromJson(
               json['service_version'] as Map<String, dynamic>),
+      serviceVersionId: json['service_version_id'] as String?,
       versionsResponse: (json['versions'] as List<dynamic>?)
           ?.map((e) => ServiceVersion.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -32,6 +33,7 @@ Service _$ServiceFromJson(Map<String, dynamic> json) => Service(
       owner: json['owner'] == null
           ? null
           : UserResponse.fromJson(json['owner'] as Map<String, dynamic>),
+      ownerId: json['owner_id'] as String?,
     );
 
 Map<String, dynamic> _$ServiceToJson(Service instance) => <String, dynamic>{
@@ -44,7 +46,9 @@ Map<String, dynamic> _$ServiceToJson(Service instance) => <String, dynamic>{
       'review_info': instance.reviewInfo,
       'avg_rating': instance.avgRating,
       'service_version': instance.serviceVersion,
+      'service_version_id': instance.serviceVersionId,
       'versions': instance.versionsResponse,
       'images': instance.imageResponse,
       'owner': instance.owner,
+      'owner_id': instance.ownerId,
     };

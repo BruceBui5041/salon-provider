@@ -19,7 +19,7 @@ Commission _$CommissionFromJson(Map<String, dynamic> json) => Commission(
       publishedAt: json['published_at'] == null
           ? null
           : DateTime.parse(json['published_at'] as String),
-      roleId: (json['role_id'] as num?)?.toInt(),
+      roleId: json['role_id'] as String?,
       percentage: (json['percentage'] as num?)?.toDouble(),
       minAmount: (json['min_amount'] as num?)?.toDouble(),
       maxAmount: (json['max_amount'] as num?)?.toDouble(),
@@ -29,9 +29,11 @@ Commission _$CommissionFromJson(Map<String, dynamic> json) => Commission(
       creator: json['creator'] == null
           ? null
           : UserResponse.fromJson(json['creator'] as Map<String, dynamic>),
+      creatorId: json['creator_id'] as String?,
       updater: json['updater'] == null
           ? null
           : UserResponse.fromJson(json['updater'] as Map<String, dynamic>),
+      updaterId: json['updater_id'] as String?,
     );
 
 Map<String, dynamic> _$CommissionToJson(Commission instance) =>
@@ -48,5 +50,7 @@ Map<String, dynamic> _$CommissionToJson(Commission instance) =>
       'max_amount': instance.maxAmount,
       'role': instance.role,
       'creator': instance.creator,
+      'creator_id': instance.creatorId,
       'updater': instance.updater,
+      'updater_id': instance.updaterId,
     };
