@@ -15,7 +15,7 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) => Payment(
           ? null
           : DateTime.parse(json['updated_at'] as String),
       status: json['status'] as String?,
-      userId: (json['user_id'] as num?)?.toInt(),
+      userId: json['user_id'] as String?,
       amount: (json['amount'] as num?)?.toDouble(),
       currency: json['currency'] as String?,
       paymentMethod:
@@ -26,9 +26,11 @@ Payment _$PaymentFromJson(Map<String, dynamic> json) => Payment(
       paymentQr: json['payment_qr'] == null
           ? null
           : PaymentQr.fromJson(json['payment_qr'] as Map<String, dynamic>),
+      paymentQrId: json['payment_qr_id'] as String?,
       booking: json['booking'] == null
           ? null
           : Booking.fromJson(json['booking'] as Map<String, dynamic>),
+      bookingId: json['booking_id'] as String?,
       user: json['user'] == null
           ? null
           : UserResponse.fromJson(json['user'] as Map<String, dynamic>),
@@ -47,7 +49,9 @@ Map<String, dynamic> _$PaymentToJson(Payment instance) => <String, dynamic>{
       'transaction_status':
           _$TransactionStatusEnumMap[instance.transactionStatus],
       'payment_qr': instance.paymentQr,
+      'payment_qr_id': instance.paymentQrId,
       'booking': instance.booking,
+      'booking_id': instance.bookingId,
       'user': instance.user,
     };
 

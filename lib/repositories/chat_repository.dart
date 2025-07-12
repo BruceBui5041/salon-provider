@@ -8,6 +8,7 @@ import 'package:salon_provider/model/response/common_response.dart';
 import 'package:salon_provider/network/api.dart';
 import 'package:salon_provider/network/chat_api.dart';
 import 'package:salon_provider/network/ws_api.dart';
+import 'package:salon_provider/common/enum_value.dart';
 
 class ChatRepository extends RepositoryConfig {
   final chatClient = getIt.get<ChatApiClient>();
@@ -135,7 +136,7 @@ class ChatRepository extends RepositoryConfig {
   ) async {
     try {
       var body = req.SendMessageReq(
-        event: 'chat_message',
+        event: WebSocketEventEnum.chat_message.value,
         roomId: roomId,
         content: content,
         messageType: MessageType.text,
@@ -151,7 +152,7 @@ class ChatRepository extends RepositoryConfig {
   Future<bool> markMessageAsRead(String messageId) async {
     try {
       wsApi.send({
-        'event': 'chat_mark_read',
+        'event': WebSocketEventEnum.chat_mark_read.value,
         'message_id': messageId,
       });
 

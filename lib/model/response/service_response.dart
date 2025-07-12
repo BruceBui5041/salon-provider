@@ -24,12 +24,16 @@ class Service extends CommonResponse {
   final String? avgRating;
   @JsonKey(name: 'service_version')
   final ServiceVersion? serviceVersion;
+  @JsonKey(name: 'service_version_id')
+  final String? serviceVersionId;
   @JsonKey(name: 'versions')
   final List<ServiceVersion>? versionsResponse;
   @JsonKey(name: "images")
   final List<ImageResponse>? imageResponse;
   @JsonKey(name: "owner")
   final UserResponse? owner;
+  @JsonKey(name: "owner_id")
+  final String? ownerId;
 
   Service({
     super.id,
@@ -41,19 +45,28 @@ class Service extends CommonResponse {
     this.reviewInfo,
     this.avgRating,
     this.serviceVersion,
+    this.serviceVersionId,
     this.versionsResponse,
     this.imageResponse,
     this.owner,
+    this.ownerId,
   });
 
   Service copyWith({
+    String? id,
+    String? status,
+    DateTime? createdAt,
+    DateTime? updatedAt,
     String? slug,
     int? ratingCount,
     dynamic reviewInfo,
     String? avgRating,
     ServiceVersion? serviceVersion,
+    String? serviceVersionId,
     List<ServiceVersion>? versionsResponse,
     List<ImageResponse>? imageResponse,
+    UserResponse? owner,
+    String? ownerId,
   }) =>
       Service(
         id: id ?? this.id,
@@ -65,8 +78,11 @@ class Service extends CommonResponse {
         reviewInfo: reviewInfo ?? this.reviewInfo,
         avgRating: avgRating ?? this.avgRating,
         serviceVersion: serviceVersion ?? this.serviceVersion,
+        serviceVersionId: serviceVersionId ?? this.serviceVersionId,
         versionsResponse: versionsResponse ?? this.versionsResponse,
         imageResponse: imageResponse ?? this.imageResponse,
+        owner: owner ?? this.owner,
+        ownerId: ownerId ?? this.ownerId,
       );
 
   factory Service.fromJson(Map<String, dynamic> json) =>

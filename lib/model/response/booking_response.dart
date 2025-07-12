@@ -54,20 +54,38 @@ class Booking extends CommonResponse {
   @JsonKey(name: 'payment')
   final Payment? payment;
 
+  @JsonKey(name: 'payment_id')
+  final String? paymentId;
+
   @JsonKey(name: 'service_man')
   final UserResponse? serviceMan;
+
+  @JsonKey(name: 'service_man_id')
+  final String? serviceManId;
 
   @JsonKey(name: 'user')
   final UserResponse? user;
 
+  @JsonKey(name: 'user_id')
+  final String? userId;
+
   @JsonKey(name: 'coupon')
   final Coupon? coupon;
+
+  @JsonKey(name: 'coupon_id')
+  final String? couponId;
 
   @JsonKey(name: 'commission')
   final Commission? commission;
 
+  @JsonKey(name: 'commission_id')
+  final String? commissionId;
+
   @JsonKey(name: 'booking_location')
   final BookingLocation? bookingLocation;
+
+  @JsonKey(name: 'booking_location_id')
+  final String? bookingLocationId;
 
   @JsonKey(name: 'fees')
   final List<Fee>? fees;
@@ -95,12 +113,18 @@ class Booking extends CommonResponse {
     this.cancellationReason,
     this.cancelledAt,
     this.payment,
+    this.paymentId,
     this.serviceMan,
+    this.serviceManId,
     this.user,
+    this.userId,
     this.coupon,
+    this.couponId,
     this.commission,
+    this.commissionId,
     this.isPopToHome = false,
     this.bookingLocation,
+    this.bookingLocationId,
     this.fees,
     this.travelFee,
   });
@@ -123,13 +147,20 @@ class Booking extends CommonResponse {
     String? cancellationReason,
     DateTime? cancelledAt,
     Payment? payment,
+    String? paymentId,
     UserResponse? serviceMan,
+    String? serviceManId,
     UserResponse? user,
+    String? userId,
     Coupon? coupon,
+    String? couponId,
     Commission? commission,
+    String? commissionId,
     bool? isPopToHome,
     BookingLocation? bookingLocation,
+    String? bookingLocationId,
     List<Fee>? fees,
+    String? travelFee,
   }) =>
       Booking(
         id: id ?? this.id,
@@ -149,13 +180,20 @@ class Booking extends CommonResponse {
         cancellationReason: cancellationReason ?? this.cancellationReason,
         cancelledAt: cancelledAt ?? this.cancelledAt,
         payment: payment ?? this.payment,
+        paymentId: paymentId ?? this.paymentId,
         serviceMan: serviceMan ?? this.serviceMan,
+        serviceManId: serviceManId ?? this.serviceManId,
         user: user ?? this.user,
+        userId: userId ?? this.userId,
         coupon: coupon ?? this.coupon,
+        couponId: couponId ?? this.couponId,
         commission: commission ?? this.commission,
+        commissionId: commissionId ?? this.commissionId,
         isPopToHome: isPopToHome ?? this.isPopToHome,
         bookingLocation: bookingLocation ?? this.bookingLocation,
+        bookingLocationId: bookingLocationId ?? this.bookingLocationId,
         fees: fees ?? this.fees,
+        travelFee: travelFee ?? this.travelFee,
       );
 
   getDiscountedPrice() {

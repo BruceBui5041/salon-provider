@@ -28,12 +28,15 @@ ServiceVersion _$ServiceVersionFromJson(Map<String, dynamic> json) =>
       categoryResponse: json['category'] == null
           ? null
           : CategoryItem.fromJson(json['category'] as Map<String, dynamic>),
+      categoryId: json['category_id'] as String?,
       mainImageResponse: json['main_image'] == null
           ? null
           : ImageResponse.fromJson(json['main_image'] as Map<String, dynamic>),
+      mainImageId: json['main_image_id'] as String?,
       service: json['service'] == null
           ? null
           : Service.fromJson(json['service'] as Map<String, dynamic>),
+      serviceId: json['service_id'] as String?,
       images: (json['images'] as List<dynamic>?)
           ?.map((e) => ImageResponse.fromJson(e as Map<String, dynamic>))
           .toList(),
@@ -53,7 +56,10 @@ Map<String, dynamic> _$ServiceVersionToJson(ServiceVersion instance) =>
       'duration': instance.duration,
       'published_date': instance.publishedDate?.toIso8601String(),
       'category': instance.categoryResponse,
+      'category_id': instance.categoryId,
       'main_image': instance.mainImageResponse,
+      'main_image_id': instance.mainImageId,
       'service': instance.service,
+      'service_id': instance.serviceId,
       'images': instance.images,
     };
